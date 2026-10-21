@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "dfe96277-ef66-491f-8c4b-67c0d1f7a051",
+  "created": 1792441320,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 558,
+    "completion_tokens": 3091,
+    "total_tokens": 3649,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2640
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 558
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N = data[0]\n    nxt = [x - 1 for x in data[1:1 + N]]\n\n    indeg = [0] * N\n    rev = [[] for _ in range(N)]\n\n    for u, v in enumerate(nxt):\n        indeg[v] += 1\n        rev[v].append(u)\n\n    # Remove non-cycle vertices by topological pruning.\n    q = deque(i for i in range(N) if indeg[i] == 0)\n    while q:\n        v = q.popleft()\n        u = nxt[v]\n        indeg[u] -= 1\n        if indeg[u] == 0:\n            q.append(u)\n\n    # Vertices with indeg > 0 are exactly the cycle vertices.\n    comp = [-1] * N\n    cycle_len = []\n\n    for i in range(N):\n        if indeg[i] > 0 and comp[i] == -1:\n            cid = len(cycle_len)\n            length = 0\n            v = i\n\n            while True:\n                comp[v] = cid\n                length += 1\n                v = nxt[v]\n                if v == i:\n                    break\n\n            cycle_len.append(length)\n\n    # Propagate component IDs and distances to the cycle through reverse edges.\n    depth = [0] * N\n    q = deque()\n\n    for i in range(N):\n        if indeg[i] > 0:\n            q.append(i)\n\n    while q:\n        v = q.popleft()\n        cid = comp[v]\n\n        for u in rev[v]:\n            if comp[u] == -1:\n                comp[u] = cid\n                depth[u] = depth[v] + 1\n                q.append(u)\n\n    ans = 0\n    for i in range(N):\n        ans += depth[i] + cycle_len[comp[i]]\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 14.421,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a directed graph with N vertices numbered 1 to N and N edges.\r\nThe out-degree of every vertex is 1, and the edge from vertex i points to vertex a_i.\r\nCount the number of pairs of vertices (u, v) such that vertex v is reachable from vertex u.\nHere, vertex v is reachable from vertex u if there exists a sequence of vertices w_0, w_1, \\dots, w_K of length K+1 that satisfies the following conditions. In particular, if u = v, it is always reachable.\n\n- w_0 = u.\n- w_K = v.\n- For every 0 \\leq i \\lt K, there is an edge from vertex w_i to vertex w_{i+1}.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\na_1 a_2 \\dots a_N\n\nOutput\n\nPrint the number of pairs of vertices (u, v) such that vertex v is reachable from vertex u.\n\nConstraints\n\n\n- 1 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq a_i \\leq N\n- All input values are integers.\n\nSample Input 1\n\n4\r\n2 1 1 4\n\nSample Output 1\n\n8\r\n\nThe vertices reachable from vertex 1 are vertices 1, 2.\r\nThe vertices reachable from vertex 2 are vertices 1, 2.\r\nThe vertices reachable from vertex 3 are vertices 1, 2, 3.\r\nThe vertex reachable from vertex 4 is vertex 4.\r\nTherefore, the number of pairs of vertices (u, v) such that vertex v is reachable from vertex u is 8.\r\nNote that the edge from vertex 4 is a self-loop, that is, it points to vertex 4 itself.\n\nSample Input 2\n\n5\r\n2 4 3 1 2\n\nSample Output 2\n\n14\n\nSample Input 3\n\n10\r\n6 10 4 1 5 9 8 6 5 1\n\nSample Output 3\n\n41\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

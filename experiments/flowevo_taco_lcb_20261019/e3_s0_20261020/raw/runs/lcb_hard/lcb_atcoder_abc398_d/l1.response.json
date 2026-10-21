@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a959bede-972a-4d49-a0f0-e2996a73cf1c",
+  "created": 1792440784,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 784,
+    "completion_tokens": 3062,
+    "total_tokens": 3846,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2886
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 784
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    N, R, C = map(int, input().split())\n    S = input().strip()\n\n    r = c = 0\n    seen = {(0, 0)}\n    ans = []\n\n    for ch in S:\n        if ch == 'N':\n            r -= 1\n        elif ch == 'S':\n            r += 1\n        elif ch == 'W':\n            c -= 1\n        else:  # ch == 'E'\n            c += 1\n\n        if (r - R, c - C) in seen:\n            ans.append('1')\n        else:\n            ans.append('0')\n\n        seen.add((r, c))\n\n    print(''.join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 15.16,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is an infinitely large two-dimensional grid, with a campfire at coordinate (0,0).\nAt time t=0, smoke exists only at cell (0,0).\nYou are given a length-N string S consisting of N, W, S, E. At times t=1,2,\\dots,N, the following happen in order:\n\n- Wind blows, and all the smoke present at that time moves as follows:\n- If the t-th character of S is N, smoke in cell (r,c) moves to cell (r-1,c).\n- If it is W, smoke in cell (r,c) moves to cell (r,c-1).\n- If it is S, smoke in cell (r,c) moves to cell (r+1,c).\n- If it is E, smoke in cell (r,c) moves to cell (r,c+1).\n\n\n- If there is no smoke in cell (0,0), new smoke is generated at cell (0,0).\n\nTakahashi is standing at cell (R,C).\nFor each integer 1 \\le t \\le N, determine if smoke exists at cell (R,C) at time t+0.5, and print the response according to the required format.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN R C\nS\n\nOutput\n\nPrint an N-character string consisting of 0 and 1.\nThe t-th character (1 \\le t \\le N) should be:\n\n- 1 if smoke exists at cell (R,C) at time t+0.5, and\n- 0 otherwise.\n\nConstraints\n\n\n- N is an integer between 1 and 200000, inclusive.\n- S is a length N string consisting of N, W, S, E.\n- R and C are integers between -N and N, inclusive.\n- (R,C) \\neq (0,0)\n\nSample Input 1\n\n6 -2 1\nNNEEWS\n\nSample Output 1\n\n001010\n\nAt times 1.5,2.5,4.5,6.5, there is no smoke at cell (-2,1). At times 3.5,5.5, there is smoke at cell (-2,1).\nHence, output 001010.\nIn the figures below, taking cell (0,0) with the campfire as a reference, cell (r,c) is drawn:\n\n- -r cells up if r < 0,\n- r cells down if r \\ge 0,\n- -c cells left if c < 0,\n- c cells right if c \\ge 0.\n\nThe grid at time 0.5 looks like:\n\nThe grid at time 1.5 looks like:\n\nThe grid at time 2.5 looks like:\n\nThe grid at time 3.5 looks like:\n\nThe grid at time 4.5 looks like:\n\nThe grid at time 5.5 looks like:\n\nThe grid at time 6.5 looks like:\n\nSample Input 2\n\n10 1 2\nNEESESWEES\n\nSample Output 2\n\n0001101011\n\nSample Input 3\n\n20 -1 -2\nWWNNWSWEWNSWWENSNWWN\n\nSample Output 3\n\n00100111111000101111\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

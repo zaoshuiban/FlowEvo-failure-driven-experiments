@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d12e0882-749b-4653-861b-053b0a47b5a5",
+  "created": 1792442458,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1051,
+    "completion_tokens": 6487,
+    "total_tokens": 7538,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6188
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 539
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef is_prime(x: int) -> bool:\n    if x < 2:\n        return False\n    if x % 2 == 0:\n        return x == 2\n\n    d = 3\n    while d * d <= x:\n        if x % d == 0:\n            return False\n        d += 2\n    return True\n\n\ndef ashish_wins(n: int) -> bool:\n    if n == 1:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 1:\n        return True\n\n    # n is even\n    if (n & (n - 1)) == 0:\n        return False\n\n    # n = 2 * p, where p is an odd prime\n    if n % 4 == 2 and is_prime(n // 2):\n        return False\n\n    return True\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    answers = []\n\n    for i in range(1, t + 1):\n        n = int(data[i])\n        answers.append(\"Ashishgup\" if ashish_wins(n) else \"FastestFinger\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 27.619,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAshishgup and FastestFinger play a game. \n\nThey start with a number $n$ and play in turns. In each turn, a player can make any one of the following moves:  Divide $n$ by any of its odd divisors greater than $1$.  Subtract $1$ from $n$ if $n$ is greater than $1$. \n\nDivisors of a number include the number itself.\n\nThe player who is unable to make a move loses the game.\n\nAshishgup moves first. Determine the winner of the game if both of them play optimally.\n\n\n-----Input-----\n\nThe first line contains a single integer $t$ ($1 \\leq t \\leq 100$)  — the number of test cases. The description of the test cases follows.\n\nThe only line of each test case contains a single integer  — $n$ ($1 \\leq n \\leq 10^9$).\n\n\n-----Output-----\n\nFor each test case, print \"Ashishgup\" if he wins, and \"FastestFinger\" otherwise (without quotes).\n\n\n-----Example-----\nInput\n7\n1\n2\n3\n4\n5\n6\n12\n\nOutput\nFastestFinger\nAshishgup\nAshishgup\nFastestFinger\nAshishgup\nFastestFinger\nAshishgup\n\n\n\n-----Note-----\n\nIn the first test case, $n = 1$, Ashishgup cannot make a move. He loses.\n\nIn the second test case, $n = 2$, Ashishgup subtracts $1$ on the first move. Now $n = 1$, FastestFinger cannot make a move, so he loses.\n\nIn the third test case, $n = 3$, Ashishgup divides by $3$ on the first move. Now $n = 1$, FastestFinger cannot make a move, so he loses.\n\nIn the last test case, $n = 12$, Ashishgup divides it by $3$. Now $n = 4$, FastestFinger is forced to subtract $1$, and Ashishgup gets $3$, so he wins by dividing it by $3$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef is_prime(x: int) -> bool:\n    if x < 2:\n        return False\n    if x % 2 == 0:\n        return x == 2\n    d = 3\n    while d * d <= x:\n        if x % d == 0:\n            return False\n        d += 2\n    return True\n\ndef ashish_wins(n: int) -> bool:\n    if n == 1:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 1:\n        return True\n\n    if (n & (n - 1)) == 0:\n        return False\n\n    half = n // 2\n    if half % 2 == 1 and is_prime(half):\n        return False\n\n    return True\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n\n    for n in data[1:t + 1]:\n        ans.append(\"Ashishgup\" if ashish_wins(n) else \"FastestFinger\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: There are N friends who decided to play the game of musical chairs one day.\n\nInitially they decide a number K and with each passing round they remove exactly K chairs. Hence, in each round exactly K p\nSolution:\nimport sys\nimport math\n\ndef count_divisors(x: int) -> int:\n    count = 0\n    root = math.isqrt(x)\n\n    for i in range(1, root + 1):\n        if x % i == 0:\n            if i * i == x:\n                count += 1\n            else:\n                count += 2\n\n    return count\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    answers = []\n\n    for i in range(1, t + 1):\n        n = int(data[i])\n        answers.append(str(count_divisors(n - 1)))\n\n    sys.stdout.write(\"\\n\"."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

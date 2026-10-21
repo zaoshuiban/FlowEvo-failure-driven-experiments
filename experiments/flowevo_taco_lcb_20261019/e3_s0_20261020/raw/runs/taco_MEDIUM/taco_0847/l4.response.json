@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1c9fc853-7553-4c17-a9c0-385aec824735",
+  "created": 1792428943,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 922,
+    "completion_tokens": 14302,
+    "total_tokens": 15224,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14032
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 794
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nsys.setrecursionlimit(10000)\n\n\ndef next_lucky(s: str) -> str:\n    s = s.lstrip('0') or '0'\n    n = len(s)\n\n    def dfs(i: int):\n        if i == n:\n            return None  # We matched s completely, so it is not strictly greater.\n\n        c = s[i]\n\n        for d in ('3', '5'):\n            if d < c:\n                continue\n\n            if d == c:\n                suffix = dfs(i + 1)\n                if suffix is not None:\n                    return d + suffix\n            else:\n                return d + '3' * (n - i - 1)\n\n        return None\n\n    answer = dfs(0)\n\n    if answer is None:\n        answer = '3' * (n + 1)\n\n    return answer\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    results = []\n\n    for i in range(1, t + 1):\n        number = data[i].decode()\n        results.append(next_lucky(number))\n\n    sys.stdout.write('\\n'.join(results))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 64.397,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLucky numbers are defined as the numbers consisting only of digits 3 and 5. So, given a number N, you have to print the least lucky number strictly greater than N.\n\nInput:\nFirst line of input contains number of test cases T. Each test case contains a single number N.  \n\nOutput:\nFor each test case, print the next lucky number in a separate line.  \n\nConstraints:\n1 ≤ T ≤ 1000  \n1 ≤ N ≤ 10^100\n\nSAMPLE INPUT\n4\n4\n48\n130\n98SAMPLE OUTPUT\n5\n53\n333\n333\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef add_one(s: str) -> str:\n    a = list(s)\n    i = len(a) - 1\n\n    while i >= 0 and a[i] == '9':\n        a[i] = '0'\n        i -= 1\n\n    if i >= 0:\n        a[i] = chr(ord(a[i]) + 1)\n        return ''.join(a)\n\n    return '1' + ''.join(a)\n\n\ndef smallest_lucky_ge(t: str):\n    n = len(t)\n\n    def dfs(i: int, greater: bool):\n        if i == n:\n            return \"\"\n\n        if greater:\n            return '3' * (n - i)\n\n        c = t[i]\n\n        if c <= '3':\n            if c == '3':\n                res = dfs(i + 1, False)\n                if res is not None:\n                    return '3' + res\n            else:\n                return '3' + '3' * (n - i - 1)\n\n            return '5' + '3' * (n - i - 1)\n\n        elif c <= '5':\n            if c == '5':\n                res = dfs(i + 1, False)\n                if res is not None:\n                    return '5' + res\n                return None\n            else:\n                return '5' + '3' * (n - i - 1)\n\n        else:\n            return None\n\n    return dfs(0, False)\n\n\ndef next_lucky(number: str) -> str:\n    s = number.lstrip('0') or '0'\n    target = add_one(s)\n\n    ans = smallest_lucky_ge(target)\n    if ans is None:\n        ans = '3' * (len(target) + 1)\n\n    return ans\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    answers = []\n\n    for i in range(1, t + 1):\n        n = data[i].decode()\n        answers.append(next_lucky(n))\n\n    sys.stdout.write('\\n'.join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Kefa decided to celebrate his first big salary by going to the restaurant. \n\nHe lives by an unusual park. The park is a rooted tree consisting of n vertices with the root at vertex 1. Vertex 1 also co\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    cats = [0] + [next(it) for _ in range(n)]\n\n    graph = [[] for _ in range(n + 1)]\n\n    for _ in range(n - 1):\n        x = next(it)\n        y = next(it)\n        graph[x].append(y)\n        graph[y].append(x)\n\n    answer = 0\n\n    stack = [(1, 0, cats[1])]\n\n    while stack:\n        node, parent, consecutive_cats = stack.pop()\n\n        if consecutive_cats > m:"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

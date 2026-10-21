@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5b2808a1-5eff-46fd-98aa-44d32809d569",
+  "created": 1792430277,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 551,
+    "completion_tokens": 664,
+    "total_tokens": 1215,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 420
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 551
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    points = []\n    idx = 1\n\n    for _ in range(n):\n        x = data[idx]\n        y = data[idx + 1]\n        idx += 2\n        points.append((x, y))\n\n    answers = []\n\n    for i in range(n):\n        xi, yi = points[i]\n        best_dist = -1\n        best_id = -1\n\n        for j in range(n):\n            if i == j:\n                continue\n\n            xj, yj = points[j]\n            dx = xi - xj\n            dy = yi - yj\n            dist = dx * dx + dy * dy\n            point_id = j + 1\n\n            if dist > best_dist or (dist == best_dist and point_id < best_id):\n                best_dist = dist\n                best_id = point_id\n\n        answers.append(str(best_id))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 2.9,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nOn the xy-plane, there are N points with ID numbers from 1 to N. Point i is located at coordinates (X_i, Y_i), and no two points have the same coordinates.\nFrom each point, find the farthest point and print its ID number.\r\nIf multiple points are the farthest, print the smallest of the ID numbers of those points.\nHere, we use the Euclidean distance: for two points (x_1,y_1) and (x_2,y_2), the distance between them is \\sqrt{(x_1-x_2)^{2}+(y_1-y_2)^{2}}.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nX_1 Y_1\r\nX_2 Y_2\r\n\\vdots\r\nX_N Y_N\n\nOutput\n\nPrint N lines. The i-th line should contain the ID number of the farthest point from point i.\n\nConstraints\n\n\n- 2 \\leq N \\leq 100\n- -1000 \\leq X_i, Y_i \\leq 1000\n- (X_i, Y_i) \\neq (X_j, Y_j) if i \\neq j.\n- All input values are integers.\n\nSample Input 1\n\n4\r\n0 0\r\n2 4\r\n5 0\r\n3 4\n\nSample Output 1\n\n3\r\n3\r\n1\r\n1\r\n\nThe following figure shows the arrangement of the points. Here, P_i represents point i.\r\n\r\nThe farthest point from point 1 are points 3 and 4, and point 3 has the smaller ID number.\nThe farthest point from point 2 is point 3.\nThe farthest point from point 3 are points 1 and 2, and point 1 has the smaller ID number.\nThe farthest point from point 4 is point 1.\n\nSample Input 2\n\n6\r\n3 2\r\n1 6\r\n4 5\r\n1 3\r\n5 5\r\n9 8\n\nSample Output 2\n\n6\r\n6\r\n6\r\n6\r\n6\r\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

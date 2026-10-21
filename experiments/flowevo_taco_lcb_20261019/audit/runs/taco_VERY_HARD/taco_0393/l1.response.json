@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9c0124cc-43af-4b28-8e3b-e203b29a34b9",
+  "created": 1792455830,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 804,
+    "completion_tokens": 9367,
+    "total_tokens": 10171,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8583
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 804
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    ndata = len(data)\n    idx = 0\n\n    def next_int():\n        nonlocal idx\n        while idx < ndata and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < ndata and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    T = next_int()\n    output = []\n\n    for _ in range(T):\n        N = next_int()\n        Q = next_int()\n\n        A = [0] * N\n        for i in range(N):\n            A[i] = next_int()\n\n        M = N - 1\n        low = [0] * M\n        high = [0] * M\n\n        for i in range(M):\n            a = A[i]\n            b = A[i + 1]\n            if a <= b:\n                low[i] = a\n                high[i] = b\n            else:\n                low[i] = b\n                high[i] = a\n\n        left_query = [0] * Q\n        right_query = [0] * Q\n        y_query = [0] * Q\n\n        for qi in range(Q):\n            x1 = next_int()\n            x2 = next_int()\n            y = next_int()\n\n            left_query[qi] = x1\n            right_query[qi] = x2 - 1\n            y_query[qi] = y\n\n        query_order = list(range(Q))\n        query_order.sort(key=y_query.__getitem__)\n\n        answer = [0] * Q\n        bit = [0] * (M + 1)\n\n        edge_order = list(range(M))\n        edge_order.sort(key=low.__getitem__)\n\n        ptr = 0\n        for qi in query_order:\n            y = y_query[qi]\n\n            while ptr < M and low[edge_order[ptr]] <= y:\n                pos = edge_order[ptr] + 1\n                while pos <= M:\n                    bit[pos] += 1\n                    pos += pos & -pos\n                ptr += 1\n\n            l = left_query[qi]\n            r = right_query[qi]\n\n            s = 0\n            pos = r\n            while pos > 0:\n                s += bit[pos]\n                pos -= pos & -pos\n\n            pos = l - 1\n            while pos > 0:\n                s -= bit[pos]\n                pos -= pos & -pos\n\n            answer[qi] = s\n\n        bit = [0] * (M + 1)\n\n        edge_order = list(range(M))\n        edge_order.sort(key=high.__getitem__)\n\n        ptr = 0\n        for qi in query_order:\n            y = y_query[qi]\n\n            while ptr < M and high[edge_order[ptr]] < y:\n                pos = edge_order[ptr] + 1\n                while pos <= M:\n                    bit[pos] += 1\n                    pos += pos & -pos\n                ptr += 1\n\n            l = left_query[qi]\n            r = right_query[qi]\n\n            s = 0\n            pos = r\n            while pos > 0:\n                s += bit[pos]\n                pos -= pos & -pos\n\n            pos = l - 1\n            while pos > 0:\n                s -= bit[pos]\n                pos -= pos & -pos\n\n            answer[qi] -= s\n\n        output.extend(map(str, answer))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 38.734,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nVivek likes playing with lasers, but his friend Divyansh says that reading biographies is much more interesting. In order to prove that lasers are fun too, Vivek proposed an interesting task involving them:\n\nYou are given $N$ points in a plane (numbered $1$ through $N$); for each valid $i$, the $i$-th point is $P_{i} = (i, A_{i})$. There are $N-1$ line segments between them (numbered $1$ through $N-1$); for each valid $i$, the $i$-th line segment is formed by connecting the points $P_{i}$ and $P_{i+1}$.\n\nYou should answer $Q$ queries. In each query, a laser beam is fired horizontally to the right, from a point $(x_{1}, y)$ to a point $(x_{2}, y)$ (where it stops and does not propagate further). Find the number of line segments it collides with on the way.\n\nThe beam is considered to collide with a line segment if it intersects or touches this segment, except when the left endpoint of this segment is $(x_{2}, y)$ or its right endpoint is $(x_{1}, y)$.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $Q$. \nThe second line contains $N$ space-separated integers $A_{1}, A_{2}, \\ldots, A_{N}$.\nEach of the next $Q$ lines contains three space-separated integers $x_{1}$, $x_{2}$ and $y$ describing a query.\n\n------  Output ------\nFor each query, print a single line containing one integer ― the number of line segments the beam collides with.\n\n------  Constraints ------\n$1 ≤ T ≤ 5$\n$2 ≤ N ≤ 100,000$\n$1 ≤ Q ≤ 100,000$\n$1 ≤ A_{i} ≤ 10^{9}$ for each valid $i$\n$1 ≤ x_{1} < x_{2} ≤ N$\n$1 ≤ y ≤ 10^{9}$\n\n------  Subtasks ------\nSubtask #1 (30 points): $N, Q ≤ 2,000$\n\nSubtask #2 (70 points): original constraints\n\n----- Sample Input 1 ------ \n1\n\n4 3\n\n1 3 5 1\n\n2 4 4\n\n1 2 3\n\n1 4 1\n----- Sample Output 1 ------ \n2\n\n1\n\n2\n----- explanation 1 ------ \nExample case 1:\n- For the first query, the beam collides with the $2$-nd line segment and the $3$-rd line segment.\n- For the second query, the beam collides only with the $1$-st line segment. We do not consider it to collide with the second line segment, since its left endpoint is $(x_{2},y)$.\n- For the third query, the beam collides with the $1$-st line segment and the $3$-rd line segment.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

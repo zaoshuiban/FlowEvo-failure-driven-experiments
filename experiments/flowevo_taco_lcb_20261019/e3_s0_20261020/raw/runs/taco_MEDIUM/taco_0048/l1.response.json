@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d0fa9087-b8a2-4779-a7c9-66edc5906cfa",
+  "created": 1792442254,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 454,
+    "completion_tokens": 7823,
+    "total_tokens": 8277,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7552
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 454
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    m = n\n\n    rad = 1\n    exponents = []\n\n    if m % 2 == 0:\n        rad *= 2\n        cnt = 0\n        while m % 2 == 0:\n            m //= 2\n            cnt += 1\n        exponents.append(cnt)\n\n    p = 3\n    while p * p <= m:\n        if m % p == 0:\n            rad *= p\n            cnt = 0\n            while m % p == 0:\n                m //= p\n                cnt += 1\n            exponents.append(cnt)\n        p += 2\n\n    if m > 1:\n        rad *= m\n        exponents.append(1)\n\n    if not exponents:\n        print(1, 0)\n        return\n\n    mx = max(exponents)\n\n    steps = 0\n    target = 1\n    while target < mx:\n        target <<= 1\n        steps += 1\n\n    need_mul = any(cnt != target for cnt in exponents)\n    operations = steps + (1 if need_mul else 0)\n\n    print(rad, operations)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 39.752,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nJATC's math teacher always gives the class some interesting math problems so that they don't get bored. Today the problem is as follows. Given an integer $n$, you can perform the following operations zero or more times:  mul $x$: multiplies $n$ by $x$ (where $x$ is an arbitrary positive integer).  sqrt: replaces $n$ with $\\sqrt{n}$ (to apply this operation, $\\sqrt{n}$ must be an integer). \n\nYou can perform these operations as many times as you like. What is the minimum value of $n$, that can be achieved and what is the minimum number of operations, to achieve that minimum value?\n\nApparently, no one in the class knows the answer to this problem, maybe you can help them?\n\n\n-----Input-----\n\nThe only line of the input contains a single integer $n$ ($1 \\le n \\le 10^6$) — the initial number.\n\n\n-----Output-----\n\nPrint two integers: the minimum integer $n$ that can be achieved using the described operations and the minimum number of operations required.\n\n\n-----Examples-----\nInput\n20\n\nOutput\n10 2\nInput\n5184\n\nOutput\n6 4\n\n\n-----Note-----\n\nIn the first example, you can apply the operation mul $5$ to get $100$ and then sqrt to get $10$.\n\nIn the second example, you can first apply sqrt to get $72$, then mul $18$ to get $1296$ and finally two more sqrt and you get $6$.\n\nNote, that even if the initial value of $n$ is less or equal $10^6$, it can still become greater than $10^6$ after applying one or more operations.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

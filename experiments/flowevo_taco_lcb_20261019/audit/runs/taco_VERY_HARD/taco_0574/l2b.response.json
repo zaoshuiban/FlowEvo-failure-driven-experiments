@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "68f6fe25-8ae5-4dc2-b751-b72f48de992b",
+  "created": 1792444329,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 306,
+    "completion_tokens": 13477,
+    "total_tokens": 13783,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13183
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 178
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef build_sequence(k):\n    if k == 1:\n        return [1]\n    if k == 2:\n        return [3, 4]\n\n    q = math.isqrt(k - 1) + 1\n\n    while True:\n        d = q * q - k\n        max_b = min(k, d // 8)\n        start_mod = (2 * d) % 3\n\n        b = max_b - ((max_b - start_mod) % 3)\n\n        while b >= 0:\n            rem = d - 8 * b\n            if rem % 3 == 0:\n                a = rem // 3\n                if a + b <= k:\n                    seq = [3] * b + [2] * a + [1] * (k - a - b)\n                    return seq\n            b -= 3\n\n        q += 1\n\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n, m = map(int, data[:2])\n\n    rows = build_sequence(n)\n    cols = build_sequence(m)\n\n    result = []\n    for x in rows:\n        result.append(\" \".join(str(x * y) for y in cols))\n\n    sys.stdout.write(\"\\n\".join(result))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 61.57,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWhile resting on the ship after the \"Russian Code Cup\" a boy named Misha invented an interesting game. He promised to give his quadrocopter to whoever will be the first one to make a rectangular table of size n × m, consisting of positive integers such that the sum of the squares of numbers for each row and each column was also a square.\n\nSince checking the correctness of the table manually is difficult, Misha asks you to make each number in the table to not exceed 10^8.\n\n\n-----Input-----\n\nThe first line contains two integers n and m (1 ≤ n, m ≤ 100)  — the size of the table. \n\n\n-----Output-----\n\nPrint the table that meets the condition: n lines containing m integers, separated by spaces. If there are multiple possible answers, you are allowed to print anyone. It is guaranteed that there exists at least one correct answer.\n\n\n-----Examples-----\nInput\n1 1\n\nOutput\n1\nInput\n1 2\n\nOutput\n3 4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

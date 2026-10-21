@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b4ea9e85-3bb5-4550-bb0a-0e62acf4c123",
+  "created": 1792431110,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 803,
+    "completion_tokens": 498,
+    "total_tokens": 1301,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 204
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 803
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def minimumCost(\n        self,\n        source: str,\n        target: str,\n        original: List[str],\n        changed: List[str],\n        cost: List[int]\n    ) -> int:\n        INF = 10**18\n        dist = [[INF] * 26 for _ in range(26)]\n        \n        for i in range(26):\n            dist[i][i] = 0\n        \n        for o, c, w in zip(original, changed, cost):\n            u = ord(o) - ord('a')\n            v = ord(c) - ord('a')\n            dist[u][v] = min(dist[u][v], w)\n        \n        for k in range(26):\n            for i in range(26):\n                if dist[i][k] == INF:\n                    continue\n                for j in range(26):\n                    if dist[k][j] == INF:\n                        continue\n                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])\n        \n        total = 0\n        \n        for s, t in zip(source, target):\n            u = ord(s) - ord('a')\n            v = ord(t) - ord('a')\n            \n            if dist[u][v] == INF:\n                return -1\n            \n            total += dist[u][v]\n        \n        return total\n```",
+  "latency_s": 2.236,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two 0-indexed strings source and target, both of length n and consisting of lowercase English letters. You are also given two 0-indexed character arrays original and changed, and an integer array cost, where cost[i] represents the cost of changing the character original[i] to the character changed[i].\nYou start with the string source. In one operation, you can pick a character x from the string and change it to the character y at a cost of z if there exists any index j such that cost[j] == z, original[j] == x, and changed[j] == y.\nReturn the minimum cost to convert the string source to the string target using any number of operations. If it is impossible to convert source to target, return -1.\nNote that there may exist indices i, j such that original[j] == original[i] and changed[j] == changed[i].\n \nExample 1:\n\nInput: source = \"abcd\", target = \"acbe\", original = [\"a\",\"b\",\"c\",\"c\",\"e\",\"d\"], changed = [\"b\",\"c\",\"b\",\"e\",\"b\",\"e\"], cost = [2,5,5,1,2,20]\nOutput: 28\nExplanation: To convert the string \"abcd\" to string \"acbe\":\n- Change value at index 1 from 'b' to 'c' at a cost of 5.\n- Change value at index 2 from 'c' to 'e' at a cost of 1.\n- Change value at index 2 from 'e' to 'b' at a cost of 2.\n- Change value at index 3 from 'd' to 'e' at a cost of 20.\nThe total cost incurred is 5 + 1 + 2 + 20 = 28.\nIt can be shown that this is the minimum possible cost.\n\nExample 2:\n\nInput: source = \"aaaa\", target = \"bbbb\", original = [\"a\",\"c\"], changed = [\"c\",\"b\"], cost = [1,2]\nOutput: 12\nExplanation: To change the character 'a' to 'b' change the character 'a' to 'c' at a cost of 1, followed by changing the character 'c' to 'b' at a cost of 2, for a total cost of 1 + 2 = 3. To change all occurrences of 'a' to 'b', a total cost of 3 * 4 = 12 is incurred.\n\nExample 3:\n\nInput: source = \"abcd\", target = \"abce\", original = [\"a\"], changed = [\"e\"], cost = [10000]\nOutput: -1\nExplanation: It is impossible to convert source to target because the value at index 3 cannot be changed from 'd' to 'e'.\n\n \nConstraints:\n\n1 <= source.length == target.length <= 10^5\nsource, target consist of lowercase English letters.\n1 <= cost.length == original.length == changed.length <= 2000\noriginal[i], changed[i] are lowercase English letters.\n1 <= cost[i] <= 10^6\noriginal[i] != changed[i]\n\nStarter code / required signature:\nclass Solution:\n    def minimumCost(self, source: str, target: str, original: List[str], changed: List[str], cost: List[int]) -> int:\n        \n\nUse the required function/method named minimumCost. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

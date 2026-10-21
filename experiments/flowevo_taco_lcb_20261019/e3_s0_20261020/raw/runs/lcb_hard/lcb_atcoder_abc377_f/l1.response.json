@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a2f65c64-417a-44bf-8758-6e062b33df70",
+  "created": 1792442825,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 758,
+    "completion_tokens": 8724,
+    "total_tokens": 9482,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8057
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 758
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M = data[0], data[1]\n\n    rows_set = set()\n    cols_set = set()\n    sums_set = set()\n    diffs_set = set()\n\n    idx = 2\n    for _ in range(M):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n\n        rows_set.add(a)\n        cols_set.add(b)\n        sums_set.add(a + b)\n        diffs_set.add(a - b)\n\n    rows = list(rows_set)\n    cols = list(cols_set)\n\n    base = (N - len(rows_set)) * (N - len(cols_set))\n\n    total_diagonal_cells = 0\n\n    # Diagonals of the form i + j = s\n    for s in sums_set:\n        L = max(1, s - N)\n        U = min(N, s - 1)\n\n        if L > U:\n            continue\n\n        length = U - L + 1\n\n        row_forbidden = 0\n        overlap = 0\n\n        for r in rows:\n            if L <= r <= U:\n                row_forbidden += 1\n                if (s - r) in cols_set:\n                    overlap += 1\n\n        col_forbidden = 0\n        for c in cols:\n            i = s - c\n            if L <= i <= U:\n                col_forbidden += 1\n\n        total_diagonal_cells += length - row_forbidden - col_forbidden + overlap\n\n    # Diagonals of the form i - j = d\n    for d in diffs_set:\n        L = max(1, d + 1)\n        U = min(N, N + d)\n\n        if L > U:\n            continue\n\n        length = U - L + 1\n\n        row_forbidden = 0\n        overlap = 0\n\n        for r in rows:\n            if L <= r <= U:\n                row_forbidden += 1\n                if (r - d) in cols_set:\n                    overlap += 1\n\n        col_forbidden = 0\n        for c in cols:\n            i = c + d\n            if L <= i <= U:\n                col_forbidden += 1\n\n        total_diagonal_cells += length - row_forbidden - col_forbidden + overlap\n\n    # Intersections of selected i+j and i-j diagonals were counted twice.\n    intersections = 0\n\n    for s in sums_set:\n        for d in diffs_set:\n            sd = s + d\n            if sd & 1:\n                continue\n\n            i = sd // 2\n            j = (s - d) // 2\n\n            if 1 <= i <= N and 1 <= j <= N:\n                if i not in rows_set and j not in cols_set:\n                    intersections += 1\n\n    answer = base - total_diagonal_cells + intersections\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 38.118,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a grid of N^2 squares with N rows and N columns.\r\nLet (i,j) denote the square at the i-th row from the top (1\\leq i\\leq N) and j-th column from the left (1\\leq j\\leq N).\nEach square is either empty or has a piece placed on it.\r\nThere are M pieces placed on the grid, and the k-th (1\\leq k\\leq M) piece is placed on square (a_k,b_k).\nYou want to place your piece on an empty square in such a way that it cannot be captured by any of the existing pieces.\nA piece placed on square (i,j) can capture pieces that satisfy any of the following conditions:\n\n- Placed in row i\n- Placed in column j\n- Placed on any square (a,b)\\ (1\\leq a\\leq N,1\\leq b\\leq N) where i+j=a+b\n- Placed on any square (a,b)\\ (1\\leq a\\leq N,1\\leq b\\leq N) where i-j=a-b\n\nFor example, a piece placed on square (4,4) can capture pieces placed on the squares shown in blue in the following figure:\n\nHow many squares can you place your piece on?\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M\r\na_1 b_1\r\na_2 b_2\r\n\\vdots\r\na_M b_M\n\nOutput\n\nPrint the number of empty squares where you can place your piece without it being captured by any existing pieces.\n\nConstraints\n\n\n- 1\\leq N\\leq10^9\n- 1\\leq M\\leq10^3\n- 1\\leq a_k\\leq N,1\\leq b_k\\leq N\\ (1\\leq k\\leq M)\n- (a_k,b_k)\\neq(a_l,b_l)\\ (1\\leq k\\lt l\\leq M)\n- All input values are integers.\n\nSample Input 1\n\n8 6\r\n1 4\r\n2 1\r\n3 8\r\n4 5\r\n5 2\r\n8 3\n\nSample Output 1\n\n2\r\n\nThe existing pieces can capture pieces placed on the squares shown in blue in the following figure:\n\nTherefore, you can place your piece on only two squares: squares (6,6) and (7,7).\n\nSample Input 2\n\n1000000000 1\r\n1 1\n\nSample Output 2\n\n999999997000000002\r\n\nOut of 10^{18} squares, the squares that cannot be used are: squares in row 1, squares in column 1, and squares (1,1), (2,2), \\ldots, (10^9,10^9), totaling 3\\times10^9-2 squares.\nNote that the answer may be 2^{32} or greater.\n\nSample Input 3\n\n20 10\r\n1 4\r\n7 11\r\n7 15\r\n8 10\r\n11 6\r\n12 5\r\n13 1\r\n15 2\r\n20 10\r\n20 15\n\nSample Output 3\n\n77\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

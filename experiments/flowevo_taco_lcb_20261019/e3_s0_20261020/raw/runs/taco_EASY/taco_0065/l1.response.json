@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b34749b6-ff0c-41bf-8fde-86055100877c",
+  "created": 1792438356,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 509,
+    "completion_tokens": 8626,
+    "total_tokens": 9135,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8271
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 509
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_left\nfrom array import array\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    q = data[0]\n\n    max_r = 0\n    for i in range(q):\n        r = data[3 * i + 2]\n        if r > max_r:\n            max_r = r\n\n    n_max = max_r\n\n    f = array('I', [0]) * (n_max + 1)\n    f[0] = 1\n\n    g = bytearray(n_max + 1)\n    positions = [array('I') for _ in range(10)]\n\n    for n in range(1, n_max + 1):\n        digit = n % 10\n        prev = n // 10\n\n        if digit == 0:\n            fn = f[prev]\n        else:\n            fn = f[prev] * digit\n\n        f[n] = fn\n\n        if n < 10:\n            gn = n\n        else:\n            gn = g[fn]\n\n        g[n] = gn\n        positions[gn].append(n)\n\n    out = []\n    idx = 1\n\n    for _ in range(q):\n        l = data[idx]\n        r = data[idx + 1]\n        k = data[idx + 2]\n        idx += 3\n\n        arr = positions[k]\n        ans = bisect_left(arr, r + 1) - bisect_left(arr, l)\n        out.append(str(ans))\n\n    sys.stdout.write('\\n'.join(out))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 36.461,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLet us define two functions f and g on positive integer numbers.  $f(n) = \\text{product of non-zero digits of} n$\n\n$g(n) = \\left\\{\\begin{array}{ll}{n} & {\\text{if} n < 10} \\\\{g(f(n))} & {\\text{otherwise}} \\end{array} \\right.$ \n\nYou need to process Q queries. In each query, you will be given three integers l, r and k. You need to print the number of integers x between l and r inclusive, such that g(x) = k. \n\n\n-----Input-----\n\nThe first line of the input contains an integer Q (1 ≤ Q ≤ 2 × 10^5) representing the number of queries. \n\nQ lines follow, each of which contains 3 integers l, r and k (1 ≤ l ≤ r ≤ 10^6, 1 ≤ k ≤ 9).\n\n\n-----Output-----\n\nFor each query, print a single line containing the answer for that query.\n\n\n-----Examples-----\nInput\n4\n22 73 9\n45 64 6\n47 55 7\n2 62 4\n\nOutput\n1\n4\n0\n8\n\nInput\n4\n82 94 6\n56 67 4\n28 59 9\n39 74 4\n\nOutput\n3\n1\n1\n5\n\n\n\n-----Note-----\n\nIn the first example:  g(33) = 9 as g(33) = g(3 × 3) = g(9) = 9  g(47) = g(48) = g(60) = g(61) = 6  There are no such integers between 47 and 55.  g(4) = g(14) = g(22) = g(27) = g(39) = g(40) = g(41) = g(58) = 4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

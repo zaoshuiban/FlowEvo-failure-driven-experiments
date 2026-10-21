@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "69d7cda5-93aa-4626-ba46-ccb64888f3a3",
+  "created": 1792437713,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 945,
+    "completion_tokens": 8656,
+    "total_tokens": 9601,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8350
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 945
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        pref = [0] * n\n        cur = 0\n\n        for i in range(n):\n            cur ^= data[idx]\n            idx += 1\n            pref[i] = cur\n\n        total_xor = cur\n\n        freq = {}\n        distinct = 0\n\n        for x in pref:\n            if x in freq:\n                freq[x] += 1\n            else:\n                freq[x] = 1\n                distinct += 1\n\n        ans = distinct\n\n        for i in range(n - 1):\n            y = total_xor ^ pref[i]\n\n            c = freq.get(y, 0)\n            if c == 0:\n                distinct += 1\n            freq[y] = c + 1\n\n            x = pref[i]\n            c = freq[x]\n\n            if c == 1:\n                distinct -= 1\n                del freq[x]\n            else:\n                freq[x] = c - 1\n\n            if distinct > ans:\n                ans = distinct\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 37.709,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array A, consisting of N integers. \n\nConsider the following definitions:\n*Prefix xor array* of an array A is defined as the array B such that B_{i} = A_{1} \\oplus \\ldots \\oplus A_{i}, where \\oplus denotes [bitwise XOR operation].  \nIn other words, B=[A_{1}, A_{1} \\oplus A_{2}, \\ldots, A_{1} \\oplus A_{2} \\ldots \\oplus A_{N}]\nThe *value* of an array A is the number of *distinct* values in array B. For example, for array A=[1, 2, 3, 0], we have B=[1, 3, 0, 0]. The array B has 3 distinct values, thus, the value of array A is 3.\nOne right shift on the array A is a transformation that changes the array A=[A_{1}, A_{2} \\ldots, A_{N}] to A^{'}=[A_{N}, A_{1}, \\ldots, A_{N-1}]. \n\nCalculate the maximum *value* of the array A you can get, by performing any (possibly zero) number of right shifts on the array A.\n\n------ Input Format ------ \n\n- The first line of input contains T - the number of test cases you need to solve.\n- The first line of each test case contains one integer N - the size of the array.\n- The second line of each test case contains N space-separated integers A_{1}, \\ldots, A_{N} - the elements of the array A.\n\n------ Output Format ------ \n\nFor each test case, output on a new line the maximum value of an array A you can achieve after performing any (possibly zero) number of right shifts on the array.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{5}$\n$2 ≤ N ≤ 2 \\cdot 10^{5}$\n$0 ≤A_{i} ≤2^{60} - 1$\n- Sum of $N$ over all test cases doesn't exceed $2 \\cdot 10^{5}$.\n\n------ subtasks ------ \n\nSubtask 1 (20 points): Sum of $N$ over all test cases doesn't exceed $2000$.\nSubtask 2 (80 points): Original constraints.\n\n----- Sample Input 1 ------ \n3\n2\n0 0\n6\n1 1 1 2 2 2\n4\n1 2 2 8\n\n----- Sample Output 1 ------ \n1\n4\n4\n\n----- explanation 1 ------ \nTest case $1$: Perform zero right shifts on $A=[0,0]$. Thus, $B= [0, 0\\oplus0]=[0,0]$. Thus, the *value* of array $A$ is $1$.\n\nTest case $2$: Perform two right shifts on $A = [1, 1, 1, 2, 2, 2]$. Thus, $A$ becomes $[2, 2, 1, 1, 1, 2]$. The array $B = [2, 0, 1, 0, 1, 3]$. Thus, the *value* of $A$ is $4$. It can be shown that the value of $A$ cannot exceed $4$.\n\nTest case $3$: Perform three right shifts on $A = [1, 2, 2, 8]$. Thus, $A$ becomes $[2, 2, 8, 1]$. The array $B = [2, 2\\oplus 2, 2\\oplus 2\\oplus 8, 2\\oplus 2\\oplus 8\\oplus 1] = [2, 0, 8, 9]$. Thus, the *value* of $A$ is $4$. It can be shown that the value of $A$ cannot exceed $4$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

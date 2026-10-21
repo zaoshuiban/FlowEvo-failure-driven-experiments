@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7fdd639c-7f1e-44c0-9529-c441419e6d3d",
+  "created": 1792435382,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 748,
+    "completion_tokens": 10807,
+    "total_tokens": 11555,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10324
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 748
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    T = int(data[0])\n    answers = []\n\n    for case in range(1, T + 1):\n        t = data[case]\n        n = len(t)\n\n        freq = [0] * 26\n        for ch in t:\n            freq[ch - 97] += 1\n\n        seen = [False] * 26\n        reversed_order = []\n\n        for ch in reversed(t):\n            idx = ch - 97\n            if not seen[idx]:\n                seen[idx] = True\n                reversed_order.append(idx)\n\n        order = reversed_order[::-1]\n        rem_pos = [0] * 26\n\n        ok = True\n        initial_len = 0\n\n        for pos, idx in enumerate(order, 1):\n            rem_pos[idx] = pos\n            if freq[idx] % pos != 0:\n                ok = False\n                break\n            initial_len += freq[idx] // pos\n\n        if not ok or initial_len > n:\n            answers.append(b\"-1\")\n            continue\n\n        s = t[:initial_len]\n\n        s_freq = [0] * 26\n        for ch in s:\n            s_freq[ch - 97] += 1\n\n        for idx in order:\n            if s_freq[idx] != freq[idx] // rem_pos[idx]:\n                ok = False\n                break\n\n        if not ok:\n            answers.append(b\"-1\")\n            continue\n\n        k = len(order)\n        pos_t = 0\n\n        for stage in range(k):\n            for ch in s:\n                idx = ch - 97\n                if rem_pos[idx] > stage:\n                    if pos_t >= n or t[pos_t] != ch:\n                        ok = False\n                        break\n                    pos_t += 1\n            if not ok:\n                break\n\n        if ok and pos_t == n:\n            order_bytes = bytes(x + 97 for x in order)\n            answers.append(s + b\" \" + order_bytes)\n        else:\n            answers.append(b\"-1\")\n\n    sys.stdout.buffer.write(b\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 52.978,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nPolycarp has a string $s$. Polycarp performs the following actions until the string $s$ is empty ($t$ is initially an empty string):\n\nhe adds to the right to the string $t$ the string $s$, i.e. he does $t = t + s$, where $t + s$ is a concatenation of the strings $t$ and $s$;\n\nhe selects an arbitrary letter of $s$ and removes from $s$ all its occurrences (the selected letter must occur in the string $s$ at the moment of performing this action).\n\nPolycarp performs this sequence of actions strictly in this order.\n\nNote that after Polycarp finishes the actions, the string $s$ will be empty and the string $t$ will be equal to some value (that is undefined and depends on the order of removing).\n\nE.g. consider $s$=\"abacaba\" so the actions may be performed as follows:\n\n$t$=\"abacaba\", the letter 'b' is selected, then $s$=\"aacaa\";\n\n$t$=\"abacabaaacaa\", the letter 'a' is selected, then $s$=\"c\";\n\n$t$=\"abacabaaacaac\", the letter 'c' is selected, then $s$=\"\" (the empty string).\n\nYou need to restore the initial value of the string $s$ using only the final value of $t$ and find the order of removing letters from $s$.\n\n\n-----Input-----\n\nThe first line contains one integer $T$ ($1 \\le T \\le 10^4$) — the number of test cases. Then $T$ test cases follow.\n\nEach test case contains one string $t$ consisting of lowercase letters of the Latin alphabet. The length of $t$ doesn't exceed $5 \\cdot 10^5$. The sum of lengths of all strings $t$ in the test cases doesn't exceed $5 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case output in a separate line:\n\n$-1$, if the answer doesn't exist;\n\ntwo strings separated by spaces. The first one must contain a possible initial value of $s$. The second one must contain a sequence of letters — it's in what order one needs to remove letters from $s$ to make the string $t$. E.g. if the string \"bac\" is outputted, then, first, all occurrences of the letter 'b' were deleted, then all occurrences of 'a', and then, finally, all occurrences of 'c'. If there are multiple solutions, print any one.\n\n\n-----Examples-----\n\nInput\n7\nabacabaaacaac\nnowyouknowthat\npolycarppoycarppoyarppyarppyrpprppp\nisi\neverywherevrywhrvryhrvrhrvhv\nhaaha\nqweqeewew\nOutput\nabacaba bac\n-1\npolycarp lcoayrp\nis si\neverywhere ewyrhv\n-1\n-1\n\n\n-----Note-----\n\nThe first test case is considered in the statement.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

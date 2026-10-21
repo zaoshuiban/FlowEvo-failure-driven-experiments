@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "186f9236-796e-4eb8-960c-f4218ac3864d",
+  "created": 1792446606,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 955,
+    "completion_tokens": 16724,
+    "total_tokens": 17679,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15897
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 187
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read()\n    idx = 0\n    data_len = len(data)\n\n    def next_int():\n        nonlocal idx\n        while idx < data_len and data[idx] <= 32:\n            idx += 1\n\n        sign = 1\n        if idx < data_len and data[idx] == 45:  # '-'\n            sign = -1\n            idx += 1\n\n        num = 0\n        while idx < data_len and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n\n        return num * sign\n\n    t = next_int()\n    answers = []\n    NEG_INF = -10**30\n\n    for _ in range(t):\n        n = next_int()\n\n        # Read first dish and find min/max.\n        m = next_int()\n        min_first = 10**18\n        max_first = -10**18\n\n        for _ in range(m):\n            v = next_int()\n            if v < min_first:\n                min_first = v\n            if v > max_first:\n                max_first = v\n\n        if n == 1:\n            answers.append(\"0\")\n            continue\n\n        # Constants for transition from dish 1 with weight 1.\n        c1 = -min_first   # max(dp(L) - 1 * L)\n        c2 = max_first    # max(dp(L) + 1 * L)\n\n        # Process internal dishes: dish 2 ... dish n-1.\n        for j in range(2, n):\n            m = next_int()\n            arr = [0] * m\n            for i in range(m):\n                arr[i] = next_int()\n\n            w = j - 1\n            w_next = j\n\n            new_c1 = NEG_INF\n            new_c2 = NEG_INF\n\n            # Edges (last -> first) in the circular array.\n            for i in range(m - 1):\n                last = arr[i]\n                first = arr[i + 1]\n\n                v1 = c1 + w * first\n                v2 = c2 - w * first\n                best = v2 if v2 > v1 else v1\n\n                cand1 = best - w_next * last\n                cand2 = best + w_next * last\n\n                if cand1 > new_c1:\n                    new_c1 = cand1\n                if cand2 > new_c2:\n                    new_c2 = cand2\n\n            # Last circular edge: arr[-1] -> arr[0]\n            last = arr[-1]\n            first = arr[0]\n\n            v1 = c1 + w * first\n            v2 = c2 - w * first\n            best = v2 if v2 > v1 else v1\n\n            cand1 = best - w_next * last\n            cand2 = best + w_next * last\n\n            if cand1 > new_c1:\n                new_c1 = cand1\n            if cand2 > new_c2:\n                new_c2 = cand2\n\n            c1, c2 = new_c1, new_c2\n\n        # Read final dish.\n        m = next_int()\n        min_last = 10**18\n        max_last = -10**18\n\n        for _ in range(m):\n            v = next_int()\n            if v < min_last:\n                min_last = v\n            if v > max_last:\n                max_last = v\n\n        w = n - 1\n        ans1 = c1 + w * max_last\n        ans2 = c2 - w * min_last\n        ans = ans1 if ans1 > ans2 else ans2\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 71.925,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in mandarin chinese, russian and vietnamese as well. \n\nYesterday Chef had cooked N very tasty dishes. A dish is prepared of several ingredients. You are given this information by N arrays, each array contains elements equal to the number of ingredients used in that dish. Also, an element of the array denotes the tastiness of the ingredient in the corresponding dish.\n\nChef placed his N dishes in a line, one after the other. You can make a simple observation that the last ingredient of a dish will be a neighbor of the first ingredient of the next dish. Of course, this is not valid for the N-th dish, as it's the last dish.\n\nOverall quality of these dishes will be calculated as follows. Consider dish i and i + 1, if the last ingredient of dish i be of tastiness x, and the first ingredient of dish i + 1 of tastiness of y, then the quality of dish will be increased by |x - y| * i, where (|t| denotes the absolute value of t).\n\nChef wants to maximize the quality of the dish. For each dish, he is allowed to take its ingredients and cyclically rotate/shift them by as many rotations as he wishes. Find the maximum possible quality of the dishes that he can obtain.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases.\nThe first line of each test case contains a single integer N denoting the number of dishes. \nNext N lines follows. i-th line contains integer M denoting the number of ingredients in i-th dish and M space-separated integers A_{1}, A_{2}, ..., A_{M} denoting the tastiness of ingredients of i-th dish.\". \n\n------ Output ------ \n\nFor each test case, output in a single line an integer corresponding to the maximum possible quality of the dishes.\n\n------ Constraints ------ \n\n$Total number of ingredients over all the test cases in a single test file won't exceed 10^{6}$\n$M ≥ 1$\n$1 ≤ A_{i} ≤ 10^{6}$\n\n------ Subtasks ------ \n\n$Subtask #1 (20 points): Total number of dishes = 2.$\n$Subtask #2 (30 points): 1 ≤ A_{i} ≤ 500$\n$Subtask #3 (50 points): original constraints$\n\n------ Example ------ \n\nInput:\n3\n3\n3 1 2 3\n2 3 2\n2 4 5\n2\n2 1 2\n2 4 5\n3\n2 1 2\n3 3 2 5\n2 4 5\n\nOutput:\n8\n4\n10\n\n------ Explanation ------ \n\nExample case 1. \n01) 123|32|45 = 0 * 1 + 2 * 2 = 4\n02) 312|32|45 = 1 * 1 + 2 * 2 = 5\n03) 231|32|45 = 2 * 1 + 2 * 2 = 6\n04) 123|23|45 = 1 * 1 + 1 * 2 = 3\n05) 312|23|45 = 0 * 1 + 1 * 2 = 2\n06) 231|23|45 = 1 * 1 + 1 * 2 = 3\n07) 123|32|54 = 0 * 1 + 3 * 2 = 6\n08) 312|32|54 = 1 * 1 + 3 * 2 = 7 \n09) 231|32|54 = 2 * 1 + 3 * 2 = 8\n10) 123|23|54 = 1 * 1 + 2 * 2 = 5\n11) 312|23|54 = 0 * 1 + 2 * 2 = 4\n12) 231|23|54 = 1 * 1 + 2 * 2 = 5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

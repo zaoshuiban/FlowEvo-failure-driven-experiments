@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5c59fbcc-649a-4074-97ec-9c9390c03aa7",
+  "created": 1792430431,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1005,
+    "completion_tokens": 16871,
+    "total_tokens": 17876,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16688
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 493
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        arr = data[idx:idx + n]\n        idx += n\n\n        values = set(arr)\n        possible = False\n\n        if k == 0:\n            possible = len(values) < n\n        else:\n            for x in values:\n                if x - k in values:\n                    possible = True\n                    break\n\n        answers.append(\"YES\" if possible else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 76.469,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a list of $n$ integers. You can perform the following operation: you choose an element $x$ from the list, erase $x$ from the list, and subtract the value of $x$ from all the remaining elements. Thus, in one operation, the length of the list is decreased by exactly $1$.\n\nGiven an integer $k$ ($k>0$), find if there is some sequence of $n-1$ operations such that, after applying the operations, the only remaining element of the list is equal to $k$.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains a single integer $t$ ($1 \\leq t \\leq 10^4$) — the number of test cases. Description of the test cases follows.\n\nThe first line of each test case contains two integers $n$ and $k$ ($2 \\leq n \\leq 2\\cdot 10^5$, $1 \\leq k \\leq 10^9$), the number of integers in the list, and the target value, respectively.\n\nThe second line of each test case contains the $n$ integers of the list $a_1, a_2, \\ldots, a_n$ ($-10^9 \\leq a_i \\leq 10^9$).\n\nIt is guaranteed that the sum of $n$ over all test cases is not greater that $2 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, print YES if you can achieve $k$ with a sequence of $n-1$ operations. Otherwise, print NO.\n\nYou may print each letter in any case (for example, \"YES\", \"Yes\", \"yes\", \"yEs\" will all be recognized as a positive answer).\n\n\n-----Examples-----\n\nInput\n4\n4 5\n4 2 2 7\n5 4\n1 9 1 3 4\n2 17\n17 0\n2 17\n18 18\nOutput\nYES\nNO\nYES\nNO\n\n\n-----Note-----\n\nIn the first example we have the list $\\{4, 2, 2, 7\\}$, and we have the target $k = 5$. One way to achieve it is the following: first we choose the third element, obtaining the list $\\{2, 0, 5\\}$. Next we choose the first element, obtaining the list $\\{-2, 3\\}$. Finally, we choose the first element, obtaining the list $\\{5\\}$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        arr = data[idx:idx + n]\n        idx += n\n\n        values = set(arr)\n        possible = False\n\n        if k == 0:\n            possible = len(values) < n\n        else:\n            target = abs(k)\n            for x in values:\n                if x - target in values:\n                    possible = True\n                    break\n\n        answers.append(\"YES\" if possible else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

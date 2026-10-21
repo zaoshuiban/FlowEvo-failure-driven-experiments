@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "52a7f118-7863-4dfe-8986-f4391d0295cf",
+  "created": 1792440021,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 552,
+    "completion_tokens": 2501,
+    "total_tokens": 3053,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2198
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 552
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\n\ndef read_ints():\n    data = sys.stdin.buffer.read()\n    num = 0\n    sign = 1\n    in_num = False\n\n    for c in data:\n        if c == 45:  # '-'\n            sign = -1\n        elif 48 <= c <= 57:\n            num = num * 10 + (c - 48)\n            in_num = True\n        else:\n            if in_num:\n                yield sign * num\n                num = 0\n                sign = 1\n                in_num = False\n            else:\n                sign = 1\n\n    if in_num:\n        yield sign * num\n\n\ndef main():\n    it = read_ints()\n\n    try:\n        n = next(it)\n    except StopIteration:\n        return\n\n    arr = array('q', [0]) * n\n\n    total = 0\n    pmean = 0\n\n    for i in range(n):\n        x = next(it)\n        arr[i] = x\n        total += x\n        pmean += (i + 1) * x\n\n    ans = pmean\n\n    for i in range(n - 1):\n        pmean = pmean - total + n * arr[i]\n        if pmean > ans:\n            ans = pmean\n\n    sys.stdout.write(str(ans))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 11.741,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMark is an undergraduate student and he is interested in rotation. A conveyor belt competition is going on in the town which Mark wants to win. In the competition, there's A conveyor belt which can be represented as a strip of 1xN blocks. Each block has a number written  on it. The belt keeps rotating in such a way that after each rotation, each block is shifted to left of it and the first block goes to last position.  \n\nThere is a switch near the conveyer belt which can stop the belt. Each participant would be given a single chance to stop the belt and his PMEAN would be calculated.  \n\nPMEAN is calculated using the sequence which is there on the belt when it stops. The participant having highest PMEAN is the winner. There can be multiple winners.\n\nMark wants to be among the winners. What PMEAN he should try to get which guarantees him to be the winner.\n\n$\\textit{PMEAN}=\\sum_{i=1}^{n}i\\times a[i]$\n\nwhere ${a}$ represents the configuration of conveyor belt when it is stopped. Indexing starts from 1.  \n\nInput Format \n\nFirst line contains N denoting the number of elements on the belt. \n\nSecond line contains N space separated integers.  \n\nOutput Format \n\nOutput the required PMEAN  \n\nConstraints \n\n1 ≤ N ≤ 10^{6} \n\n-10^{9} ≤ each number ≤ 10^{9} \n\nFor any rotation, PMEAN will always lie within the range of 64-bit signed integer.  \n\nSample Input  \n\n3\n20 30 10 \n\nSample Output  \n\n140\n\nExplanation  \n\nNumber on top can be written in these manners. \n\nInitial numbers on belt, 20 30 10  PMEAN = 1x20 + 2x30 + 3x10 = 110 \n\nAfter first rotation,     30 10 20  PMEAN = 1x30 + 2x10 + 3x20 = 110 \n\nAfter second rotation,     10 20 30  PMEAN = 1x10 + 2x20 + 3x30 = 140 \n\nSo maximum possible value will be 140.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "task_id": "taco_0401",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "old_first_pass": false,
+  "old_final_pass": false,
+  "new_first_status": "WRONG_ANSWER",
+  "new_original_final_status": "WRONG_ANSWER",
+  "any_saved_candidate_pass": false,
+  "first_passing_saved_stage": null,
+  "attempts": 5,
+  "invalid_cases": 13,
+  "reference_corrections": 0,
+  "input_coverage": "task_specific_checks",
+  "preflight_status": "READY",
+  "evaluation_epoch": "repair_v2_20261020",
+  "timing_unstable": false,
+  "reported_final_status": "WRONG_ANSWER",
+  "family": "sequence_query",
+  "sampling_group": "persistent_wa",
+  "label": "VERIFIED_EVALUATION_PROBLEM",
+  "root_subtype": "wrong_reference",
+  "finding": "第二例 [1,0] 可以构成一个父亲及一个孩子，真话人数为 2；参考给 1。",
+  "static_syntax": "OK",
+  "independent_evidence": {
+    "kind": "independent_oracle",
+    "oracle_result": [
+      "2",
+      "2",
+      "2",
+      "1"
+    ],
+    "matches_candidate": true,
+    "reference_result": [
+      "2",
+      "1",
+      "2",
+      "2"
+    ]
+  },
+  "review_scope": "task statement, original final code, test/expected contract, replay actual output/exception, old feedback and full candidate history; unknown retained where evidence insufficient",
+  "candidate_universally_correct": null,
+  "program_defect_excluded": false,
+  "new_status_observed": "WRONG_ANSWER",
+  "source_code_sha256": "c7e98d169fb23a62355ce8dd490923f11be6bcc84e2c56c48371ef8c7a2fa52e",
+  "task_sha256": "f2b824d4ffc3f62cc9767317a8319cbad2304d2ba50790e2e890736cefe70765",
+  "evidence_file_hashes": {
+    "private_failure_case.json": "3c27d6fae848d805a1c09ad908e5aa44ddf37906471e6c109e8b13ed403779f9",
+    "isolated_failure_execution.json": "95e9246be4f222f520b976bdb92f07d353f96d86f602ee0e6b2ba2eca514e1d4",
+    "history.json": "23a06a2f13c6863051703040b208ea72ca1a41df7a028a0bf846489bf96333c2",
+    "replay.json": "caa0595124cf2c7325e31efe141b2d0efc9778fe80eb0900558b2673237ea1df",
+    "original.py": "c7e98d169fb23a62355ce8dd490923f11be6bcc84e2c56c48371ef8c7a2fa52e",
+    "old_evaluator_trace.json": "b734ae83f9d1559a52ee59078372de9bd78593eb704e48b3a150cefe498c721b",
+    "preflight.json": "d965861061c11d3cc6748ea71445509139f819a4e08d18859b89b6666a61c201",
+    "statement.txt": "100dd3694d14ec575fbfa0737aaa28936d66414c0e95948aa40f21462f90a986"
+  },
+  "reproduction": "cd /opt/flowevo-benchmark-20261019 && venv/bin/python repair_v2d_20261020/code/adapter.py --task data/tasks/taco_0401.json --candidate e1_e2_20261020/private_e1/taco_0401/original.py --policies repair_v2d_20261020/policies.json --out /tmp/e1_taco_0401.json",
+  "root_cause_certainty": "confirmed specific defect"
+}

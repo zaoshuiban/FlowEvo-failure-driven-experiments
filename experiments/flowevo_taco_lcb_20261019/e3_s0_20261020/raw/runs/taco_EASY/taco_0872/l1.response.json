@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "912a0f70-2358-469a-aece-656329b58ef9",
+  "created": 1792430179,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 355,
+    "completion_tokens": 10274,
+    "total_tokens": 10629,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10210
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 355
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef tops(msg):\n    result = []\n    i = 1\n    step = 5\n    n = len(msg)\n\n    while i < n:\n        result.append(msg[i])\n        i += step\n        step += 4\n\n    result.reverse()\n    return ''.join(result)\n```",
+  "latency_s": 47.298,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n# Task\n\nWrite a function that accepts `msg` string and returns local tops of string from the highest to the lowest.  \nThe string's tops are from displaying the string in the below way:\n\n```      \n                                                      3 \n                              p                     2   4\n            g               o   q                 1\n  b       f   h           n       r             z \na   c   e       i       m          s          y\n      d           j   l             t       x\n                    k                 u   w \n                                        v\n\n\n```\nThe next top is always 1 character higher than the previous one. \nFor the above example, the solution for the `abcdefghijklmnopqrstuvwxyz1234` input string is `3pgb`.\n\n- When the `msg` string is empty, return an empty string.\n- The input strings may be very long. Make sure your solution has good performance.\n\nCheck the test cases for more samples.\n\n# **Note** for C++\n\nDo not post an issue in my solution without checking if your returned string doesn't have some invisible characters. You read most probably outside of `msg` string.\n\nStarter code / required signature:\ndef tops(msg):\n\t\n\nUse the required function/method named tops. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

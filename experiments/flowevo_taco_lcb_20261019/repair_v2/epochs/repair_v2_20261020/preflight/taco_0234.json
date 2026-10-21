@@ -1,0 +1,981 @@
+{
+  "task_id": "taco_0234",
+  "status": "READY",
+  "total_cases": 171,
+  "valid_cases": 167,
+  "invalid_cases": [
+    {
+      "index": 47,
+      "rule": "array/query size",
+      "input_sha256": "150b1e4aebcbe8dd5276b1893d3d9e1bc4ca193e3c974acaf7ec698cef90658e",
+      "preview": "5 0\n1 2 3 4 5\n"
+    },
+    {
+      "index": 68,
+      "rule": "array/query size",
+      "input_sha256": "e859d27f30aedf4e004961d760edcef5cd18fff4593b8663811b5718d1cb6fd0",
+      "preview": "10 0\n1 2 3 4 5 6 7 8 9 10\n"
+    },
+    {
+      "index": 87,
+      "rule": "element range",
+      "input_sha256": "7ad797202bd032d594f26a2f02e5ce894cf3bb7b30b452db339d35ed630c9f86",
+      "preview": "6 3\n5 4 3 2 1 0\n1 1 3\n2 4 6\n1 1 2\n"
+    },
+    {
+      "index": 134,
+      "rule": "array/query size",
+      "input_sha256": "b6130e069587f546ade98ccf3d20fdf116706fc05235ed7c5bd8ea88d8b94269",
+      "preview": "1 0\n1\n"
+    }
+  ],
+  "reference_issues": [],
+  "reference_corrections": [
+    {
+      "index": 1,
+      "old": "1\n4 1 5 7 6 3 2\n",
+      "new": "1\n7 4 5 1 3 2 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 2,
+      "old": "5\n8 4 1 5 3 7 10 6 9 2\n",
+      "new": "5\n1 8 9 10 2 3 7 4 5 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 3,
+      "old": "4\n4 1 5 3 2\n",
+      "new": "4\n5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 4,
+      "old": "3\n4 1 5 6 3 2\n",
+      "new": "3\n4 2 3 5 6 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 5,
+      "old": "2\n4 1 3 2\n",
+      "new": "2\n3 2 4 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 6,
+      "old": "5\n8 4 1 5 3 7 6 9 2\n",
+      "new": "5\n6 7 4 8 3 2 5 9 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 7,
+      "old": "3\n8 11 7 10 6 9\n",
+      "new": "3\n9 10 11 7 8 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 8,
+      "old": "2\n8 4 14 16 10 6 12 2\n",
+      "new": "2\n6 4 12 10 2 14 16 8",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 9,
+      "old": "2\n8 4 14 10 6 12 2\n",
+      "new": "2\n14 6 10 8 4 2 12",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 10,
+      "old": "1\n4 1 5 3 2\n",
+      "new": "1\n5 1 2 3 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 11,
+      "old": "0\n1\n",
+      "new": "0\n1 1 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 13,
+      "old": "3\n4 1 5 3 2\n",
+      "new": "3\n1 1 4 5 5 2 2 3 3 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 14,
+      "old": "3\n8 4 1 5 3 7 10 6 9 2\n",
+      "new": "3\n7 6 3 2 1 5 9 8 10 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 15,
+      "old": "2\n4 1 5 7 6 3 2\n",
+      "new": "2\n6 5 2 3 7 1 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 16,
+      "old": "0\n1\n",
+      "new": "0\n1 1 1 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 17,
+      "old": "1\n4 1 5 3 2\n",
+      "new": "1\n4 5 1 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 18,
+      "old": "2\n4 1 3 2\n",
+      "new": "2\n3 4 2 2 3 1 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 19,
+      "old": "0\n1\n",
+      "new": "0\n1 1 1 1 1 1 1 1 1 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 20,
+      "old": "10\n8 4 10 6 12 2\n",
+      "new": "10\n2 4 6 8 10 12",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 21,
+      "old": "1\n4 1 3 2\n",
+      "new": "1\n4 2 1 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 22,
+      "old": "9\n8 4 1 5 3 7 10 6 9 2\n",
+      "new": "9\n10 9 8 7 6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 23,
+      "old": "6\n7 1 3 5\n",
+      "new": "6\n1 3 5 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 24,
+      "old": "3\n4 1 5 3 2\n",
+      "new": "3\n1 5 3 2 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 25,
+      "old": "3\n4 1 3 2\n",
+      "new": "3\n4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 26,
+      "old": "2\n1 3 2\n",
+      "new": "2\n3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 27,
+      "old": "4\n8 4 1 5 3 7 10 6 9 2\n",
+      "new": "4\n9 10 4 2 3 6 7 8 1 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 29,
+      "old": "3\n4 1 5 6 3 2\n",
+      "new": "3\n2 3 1 6 4 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 30,
+      "old": "1\n4 1 5 7 6 3 2\n",
+      "new": "1\n4 3 2 1 7 6 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 31,
+      "old": "2\n4 1 5 6 3 2\n",
+      "new": "2\n3 2 6 4 5 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 32,
+      "old": "20\n30 20 10 50 40\n",
+      "new": "20\n30 20 50 40 10",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 33,
+      "old": "3\n4 1 3 2\n",
+      "new": "3\n1 2 3 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 34,
+      "old": "20\n60 70 30 20 80 100 10 50 40 90\n",
+      "new": "20\n50 10 60 80 90 100 40 70 20 30",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 35,
+      "old": "10\n60 30 20 10 50 40 70\n",
+      "new": "10\n70 20 30 10 40 50 60",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 36,
+      "old": "15\n36 25 1 16 9\n",
+      "new": "15\n16 9 36 25 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 37,
+      "old": "4\n8 5 7 10 6 9\n",
+      "new": "4\n10 5 9 8 7 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 38,
+      "old": "11\n77 33 11 55 66 22 44 88\n",
+      "new": "11\n66 11 33 22 77 88 44 55",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 39,
+      "old": "222\n333 555 777 1000 111 666 444 222 888 999\n",
+      "new": "222\n555 111 666 888 999 1000 444 777 222 333",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 41,
+      "old": "4\n4 1 5 2 3\n",
+      "new": "4\n1 2 3 4 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 42,
+      "old": "3\n4 1 6 5 2 3 7\n",
+      "new": "3\n6 7 1 4 5 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 43,
+      "old": "5\n10 4 1 6 5 8 2 3 9 7\n",
+      "new": "5\n9 10 1 8 5 6 7 2 3 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 44,
+      "old": "1\n4 1 6 5 2 3\n",
+      "new": "1\n5 6 1 2 3 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 45,
+      "old": "3\n4 2 1 3\n",
+      "new": "3\n4 2 3 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 46,
+      "old": "3\n4 1 5 6 8 2 3 9 7\n",
+      "new": "3\n9 7 1 2 3 8 4 5 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 48,
+      "old": "1\n2 1\n",
+      "new": "1\n1 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 49,
+      "old": "7\n10 4 1 6 5 8 2 3 9 7\n",
+      "new": "7\n3 8 4 5 6 7 2 9 1 10",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 50,
+      "old": "4\n4 1 5 2 3\n",
+      "new": "4\n1 2 3 4 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 51,
+      "old": "4\n4 1 6 5 2 3 7\n",
+      "new": "4\n7 2 1 6 5 4 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 52,
+      "old": "1\n4 1 6 5 2 3\n",
+      "new": "1\n5 4 3 2 1 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 53,
+      "old": "3\n4 2 1 3\n",
+      "new": "3\n1 2 3 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 54,
+      "old": "2\n2 1 3\n",
+      "new": "2\n1 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 55,
+      "old": "9\n10 4 1 6 5 8 2 3 9 7\n",
+      "new": "9\n10 9 8 7 6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 56,
+      "old": "2\n4 1 5 2 3\n",
+      "new": "2\n5 1 2 4 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 57,
+      "old": "2\n4 1 6 5 2 3\n",
+      "new": "2\n1 2 4 5 6 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 58,
+      "old": "6\n4 1 5 6 2 3 7\n",
+      "new": "6\n1 2 3 4 5 6 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 59,
+      "old": "3\n4 2 1 3\n",
+      "new": "3\n4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 60,
+      "old": "5\n4 1 6 5 2 3\n",
+      "new": "5\n1 2 3 4 5 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 61,
+      "old": "3\n4 1 5 6 2 3 7\n",
+      "new": "3\n2 3 6 7 4 1 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 62,
+      "old": "4\n4 1 5 2 3\n",
+      "new": "4\n1 2 3 4 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 63,
+      "old": "2\n4 1 6 5 8 2 3 9 7\n",
+      "new": "2\n2 3 8 7 5 6 1 9 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 64,
+      "old": "3\n4 1 5 2 3\n",
+      "new": "3\n1 3 2 5 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 65,
+      "old": "9\n10 4 1 5 6 8 2 3 9 7\n",
+      "new": "9\n1 2 3 4 5 6 7 8 9 10",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 67,
+      "old": "1\n2 1\n",
+      "new": "1\n1 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 69,
+      "old": "4\n1 5 3 9 7\n",
+      "new": "4\n3 9 1 5 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 70,
+      "old": "4\n4 1 5 8 9 7\n",
+      "new": "4\n5 9 7 4 8 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 71,
+      "old": "30\n10 30 20 40\n",
+      "new": "30\n10 20 30 40",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 72,
+      "old": "8\n11 1 5 13 3 9 7\n",
+      "new": "8\n3 5 7 1 13 9 11",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 74,
+      "old": "60\n10 50 170 150 110 90 70 130 30\n",
+      "new": "60\n50 70 90 10 130 150 170 30 110",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 76,
+      "old": "80\n115 135 105 125 145 65 155 75 95 85\n",
+      "new": "80\n145 85 95 75 155 135 105 115 125 65",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 77,
+      "old": "9000\n9000 3000 6000 12000\n",
+      "new": "9000\n3000 6000 9000 12000",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 78,
+      "old": "3\n4 1 5 2 3\n",
+      "new": "3\n5 1 4 3 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 79,
+      "old": "1\n10 4 1 5 6 8 2 3 9 7\n",
+      "new": "1\n6 7 8 9 10 1 2 3 4 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 80,
+      "old": "2\n2 1 3\n",
+      "new": "2\n3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 81,
+      "old": "4\n4 1 5 6 2 3 7\n",
+      "new": "4\n1 7 4 3 2 6 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 82,
+      "old": "3\n4 1 6 5 2 3\n",
+      "new": "3\n6 1 4 5 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 83,
+      "old": "3\n4 2 1 3\n",
+      "new": "3\n4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 84,
+      "old": "1\n4 1 6 5 8 2 3 9 7\n",
+      "new": "1\n4 9 1 2 5 6 7 8 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 86,
+      "old": "9\n10 4 1 6 5 8 2 3 9 7\n",
+      "new": "9\n10 9 8 7 6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 88,
+      "old": "0\n1\n",
+      "new": "0\n1 1 1 1 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 89,
+      "old": "6\n4 1 5 6 2 3 7\n",
+      "new": "6\n7 6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 90,
+      "old": "4\n4 1 5 2 3\n",
+      "new": "4\n1 1 2 2 3 3 4 4 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 91,
+      "old": "0\n4 1 5 2 3\n",
+      "new": "0\n1 2 3 4 5 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 92,
+      "old": "1\n2 1\n",
+      "new": "1\n2 1 2 1 2 1 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 93,
+      "old": "3\n4 1 6 5 8 2 3 7\n",
+      "new": "3\n7 6 8 1 3 2 5 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 94,
+      "old": "3\n4 2 1 3\n",
+      "new": "3\n1 2 3 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 95,
+      "old": "4\n4 1 5 2 3\n",
+      "new": "4\n5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 96,
+      "old": "2\n10 4 1 5 6 8 2 3 9 7\n",
+      "new": "2\n3 2 1 9 4 7 6 8 10 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 97,
+      "old": "2\n4 1 6 5 2 3\n",
+      "new": "2\n5 6 1 4 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 98,
+      "old": "2\n4 1 6 5 8 2 3 7\n",
+      "new": "2\n5 2 1 7 6 8 4 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 99,
+      "old": "5\n4 1 6 5 2 3 7\n",
+      "new": "5\n2 3 4 5 6 1 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 100,
+      "old": "0\n1\n",
+      "new": "0\n1 1 1 1 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 101,
+      "old": "6\n4 1 5 6 8 2 3 9 7\n",
+      "new": "6\n7 8 9 4 5 2 3 6 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 102,
+      "old": "5\n4 1 6 5 2 3\n",
+      "new": "5\n6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 103,
+      "old": "2\n10 4 1 5 6 8 2 3 9 7\n",
+      "new": "2\n8 1 4 9 3 7 10 2 5 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 104,
+      "old": "3\n4 1 5 2 3\n",
+      "new": "3\n4 5 2 3 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 105,
+      "old": "5\n4 1 6 5 2 3\n",
+      "new": "5\n6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 106,
+      "old": "5\n4 1 6 5 2 3 7\n",
+      "new": "5\n2 3 4 1 5 6 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 107,
+      "old": "4\n4 1 5 2 3\n",
+      "new": "4\n5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 108,
+      "old": "4\n4 1 6 5 8 2 3 7\n",
+      "new": "4\n8 5 1 3 2 7 6 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 109,
+      "old": "3\n4 2 1 3\n",
+      "new": "3\n1 2 3 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 110,
+      "old": "2\n4 1 6 5 2 3\n",
+      "new": "2\n5 2 6 1 4 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 111,
+      "old": "8\n10 4 1 6 5 8 2 3 9 7\n",
+      "new": "8\n10 9 5 1 8 7 6 4 3 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 112,
+      "old": "1\n4 2 1 3\n",
+      "new": "1\n3 4 1 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 113,
+      "old": "6\n4 1 5 6 2 3 7\n",
+      "new": "6\n7 6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 114,
+      "old": "3\n4 1 6 5 8 2 3 9 7\n",
+      "new": "3\n5 9 2 1 3 4 6 7 8",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 115,
+      "old": "2\n4 6 5 8 9 7\n",
+      "new": "2\n9 6 5 4 8 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 116,
+      "old": "6\n10 4 1 6 5 8 2 3 9 7\n",
+      "new": "6\n4 5 6 1 2 3 7 8 9 10",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 117,
+      "old": "3\n4 1 5 2 3\n",
+      "new": "3\n5 4 1 3 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 118,
+      "old": "1\n2 1 3\n",
+      "new": "1\n3 1 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 119,
+      "old": "2\n4 2 1 3\n",
+      "new": "2\n4 1 3 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 120,
+      "old": "2\n4 1 5 2 3\n",
+      "new": "2\n4 1 3 5 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 121,
+      "old": "4\n10 4 1 5 6 8 2 3 9 7\n",
+      "new": "4\n9 8 3 4 7 6 2 1 10 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 122,
+      "old": "2\n4 1 5 2 3\n",
+      "new": "2\n2 5 3 1 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 123,
+      "old": "9\n10 4 1 5 6 8 2 3 9 7\n",
+      "new": "9\n1 2 3 4 5 6 7 8 9 10",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 124,
+      "old": "2\n2 1 3\n",
+      "new": "2\n3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 125,
+      "old": "2\n4 2 1 3\n",
+      "new": "2\n3 2 4 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 126,
+      "old": "5\n4 1 6 5 2 3\n",
+      "new": "5\n1 2 3 4 5 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 127,
+      "old": "2\n4 1 5 6 2 3 7\n",
+      "new": "2\n1 5 4 7 6 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 128,
+      "old": "5\n4 1 6 5 8 2 3 9 7\n",
+      "new": "5\n2 1 8 9 5 6 4 3 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 130,
+      "old": "4\n4 5 1 3 2\n",
+      "new": "4\n1 2 3 4 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 131,
+      "old": "5\n4 5 1 3 6 2\n",
+      "new": "5\n1 2 3 4 5 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 132,
+      "old": "5\n4 5 1 3 6 2 7\n",
+      "new": "5\n2 3 4 5 1 6 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 133,
+      "old": "3\n4 9 5 8 10 1 3 6 2 7\n",
+      "new": "3\n7 1 2 6 3 4 5 8 9 10",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 135,
+      "old": "1\n4 2 1 3\n",
+      "new": "1\n3 4 1 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 136,
+      "old": "5\n4 9 5 8 1 3 6 2 7\n",
+      "new": "5\n2 3 8 9 4 5 1 6 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 137,
+      "old": "2\n2 1 3\n",
+      "new": "2\n1 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 138,
+      "old": "3\n4 5 1 3 2\n",
+      "new": "3\n5 1 4 3 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 139,
+      "old": "2\n4 5 1 3 2\n",
+      "new": "2\n1 4 5 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 140,
+      "old": "5\n4 5 1 3 6 2\n",
+      "new": "5\n6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 141,
+      "old": "6\n4 9 1 3 7\n",
+      "new": "6\n3 7 4 1 9",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 142,
+      "old": "2\n7 3 5\n",
+      "new": "2\n3 7 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 143,
+      "old": "2\n4 5 1 3 6 2 7\n",
+      "new": "2\n3 4 6 2 7 1 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 144,
+      "old": "5\n4 5 1 3 6 2\n",
+      "new": "5\n1 3 2 5 4 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 145,
+      "old": "1\n2 1\n",
+      "new": "1\n2 2 2 1 1 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 146,
+      "old": "2\n2 1 3\n",
+      "new": "2\n1 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 147,
+      "old": "4\n4 5 1 3 2\n",
+      "new": "4\n5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 148,
+      "old": "5\n4 5 1 3 6 2 7\n",
+      "new": "5\n2 3 4 5 1 6 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 149,
+      "old": "9\n4 9 5 8 10 1 3 6 2 7\n",
+      "new": "9\n10 9 8 7 6 5 4 3 2 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 150,
+      "old": "3\n4 2 1 3\n",
+      "new": "3\n1 3 2 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 151,
+      "old": "1\n4 5 1 3 6 2\n",
+      "new": "1\n4 5 6 1 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 152,
+      "old": "4\n4 5 1 3 2\n",
+      "new": "4\n1 2 3 4 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 153,
+      "old": "4\n4 5 1 3 6 2 7\n",
+      "new": "4\n7 4 5 6 1 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 154,
+      "old": "1\n4 5 1 3 2\n",
+      "new": "1\n1 5 4 3 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 155,
+      "old": "2\n8 9 7\n",
+      "new": "2\n7 8 9",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 156,
+      "old": "1\n4 5 1 3 6 2\n",
+      "new": "1\n4 1 2 5 6 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 157,
+      "old": "1\n4 2 1 3\n",
+      "new": "1\n3 2 1 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 159,
+      "old": "2\n4 5 1 3 6 2\n",
+      "new": "2\n6 2 1 3 5 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 160,
+      "old": "2\n4 9 5 1 3 2\n",
+      "new": "2\n3 9 4 1 1 2 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 161,
+      "old": "10\n40 30 10 20 50\n",
+      "new": "10\n40 50 10 20 30",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 162,
+      "old": "1\n4 9 5 8 10 1 3 6 2 7\n",
+      "new": "1\n8 9 10 1 2 3 4 5 6 7",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 163,
+      "old": "1\n4 5 1 3 6 2\n",
+      "new": "1\n2 1 6 5 4 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 164,
+      "old": "1\n4 5 1 3 2\n",
+      "new": "1\n3 4 5 1 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 165,
+      "old": "1\n4 5 1 3 6 2 7\n",
+      "new": "1\n6 4 3 2 1 7 5",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 166,
+      "old": "2\n4 9 5 8 1 3 6 2 7\n",
+      "new": "2\n8 9 4 5 1 2 3 7 6",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 167,
+      "old": "3\n4 5 1 3 2\n",
+      "new": "3\n4 3 2 5 1",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 168,
+      "old": "2\n4 2 1 3\n",
+      "new": "2\n4 1 3 2",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 169,
+      "old": "2\n4 5 8 1 3 6 2 7\n",
+      "new": "2\n1 5 8 4 7 6 2 3",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    },
+    {
+      "index": 170,
+      "old": "1\n4 5 1 3 6 2\n",
+      "new": "1\n5 6 2 3 1 4",
+      "proof": "independent direct list simulation (n*m <= 100000)"
+    }
+  ],
+  "input_coverage": "task_specific_checks",
+  "checker": "tokens",
+  "semantic_supported": false,
+  "task_sha256": "164831de430f18cf0961e77eef2a449b8d719f74fe17b60852feba513609004f"
+}

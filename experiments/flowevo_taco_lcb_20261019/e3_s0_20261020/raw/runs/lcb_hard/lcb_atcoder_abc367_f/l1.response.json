@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ca323ee2-ae9c-4323-b451-d16def2d3c65",
+  "created": 1792446340,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 709,
+    "completion_tokens": 7555,
+    "total_tokens": 8264,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7145
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 709
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport os\nimport random\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N, Q = data[0], data[1]\n\n    seed = int.from_bytes(os.urandom(16), \"little\")\n    rng = random.Random(seed)\n\n    hash_value = [0] * (N + 1)\n    for i in range(1, N + 1):\n        hash_value[i] = rng.getrandbits(128)\n\n    mask = (1 << 128) - 1\n\n    pref_a = [0] * (N + 1)\n    pref_b = [0] * (N + 1)\n\n    idx = 2\n\n    cur = 0\n    for i in range(1, N + 1):\n        cur = (cur + hash_value[data[idx]]) & mask\n        pref_a[i] = cur\n        idx += 1\n\n    cur = 0\n    for i in range(1, N + 1):\n        cur = (cur + hash_value[data[idx]]) & mask\n        pref_b[i] = cur\n        idx += 1\n\n    answers = []\n\n    for _ in range(Q):\n        l = data[idx]\n        r = data[idx + 1]\n        L = data[idx + 2]\n        R = data[idx + 3]\n        idx += 4\n\n        if r - l != R - L:\n            answers.append(\"No\\n\")\n            continue\n\n        hash_a = (pref_a[r] - pref_a[l - 1]) & mask\n        hash_b = (pref_b[R] - pref_b[L - 1]) & mask\n\n        answers.append(\"Yes\\n\" if hash_a == hash_b else \"No\\n\")\n\n    sys.stdout.write(\"\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 37.499,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given sequences of positive integers of length N: A=(A_1,A_2,\\ldots,A_N) and B=(B_1,B_2,\\ldots,B_N).\nYou are given Q queries to process in order. The i-th query is explained below.\n\n- You are given positive integers l_i,r_i,L_i,R_i. Print Yes if it is possible to rearrange the subsequence (A_{l_i},A_{l_i+1},\\ldots,A_{r_i}) to match the subsequence (B_{L_i},B_{L_i+1},\\ldots,B_{R_i}), and No otherwise.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN Q\r\nA_1 A_2 \\ldots A_N\r\nB_1 B_2 \\ldots B_N\r\nl_1 r_1 L_1 R_1\r\nl_2 r_2 L_2 R_2\r\n\\vdots\r\nl_Q r_Q L_Q R_Q\n\nOutput\n\nPrint Q lines. The i-th line should contain the answer to the i-th query.\n\nConstraints\n\n\n-  1\\leq N,Q\\leq 2\\times 10^5\n-  1\\leq A_i,B_i\\leq N\n-  1\\leq l_i \\leq r_i\\leq N\n-  1\\leq L_i \\leq R_i\\leq N\n- All input values are integers.\n\nSample Input 1\n\n5 4\r\n1 2 3 2 4\r\n2 3 1 4 2\r\n1 3 1 3\r\n1 2 3 5\r\n1 4 2 5\r\n1 5 1 5\n\nSample Output 1\n\nYes\r\nNo\r\nNo\r\nYes\r\n\n\n- For the 1st query, it is possible to rearrange (1,2,3) to match (2,3,1). Hence, we print Yes.\n- For the 2nd query, it is impossible to rearrange (1,2) in any way to match (1,4,2). Hence, we print No.\n- For the 3rd query, it is impossible to rearrange (1,2,3,2) in any way to match (3,1,4,2). Hence, we print No.\n- For the 4th query, it is possible to rearrange (1,2,3,2,4) to match (2,3,1,4,2). Hence, we print Yes.\n\nSample Input 2\n\n4 4\r\n4 4 4 4\r\n4 4 4 4\r\n1 2 2 3\r\n3 3 1 1\r\n1 3 1 4\r\n1 4 2 3\n\nSample Output 2\n\nYes\r\nYes\r\nNo\r\nNo\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

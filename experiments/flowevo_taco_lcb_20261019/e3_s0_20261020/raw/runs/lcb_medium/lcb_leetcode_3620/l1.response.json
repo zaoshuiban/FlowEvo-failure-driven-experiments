@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3f4ccbd5-cc19-4f83-afb3-96bdd3645479",
+  "created": 1792431270,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 357,
+    "completion_tokens": 332,
+    "total_tokens": 689,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 239
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 357
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def maxDistinctElements(self, nums: List[int], k: int) -> int:\n        nums.sort()\n        ans = 0\n        last = -10**30\n\n        for x in nums:\n            chosen = max(x - k, last + 1)\n            if chosen <= x + k:\n                ans += 1\n                last = chosen\n\n        return ans\n```",
+  "latency_s": 2.158,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer array nums and an integer k.\nYou are allowed to perform the following operation on each element of the array at most once:\n\nAdd an integer in the range [-k, k] to the element.\n\nReturn the maximum possible number of distinct elements in nums after performing the operations.\n \nExample 1:\n\nInput: nums = [1,2,2,3,3,4], k = 2\nOutput: 6\nExplanation:\nnums changes to [-1, 0, 1, 2, 3, 4] after performing operations on the first four elements.\n\nExample 2:\n\nInput: nums = [4,4,4,4], k = 1\nOutput: 3\nExplanation:\nBy adding -1 to nums[0] and 1 to nums[1], nums changes to [3, 5, 4, 4].\n\n \nConstraints:\n\n1 <= nums.length <= 10^5\n1 <= nums[i] <= 10^9\n0 <= k <= 10^9\n\nStarter code / required signature:\nclass Solution:\n    def maxDistinctElements(self, nums: List[int], k: int) -> int:\n        \n\nUse the required function/method named maxDistinctElements. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "20a6567c-bee2-4337-b3b5-32ffbd3ed7e0",
+  "created": 1792435017,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 995,
+    "completion_tokens": 11582,
+    "total_tokens": 12577,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11007
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 227
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    T = next(it)\n    answers = []\n\n    for _ in range(T):\n        n = next(it)\n        xs = [next(it) for _ in range(n)]\n        ys = [next(it) for _ in range(n)]\n\n        points = []\n        lines = set()\n\n        for x, y in zip(xs, ys):\n            points.append((2 * x, 2 * y, 2 * (x + y), 2 * (x - y)))\n\n            # x = x\n            lines.add((1, 0, x))\n            # y = y\n            lines.add((0, 1, y))\n            # x + y = constant\n            lines.add((1, 1, x + y))\n            # x - y = constant\n            lines.add((1, -1, x - y))\n\n        candidates = set()\n        for px, py, _, _ in points:\n            candidates.add((px, py))\n\n        lines = list(lines)\n        m = len(lines)\n\n        for i in range(m):\n            a1, b1, c1 = lines[i]\n            for j in range(i + 1, m):\n                a2, b2, c2 = lines[j]\n\n                det = a1 * b2 - a2 * b1\n                if det == 0:\n                    continue\n\n                x_num = c1 * b2 - c2 * b1\n                y_num = a1 * c2 - a2 * c1\n\n                # Store coordinates multiplied by 2.\n                qx2 = (2 * x_num) // det\n                qy2 = (2 * y_num) // det\n                candidates.add((qx2, qy2))\n\n        best_score = 0\n        max_possible_score = n + 1\n\n        for qx, qy in candidates:\n            qsum = qx + qy\n            qdiff = qx - qy\n            score = 0\n\n            for px, py, psum, pdiff in points:\n                if qx == px:\n                    if qy == py:\n                        score += 2\n                    else:\n                        score += 1\n                elif qy == py or qsum == psum or qdiff == pdiff:\n                    score += 1\n\n            if score > best_score:\n                best_score = score\n                if best_score == max_possible_score:\n                    break\n\n        answers.append(str(2 * n - best_score))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 55.446,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given N *distinct* points in a 2-D plane, numbered 1 through N. The X-coordinate of the points are X_{1}, X_{2}, \\ldots, X_{N} respectively and the Y-coordinates are Y_{1}, Y_{2}, \\ldots, Y_{N} respectively. Your goal is to make the location of all the N points equal to that of each other. To achieve this, you can do some operations.\n\nIn one operation, you choose an index i\\;(1 ≤ i ≤ N) and a real number K and change the location of the i^{th} point in one of the following ways:\nSet (X_{i}, Y_{i}) = (X_{i} + K, Y_{i})\nSet (X_{i}, Y_{i}) = (X_{i}, Y_{i} + K)\nSet (X_{i}, Y_{i}) = (X_{i} + K, Y_{i} + K)\nSet (X_{i}, Y_{i}) = (X_{i} + K, Y_{i} - K)\n\nFind the minimum number of operations to achieve the goal.\n\n------ Input Format ------ \n\n- The first line of the input contains a single integer T denoting the number of test cases. The description of T test cases follows.\n- Each test case contains three lines of input.\n- The first line contains a single integer N.\n- The second line contains N space-separated integers X_{1}, X_{2}, \\ldots, X_{N}.\n- The third line contains N space-separated integers Y_{1}, Y_{2}, \\ldots, Y_{N}.\n\n------ Output Format ------ \n\nFor each test case, print a single line containing one integer - the minimum number of operations to achieve the goal.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 300$\n$2 ≤ N ≤ 100$\n$-10^{9} ≤ X_{i}, Y_{i} ≤ 10^{9}$\n$(X_{i}, Y_{i}) \\neq (X_{j}, Y_{j})$ if $(i \\neq j)$\n- Sum of $N$ over all test cases does not exceed $600$.\n\n------ subtasks ------ \n\nSubtask #1 (100 points): original constraints\n\n----- Sample Input 1 ------ \n2\n3\n0 1 -4\n0 1 5\n3\n0 1 3\n1 1 -1\n\n----- Sample Output 1 ------ \n3\n2\n\n----- explanation 1 ------ \nTest case $1$ :  \n- In the first operation, you choose $i = 2$, and $K = - 1$ and apply the third type of operation. So the location of $2^{nd}$ point becomes $(1 - 1, 1 - 1) = (0, 0)$.\n\n- In the second operation, you choose $i = 3$, and $K = 4$ and apply the first type of operation. So the location of $3^{rd}$ point becomes $(- 4 + 4, 5) = (0, 5)$.\n\n- In the third operation, you choose $i = 3$, and $K = -5$ and apply the second type of operation. So the location of $3^{rd}$ point becomes $(0, 5 - 5) = (0, 0)$.\n\nHence after the above operations, the location of the given three points becomes equal to each other.\n\nTest case $2$ : \n- In the first operation, you choose $i = 1$ and $K = 1$ and apply the first type of operation. So the location of 1st point becomes $(0 + 1, 1) = (1, 1)$.\n\n- In the second operation, you choose $i = 3$, and $K = -2$ and apply the fourth type of operation. So the location of 3rd point becomes $(3 - 2, -1 - (-2)) = (1, 1)$.\n\nHence after the above operations, the location of the given three points becomes equal to each other.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

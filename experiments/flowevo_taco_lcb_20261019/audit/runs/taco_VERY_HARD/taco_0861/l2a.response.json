@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6449062a-6821-4884-bd66-9d4f7bd0bf80",
+  "created": 1792429357,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 548,
+    "completion_tokens": 21553,
+    "total_tokens": 22101,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 21053
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 164
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        a = [next(it) for _ in range(n)]\n\n        if n <= 1:\n            answers.append(\"0\")\n            continue\n\n        mn = min(a)\n        order = list(range(n))\n        order.sort(key=a.__getitem__, reverse=True)\n\n        parent = list(range(n))\n        size = [0] * n\n        active = bytearray(n)\n        mark = [0] * n\n        stamp = 1\n        ans = 0\n\n        def find(x):\n            while parent[x] != x:\n                parent[x] = parent[parent[x]]\n                x = parent[x]\n            return x\n\n        def union(x, y):\n            rx = find(x)\n            ry = find(y)\n            if rx == ry:\n                return\n            if size[rx] < size[ry]:\n                rx, ry = ry, rx\n            parent[ry] = rx\n            size[rx] += size[ry]\n\n        i = 0\n        while i < n:\n            h = a[order[i]]\n\n            if h == mn:\n                break\n\n            j = i + 1\n            while j < n and a[order[j]] == h:\n                j += 1\n\n            for k in range(i, j):\n                p = order[k]\n                active[p] = 1\n                parent[p] = p\n                size[p] = 1\n\n            for k in range(i, j):\n                p = order[k]\n                if p > 0 and active[p - 1]:\n                    union(p, p - 1)\n                if p + 1 < n and active[p + 1]:\n                    union(p, p + 1)\n\n            count = 0\n            for k in range(i, j):\n                p = order[k]\n                root = find(p)\n                if mark[root] != stamp:\n                    mark[root] = stamp\n                    count += 1\n\n            ans += count\n            stamp += 1\n            i = j\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 107.227,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a sequence of positive integers $A_{1}, A_{2}, \\ldots, A_{N}$. You should make all its elements equal by performing a sequence of operations.\n\nIn one operation, you may choose any contiguous subsequence $A_{l}, A_{l+1}, \\ldots, A_{r}$ such that for each $i$ ($l+1 ≤ i ≤ r$), $A_{i} = A_{l}$, i.e. a sequence of identical elements, then choose any integer $x < A_{l}$, and for each $i$ ($l ≤ i ≤ r$), replace $A_{i}$ by $x$. The integers $x$ chosen in different operations may be different.\n\nFind the smallest number of operations necessary to make all elements of the given sequence equal.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nThe second line contains $N$ space-separated integers $A_{1}, A_{2}, \\ldots, A_{N}$.\n\n------  Output ------\nPrint a single line containing one integer ― the smallest number of operations.\n\n------  Constraints ------\n$1 ≤ T ≤ 100$\n$1 ≤ N ≤ 5 \\cdot 10^{5}$\n$1 ≤ A_{i} ≤ 10^{9}$ for each valid $i$\nthe sum of $N$ over all test cases does not exceed $5 \\cdot 10^{5}$\n\n------  Subtasks ------\nSubtask #1 (50 points):\n$A_{i} ≤ N$ for each valid $i$\nthe sum of $N$ over all test cases does not exceed $5,000$\n\nSubtask #2 (50 points): original constraints\n\n----- Sample Input 1 ------ \n2\n\n5\n\n5 9 8 3 12\n\n2\n\n19 19\n----- Sample Output 1 ------ \n4\n\n0\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "66d29eb5-0632-4034-a990-30df577bcc4b",
+  "created": 1792439542,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 422,
+    "completion_tokens": 6398,
+    "total_tokens": 6820,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5783
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 422
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport math\n\n\ndef _is_prime(n):\n    if n < 2:\n        return False\n\n    small_primes = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)\n    for p in small_primes:\n        if n % p == 0:\n            return n == p\n\n    d = n - 1\n    s = 0\n    while d % 2 == 0:\n        s += 1\n        d //= 2\n\n    # Deterministic Miller-Rabin bases for 64-bit integers,\n    # plus extra bases for larger inputs.\n    bases = (\n        2, 325, 9375, 28178, 450775, 9780504, 1795265022,\n        3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47\n    )\n\n    for a in bases:\n        if a % n == 0:\n            continue\n\n        x = pow(a, d, n)\n        if x == 1 or x == n - 1:\n            continue\n\n        for _ in range(s - 1):\n            x = (x * x) % n\n            if x == n - 1:\n                break\n        else:\n            return False\n\n    return True\n\n\ndef _pollard_rho(n):\n    if n % 2 == 0:\n        return 2\n    if n % 3 == 0:\n        return 3\n\n    for p in (5, 7, 11, 13, 17, 19, 23, 29, 31, 37):\n        if n % p == 0:\n            return p\n\n    c = 1\n    while True:\n        x = 2\n        y = 2\n        d = 1\n\n        while d == 1:\n            x = (x * x + c) % n\n            y = (y * y + c) % n\n            y = (y * y + c) % n\n            d = math.gcd(abs(x - y), n)\n\n        if d != n:\n            return d\n\n        c += 1\n\n\ndef _factor(n, factors):\n    if n == 1:\n        return\n\n    if _is_prime(n):\n        factors.add(n)\n        return\n\n    divisor = _pollard_rho(n)\n    _factor(divisor, factors)\n    _factor(n // divisor, factors)\n\n\ndef proper_fractions(n):\n    if n <= 1:\n        return 0\n\n    factors = set()\n    _factor(n, factors)\n\n    result = n\n    for prime in factors:\n        result -= result // prime\n\n    return result\n```",
+  "latency_s": 24.703,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIf n is the numerator and d the denominator of a fraction, that fraction is defined a (reduced) proper fraction if and only if GCD(n,d)==1.\n\nFor example `5/16` is a proper fraction, while `6/16` is not, as both 6 and 16 are divisible by 2, thus the fraction can be reduced to `3/8`.\n\nNow, if you consider a given number d, how many proper fractions can be built using d as a denominator?\n\nFor example, let's assume that d is 15: you can build a total of 8 different proper fractions between 0 and 1 with it: 1/15, 2/15, 4/15, 7/15, 8/15, 11/15, 13/15 and 14/15.\n\nYou are to build a function that computes how many proper fractions you can build with a given denominator:\n```python\nproper_fractions(1)==0\nproper_fractions(2)==1\nproper_fractions(5)==4\nproper_fractions(15)==8\nproper_fractions(25)==20\n```\n\nBe ready to handle big numbers.\n\nEdit: to be extra precise, the term should be \"reduced\" fractions, thanks to [girianshiido](http://www.codewars.com/users/girianshiido) for pointing this out and sorry for the use of an improper word :)\n\nStarter code / required signature:\ndef proper_fractions(n):\n\t\n\nUse the required function/method named proper_fractions. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

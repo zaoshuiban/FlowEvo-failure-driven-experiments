@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1fe2669f-5a33-47a9-b7f2-f65c8a1d44a3",
+  "created": 1792439210,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1210,
+    "completion_tokens": 19856,
+    "total_tokens": 21066,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 19354
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 826
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    children = [[] for _ in range(n + 1)]\n\n    for city in range(2, n + 1):\n        parent = data[city - 1]\n        children[parent].append(city)\n\n    # down[v] = number of valid antichains of bad edges inside v's subtree,\n    # excluding the edge from v to its parent.\n    down = [1] * (n + 1)\n\n    for v in range(n, 0, -1):\n        product = 1\n        for child in children[v]:\n            product = product * (down[child] + 1) % MOD\n        down[v] = product\n\n    # up[v] = number of valid antichains in the component on the parent side\n    # after removing the edge between v and its parent.\n    up = [0] * (n + 1)\n    answer = [0] * (n + 1)\n\n    for v in range(1, n + 1):\n        if v == 1:\n            answer[v] = down[v]\n            parent_factor = 1\n        else:\n            parent_factor = up[v] + 1\n            if parent_factor >= MOD:\n                parent_factor -= MOD\n            answer[v] = down[v] * parent_factor % MOD\n\n        ch = children[v]\n        m = len(ch)\n        if m == 0:\n            continue\n\n        prefix = [1] * (m + 1)\n        for i in range(m):\n            child = ch[i]\n            prefix[i + 1] = prefix[i] * (down[child] + 1) % MOD\n\n        suffix = 1\n        for i in range(m - 1, -1, -1):\n            child = ch[i]\n            up[child] = parent_factor * prefix[i] % MOD * suffix % MOD\n            suffix = suffix * (down[child] + 1) % MOD\n\n    sys.stdout.write(\" \".join(str(answer[i]) for i in range(1, n + 1)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 93.532,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe country has n cities and n - 1 bidirectional roads, it is possible to get from every city to any other one if you move only along the roads. The cities are numbered with integers from 1 to n inclusive.\n\nAll the roads are initially bad, but the government wants to improve the state of some roads. We will assume that the citizens are happy about road improvement if the path from the capital located in city x to any other city contains at most one bad road.\n\nYour task is — for every possible x determine the number of ways of improving the quality of some roads in order to meet the citizens' condition. As those values can be rather large, you need to print each value modulo 1 000 000 007 (10^9 + 7).\n\n\n-----Input-----\n\nThe first line of the input contains a single integer n (2 ≤ n ≤ 2·10^5) — the number of cities in the country. Next line contains n - 1 positive integers p_2, p_3, p_4, ..., p_{n} (1 ≤ p_{i} ≤ i - 1) — the description of the roads in the country. Number p_{i} means that the country has a road connecting city p_{i} and city i. \n\n\n-----Output-----\n\nPrint n integers a_1, a_2, ..., a_{n}, where a_{i} is the sought number of ways to improve the quality of the roads modulo 1 000 000 007 (10^9 + 7), if the capital of the country is at city number i.\n\n\n-----Examples-----\nInput\n3\n1 1\n\nOutput\n4 3 3\nInput\n5\n1 2 3 4\n\nOutput\n5 8 9 8 5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    children = [[] for _ in range(n + 1)]\n\n    idx = 1\n    for city in range(2, n + 1):\n        parent = data[idx]\n        idx += 1\n        children[parent].append(city)\n\n    dp = [0] * (n + 1)\n\n    # dp[v] = number of valid antichains inside the subtree of v,\n    # considering v as the parent side.\n    for v in range(n, 0, -1):\n        product = 1\n        for child in children[v]:\n            product = product * (dp[child] + 1) % MOD\n        dp[v] = product\n\n    up = [0] * (n + 1)\n    answer = [0] * (n + 1)\n\n    for v in range(1, n + 1):\n        if v == 1:\n            answer[v] = dp[v]\n            base = 1\n        else:\n            parent_side = up[v] + 1\n            if parent_side >= MOD:\n                parent_side -= MOD\n            answer[v] = dp[v] * parent_side % MOD\n            base = parent_side\n\n        ch = children[v]\n        m = len(ch)\n\n        if m == 0:\n            continue\n\n        prefix = [1] * (m + 1)\n        for i in range(m):\n            child = ch[i]\n            prefix[i + 1] = prefix[i] * (dp[child] + 1) % MOD\n\n        suffix = 1\n        for i in range(m - 1, -1, -1):\n            child = ch[i]\n            up[child] = base * prefix[i] % MOD * suffix % MOD\n            suffix = suffix * (dp[child] + 1) % MOD\n\n    sys.stdout.write(\" \".join(str(answer[i]) for i in range(1, n + 1)))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: As you know, an undirected connected graph with n nodes and n - 1 edges is called a tree. You are given an integer d and a tree consisting of n nodes. Each node i has a value a_{i} associated with it.\nSolution:\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    d, n = data[0], data[1]\n    a = [0] + data[2:2 + n]\n\n    adj = [[] for _ in range(n + 1)]\n    pos = 2 + n\n\n    for _ in range(n - 1):\n        u, v = data[pos], data[pos + 1]\n        pos += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    sys.setrecursionlimit(1_000_000)\n\n    answer = 0\n\n    for root in range(1, n + 1):\n        base = a[root]\n        li"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

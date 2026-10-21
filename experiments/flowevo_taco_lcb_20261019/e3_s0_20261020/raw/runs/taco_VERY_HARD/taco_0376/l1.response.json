@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "76a8df85-6a0a-4eaa-952a-be956e6d3cbe",
+  "created": 1792449374,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 734,
+    "completion_tokens": 25036,
+    "total_tokens": 25770,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24338
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 734
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import gcd\n\nMOD = 998244353\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    outputs = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        adj = [[] for _ in range(n)]\n        for _ in range(n - 1):\n            u = data[idx] - 1\n            v = data[idx + 1] - 1\n            idx += 2\n            adj[u].append(v)\n            adj[v].append(u)\n\n        # Only prime divisors of n - 1 are needed.\n        y = n - 1\n        factors = []\n\n        if y % 2 == 0:\n            factors.append(2)\n            while y % 2 == 0:\n                y //= 2\n\n        p = 3\n        while p * p <= y:\n            if y % p == 0:\n                factors.append(p)\n                while y % p == 0:\n                    y //= p\n            p += 2\n\n        if y > 1:\n            factors.append(y)\n\n        if not factors:\n            ans = [0] * (n + 1)\n            ans[1] = pow(2, n - 1, MOD)\n            outputs.append(\" \".join(str(ans[i]) for i in range(1, n + 1)))\n            continue\n\n        parent = [-1] * n\n        parent[0] = -2\n        order = [0]\n\n        for v in order:\n            pv = parent[v]\n            for u in adj[v]:\n                if u != pv:\n                    parent[u] = v\n                    order.append(u)\n\n        rev_order = order[::-1]\n        exact_gcds = set()\n\n        for k in factors:\n            out_child = [0] * n\n            g = 0\n            ok = True\n\n            for v in rev_order:\n                cur_out = out_child[v]\n                rem = cur_out % k\n\n                if v == 0:\n                    if rem != 0:\n                        ok = False\n                        break\n                    degree = cur_out\n                else:\n                    if rem == 0:\n                        x = 0\n                    elif rem == k - 1:\n                        x = 1\n                    else:\n                        ok = False\n                        break\n\n                    degree = cur_out + x\n\n                    if x == 0:\n                        out_child[parent[v]] += 1\n\n                if degree:\n                    if g == 0:\n                        g = degree\n                    elif g != k:\n                        g = gcd(g, degree)\n\n            if ok:\n                exact_gcds.add(g)\n\n        ans = [0] * (n + 1)\n        ans[1] = (pow(2, n - 1, MOD) - len(exact_gcds)) % MOD\n\n        for g in exact_gcds:\n            ans[g] = 1\n\n        outputs.append(\" \".join(str(ans[i]) for i in range(1, n + 1)))\n\n    sys.stdout.write(\"\\n\".join(outputs))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 121.147,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a tree with n nodes. As a reminder, a tree is a connected undirected graph without cycles.\n\nLet a_1, a_2, …, a_n be a sequence of integers. Perform the following operation exactly n times: \n\n  * Select an unerased node u. Assign a_u := number of unerased nodes adjacent to u. Then, erase the node u along with all edges that have it as an endpoint. \n\n\n\nFor each integer k from 1 to n, find the number, modulo 998 244 353, of different sequences a_1, a_2, …, a_n that satisfy the following conditions:\n\n  * it is possible to obtain a by performing the aforementioned operations exactly n times in some order. \n  * \\operatorname{gcd}(a_1, a_2, …, a_n) = k. Here, \\operatorname{gcd} means the greatest common divisor of the elements in a. \n\nInput\n\nThe first line contains a single integer t (1 ≤ t ≤ 10 000) — the number of test cases.\n\nThe first line of each test case contains a single integer n (2 ≤ n ≤ 10^5).\n\nEach of the next n - 1 lines contains two integers u and v (1 ≤ u, v ≤ n) indicating there is an edge between vertices u and v. It is guaranteed that the given edges form a tree.\n\nIt is guaranteed that the sum of n over all test cases doesn't exceed 3 ⋅ 10^5.\n\nOutput\n\nFor each test case, print n integers in a single line, where for each k from 1 to n, the k-th integer denotes the answer when \\operatorname{gcd} equals to k.\n\nExample\n\nInput\n\n\n2\n3\n2 1\n1 3\n2\n1 2\n\n\nOutput\n\n\n3 1 0\n2 0\n\nNote\n\nIn the first test case, \n\n<image>\n\n  * If we delete the nodes in order 1 → 2 → 3 or 1 → 3 → 2, then the obtained sequence will be a = [2, 0, 0] which has \\operatorname{gcd} equals to 2. \n  * If we delete the nodes in order 2 → 1 → 3, then the obtained sequence will be a = [1, 1, 0] which has \\operatorname{gcd} equals to 1. \n  * If we delete the nodes in order 3 → 1 → 2, then the obtained sequence will be a = [1, 0, 1] which has \\operatorname{gcd} equals to 1. \n  * If we delete the nodes in order 2 → 3 → 1 or 3 → 2 → 1, then the obtained sequence will be a = [0, 1, 1] which has \\operatorname{gcd} equals to 1. \n\n\n\nNote that here we are counting the number of different sequences, not the number of different orders of deleting nodes.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

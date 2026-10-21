@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b85ee236-74ef-400a-a07d-4284dd7b7aa7",
+  "created": 1792440313,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1076,
+    "completion_tokens": 7079,
+    "total_tokens": 8155,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6802
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 436
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef int_stream():\n    data = sys.stdin.buffer.read()\n    num = 0\n    in_number = False\n\n    for c in data:\n        if 48 <= c <= 57:\n            num = num * 10 + (c - 48)\n            in_number = True\n        else:\n            if in_number:\n                yield num\n                num = 0\n                in_number = False\n\n    if in_number:\n        yield num\n\n\ndef solve():\n    it = int_stream()\n\n    try:\n        t = next(it)\n    except StopIteration:\n        return\n\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        a = [next(it) for _ in range(n)]\n        b = [next(it) for _ in range(n)]\n\n        # Move before day 1: earn B on all days.\n        current = sum(b)\n        best = current\n\n        # After moving following day i, earn A[1..i] + B[i+1..N].\n        for i in range(n):\n            current += a[i] - b[i]\n            if current > best:\n                best = current\n\n        answers.append(str(best))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 32.756,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nChef owns a fast food shop that is currently located in a city called Chefland. He is planning to move his shop to a bigger city called Chefabad. There are $N$ consecutive days (numbered $1$ through $N$) such that the move can be done before day $1$, after day $N$ or between any two consecutive days. Moving the shop takes zero time. Chef wants to time the move in a way thay maximises his profit during these $N$ days.\n\nFor each $i$ ($1 ≤ i ≤ N$), we know that if Chef's shop is in Chefland on the $i$-th day, he earns $A_{i}$ coins, while if it is in Chefabad on this day, he earns $B_{i}$ coins. Find the maximum profit Chef can make if he optimally chooses the time when the shop should move. Note that once the shop has moved to Chefabad, it cannot return to Chefland.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nThe second line contains $N$ space-separated integers $A_{1}, A_{2}, \\ldots, A_{N}$.\nThe third line contains $N$ space-separated integers $B_{1}, B_{2}, \\ldots, B_{N}$.\n\n------  Output ------\nFor each test case, print a single line containing one integer ― the maximum profit.\n\n------  Constraints ------\n$1 ≤ T ≤ 1,000$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i}, B_{i} ≤ 10^{4}$ for each valid $i$\nthe sum of $N$ over all test cases does not exceed $10^{6}$\n\n------  Subtasks ------\nSubtask #1 (50 points):\n$1 ≤ N ≤ 1,000$\nthe sum of $N$ over all test cases does not exceed $10,000$\n\nSubtask #2 (50 points): original constraints\n\n----- Sample Input 1 ------ \n3\n3\n2 3 2\n10 3 4\n4\n7 5 3 4\n2 3 1 3\n2\n10 1\n1 10\n----- Sample Output 1 ------ \n17\n19\n20\n----- explanation 1 ------ \nExample case 1: The best time to move is before the first day.\n\nExample case 2: The best time to move is after the last day.\n\nExample case 3: The best time to move is after the first day.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        a = data[idx:idx + n]\n        idx += n\n\n        b = data[idx:idx + n]\n        idx += n\n\n        current = sum(b)\n        best = current\n\n        for ai, bi in zip(a, b):\n            current += ai - bi\n            if current > best:\n                best = current\n\n        answers.append(str(best))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Read problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nThere are $N$ frogs (numbered $1$ through $N$) in a line. For each valid $i$, the $i$-th frog i\nSolution:\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        weights = [next(it) for _ in range(n)]\n        jumps = [next(it) for _ in range(n)]\n\n        order = sorted(range(n), key=lambda i: weights[i])\n\n        prev_position = -10**18\n        hits = 0\n\n        for idx in order:\n            start_position = idx + 1\n            step = jumps[idx]\n\n            if sta"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

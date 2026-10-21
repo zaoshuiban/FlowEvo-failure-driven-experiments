@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e7a61002-e29c-48d5-8575-9dd7640d2d35",
+  "created": 1792429424,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 472,
+    "completion_tokens": 838,
+    "total_tokens": 1310,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 639
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 472
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    parent = [-1] * (n + 1)\n\n    for i in range(1, n + 1):\n        parent[i] = data[i]\n\n    depth = [0] * (n + 1)\n\n    def get_depth(employee):\n        if depth[employee] != 0:\n            return depth[employee]\n\n        if parent[employee] == -1:\n            depth[employee] = 1\n        else:\n            depth[employee] = get_depth(parent[employee]) + 1\n\n        return depth[employee]\n\n    answer = 0\n    for i in range(1, n + 1):\n        answer = max(answer, get_depth(i))\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 4.198,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA company has n employees numbered from 1 to n. Each employee either has no immediate manager or exactly one immediate manager, who is another employee with a different number. An employee A is said to be the superior of another employee B if at least one of the following is true:\n\n  * Employee A is the immediate manager of employee B\n  * Employee B has an immediate manager employee C such that employee A is the superior of employee C. \n\n\n\nThe company will not have a managerial cycle. That is, there will not exist an employee who is the superior of his/her own immediate manager.\n\nToday the company is going to arrange a party. This involves dividing all n employees into several groups: every employee must belong to exactly one group. Furthermore, within any single group, there must not be two employees A and B such that A is the superior of B.\n\nWhat is the minimum number of groups that must be formed?\n\nInput\n\nThe first line contains integer n (1 ≤ n ≤ 2000) — the number of employees.\n\nThe next n lines contain the integers pi (1 ≤ pi ≤ n or pi = -1). Every pi denotes the immediate manager for the i-th employee. If pi is -1, that means that the i-th employee does not have an immediate manager. \n\nIt is guaranteed, that no employee will be the immediate manager of him/herself (pi ≠ i). Also, there will be no managerial cycles.\n\nOutput\n\nPrint a single integer denoting the minimum number of groups that will be formed in the party.\n\nExamples\n\nInput\n\n5\n-1\n1\n2\n1\n-1\n\n\nOutput\n\n3\n\nNote\n\nFor the first example, three groups are sufficient, for example: \n\n  * Employee 1 \n  * Employees 2 and 4 \n  * Employees 3 and 5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

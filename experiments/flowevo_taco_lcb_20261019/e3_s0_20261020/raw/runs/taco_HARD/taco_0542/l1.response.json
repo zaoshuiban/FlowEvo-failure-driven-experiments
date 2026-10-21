@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d16b2b44-dd44-452b-a5ce-3a60f3a704db",
+  "created": 1792454466,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 249,
+    "completion_tokens": 12570,
+    "total_tokens": 12819,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12275
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 249
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n    max_a = max(a)\n\n    present = bytearray(max_a + 1)\n    for v in a:\n        present[v] = 1\n\n    prev_present = [0] * (max_a + 1)\n    last = 0\n    for i in range(1, max_a + 1):\n        if present[i]:\n            last = i\n        prev_present[i] = last\n\n    ans = 0\n    M = max_a\n\n    for x in range(M, 0, -1):\n        if x - 1 <= ans:\n            break\n\n        if not present[x]:\n            continue\n\n        cur = ans\n\n        for low in range(x, M + 1, x):\n            right = low + x - 1\n            if right > M:\n                right = M\n\n            v = prev_present[right]\n            if v >= low:\n                rem = v - low\n                if rem > cur:\n                    cur = rem\n                    if cur == x - 1:\n                        break\n\n        ans = cur\n\n    sys.stdout.write(str(ans))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 57.443,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a sequence a consisting of n integers. Find the maximum possible value of $a_{i} \\operatorname{mod} a_{j}$ (integer remainder of a_{i} divided by a_{j}), where 1 ≤ i, j ≤ n and a_{i} ≥ a_{j}.\n\n\n-----Input-----\n\nThe first line contains integer n — the length of the sequence (1 ≤ n ≤ 2·10^5). \n\nThe second line contains n space-separated integers a_{i} (1 ≤ a_{i} ≤ 10^6).\n\n\n-----Output-----\n\nPrint the answer to the problem.\n\n\n-----Examples-----\nInput\n3\n3 4 5\n\nOutput\n2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

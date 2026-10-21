@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bbe43757-26da-4790-a3d7-8e91cb20e377",
+  "created": 1792433687,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1168,
+    "completion_tokens": 19105,
+    "total_tokens": 20273,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 18788
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 656
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    P = int(data[1])\n\n    invP = pow(P, MOD - 2, MOD)\n    invP2 = invP * invP % MOD\n\n    inv2 = (MOD + 1) // 2\n    inv4 = inv2 * inv2 % MOD\n\n    # A_i = sum_{k=0}^{i-1} P^{-k}\n    # B_i = sum_{k=0}^{i-1} P^{-2k}\n    # F(i) = (A_i^2 + B_i) / 4\n    A = 0\n    B = 0\n    term = 1       # P^{-k}\n    term_sq = 1    # P^{-2k}\n\n    ans = []\n\n    for _ in range(N):\n        A = (A + term) % MOD\n        B = (B + term_sq) % MOD\n\n        f = (A * A + B) % MOD\n        f = f * inv4 % MOD\n        ans.append(str(f))\n\n        term = term * invP % MOD\n        term_sq = term_sq * invP2 % MOD\n\n    sys.stdout.write(\" \".join(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 74.477,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nStack has a positive integer P(P > 1).  \nHe starts a game where his initial score is 0.\n\nIn the i^{th} turn, with a probability of \\frac{1}{2}, Stack adds \\frac{1}{P^{i-1}} to his score. \n \nStack stops after N turns.\n\nLet S_{i} be his score after i turns and F(i) denote the [expected value] of S_{i}^{2}. \n\nFor each integer i(1 ≤ i ≤ N), find the value of F(i) modulo 998244353. \n\n------ Input Format ------ \n\nThe only line of input contains two space-separated positive integers N and P, as mentioned in the statement.\n\n------ Output Format ------ \n\nPrint N space-separated integers. For each integer i(1 ≤ i ≤ N), output the value of F(i) modulo 998244353. \n\nFormally, let M=998244353. It can be shown that the answer can be expressed as an irreducible fraction \\frac{x}{y}, where x and y are integers and y \\not \\equiv 0 \\pmod{M}.  \nOutput the integer equal to x \\cdot y^{-1} \\bmod M .  \nIn other words, output such an integer z that 0 ≤ z < M and z \\cdot y \\equiv x \\pmod{M}.\n.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 3 \\cdot 10^{5}$\n$2 ≤ P ≤ 10^{5}$\n\n----- Sample Input 1 ------ \n2 2\n\n----- Sample Output 1 ------ \n499122177 124780545\n\n----- explanation 1 ------ \n$S_{1}$ can be $0$ or $1$ with equal probability.\nThus $F(1)=\\frac{0 \\cdot 0}{2}+\\frac{1 \\cdot 1}{2} = \\frac{1}{2}$.\n\n$F(2)=\\frac{7}{8}$.\n\n----- Sample Input 2 ------ \n10 343\n\n----- Sample Output 2 ------ \n499122177 379526990 822885144 761122022 256959043 151932103 340445396 758502677 478338987 125853909\n\n----- explanation 2 ------\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\nMOD = 998244353\nINV2 = (MOD + 1) // 2  # modular inverse of 2\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    P = int(data[1])\n\n    invP = pow(P, MOD - 2, MOD)\n\n    ans = []\n    expected = 0       # E[S_{i-1}]\n    expected_sq = 0    # E[S_{i-1}^2]\n    add_value = 1      # 1 / P^(i-1)\n\n    for _ in range(N):\n        add_sq = add_value * add_value % MOD\n\n        # E[(S + X * add_value)^2]\n        # = E[S^2] + add_value * E[S] + add_value^2 / 2\n        expected_sq = (\n            expected_sq\n            + add_value * expected\n            + add_sq * INV2\n        ) % MOD\n\n        # E[S + X * add_value] = E[S] + add_value / 2\n        expected = (expected + add_value * INV2) % MOD\n\n        ans.append(str(expected_sq))\n        add_value = add_value * invP % MOD\n\n    sys.stdout.write(\" \".join(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

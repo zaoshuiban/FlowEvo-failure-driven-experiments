@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c67281f6-d6a4-433c-8f94-230bd018991b",
+  "created": 1792456172,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 574,
+    "completion_tokens": 29753,
+    "total_tokens": 30327,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 28662
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 190
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    out = []\n\n    for _ in range(t):\n        n = next(it)\n\n        adj = [[] for _ in range(n + 1)]\n        U = [0] * n\n        V = [0] * n\n\n        for eid in range(1, n):\n            a = next(it)\n            b = next(it)\n            U[eid] = a\n            V[eid] = b\n            adj[a].append((b, eid))\n            adj[b].append((a, eid))\n\n        parent = [0] * (n + 1)\n        parent_edge = [0] * (n + 1)\n        order = []\n\n        stack = [1]\n        parent[1] = -1\n\n        while stack:\n            u = stack.pop()\n            order.append(u)\n\n            for v, eid in adj[u]:\n                if v == parent[u]:\n                    continue\n                parent[v] = u\n                parent_edge[v] = eid\n                stack.append(v)\n\n        dp0 = [0] * (n + 1)\n        dp1 = [0] * (n + 1)\n\n        best1c = [0] * (n + 1)\n        best1d = [0] * (n + 1)\n        best2c = [0] * (n + 1)\n        best2d = [0] * (n + 1)\n\n        for u in reversed(order):\n            base = 0\n            b1c = b1d = 0\n            b2c = b2d = 0\n\n            for v, _ in adj[u]:\n                if v == parent[u]:\n                    continue\n\n                base += dp0[v]\n                delta = 1 + dp1[v] - dp0[v]\n\n                if delta > b1d:\n                    b2d, b2c = b1d, b1c\n                    b1d, b1c = delta, v\n                elif delta > b2d:\n                    b2d, b2c = delta, v\n\n            dp1[u] = base + b1d\n            dp0[u] = base + b1d + b2d\n\n            best1c[u] = b1c\n            best1d[u] = b1d\n            best2c[u] = b2c\n            best2d[u] = b2d\n\n        selected = [False] * n\n        parent_selected = [False] * (n + 1)\n\n        selected_count = 0\n\n        for u in order:\n            cap = 2 - (1 if parent_selected[u] else 0)\n\n            if cap > 0 and best1d[u] > 0:\n                v = best1c[u]\n                eid = parent_edge[v]\n                selected[eid] = True\n                selected_count += 1\n                parent_selected[v] = True\n                cap -= 1\n\n            if cap > 0 and best2d[u] > 0:\n                v = best2c[u]\n                eid = parent_edge[v]\n                selected[eid] = True\n                selected_count += 1\n                parent_selected[v] = True\n                cap -= 1\n\n        removed_edges = []\n        for eid in range(1, n):\n            if not selected[eid]:\n                removed_edges.append(eid)\n\n        operations = len(removed_edges)\n        out.append(str(operations))\n\n        if operations == 0:\n            continue\n\n        kept_degree = [0] * (n + 1)\n\n        for eid in range(1, n):\n            if selected[eid]:\n                a = U[eid]\n                b = V[eid]\n                kept_degree[a] += 1\n                kept_degree[b] += 1\n\n        visited = [False] * (n + 1)\n        components = []\n\n        for start in range(1, n + 1):\n            if visited[start]:\n                continue\n\n            visited[start] = True\n            stack = [start]\n            endpoints = []\n\n            while stack:\n                u = stack.pop()\n\n                if kept_degree[u] <= 1:\n                    endpoints.append(u)\n\n                for v, eid in adj[u]:\n                    if selected[eid] and not visited[v]:\n                        visited[v] = True\n                        stack.append(v)\n\n            if len(endpoints) == 1:\n                components.append((endpoints[0], endpoints[0]))\n            else:\n                components.append((endpoints[0], endpoints[1]))\n\n        for i in range(operations):\n            eid = removed_edges[i]\n            a = U[eid]\n            b = V[eid]\n\n            c = components[i][1]\n            d = components[i + 1][0]\n\n            out.append(f\"{a} {b} {c} {d}\")\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 152.794,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNastia has an unweighted tree with n vertices and wants to play with it!\n\nThe girl will perform the following operation with her tree, as long as she needs:\n\n  1. Remove any existing edge. \n  2. Add an edge between any pair of vertices. \n\n\n\nWhat is the minimum number of operations Nastia needs to get a bamboo from a tree? A bamboo is a tree in which no node has a degree greater than 2.\n\nInput\n\nThe first line contains a single integer t (1 ≤ t ≤ 10 000) — the number of test cases.\n\nThe first line of each test case contains a single integer n (2 ≤ n ≤ 10^5) — the number of vertices in the tree.\n\nNext n - 1 lines of each test cases describe the edges of the tree in form a_i, b_i (1 ≤ a_i, b_i ≤ n, a_i ≠ b_i).\n\nIt's guaranteed the given graph is a tree and the sum of n in one test doesn't exceed 2 ⋅ 10^5.\n\nOutput\n\nFor each test case in the first line print a single integer k — the minimum number of operations required to obtain a bamboo from the initial tree.\n\nIn the next k lines print 4 integers x_1, y_1, x_2, y_2 (1 ≤ x_1, y_1, x_2, y_{2} ≤ n, x_1 ≠ y_1, x_2 ≠ y_2) — this way you remove the edge (x_1, y_1) and add an undirected edge (x_2, y_2).\n\nNote that the edge (x_1, y_1) must be present in the graph at the moment of removing.\n\nExample\n\nInput\n\n\n2\n7\n1 2\n1 3\n2 4\n2 5\n3 6\n3 7\n4\n1 2\n1 3\n3 4\n\n\nOutput\n\n\n2\n2 5 6 7\n3 6 4 5\n0\n\nNote\n\nNote the graph can be unconnected after a certain operation.\n\nConsider the first test case of the example: \n\n<image> The red edges are removed, and the green ones are added.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

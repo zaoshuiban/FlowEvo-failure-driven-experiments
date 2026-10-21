@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e6c55762-1b4a-4c29-955d-8fb6aeefc874",
+  "created": 1792430182,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 833,
+    "completion_tokens": 2495,
+    "total_tokens": 3328,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2385
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 833
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def countValidSelections(self, nums: List[int]) -> int:\n        total = sum(nums)\n        left = 0\n        ans = 0\n\n        for x in nums:\n            if x == 0:\n                right = total - left\n                diff = abs(left - right)\n\n                if diff == 0:\n                    ans += 2\n                elif diff == 1:\n                    ans += 1\n\n            left += x\n\n        return ans\n```",
+  "latency_s": 12.037,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer array nums.\nStart by selecting a starting position curr such that nums[curr] == 0, and choose a movement direction of either left or right.\nAfter that, you repeat the following process:\n\nIf curr is out of the range [0, n - 1], this process ends.\nIf nums[curr] == 0, move in the current direction by incrementing curr if you are moving right, or decrementing curr if you are moving left.\nElse if nums[curr] > 0:\n\t\nDecrement nums[curr] by 1.\nReverse your movement direction (left becomes right and vice versa).\nTake a step in your new direction.\n\n\n\nA selection of the initial position curr and movement direction is considered valid if every element in nums becomes 0 by the end of the process.\nReturn the number of possible valid selections.\n \nExample 1:\n\nInput: nums = [1,0,2,0,3]\nOutput: 2\nExplanation:\nThe only possible valid selections are the following:\n\nChoose curr = 3, and a movement direction to the left.\n\n\t\n[1,0,2,0,3] -> [1,0,2,0,3] -> [1,0,1,0,3] -> [1,0,1,0,3] -> [1,0,1,0,2] -> [1,0,1,0,2] -> [1,0,0,0,2] -> [1,0,0,0,2] -> [1,0,0,0,1] -> [1,0,0,0,1] -> [1,0,0,0,1] -> [1,0,0,0,1] -> [0,0,0,0,1] -> [0,0,0,0,1] -> [0,0,0,0,1] -> [0,0,0,0,1] -> [0,0,0,0,0].\n\n\nChoose curr = 3, and a movement direction to the right.\n\t\n[1,0,2,0,3] -> [1,0,2,0,3] -> [1,0,2,0,2] -> [1,0,2,0,2] -> [1,0,1,0,2] -> [1,0,1,0,2] -> [1,0,1,0,1] -> [1,0,1,0,1] -> [1,0,0,0,1] -> [1,0,0,0,1] -> [1,0,0,0,0] -> [1,0,0,0,0] -> [1,0,0,0,0] -> [1,0,0,0,0] -> [0,0,0,0,0].\n\n\n\n\nExample 2:\n\nInput: nums = [2,3,4,0,4,1,0]\nOutput: 0\nExplanation:\nThere are no possible valid selections.\n\n \nConstraints:\n\n1 <= nums.length <= 100\n0 <= nums[i] <= 100\nThere is at least one element i where nums[i] == 0.\n\nStarter code / required signature:\nclass Solution:\n    def countValidSelections(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named countValidSelections. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

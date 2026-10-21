@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "21abb7ad-8539-40c9-9166-66b7cd4b2a51",
+  "created": 1792447805,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 491,
+    "completion_tokens": 18964,
+    "total_tokens": 19455,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 18381
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 235
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n\n    n = data[idx]\n    idx += 1\n\n    arr = data[idx:idx + n]\n    idx += n\n\n    m = data[idx]\n    idx += 1\n\n    BLOCK = 1024\n    num_blocks = (n + BLOCK - 1) // BLOCK\n    primes = (2, 3, 5)\n\n    masks = {p: [0] * num_blocks for p in primes}\n\n    for i, value in enumerate(arr):\n        b = i // BLOCK\n        bit = 1 << (i % BLOCK)\n        for p in primes:\n            if value % p == 0:\n                masks[p][b] |= bit\n\n    for _ in range(m):\n        query_type = data[idx]\n        idx += 1\n\n        if query_type == 1:\n            l = data[idx] - 1\n            r = data[idx + 1] - 1\n            p = data[idx + 2]\n            idx += 3\n\n            left_block = l // BLOCK\n            right_block = r // BLOCK\n            block_masks = masks[p]\n\n            for b in range(left_block, right_block + 1):\n                base = b * BLOCK\n\n                if b > left_block and b < right_block:\n                    bits = block_masks[b]\n                else:\n                    left = l - base if b == left_block else 0\n                    right = r - base if b == right_block else BLOCK - 1\n                    length = right - left + 1\n                    range_mask = ((1 << length) - 1) << left\n                    bits = block_masks[b] & range_mask\n\n                while bits:\n                    low_bit = bits & -bits\n                    offset = low_bit.bit_length() - 1\n                    pos = base + offset\n\n                    value = arr[pos] // p\n                    arr[pos] = value\n\n                    if value % p != 0:\n                        block_masks[b] ^= low_bit\n\n                    bits ^= low_bit\n\n        else:\n            pos = data[idx] - 1\n            new_value = data[idx + 1]\n            idx += 2\n\n            arr[pos] = new_value\n            b = pos // BLOCK\n            bit = 1 << (pos % BLOCK)\n\n            for p in primes:\n                if new_value % p == 0:\n                    masks[p][b] |= bit\n                else:\n                    masks[p][b] &= ~bit\n\n    sys.stdout.write(\" \".join(map(str, arr)))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 93.66,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \n\nChef has an array containing N integers. You have to make M queries. Each query has one of the two types:\n\n1 l r p - Select all the numbers having indices between l and r (inclusive) that are divisible by p and divide them by p,\nwhere p is in set {2, 3, 5}.\n2 l d - Modify the l-th number in the array to d.\n\nPlease help Chef in finding out the array after all the M queries.\n\n------ Input ------ \n\nThe first line of the input contains a single integer N denoting the number of integers in given array. \nThe second line contains N space-separated integers A_{1}, A_{2}, ..., A_{N} denoting the given array.\nNext line contains a single integer M denoting the number of queries.\nEach of the following M lines describes a single query in the format given in the statement.\n\n------ Output ------ \n\nOutput a single line containing N integers denoting the array after all the M queries.\n\n------ Constraints ------ \n\n$1 ≤ M ≤ 10^{5}$\n$1 ≤ l ≤ r ≤ N$\n$1 ≤ A_{i} ≤ 10^{9}$\n$In each query of first type, p is in set {2, 3, 5} $\n$Subtask 1 (20 points): 1 ≤ N ≤ 100$\n$Subtask 2 (35 points): 1 ≤ N ≤ 10^{5}, there is no query of second type$\n$Subtask 3 (45 points): 1 ≤ N ≤ 10^{5}$\n\n------ Example ------ \n\nInput:\n3\n1 2 3\n5\n1 2 2 2\n1 2 2 2\n2 2 3\n1 2 3 3\n2 1 5\n\nOutput:\n5 1 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

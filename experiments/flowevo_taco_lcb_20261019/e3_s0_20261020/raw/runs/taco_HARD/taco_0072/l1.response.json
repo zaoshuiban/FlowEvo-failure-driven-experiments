@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8ae29ab5-43c6-43fe-8e1e-664797d79564",
+  "created": 1792436669,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 714,
+    "completion_tokens": 11832,
+    "total_tokens": 12546,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11005
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 714
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef build_trans(blocked):\n    res = [0] * 4\n    for pre in range(4):\n        if pre & blocked:\n            continue\n\n        occupied = pre | blocked\n        available = 3 ^ occupied\n        possible_next = 0\n\n        def dfs(avail, nxt):\n            nonlocal possible_next\n            if avail == 0:\n                possible_next |= 1 << nxt\n                return\n\n            p = avail & -avail\n\n            # Put a horizontal domino going to the next column\n            dfs(avail ^ p, nxt | p)\n\n            # Put a vertical domino inside the current column\n            other = p ^ 3\n            if avail & other:\n                dfs(avail ^ p ^ other, nxt)\n\n        dfs(available, 0)\n        res[pre] = possible_next\n\n    return res\n\n\ntrans_by_blocked = [build_trans(b) for b in range(4)]\n\nMAXK = 31\npow_rel = [trans_by_blocked[0]]\n\nfor _ in range(1, MAXK):\n    prev = pow_rel[-1]\n    cur = [0] * 4\n\n    for i in range(4):\n        bits = prev[i]\n        val = 0\n\n        if bits & 1:\n            val |= prev[0]\n        if bits & 2:\n            val |= prev[1]\n        if bits & 4:\n            val |= prev[2]\n        if bits & 8:\n            val |= prev[3]\n\n        cur[i] = val\n\n    pow_rel.append(cur)\n\n\ndef apply_gap(states, length):\n    k = 0\n\n    while length:\n        if length & 1:\n            rel = pow_rel[k]\n            new_states = 0\n\n            if states & 1:\n                new_states |= rel[0]\n            if states & 2:\n                new_states |= rel[1]\n            if states & 4:\n                new_states |= rel[2]\n            if states & 8:\n                new_states |= rel[3]\n\n            states = new_states\n\n        length >>= 1\n        k += 1\n\n    return states\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n\n        cells = []\n\n        for _ in range(m):\n            r = next(it)\n            c = next(it)\n            cells.append((c, 1 << (r - 1)))\n\n        cells.sort()\n\n        events = []\n        idx = 0\n\n        while idx < m:\n            c = cells[idx][0]\n            blocked = 0\n\n            while idx < m and cells[idx][0] == c:\n                blocked |= cells[idx][1]\n                idx += 1\n\n            events.append((c, blocked))\n\n        states = 1\n        prev_col = 0\n\n        for c, blocked in events:\n            states = apply_gap(states, c - prev_col - 1)\n\n            trans = trans_by_blocked[blocked]\n            new_states = 0\n\n            if states & 1:\n                new_states |= trans[0]\n            if states & 2:\n                new_states |= trans[1]\n            if states & 4:\n                new_states |= trans[2]\n            if states & 8:\n                new_states |= trans[3]\n\n            states = new_states\n            prev_col = c\n\n        states = apply_gap(states, n - prev_col)\n\n        answers.append(\"YES\" if states & 1 else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 52.082,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nEvery year Santa Claus gives gifts to all children. However, each country has its own traditions, and this process takes place in different ways. For example, in Berland you need to solve the New Year's puzzle.\n\nPolycarp got the following problem: given a grid strip of size $2 \\times n$, some cells of it are blocked. You need to check if it is possible to tile all free cells using the $2 \\times 1$ and $1 \\times 2$ tiles (dominoes).\n\nFor example, if $n = 5$ and the strip looks like this (black cells are blocked):\n\nThen it can be tiled, for example, using two vertical and two horizontal tiles, as in the picture below (different tiles are marked by different colors).\n\nAnd if $n = 3$ and the strip looks like this:\n\nIt is impossible to tile free cells.\n\nPolycarp easily solved this task and received his New Year's gift. Can you solve it?\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\leq t \\leq 10^4$) — the number of test cases. Then $t$ test cases follow.\n\nEach test case is preceded by an empty line.\n\nThe first line of each test case contains two integers $n$ and $m$ ($1 \\le n \\le 10^9$, $1 \\le m \\le 2 \\cdot 10^5$) — the length of the strip and the number of blocked cells on it.\n\nEach of the next $m$ lines contains two integers $r_i, c_i$ ($1 \\le r_i \\le 2, 1 \\le c_i \\le n$) — numbers of rows and columns of blocked cells. It is guaranteed that all blocked cells are different, i.e. $(r_i, c_i) \\ne (r_j, c_j), i \\ne j$.\n\nIt is guaranteed that the sum of $m$ over all test cases does not exceed $2 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, print on a separate line:\n\n\"YES\", if it is possible to tile all unblocked squares with the $2 \\times 1$ and $1 \\times 2$ tiles;\n\n\"NO\" otherwise.\n\nYou can output \"YES\" and \"NO\" in any case (for example, the strings yEs, yes, Yes and YES will be recognized as positive).\n\n\n-----Examples-----\n\nInput\n3\n\n5 2\n2 2\n1 4\n\n3 2\n2 1\n2 3\n\n6 4\n2 1\n2 3\n2 4\n2 6\nOutput\nYES\nNO\nNO\n\n\n-----Note-----\n\nThe first two test cases are explained in the statement.\n\nIn the third test case the strip looks like this:\n\nIt is easy to check that the unblocked squares on it can not be tiled.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a55f0ed6-1135-47f8-b470-a333e0c10dae",
+  "created": 1792434933,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1071,
+    "completion_tokens": 13042,
+    "total_tokens": 14113,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12759
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 559
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    a = list(map(int, data[1:1 + n]))\n\n    # order[rank] = original position (0-based) of the element with this rank\n    order = sorted(range(n), key=a.__getitem__)\n\n    # p[position] = rank/target position of the element at this position\n    p = [0] * n\n    for rank, pos in enumerate(order):\n        p[pos] = rank\n\n    visited = [False] * n\n    cycles = []\n\n    for start in range(n):\n        if visited[start]:\n            continue\n\n        cycle = []\n        cur = start\n\n        while not visited[cur]:\n            visited[cur] = True\n            cycle.append(cur + 1)  # convert to 1-based index\n            cur = p[cur]\n\n        cycle.sort()\n        cycles.append(cycle)\n\n    cycles.sort(key=lambda c: c[0])\n\n    output = [str(len(cycles))]\n    for cycle in cycles:\n        output.append(str(len(cycle)) + \" \" + \" \".join(map(str, cycle)))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 63.256,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a sequence a_1, a_2, ..., a_{n} consisting of different integers. It is required to split this sequence into the maximum number of subsequences such that after sorting integers in each of them in increasing order, the total sequence also will be sorted in increasing order.\n\nSorting integers in a subsequence is a process such that the numbers included in a subsequence are ordered in increasing order, and the numbers which are not included in a subsequence don't change their places.\n\nEvery element of the sequence must appear in exactly one subsequence.\n\n\n-----Input-----\n\nThe first line of input data contains integer n (1 ≤ n ≤ 10^5) — the length of the sequence.\n\nThe second line of input data contains n different integers a_1, a_2, ..., a_{n} ( - 10^9 ≤ a_{i} ≤ 10^9) — the elements of the sequence. It is guaranteed that all elements of the sequence are distinct.\n\n\n-----Output-----\n\nIn the first line print the maximum number of subsequences k, which the original sequence can be split into while fulfilling the requirements.\n\nIn the next k lines print the description of subsequences in the following format: the number of elements in subsequence c_{i} (0 < c_{i} ≤ n), then c_{i} integers l_1, l_2, ..., l_{c}_{i} (1 ≤ l_{j} ≤ n) — indices of these elements in the original sequence. \n\nIndices could be printed in any order. Every index from 1 to n must appear in output exactly once.\n\nIf there are several possible answers, print any of them.\n\n\n-----Examples-----\nInput\n6\n3 2 1 6 5 4\n\nOutput\n4\n2 1 3\n1 2\n2 4 6\n1 5\n\nInput\n6\n83 -75 -49 11 37 62\n\nOutput\n1\n6 1 2 3 4 5 6\n\n\n\n-----Note-----\n\nIn the first sample output:\n\nAfter sorting the first subsequence we will get sequence 1 2 3 6 5 4.\n\nSorting the second subsequence changes nothing.\n\nAfter sorting the third subsequence we will get sequence 1 2 3 4 5 6.\n\nSorting the last subsequence changes nothing.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    a = list(map(int, data[1:1 + n]))\n\n    # order[i] = original index (0-based) of the i-th smallest element\n    order = list(range(n))\n    order.sort(key=a.__getitem__)\n\n    visited = [False] * n\n    cycles = []\n\n    for i in range(n):\n        if not visited[i]:\n            cycle = []\n            cur = i\n\n            while not visited[cur]:\n                visited[cur] = True\n                cycle.append(cur + 1)  # convert to 1-based index\n                cur = order[cur]\n\n            cycles.append(cycle)\n\n    output = [str(len(cycles))]\n\n    for cycle in cycles:\n        output.append(str(len(cycle)) + \" \" + \" \".join(map(str, cycle)))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given arrays A and B of length N each. Determine the number of *good* pairs.\n\nA pair (i,j) (1≤ i,j ≤ N) is said to be *good* if all of the following conditions are satisfied:\ni < j;\nA_{i} = B_\nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        A = [next(it) for _ in range(n)]\n        B = [next(it) for _ in range(n)]\n\n        freq = {}\n        ans = 0\n\n        for a, b in zip(A, B):\n            # Need previous i such that:\n            # A[i] = B[j] = b\n            # B[i] = A[j] = a\n            ans += freq.get((b, a), 0)\n\n            # Insert curre"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

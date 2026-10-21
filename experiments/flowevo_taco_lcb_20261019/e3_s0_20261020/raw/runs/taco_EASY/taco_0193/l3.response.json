@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "92f8bc64-ec64-4b70-9df2-5959c8a4770f",
+  "created": 1792434441,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 756,
+    "completion_tokens": 2828,
+    "total_tokens": 3584,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2620
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 372
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef count_pretty(n: int) -> int:\n    if n <= 0:\n        return 0\n\n    q, r = divmod(n, 10)\n    ans = q * 3\n\n    if r >= 2:\n        ans += 1\n    if r >= 3:\n        ans += 1\n    if r >= 9:\n        ans += 1\n\n    return ans\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        l = data[idx]\n        r = data[idx + 1]\n        idx += 2\n\n        answers.append(str(count_pretty(r) - count_pretty(l - 1)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 12.468,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nVasya likes the number $239$. Therefore, he considers a number pretty if its last digit is $2$, $3$ or $9$. \nVasya wants to watch the numbers between $L$ and $R$ (both inclusive), so he asked you to determine how many pretty numbers are in this range. Can you help him?\n\n-----Input-----\n- The first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\n- The first and only line of each test case contains two space-separated integers $L$ and $R$.\n\n-----Output-----\nFor each test case, print a single line containing one integer — the number of pretty numbers between $L$ and $R$.\n\n-----Constraints-----\n- $1 \\le T \\le 100$\n- $1 \\le L \\le R \\le 10^5$\n\n-----Subtasks-----\nSubtask #1 (100 points): original constraints\n\n-----Example Input-----\n2\n1 10\n11 33\n\n-----Example Output-----\n3\n8\n\n-----Explanation-----\nExample case 1: The pretty numbers between $1$ and $10$ are $2$, $3$ and $9$.\nExample case 2: The pretty numbers between $11$ and $33$ are $12$, $13$, $19$, $22$, $23$, $29$, $32$ and $33$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef count_pretty(n: int) -> int:\n    q, r = divmod(n, 10)\n    return q * 3 + sum(1 for d in (2, 3, 9) if d <= r)\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        l = data[idx]\n        r = data[idx + 1]\n        idx += 2\n\n        ans.append(str(count_pretty(r) - count_pretty(l - 1)))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

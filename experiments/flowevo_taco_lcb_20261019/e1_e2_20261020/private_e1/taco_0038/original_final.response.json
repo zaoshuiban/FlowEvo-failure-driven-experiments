@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5c60134f-63d2-4aee-be5e-2563a639fd0a",
+  "created": 1792437636,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1247,
+    "completion_tokens": 4937,
+    "total_tokens": 6184,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4626
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 607
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    graph = [[] for _ in range(n + 1)]\n\n    idx = 2\n    for _ in range(n - 1):\n        u = data[idx]\n        v = data[idx + 1]\n        idx += 2\n        graph[u].append(v)\n        graph[v].append(u)\n\n    parent = [0] * (n + 1)\n    depth = [0] * (n + 1)\n    order = []\n\n    stack = [1]\n    parent[1] = -1\n\n    while stack:\n        u = stack.pop()\n        order.append(u)\n\n        for v in graph[u]:\n            if v != parent[u]:\n                parent[v] = u\n                depth[v] = depth[u] + 1\n                stack.append(v)\n\n    subtree_size = [1] * (n + 1)\n\n    for u in reversed(order):\n        p = parent[u]\n        if p != -1:\n            subtree_size[p] += subtree_size[u]\n\n    values = [\n        depth[u] - subtree_size[u] + 1\n        for u in range(1, n + 1)\n    ]\n\n    values.sort(reverse=True)\n    print(sum(values[:k]))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 22.223,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWriting light novels is the most important thing in Linova's life. Last night, Linova dreamed about a fantastic kingdom. She began to write a light novel for the kingdom as soon as she woke up, and of course, she is the queen of it.\n\n[Image] \n\nThere are $n$ cities and $n-1$ two-way roads connecting pairs of cities in the kingdom. From any city, you can reach any other city by walking through some roads. The cities are numbered from $1$ to $n$, and the city $1$ is the capital of the kingdom. So, the kingdom has a tree structure.\n\nAs the queen, Linova plans to choose exactly $k$ cities developing industry, while the other cities will develop tourism. The capital also can be either industrial or tourism city.\n\nA meeting is held in the capital once a year. To attend the meeting, each industry city sends an envoy. All envoys will follow the shortest path from the departure city to the capital (which is unique).\n\nTraveling in tourism cities is pleasant. For each envoy, his happiness is equal to the number of tourism cities on his path.\n\nIn order to be a queen loved by people, Linova wants to choose $k$ cities which can maximize the sum of happinesses of all envoys. Can you calculate the maximum sum for her?\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $k$ ($2\\le n\\le 2 \\cdot 10^5$, $1\\le k< n$)  — the number of cities and industry cities respectively.\n\nEach of the next $n-1$ lines contains two integers $u$ and $v$ ($1\\le u,v\\le n$), denoting there is a road connecting city $u$ and city $v$.\n\nIt is guaranteed that from any city, you can reach any other city by the roads.\n\n\n-----Output-----\n\nPrint the only line containing a single integer  — the maximum possible sum of happinesses of all envoys.\n\n\n-----Examples-----\nInput\n7 4\n1 2\n1 3\n1 4\n3 5\n3 6\n4 7\n\nOutput\n7\nInput\n4 1\n1 2\n1 3\n2 4\n\nOutput\n2\nInput\n8 5\n7 5\n1 7\n6 1\n3 7\n8 3\n2 1\n4 5\n\nOutput\n9\n\n\n-----Note-----\n\n[Image]\n\nIn the first example, Linova can choose cities $2$, $5$, $6$, $7$ to develop industry, then the happiness of the envoy from city $2$ is $1$, the happiness of envoys from cities $5$, $6$, $7$ is $2$. The sum of happinesses is $7$, and it can be proved to be the maximum one.\n\n[Image]\n\nIn the second example, choosing cities $3$, $4$ developing industry can reach a sum of $3$, but remember that Linova plans to choose exactly $k$ cities developing industry, then the maximum sum is $2$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef main():\n    input = sys.stdin.buffer.readline\n    n, k = map(int, input().split())\n\n    graph = [[] for _ in range(n)]\n    for _ in range(n - 1):\n        u, v = map(int, input().split())\n        u -= 1\n        v -= 1\n        graph[u].append(v)\n        graph[v].append(u)\n\n    parent = [-1] * n\n    depth = [0] * n\n    parent[0] = 0\n\n    order = []\n    stack = [0]\n\n    while stack:\n        u = stack.pop()\n        order.append(u)\n\n        for v in graph[u]:\n            if parent[v] == -1:\n                parent[v] = u\n                depth[v] = depth[u] + 1\n                stack.append(v)\n\n    subtree_size = [1] * n\n\n    for u in reversed(order):\n        if u != 0:\n            subtree_size[parent[u]] += subtree_size[u]\n\n    values = [depth[u] - subtree_size[u] + 1 for u in range(n)]\n    values.sort(reverse=True)\n\n    print(sum(values[:k]))\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Runtime error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6687319c-230c-4d03-a4ba-5f7e0b463e46",
+  "created": 1792431377,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1017,
+    "completion_tokens": 3724,
+    "total_tokens": 4741,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3403
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 505
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import defaultdict\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n    n = data[idx]\n    idx += 1\n\n    ks = []\n    by_value = defaultdict(list)\n\n    for i in range(n):\n        k = data[idx]\n        idx += 1\n        ks.append(k)\n\n        count = {}\n        for _ in range(k):\n            a = data[idx]\n            idx += 1\n            count[a] = count.get(a, 0) + 1\n\n        for value, cnt in count.items():\n            by_value[value].append((i, cnt))\n\n    pair_match = [[0] * n for _ in range(n)]\n\n    for lst in by_value.values():\n        m = len(lst)\n        for p in range(m):\n            i, ci = lst[p]\n            for q in range(p + 1, m):\n                j, cj = lst[q]\n                if i < j:\n                    pair_match[i][j] += ci * cj\n                else:\n                    pair_match[j][i] += ci * cj\n\n    best = 0.0\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            prob = pair_match[i][j] / (ks[i] * ks[j])\n            if prob > best:\n                best = prob\n\n    print(f\"{best:.15f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 16.666,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are N dice.\r\nThe i-th die has K_i faces, with the numbers A_{i,1}, A_{i,2}, \\ldots, A_{i,K_i} written on them.\r\nWhen you roll this die, each face appears with probability \\frac{1}{K_i}.\nYou choose two dice from the N dice and roll them.\r\nDetermine the maximum probability that the two dice show the same number, when the dice are chosen optimally.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nK_1 A_{1,1} A_{1,2} \\dots A_{1,K_1}\r\n\\vdots\r\nK_N A_{N,1} A_{N,2} \\dots A_{N,K_N}\n\nOutput\n\nPrint the answer.\r\nYour answer is considered correct if the absolute or relative error from the true solution does not exceed 10^{-8}.\n\nConstraints\n\n\n- 2 \\leq N \\leq 100\n- 1 \\leq K_i\n- K_1 + K_2 + \\dots + K_N \\leq 10^5\n- 1 \\leq A_{i,j} \\leq 10^5\n- All input values are integers.\n\nSample Input 1\n\n3\r\n3 1 2 3\r\n4 1 2 2 1\r\n6 1 2 3 4 5 6\n\nSample Output 1\n\n0.333333333333333\r\n\n\n- When choosing the 1st and 2nd dice, the probability that the outcomes are the same is \\frac{1}{3}.\n- When choosing the 1st and 3rd dice, the probability is \\frac{1}{6}.\n- When choosing the 2nd and 3rd dice, the probability is \\frac{1}{6}.\n\nTherefore, the maximum probability is \\frac{1}{3} = 0.3333333333\\ldots.\n\nSample Input 2\n\n3\r\n5 1 1 1 1 1\r\n4 2 2 2 2\r\n3 1 1 2\n\nSample Output 2\n\n0.666666666666667\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    dice = []\n\n    for _ in range(n):\n        k = next(it)\n        counts = {}\n        for _ in range(k):\n            a = next(it)\n            counts[a] = counts.get(a, 0) + 1\n        dice.append((k, counts))\n\n    best = 0.0\n\n    for i in range(n):\n        ki, ci = dice[i]\n        for j in range(i + 1, n):\n            kj, cj = dice[j]\n\n            numerator = 0\n\n            if len(ci) <= len(cj):\n                for value, count_i in ci.items():\n                    count_j = cj.get(value)\n                    if count_j is not None:\n                        numerator += count_i * count_j\n            else:\n                for value, count_j in cj.items():\n                    count_i = ci.get(value)\n                    if count_i is not None:\n                        numerator += count_i * count_j\n\n            probability = numerator / (ki * kj)\n            if probability > best:\n                best = probability\n\n    print(f\"{best:.15f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Runtime or compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: There are N sticks with several balls stuck onto them. Each ball has a lowercase English letter written on it.\nFor each i = 1, 2, \\ldots, N, the letters written on the balls stuck onto the i-th stick \nSolution:\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    sticks = set()\n\n    for s in data[1:n + 1]:\n        rev = s[::-1]\n        if s <= rev:\n            sticks.add(s)\n        else:\n            sticks.add(rev)\n\n    print(len(sticks))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

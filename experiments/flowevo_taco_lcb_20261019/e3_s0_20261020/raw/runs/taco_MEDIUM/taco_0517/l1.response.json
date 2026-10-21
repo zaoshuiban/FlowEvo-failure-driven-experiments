@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4d0392f4-da0e-43e7-9602-5ac0527efa95",
+  "created": 1792443178,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1023,
+    "completion_tokens": 10597,
+    "total_tokens": 11620,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10083
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1023
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, q = data[0], data[1]\n    angles = data[2:2 + q]\n\n    # For parity, hackonacci has period 7:\n    # odd for indices congruent to 0, 1, 6 modulo 7 after squaring logic.\n    good = [0] * 7\n    good[0] = good[1] = good[6] = 1\n\n    # Build repeating row patterns for i modulo 7.\n    patterns = []\n    for im in range(7):\n        pat = bytearray(7)\n        for jj in range(7):\n            jres = (jj + 1) % 7\n            pat[jj] = good[(im * jres) % 7]\n        patterns.append(bytes(pat))\n\n    # 1 = Y, 0 = X\n    mat = bytearray(n * n)\n    repeats = (n + 6) // 7\n\n    for i in range(1, n + 1):\n        row = (patterns[i % 7] * repeats)[:n]\n        start = (i - 1) * n\n        mat[start:start + n] = row\n\n    ans90 = 0\n    ans180 = 0\n\n    for i in range(n):\n        row_start = i * n\n        opp_row_start = (n - 1 - i) * n\n\n        for j in range(n):\n            value = mat[row_start + j]\n\n            # Rotation by 180 degrees\n            if value != mat[opp_row_start + (n - 1 - j)]:\n                ans180 += 1\n\n            # Rotation by 90 degrees clockwise\n            if value != mat[(n - 1 - j) * n + i]:\n                ans90 += 1\n\n    # For a square matrix, 90 and 270 degree rotations have the same\n    # number of differing cells.\n    ans270 = ans90\n\n    rotation_answers = [0, ans90, ans180, ans270]\n\n    output = []\n    for angle in angles:\n        output.append(str(rotation_answers[(angle % 360) // 90]))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 43.99,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWe define a $hackonacci$ series as follows:\n\n$hackonacci(n)=1\\cdot hackonacci(n-1)+2\\cdot hackon acesi(n-2)+3\\cdot hackon aci(n-3)$   \n$hackonacci(1)=1$  \n$hackonacci(2)=2$  \n$hackonacci(3)=3$  \n\nWe define a Hackonacci Matrix to be an $n\\times n$ matrix where the rows and columns are indexed from ${1}$ to $n$, and the top-left cell is $(1,1)$. Each cell $(i,j)$ must contains either the character X or the character Y. If $hackonacci((i\\cdot j)^2)$ is even, it's X; otherwise, it's Y.\n\nNext, we want to perform ${q}$ queries where each query ${i}$ consists of an integer, ${angle}_i$. Each ${angle}_i$ is a multiple of ${90}$ degrees and describes the angle by which you must rotate the matrix in the clockwise direction. For each ${angle}_i$, we want to count the number of cells that are different after the rotation. For example, the diagram below depicts the $270^{\\circ}$ rotation of a Hackonacci Matrix when $n=2$: \n\nAs you can see, there are two cells whose values change after the rotation. Note that we filled each initial cell using the Hackonacci formula given above:\n\n$(1,1)$: $hagonacci((1\\cdot1)^2)=hakenacci(1)=1$ \n\nBecause this is an odd number, we mark this cell with a Y.\n$(1,2)$: $\\begin{equation}\\begin{aligned}hackonacci((1\\cdot2)^2)&=hackonocci(4)\\\\ &\\Rightarrow1\\cdot hagonacci(3)+2\\cdot hackonaccci(2)+3\\cdot hackonacci(1)\\\\ &\\Rightarrow1\\cdot3+2\\cdot2+3\\cdot1=3+4+3=10\\end{aligned}\\end{equation}$ \n\nBecause this is an even number, we mark this cell with an X.\n$(2,1)$: $hakenacci((2\\cdot1)^2)=hakenacci(4)\\Rightarrow10$ \n\nBecause this is an even number, we mark this cell with an X.\n$(2,2)$: $hakenaci((2\\cdot2)^2)=hakenacci(16)\\Rightarrow296578$ \n\nBecause this is an even number, we mark this cell with an X.\n\nGiven the value of $n$ and ${q}$ queries, construct a Hackonacci Matrix and answer the queries. For each query ${i}$, print an integer on a new line denoting the number of cells whose values differ from the initial Hackonacci Matrix when it's rotated by ${angle}_i$ degrees in the clockwise direction. \n\nInput Format\n\nThe first line contains two space-separated integers describing the respective values of $n$ and ${q}$. \n\nEach line ${i}$ of the ${q}$ subsequent lines contains an integer denoting ${angle}_i$.\n\nConstraints\n\n$1\\leq n\\leq2000$  \n$1\\leq q\\leq10^4$  \n$0\\leq angle_i\\leq10^5$  \nIt is guaranteed that each ${angle}_i$ is multiple of ${90}$ degrees.\n\nOutput Format\n\nFor each ${angle}_i$, print a single integer on a new line denoting the number of different cells that differ between the initial matrix and the matrix rotated by ${angle}_i$ degrees.\n\nSample Input 0\n4 3\n90\n180\n270\n\nSample Output 0\n10\n6\n10\n\nExplanation 0\n\nBecause $n=4$, we must build a $4\\times4$ Hackonacci matrix and then perform $q=3$ queries, shown below. The following diagrams depict each query rotation, and cells whose values changed after performing a rotation are highlighted in orange:\n\nWhen we perform a $90^{\\circ}$ rotation on the matrix, there are $10$ cells whose  values change: \n\nThus, we print $10$ on a new line.\nWhen we perform a ${180^{\\circ}}$ rotation on the matrix, there are ${6}$ cells whose  values change:\n \nThus, we print ${6}$ on a new line.\nWhen we perform a $270^{\\circ}$ rotation on the matrix, there are $10$ cells whose  values change:\n \nThus, we print $10$ on a new line.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

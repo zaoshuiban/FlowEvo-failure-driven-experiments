@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e7be635c-1579-4cc2-a505-951d971683dc",
+  "created": 1792438483,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 391,
+    "completion_tokens": 10208,
+    "total_tokens": 10599,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10068
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 263
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport math\n\ndef vector_length(vector):\n    try:\n        (x1, y1), (x2, y2) = vector\n    except (TypeError, ValueError):\n        x1, y1, x2, y2 = vector\n\n    try:\n        dx = x2 - x1\n        dy = y2 - y1\n    except TypeError:\n        x1, y1, x2, y2 = map(float, (x1, y1, x2, y2))\n        dx = x2 - x1\n        dy = y2 - y1\n\n    return math.hypot(dx, dy)\n```",
+  "latency_s": 46.415,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFor a given 2D vector described by cartesian coordinates of its initial point and terminal point in the following format:\n\n```python\n[[x1, y1], [x2, y2]]\n```\n\nYour function must return this vector's length represented as a floating point number.\n\nError must be within 1e-7.\n\nCoordinates can be integers or floating point numbers.\n\nStarter code / required signature:\ndef vector_length(vector):\n\t\n\nUse the required function/method named vector_length. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport math\n\ndef vector_length(vector):\n    try:\n        # Standard format: [[x1, y1], [x2, y2]]\n        (x1, y1), (x2, y2) = vector\n    except (TypeError, ValueError):\n        # Also support flat format: [x1, y1, x2, y2]\n        x1, y1, x2, y2 = vector\n    return math.hypot(x2 - x1, y2 - y1)\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Given an array of integers as strings and numbers, return the sum of the array values as if all were numbers.\n\nReturn your answer as a number.\nSolution:\ndef sum_mix(arr):\n    return sum(int(x) for x in arr)"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

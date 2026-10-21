@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "15bafdc2-6042-442a-ba35-20686bef24b7",
+  "created": 1792431759,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 390,
+    "completion_tokens": 1667,
+    "total_tokens": 2057,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1543
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 390
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    total = n * (n + 1) // 2\n    target = total // 2\n\n    remaining = target\n    group = []\n\n    for x in range(n, 0, -1):\n        if x <= remaining:\n            group.append(x)\n            remaining -= x\n            if remaining == 0:\n                break\n\n    difference = total - 2 * target\n\n    print(difference)\n    print(len(group), *group)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 7.632,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nPetya has n integers: 1, 2, 3, ..., n. He wants to split these integers in two non-empty groups in such a way that the absolute difference of sums of integers in each group is as small as possible. \n\nHelp Petya to split the integers. Each of n integers should be exactly in one group.\n\n\n-----Input-----\n\nThe first line contains a single integer n (2 ≤ n ≤ 60 000) — the number of integers Petya has.\n\n\n-----Output-----\n\nPrint the smallest possible absolute difference in the first line.\n\nIn the second line print the size of the first group, followed by the integers in that group. You can print these integers in arbitrary order. If there are multiple answers, print any of them.\n\n\n-----Examples-----\nInput\n4\n\nOutput\n0\n2 1 4 \n\nInput\n2\n\nOutput\n1\n1 1 \n\n\n\n-----Note-----\n\nIn the first example you have to put integers 1 and 4 in the first group, and 2 and 3 in the second. This way the sum in each group is 5, and the absolute difference is 0.\n\nIn the second example there are only two integers, and since both groups should be non-empty, you have to put one integer in the first group and one in the second. This way the absolute difference of sums of integers in each group is 1.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

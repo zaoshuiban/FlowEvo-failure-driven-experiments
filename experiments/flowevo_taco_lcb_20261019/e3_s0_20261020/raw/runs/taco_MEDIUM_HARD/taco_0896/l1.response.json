@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d6c57612-0f73-4ead-b459-fbc7f3b42358",
+  "created": 1792440565,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 874,
+    "completion_tokens": 8476,
+    "total_tokens": 9350,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7819
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 874
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n    k = next(it)\n\n    arrivals = []\n    departures = []\n    max_day = 0\n\n    for _ in range(m):\n        d = next(it)\n        f = next(it)\n        t = next(it)\n        c = next(it)\n\n        if d > max_day:\n            max_day = d\n\n        if t == 0:\n            arrivals.append((d, f, c))\n        else:\n            departures.append((d, t, c))\n\n    INF = 10**18\n\n    arrivals.sort()\n    departures.sort(reverse=True)\n\n    # pref[day] = minimum cost to bring all people to city 0\n    # using only flights on days <= day.\n    pref = [INF] * (max_day + 1)\n    min_arrival = [INF] * (n + 1)\n\n    arrived_count = 0\n    arrival_cost = 0\n    p = 0\n    arrivals_len = len(arrivals)\n\n    for day in range(max_day + 1):\n        while p < arrivals_len and arrivals[p][0] == day:\n            _, city, cost = arrivals[p]\n\n            old_cost = min_arrival[city]\n            if cost < old_cost:\n                if old_cost == INF:\n                    arrived_count += 1\n                else:\n                    arrival_cost -= old_cost\n\n                min_arrival[city] = cost\n                arrival_cost += cost\n\n            p += 1\n\n        if arrived_count == n:\n            pref[day] = arrival_cost\n\n    # Process departures backwards.\n    min_departure = [INF] * (n + 1)\n\n    departed_count = 0\n    departure_cost = 0\n    q = 0\n    departures_len = len(departures)\n\n    answer = INF\n\n    for day in range(max_day, -1, -1):\n        while q < departures_len and departures[q][0] == day:\n            _, city, cost = departures[q]\n\n            old_cost = min_departure[city]\n            if cost < old_cost:\n                if old_cost == INF:\n                    departed_count += 1\n                else:\n                    departure_cost -= old_cost\n\n                min_departure[city] = cost\n                departure_cost += cost\n\n            q += 1\n\n        if departed_count == n:\n            # If everyone has arrived by arrival_day, they can work for k days\n            # only if departure day >= arrival_day + k + 1.\n            arrival_day = day - k - 1\n\n            if 0 <= arrival_day <= max_day:\n                if pref[arrival_day] != INF:\n                    total = pref[arrival_day] + departure_cost\n                    if total < answer:\n                        answer = total\n\n    print(answer if answer != INF else -1)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 40.012,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nCountry of Metropolia is holding Olympiad of Metrpolises soon. It mean that all jury members of the olympiad should meet together in Metropolis (the capital of the country) for the problem preparation process.\n\nThere are n + 1 cities consecutively numbered from 0 to n. City 0 is Metropolis that is the meeting point for all jury members. For each city from 1 to n there is exactly one jury member living there. Olympiad preparation is a long and demanding process that requires k days of work. For all of these k days each of the n jury members should be present in Metropolis to be able to work on problems.\n\nYou know the flight schedule in the country (jury members consider themselves important enough to only use flights for transportation). All flights in Metropolia are either going to Metropolis or out of Metropolis. There are no night flights in Metropolia, or in the other words, plane always takes off at the same day it arrives. On his arrival day and departure day jury member is not able to discuss the olympiad. All flights in Megapolia depart and arrive at the same day.\n\nGather everybody for k days in the capital is a hard objective, doing that while spending the minimum possible money is even harder. Nevertheless, your task is to arrange the cheapest way to bring all of the jury members to Metrpolis, so that they can work together for k days and then send them back to their home cities. Cost of the arrangement is defined as a total cost of tickets for all used flights. It is allowed for jury member to stay in Metropolis for more than k days.\n\n\n-----Input-----\n\nThe first line of input contains three integers n, m and k (1 ≤ n ≤ 10^5, 0 ≤ m ≤ 10^5, 1 ≤ k ≤ 10^6). \n\nThe i-th of the following m lines contains the description of the i-th flight defined by four integers d_{i}, f_{i}, t_{i} and c_{i} (1 ≤ d_{i} ≤ 10^6, 0 ≤ f_{i} ≤ n, 0 ≤ t_{i} ≤ n, 1 ≤ c_{i} ≤ 10^6, exactly one of f_{i} and t_{i} equals zero), the day of departure (and arrival), the departure city, the arrival city and the ticket cost.\n\n\n-----Output-----\n\nOutput the only integer that is the minimum cost of gathering all jury members in city 0 for k days and then sending them back to their home cities.\n\nIf it is impossible to gather everybody in Metropolis for k days and then send them back to their home cities, output \"-1\" (without the quotes).\n\n\n-----Examples-----\nInput\n2 6 5\n1 1 0 5000\n3 2 0 5500\n2 2 0 6000\n15 0 2 9000\n9 0 1 7000\n8 0 2 6500\n\nOutput\n24500\n\nInput\n2 4 5\n1 2 0 5000\n2 1 0 4500\n2 1 0 3000\n8 0 1 6000\n\nOutput\n-1\n\n\n\n-----Note-----\n\nThe optimal way to gather everybody in Metropolis in the first sample test is to use flights that take place on days 1, 2, 8 and 9. The only alternative option is to send jury member from second city back home on day 15, that would cost 2500 more.\n\nIn the second sample it is impossible to send jury member from city 2 back home from Metropolis.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

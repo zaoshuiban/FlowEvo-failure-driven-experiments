@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f1ef5506-d3cb-4be1-9069-4ac4302b5f3e",
+  "created": 1792428474,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 739,
+    "completion_tokens": 882,
+    "total_tokens": 1621,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 620
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 739
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    cats = [0] + [next(it) for _ in range(n)]\n\n    graph = [[] for _ in range(n + 1)]\n\n    for _ in range(n - 1):\n        x = next(it)\n        y = next(it)\n        graph[x].append(y)\n        graph[y].append(x)\n\n    answer = 0\n\n    stack = [(1, 0, cats[1])]\n\n    while stack:\n        node, parent, consecutive_cats = stack.pop()\n\n        if consecutive_cats > m:\n            continue\n\n        if node != 1 and len(graph[node]) == 1:\n            answer += 1\n            continue\n\n        for neighbor in graph[node]:\n            if neighbor == parent:\n                continue\n\n            if cats[neighbor] == 1:\n                next_consecutive = consecutive_cats + 1\n            else:\n                next_consecutive = 0\n\n            stack.append((neighbor, node, next_consecutive))\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 3.92,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nKefa decided to celebrate his first big salary by going to the restaurant. \n\nHe lives by an unusual park. The park is a rooted tree consisting of n vertices with the root at vertex 1. Vertex 1 also contains Kefa's house. Unfortunaely for our hero, the park also contains cats. Kefa has already found out what are the vertices with cats in them.\n\nThe leaf vertices of the park contain restaurants. Kefa wants to choose a restaurant where he will go, but unfortunately he is very afraid of cats, so there is no way he will go to the restaurant if the path from the restaurant to his house contains more than m consecutive vertices with cats. \n\nYour task is to help Kefa count the number of restaurants where he can go.\n\n\n-----Input-----\n\nThe first line contains two integers, n and m (2 ≤ n ≤ 10^5, 1 ≤ m ≤ n) — the number of vertices of the tree and the maximum number of consecutive vertices with cats that is still ok for Kefa.\n\nThe second line contains n integers a_1, a_2, ..., a_{n}, where each a_{i} either equals to 0 (then vertex i has no cat), or equals to 1 (then vertex i has a cat).\n\nNext n - 1 lines contains the edges of the tree in the format \"x_{i} y_{i}\" (without the quotes) (1 ≤ x_{i}, y_{i} ≤ n, x_{i} ≠ y_{i}), where x_{i} and y_{i} are the vertices of the tree, connected by an edge. \n\nIt is guaranteed that the given set of edges specifies a tree.\n\n\n-----Output-----\n\nA single integer — the number of distinct leaves of a tree the path to which from Kefa's home contains at most m consecutive vertices with cats.\n\n\n-----Examples-----\nInput\n4 1\n1 1 0 0\n1 2\n1 3\n1 4\n\nOutput\n2\n\nInput\n7 1\n1 0 1 1 0 0 0\n1 2\n1 3\n2 4\n2 5\n3 6\n3 7\n\nOutput\n2\n\n\n\n-----Note-----\n\nLet us remind you that a tree is a connected graph on n vertices and n - 1 edge. A rooted tree is a tree with a special vertex called root. In a rooted tree among any two vertices connected by an edge, one vertex is a parent (the one closer to the root), and the other one is a child. A vertex is called a leaf, if it has no children.\n\nNote to the first sample test: $80$ The vertices containing cats are marked red. The restaurants are at vertices 2, 3, 4. Kefa can't go only to the restaurant located at vertex 2.\n\nNote to the second sample test: $88$ The restaurants are located at vertices 4, 5, 6, 7. Kefa can't go to restaurants 6, 7.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bb47b83c-7f2c-4810-8bc2-46ed15e5b095",
+  "created": 1792435111,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 212,
+    "completion_tokens": 223,
+    "total_tokens": 435,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 179
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 212
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef binary_to_string(binary):\n    return ''.join(chr(int(binary[i:i + 8], 2)) for i in range(0, len(binary), 8))\n```",
+  "latency_s": 1.687,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWrite a function that takes in a binary string and returns the equivalent decoded text (the text is ASCII encoded).\n\nEach 8 bits on the binary string represent 1 character on the ASCII table.\n\nThe input string will always be a valid binary string.\n\nCharacters can be in the range from \"00000000\" to \"11111111\" (inclusive)\n\nNote: In the case of an empty binary string your function should return an empty string.\n\nStarter code / required signature:\ndef binary_to_string(binary):\n\t\n\nUse the required function/method named binary_to_string. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

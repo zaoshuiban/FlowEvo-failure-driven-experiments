@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d1c693fc-d794-4d28-8aec-e023b101b760",
+  "created": 1792431658,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1205,
+    "completion_tokens": 9390,
+    "total_tokens": 10595,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 9087
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 693
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    knowledge = data[2:2 + n]\n\n    adj = [[] for _ in range(n)]\n    idx = 2 + n\n\n    for _ in range(m):\n        u = data[idx] - 1\n        v = data[idx + 1] - 1\n        idx += 2\n\n        adj[u].append(v)\n        adj[v].append(u)\n\n    visited = [False] * n\n    answer = 1\n\n    for start in range(n):\n        if visited[start]:\n            continue\n\n        visited[start] = True\n        stack = [start]\n\n        max_knowledge = -1\n        count_max = 0\n\n        while stack:\n            u = stack.pop()\n            value = knowledge[u]\n\n            if value > max_knowledge:\n                max_knowledge = value\n                count_max = 1\n            elif value == max_knowledge:\n                count_max += 1\n\n            for v in adj[u]:\n                if not visited[v]:\n                    visited[v] = True\n                    stack.append(v)\n\n        answer = (answer * count_max) % MOD\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 44.406,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nToday is Vasya's birthday. On this special occasion, he has organized a party for all of his friends. These friends are enumerated by integers from 1 to N. Each of Vasya's friends has a Knowledge Level. In addition, each of them knows an arbitrary number of other people at the party. This friendship is bidirectional and transitive in nature, i.e if person A knows person B and person B knows person C, then we consider that person A knows person C. All these people who know each other come together and form a single group of friends.  \n\nNow, they decide to play a game. In this game, among all groups of friends, the one with the highest knowledge level within each group is elected to represent the group during the game. Let's call this person the leader of the group.  If there are multiple candidates to be the leader of a group, you can select any of them arbitrarily. The game is then played after selecting these leaders.\n\nNow, Vasya wants to find the number of distinct ways the game can be played. He finds this task too hard and wants you to help him. As this number can be large, print it Modulo 10^9+7.   \n\nInput Format:\n\nThe first line contains two integers N and M denoting the number of people Vasya has invited to the party and the number of relations between these people. The next line contains N space separated integers denoting the where the i^{th} integer denotes the knowledge level of person i. Each of the next M lines contains 2 space separated integers u and v denoting that person u knows person v and vice-versa.  \n\nOutput Format\n\nPrint the required answer on a single line. As the answer may be large, print it Modulo 10^9+7 \n\nConstraints\n\n 1 ≤ N ≤ 10^5 \n\n 0 ≤ M ≤ 10^5 \n\n 0 ≤ A[i] ≤ 10^9  \n\n 1 ≤ u,v ≤ N   \n\n M ≤ (N*(N-1))/2     \n\nNote:\n\nThere can be self loops, i.e edges from and to the same person and multple edges from one person to another. \n\nSAMPLE INPUT\n5 4\n1 2 3 4 5\n1 2\n2 3\n3 4\n4 5\n\nSAMPLE OUTPUT\n1\n\nExplanation\n\nHere, all the people at the party know each other. Among this group the person with the highest knowledge is person 5. Hence, there is only one way.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    knowledge = [0] + data[2:2 + n]\n\n    parent = list(range(n + 1))\n    size = [1] * (n + 1)\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n\n    idx = 2 + n\n    for _ in range(m):\n        u = data[idx]\n        v = data[idx + 1]\n        idx += 2\n        union(u, v)\n\n    max_knowledge = [-1] * (n + 1)\n    max_count = [0] * (n + 1)\n\n    for i in range(1, n + 1):\n        root = find(i)\n        val = knowledge[i]\n\n        if val > max_knowledge[root]:\n            max_knowledge[root] = val\n            max_count[root] = 1\n        elif val == max_knowledge[root]:\n            max_count[root] += 1\n\n    answer = 1\n    for i in range(1, n + 1):\n        if max_count[i] > 0:\n            answer = (answer * max_count[i]) % MOD\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,608 @@
+{
+  "solutions": {
+    "lcb_atcoder_abc328_a": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    N, X = data[0], data[1]\n    scores = data[2:2 + N]\n    print(sum(s for s in scores if s <= X))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3019": "class Solution:\n    def furthestDistanceFromOrigin(self, moves: str) -> int:\n        left = moves.count('L')\n        right = moves.count('R')\n        wildcard = moves.count('_')\n        return abs(left - right) + wildcard",
+    "lcb_leetcode_3626": "class Solution:\n    def smallestNumber(self, n: int, t: int) -> int:\n        num = n\n        while True:\n            product = 1\n            for digit in str(num):\n                product *= int(digit)\n            if product % t == 0:\n                return num\n            num += 1",
+    "lcb_leetcode_3331": "from typing import List\n\nclass Solution:\n    def minOperations(self, nums: List[int], k: int) -> int:\n        return sum(1 for x in nums if x < k)",
+    "lcb_atcoder_abc355_a": "import sys\n\nA, B = map(int, sys.stdin.readline().split())\n\ncandidates = [i for i in range(1, 4) if i != A and i != B]\n\nif len(candidates) == 1:\n    print(candidates[0])\nelse:\n    print(-1)",
+    "lcb_leetcode_3811": "class Solution:\n    def reverseDegree(self, s: str) -> int:\n        total = 0\n        for i, ch in enumerate(s, start=1):\n            total += i * (ord('z') - ord(ch) + 1)\n        return total",
+    "lcb_atcoder_abc308_b": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    it = iter(tokens)\n\n    N = int(next(it))\n    M = int(next(it))\n\n    C = [next(it) for _ in range(N)]\n    D = [next(it) for _ in range(M)]\n\n    P = [int(next(it)) for _ in range(M + 1)]\n\n    price = {D[i]: P[i + 1] for i in range(M)}\n\n    answer = sum(price.get(color, P[0]) for color in C)\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3421": "from typing import List\n\nclass Solution:\n    def countCompleteDayPairs(self, hours: List[int]) -> int:\n        count = 0\n        remainder_count = [0] * 24\n\n        for hour in hours:\n            remainder = hour % 24\n            needed = (24 - remainder) % 24\n            count += remainder_count[needed]\n            remainder_count[remainder] += 1\n\n        return count",
+    "lcb_leetcode_3533": "from typing import List\n\nclass Solution:\n    def finalPositionOfSnake(self, n: int, commands: List[str]) -> int:\n        row = 0\n        col = 0\n\n        for command in commands:\n            if command == \"UP\":\n                row -= 1\n            elif command == \"DOWN\":\n                row += 1\n            elif command == \"LEFT\":\n                col -= 1\n            elif command == \"RIGHT\":\n                col += 1\n\n        return row * n + col",
+    "lcb_leetcode_3617": "class Solution:\n    def possibleStringCount(self, word: str) -> int:\n        ans = 1\n        i = 0\n        n = len(word)\n        \n        while i < n:\n            j = i\n            while j < n and word[j] == word[i]:\n                j += 1\n            ans += (j - i - 1)\n            i = j\n        \n        return ans",
+    "lcb_codeforces_1873_B": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        a = data[idx:idx + n]\n        idx += n\n\n        min_pos = 0\n        for i in range(1, n):\n            if a[i] < a[min_pos]:\n                min_pos = i\n\n        a[min_pos] += 1\n\n        product = 1\n        for x in a:\n            product *= x\n\n        answers.append(str(product))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()",
+    "lcb_leetcode_3044": "from typing import List\n\nclass Solution:\n    def minOperations(self, nums: List[int], k: int) -> int:\n        seen = set()\n        operations = 0\n\n        for i in range(len(nums) - 1, -1, -1):\n            operations += 1\n            if nums[i] <= k:\n                seen.add(nums[i])\n\n            if len(seen) == k:\n                return operations\n\n        return operations",
+    "lcb_leetcode_2955": "class Solution:\n    def accountBalanceAfterPurchase(self, purchaseAmount: int) -> int:\n        roundedAmount = ((purchaseAmount + 5) // 10) * 10\n        return 100 - roundedAmount",
+    "lcb_leetcode_3193": "from typing import List\n\nclass Solution:\n    def maximumStrongPairXor(self, nums: List[int]) -> int:\n        ans = 0\n\n        for i in range(len(nums)):\n            for j in range(i, len(nums)):\n                x, y = nums[i], nums[j]\n                if abs(x - y) <= min(x, y):\n                    ans = max(ans, x ^ y)\n\n        return ans",
+    "lcb_atcoder_abc385_b": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    H = int(data[0])\n    W = int(data[1])\n    X = int(data[2]) - 1\n    Y = int(data[3]) - 1\n\n    grid = data[4:4 + H]\n    T = data[4 + H]\n\n    x, y = X, Y\n    visited_houses = set()\n\n    for move in T:\n        nx, ny = x, y\n\n        if move == ord('U'):\n            nx -= 1\n        elif move == ord('D'):\n            nx += 1\n        elif move == ord('L'):\n            ny -= 1\n        elif move == ord('R'):\n            ny += 1\n\n        if 0 <= nx < H and 0 <= ny < W and grid[nx][ny] != ord('#'):\n            x, y = nx, ny\n\n        if grid[x][y] == ord('@'):\n            visited_houses.add((x, y))\n\n    print(x + 1, y + 1, len(visited_houses))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3616": "from typing import List\n\nclass Solution:\n    def countValidSelections(self, nums: List[int]) -> int:\n        total = sum(nums)\n        left = 0\n        ans = 0\n\n        for x in nums:\n            if x == 0:\n                right = total - left\n                diff = abs(left - right)\n\n                if diff == 0:\n                    ans += 2\n                elif diff == 1:\n                    ans += 1\n\n            left += x\n\n        return ans",
+    "lcb_leetcode_3154": "from typing import List\n\nclass Solution:\n    def maximumTripletValue(self, nums: List[int]) -> int:\n        max_value = 0\n        max_i = 0\n        max_diff = 0\n\n        for x in nums:\n            max_value = max(max_value, max_diff * x)\n            max_diff = max(max_diff, max_i - x)\n            max_i = max(max_i, x)\n\n        return max_value",
+    "lcb_atcoder_abc389_a": "import sys\n\nS = sys.stdin.readline().strip()\na, b = S.split('x')\nprint(int(a) * int(b))",
+    "lcb_atcoder_abc361_a": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    N, K, X = data[0], data[1], data[2]\n    A = data[3:3 + N]\n\n    B = A[:K] + [X] + A[K:]\n    print(*B)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc363_a": "import sys\n\nR = int(sys.stdin.readline())\nprint(100 - (R % 100))",
+    "lcb_leetcode_3183": "from typing import List\n\nclass Solution:\n    def findKOr(self, nums: List[int], k: int) -> int:\n        result = 0\n\n        for bit in range(31):\n            count = sum((num >> bit) & 1 for num in nums)\n            if count >= k:\n                result |= 1 << bit\n\n        return result",
+    "lcb_atcoder_abc305_a": "import sys\n\nN = int(sys.stdin.readline())\nprint(((N + 2) // 5) * 5)",
+    "lcb_atcoder_abc338_a": "import sys\n\nS = sys.stdin.readline().strip()\n\nif S[0].isupper() and all(c.islower() for c in S[1:]):\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+    "lcb_leetcode_3651": "from typing import List\n\nclass Solution:\n    def constructTransformedArray(self, nums: List[int]) -> List[int]:\n        n = len(nums)\n        result = [0] * n\n\n        for i, value in enumerate(nums):\n            landing_index = (i + value) % n\n            result[i] = nums[landing_index]\n\n        return result",
+    "lcb_leetcode_3379": "class Solution:\n    def scoreOfString(self, s: str) -> int:\n        return sum(abs(ord(s[i]) - ord(s[i - 1])) for i in range(1, len(s)))",
+    "lcb_atcoder_abc301_b": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    a = data[1:1 + n]\n\n    ans = [a[0]]\n    prev = a[0]\n\n    for cur in a[1:]:\n        if prev < cur:\n            for x in range(prev + 1, cur + 1):\n                ans.append(x)\n        else:\n            for x in range(prev - 1, cur - 1, -1):\n                ans.append(x)\n        prev = cur\n\n    print(*ans)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc333_a": "import sys\n\nN = int(sys.stdin.readline().strip())\nprint(str(N) * N)",
+    "lcb_atcoder_abc348_a": "import sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    result = ''.join('x' if i % 3 == 0 else 'o' for i in range(1, n + 1))\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc323_b": "import sys\n\ndef main():\n    input = sys.stdin.readline\n    N = int(input())\n    wins = []\n\n    for _ in range(N):\n        s = input().strip()\n        wins.append(s.count('o'))\n\n    players = list(range(1, N + 1))\n    players.sort(key=lambda p: (-wins[p - 1], p))\n\n    print(*players)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3251": "from typing import List\n\nclass Solution:\n    def areaOfMaxDiagonal(self, dimensions: List[List[int]]) -> int:\n        max_diagonal = -1\n        max_area = 0\n\n        for length, width in dimensions:\n            diagonal_squared = length * length + width * width\n            area = length * width\n\n            if diagonal_squared > max_diagonal:\n                max_diagonal = diagonal_squared\n                max_area = area\n            elif diagonal_squared == max_diagonal:\n                max_area = max(max_area, area)\n\n        return max_area",
+    "lcb_leetcode_3236": "from typing import List\n\nclass Solution:\n    def missingInteger(self, nums: List[int]) -> int:\n        prefix_sum = nums[0]\n        i = 1\n\n        while i < len(nums) and nums[i] == nums[i - 1] + 1:\n            prefix_sum += nums[i]\n            i += 1\n\n        present = set(nums)\n        x = prefix_sum\n\n        while x in present:\n            x += 1\n\n        return x",
+    "lcb_atcoder_abc345_b": "import sys\n\nx = int(sys.stdin.readline().strip())\nprint((x + 9) // 10)",
+    "lcb_atcoder_abc303_a": "import sys\n\ndef similar(a: str, b: str) -> bool:\n    if a == b:\n        return True\n    return (a == '1' and b == 'l') or (a == 'l' and b == '1') or \\\n           (a == '0' and b == 'o') or (a == 'o' and b == '0')\n\ndef main():\n    input = sys.stdin.readline\n    N = int(input())\n    S = input().strip()\n    T = input().strip()\n\n    for s, t in zip(S, T):\n        if not similar(s, t):\n            print(\"No\")\n            return\n\n    print(\"Yes\")\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc342_a": "S = input().strip()\n\nfor i, ch in enumerate(S):\n    if S.count(ch) == 1:\n        print(i + 1)\n        break",
+    "lcb_atcoder_abc350_a": "S = input().strip()\nn = int(S[3:])\n\nif 1 <= n <= 349 and n != 316:\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+    "lcb_atcoder_abc387_a": "import sys\n\nA, B = map(int, sys.stdin.readline().split())\nprint((A + B) ** 2)",
+    "lcb_leetcode_3515": "from typing import List\n\nclass Solution:\n    def canAliceWin(self, nums: List[int]) -> bool:\n        single_sum = 0\n        double_sum = 0\n        total_sum = 0\n\n        for num in nums:\n            total_sum += num\n            if num < 10:\n                single_sum += num\n            else:\n                double_sum += num\n\n        return 2 * single_sum > total_sum or 2 * double_sum > total_sum",
+    "lcb_leetcode_3621": "from typing import List\n\nclass Solution:\n    def minOperations(self, nums: List[int], k: int) -> int:\n        if any(x < k for x in nums):\n            return -1\n        \n        return len({x for x in nums if x > k})",
+    "lcb_atcoder_abc370_a": "import sys\n\nL, R = map(int, sys.stdin.readline().split())\n\nif L == 1 and R == 0:\n    print(\"Yes\")\nelif L == 0 and R == 1:\n    print(\"No\")\nelse:\n    print(\"Invalid\")",
+    "lcb_atcoder_abc348_b": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    points = []\n    idx = 1\n\n    for _ in range(n):\n        x = data[idx]\n        y = data[idx + 1]\n        idx += 2\n        points.append((x, y))\n\n    answers = []\n\n    for i in range(n):\n        xi, yi = points[i]\n        best_dist = -1\n        best_id = -1\n\n        for j in range(n):\n            if i == j:\n                continue\n\n            xj, yj = points[j]\n            dx = xi - xj\n            dy = yi - yj\n            dist = dx * dx + dy * dy\n            point_id = j + 1\n\n            if dist > best_dist or (dist == best_dist and point_id < best_id):\n                best_dist = dist\n                best_id = point_id\n\n        answers.append(str(best_id))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3731": "from typing import List\n\nclass Solution:\n    def subarraySum(self, nums: List[int]) -> int:\n        n = len(nums)\n        prefix = [0] * (n + 1)\n        \n        for i in range(n):\n            prefix[i + 1] = prefix[i] + nums[i]\n        \n        total = 0\n        for i in range(n):\n            start = max(0, i - nums[i])\n            total += prefix[i + 1] - prefix[start]\n        \n        return total",
+    "lcb_atcoder_abc312_b": "import sys\n\ndef main():\n    input = sys.stdin.readline\n\n    N, M = map(int, input().split())\n    S = [input().strip() for _ in range(N)]\n\n    ans = []\n\n    for r in range(N - 8):\n        for c in range(M - 8):\n            ok = True\n\n            # Top-left 3x3 must be black\n            for dr in range(3):\n                for dc in range(3):\n                    if S[r + dr][c + dc] != '#':\n                        ok = False\n                        break\n                if not ok:\n                    break\n            if not ok:\n                continue\n\n            # Bottom-right 3x3 must be black\n            for dr in range(6, 9):\n                for dc in range(6, 9):\n                    if S[r + dr][c + dc] != '#':\n                        ok = False\n                        break\n                if not ok:\n                    break\n            if not ok:\n                continue\n\n            # Cells adjacent to the top-left 3x3 must be white\n            for dc in range(4):\n                if S[r + 3][c + dc] != '.':\n                    ok = False\n                    break\n            if not ok:\n                continue\n\n            for dr in range(3):\n                if S[r + dr][c + 3] != '.':\n                    ok = False\n                    break\n            if not ok:\n                continue\n\n            # Cells adjacent to the bottom-right 3x3 must be white\n            for dc in range(5, 9):\n                if S[r + 5][c + dc] != '.':\n                    ok = False\n                    break\n            if not ok:\n                continue\n\n            for dr in range(6, 9):\n                if S[r + dr][c + 5] != '.':\n                    ok = False\n                    break\n            if not ok:\n                continue\n\n            ans.append((r + 1, c + 1))\n\n    for i, j in ans:\n        print(i, j)\n\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc351_b": "import sys\n\ndef main():\n    input = sys.stdin.readline\n\n    N = int(input())\n    A = [input().strip() for _ in range(N)]\n\n    for i in range(N):\n        B_row = input().strip()\n\n        if A[i] != B_row:\n            for j in range(N):\n                if A[i][j] != B_row[j]:\n                    print(i + 1, j + 1)\n                    return\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3484": "class Solution:\n    def getSmallestString(self, s: str) -> str:\n        chars = list(s)\n        for i in range(len(chars) - 1):\n            if (ord(chars[i]) - ord('0')) % 2 == (ord(chars[i + 1]) - ord('0')) % 2:\n                if chars[i] > chars[i + 1]:\n                    chars[i], chars[i + 1] = chars[i + 1], chars[i]\n                    break\n        return ''.join(chars)",
+    "lcb_leetcode_3263": "from typing import List\n\nclass Solution:\n    def minimumCost(self, nums: List[int]) -> int:\n        n = len(nums)\n        answer = float('inf')\n        \n        for i in range(1, n - 1):\n            for j in range(i + 1, n):\n                answer = min(answer, nums[0] + nums[i] + nums[j])\n        \n        return answer",
+    "lcb_leetcode_2998": "class Solution:\n    def countSymmetricIntegers(self, low: int, high: int) -> int:\n        count = 0\n\n        for x in range(low, high + 1):\n            s = str(x)\n            n = len(s)\n\n            if n % 2 != 0:\n                continue\n\n            half = n // 2\n            left_sum = sum(int(ch) for ch in s[:half])\n            right_sum = sum(int(ch) for ch in s[half:])\n\n            if left_sum == right_sum:\n                count += 1\n\n        return count",
+    "lcb_leetcode_3636": "class Solution:\n    def isBalanced(self, num: str) -> bool:\n        even_sum = sum(int(num[i]) for i in range(0, len(num), 2))\n        odd_sum = sum(int(num[i]) for i in range(1, len(num), 2))\n        return even_sum == odd_sum",
+    "lcb_atcoder_abc335_a": "import sys\n\nS = sys.stdin.readline().strip()\nprint(S[:-1] + '4')",
+    "lcb_atcoder_abc362_a": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    R, G, B = map(int, data[:3])\n    C = data[3]\n\n    pens = {\n        \"Red\": R,\n        \"Green\": G,\n        \"Blue\": B\n    }\n\n    answer = min(price for color, price in pens.items() if color != C)\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc374_a": "import sys\n\nS = sys.stdin.readline().strip()\n\nif S.endswith(\"san\"):\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+    "lcb_leetcode_3361": "class Solution:\n    def findLatestTime(self, s: str) -> str:\n        for hour in range(11, -1, -1):\n            for minute in range(59, -1, -1):\n                time = f\"{hour:02d}:{minute:02d}\"\n                if all(a == '?' or a == b for a, b in zip(s, time)):\n                    return time\n        return \"\"",
+    "lcb_atcoder_abc301_a": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    N = int(data[0])\n    S = data[1]\n\n    t_count = S.count('T')\n    a_count = N - t_count\n\n    if t_count > a_count:\n        print('T')\n    elif a_count > t_count:\n        print('A')\n    else:\n        target = t_count\n        t = 0\n        a = 0\n\n        for ch in S:\n            if ch == 'T':\n                t += 1\n                if t == target:\n                    print('T')\n                    return\n            else:\n                a += 1\n                if a == target:\n                    print('A')\n                    return\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc337_a": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    takahashi = 0\n    aoki = 0\n\n    idx = 1\n    for _ in range(n):\n        takahashi += data[idx]\n        aoki += data[idx + 1]\n        idx += 2\n\n    if takahashi > aoki:\n        print(\"Takahashi\")\n    elif takahashi < aoki:\n        print(\"Aoki\")\n    else:\n        print(\"Draw\")\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc356_b": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M = data[0], data[1]\n    A = data[2:2 + M]\n\n    idx = 2 + M\n    totals = [0] * M\n\n    for _ in range(N):\n        for j in range(M):\n            totals[j] += data[idx]\n            idx += 1\n\n    print(\"Yes\" if all(totals[j] >= A[j] for j in range(M)) else \"No\")\n\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc354_b": "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    users = []\n\n    total = 0\n    for _ in range(n):\n        s, c = input().split()\n        c = int(c)\n        users.append(s)\n        total += c\n\n    users.sort()\n    print(users[total % n])\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_codeforces_1899_A": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ans = []\n\n    for n in data[1:1 + t]:\n        if n % 3 == 0:\n            ans.append(\"Second\")\n        else:\n            ans.append(\"First\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc339_a": "import sys\n\nS = sys.stdin.readline().strip()\nprint(S[S.rfind('.') + 1:])",
+    "lcb_atcoder_abc318_b": "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n\n    covered = [[False] * 100 for _ in range(100)]\n\n    for _ in range(n):\n        a, b, c, d = map(int, input().split())\n        for x in range(a, b):\n            for y in range(c, d):\n                covered[x][y] = True\n\n    area = sum(sum(row) for row in covered)\n    print(area)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3568": "class Solution:\n    def generateKey(self, num1: int, num2: int, num3: int) -> int:\n        s1 = str(num1).zfill(4)\n        s2 = str(num2).zfill(4)\n        s3 = str(num3).zfill(4)\n\n        key = ''.join(min(s1[i], s2[i], s3[i]) for i in range(4))\n        return int(key)",
+    "lcb_atcoder_abc318_a": "import sys\n\ndef main():\n    N, M, P = map(int, sys.stdin.readline().split())\n    if M > N:\n        print(0)\n    else:\n        print((N - M) // P + 1)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc306_a": "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    s = input().strip()\n    print(''.join(ch * 2 for ch in s))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3511": "class Solution:\n    def losingPlayer(self, x: int, y: int) -> str:\n        turns = min(x, y // 4)\n        return \"Alice\" if turns % 2 == 1 else \"Bob\"",
+    "lcb_leetcode_3684": "class Solution:\n    def hasMatch(self, s: str, p: str) -> bool:\n        left, right = p.split('*')\n        left_pos = s.find(left)\n        if left_pos == -1:\n            return False\n        return s.find(right, left_pos + len(left)) != -1",
+    "lcb_atcoder_abc307_b": "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    strings = [input().strip() for _ in range(n)]\n\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            t = strings[i] + strings[j]\n            if t == t[::-1]:\n                print(\"Yes\")\n                return\n\n    print(\"No\")\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_2777": "from typing import List\n\nclass Solution:\n    def distinctDifferenceArray(self, nums: List[int]) -> List[int]:\n        n = len(nums)\n        \n        prefix = [0] * n\n        seen = set()\n        for i in range(n):\n            seen.add(nums[i])\n            prefix[i] = len(seen)\n        \n        suffix = [0] * (n + 1)\n        seen.clear()\n        for i in range(n - 1, -1, -1):\n            seen.add(nums[i])\n            suffix[i] = len(seen)\n        \n        return [prefix[i] - suffix[i + 1] for i in range(n)]",
+    "lcb_leetcode_2870": "from typing import List\n\nclass Solution:\n    def alternatingSubarray(self, nums: List[int]) -> int:\n        n = len(nums)\n        ans = -1\n\n        for i in range(n):\n            for j in range(i + 1, n):\n                expected = nums[i] + ((j - i) % 2)\n\n                if nums[j] != expected:\n                    break\n\n                ans = max(ans, j - i + 1)\n\n        return ans",
+    "lcb_leetcode_3207": "class Solution:\n    def findMinimumOperations(self, s1: str, s2: str, s3: str) -> int:\n        limit = min(len(s1), len(s2), len(s3))\n        common = 0\n\n        while common < limit and s1[common] == s2[common] == s3[common]:\n            common += 1\n\n        if common == 0:\n            return -1\n\n        return (len(s1) - common) + (len(s2) - common) + (len(s3) - common)",
+    "lcb_atcoder_abc346_b": "import sys\n\nW, B = map(int, sys.stdin.readline().split())\n\nS = \"wbwbwwbwbwbw\"\nlength = W + B\n\nfor start in range(12):\n    white_count = 0\n    for i in range(length):\n        if S[(start + i) % 12] == 'w':\n            white_count += 1\n\n    if white_count == W:\n        print(\"Yes\")\n        sys.exit()\n\nprint(\"No\")",
+    "lcb_leetcode_2999": "class Solution:\n    def canBeEqual(self, s1: str, s2: str) -> bool:\n        return (\n            sorted(s1[0::2]) == sorted(s2[0::2]) and\n            sorted(s1[1::2]) == sorted(s2[1::2])\n        )",
+    "lcb_atcoder_abc399_b": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    n = data[0]\n    p = data[1:1 + n]\n\n    result = []\n    for score in p:\n        rank = 1 + sum(1 for other in p if other > score)\n        result.append(str(rank))\n\n    print(\"\\n\".join(result))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3055": "class Solution:\n    def maximumOddBinaryNumber(self, s: str) -> str:\n        ones = s.count('1')\n        zeros = len(s) - ones\n        return '1' * (ones - 1) + '0' * zeros + '1'",
+    "lcb_atcoder_abc320_a": "import sys\n\nA, B = map(int, sys.stdin.readline().split())\nprint(A ** B + B ** A)",
+    "lcb_leetcode_3429": "from typing import List\n\nclass Solution:\n    def isArraySpecial(self, nums: List[int]) -> bool:\n        for i in range(1, len(nums)):\n            if nums[i] % 2 == nums[i - 1] % 2:\n                return False\n        return True",
+    "lcb_atcoder_abc389_b": "import sys\n\nX = int(sys.stdin.readline())\n\nfactorial = 1\nn = 1\n\nwhile factorial < X:\n    n += 1\n    factorial *= n\n\nprint(n)",
+    "lcb_leetcode_3034": "from typing import List\n\nclass Solution:\n    def numberOfPoints(self, nums: List[List[int]]) -> int:\n        covered = set()\n        for start, end in nums:\n            covered.update(range(start, end + 1))\n        return len(covered)",
+    "lcb_atcoder_abc319_b": "import sys\n\ndef main():\n    N = int(sys.stdin.readline().strip())\n    ans = []\n\n    for i in range(N + 1):\n        for j in range(1, 10):\n            if N % j == 0 and i % (N // j) == 0:\n                ans.append(str(j))\n                break\n        else:\n            ans.append('-')\n\n    print(''.join(ans))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc369_a": "import sys\n\ndef main():\n    A, B = map(int, sys.stdin.readline().split())\n\n    candidates = set()\n\n    if (A + B) % 2 == 0:\n        candidates.add((A + B) // 2)\n\n    candidates.add(2 * A - B)\n    candidates.add(2 * B - A)\n\n    print(len(candidates))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc311_b": "import sys\n\ndef main():\n    input = sys.stdin.readline\n    N, D = map(int, input().split())\n    S = [input().strip() for _ in range(N)]\n\n    ans = 0\n    current = 0\n\n    for j in range(D):\n        if all(S[i][j] == 'o' for i in range(N)):\n            current += 1\n            ans = max(ans, current)\n        else:\n            current = 0\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc347_b": "import sys\n\nS = sys.stdin.readline().strip()\nsubstrings = set()\n\nfor i in range(len(S)):\n    for j in range(i + 1, len(S) + 1):\n        substrings.add(S[i:j])\n\nprint(len(substrings))",
+    "lcb_atcoder_abc398_a": "import sys\n\nN = int(sys.stdin.readline())\n\nif N % 2 == 1:\n    half = N // 2\n    ans = '-' * half + '=' + '-' * half\nelse:\n    half = N // 2 - 1\n    ans = '-' * half + '==' + '-' * half\n\nprint(ans)",
+    "lcb_leetcode_3398": "from typing import List\n\nclass Solution:\n    def canMakeSquare(self, grid: List[List[str]]) -> bool:\n        for i in range(2):\n            for j in range(2):\n                black = 0\n                white = 0\n                \n                for r in range(i, i + 2):\n                    for c in range(j, j + 2):\n                        if grid[r][c] == \"B\":\n                            black += 1\n                        else:\n                            white += 1\n                \n                if black >= 3 or white >= 3:\n                    return True\n                    \n        return False",
+    "lcb_atcoder_abc391_b": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    S = data[2:2 + N]\n    T = data[2 + N:2 + N + M]\n\n    for a in range(N - M + 1):\n        for b in range(N - M + 1):\n            match = True\n            for i in range(M):\n                if S[a + i][b:b + M] != T[i]:\n                    match = False\n                    break\n            if match:\n                print(a + 1, b + 1)\n                return\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc344_b": "import sys\n\ndef main():\n    numbers = sys.stdin.read().split()\n    numbers.reverse()\n    sys.stdout.write(\"\\n\".join(numbers))\n    if numbers:\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc366_a": "import sys\n\nN, T, A = map(int, sys.stdin.readline().split())\n\nremaining = N - T - A\n\nif T > A + remaining or A > T + remaining:\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+    "lcb_atcoder_abc353_a": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    N = data[0]\n    H = data[1:1 + N]\n\n    first_height = H[0]\n\n    for i in range(1, N):\n        if H[i] > first_height:\n            print(i + 1)\n            return\n\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_3227": "from typing import List\n\nclass Solution:\n    def findMissingAndRepeatedValues(self, grid: List[List[int]]) -> List[int]:\n        n = len(grid)\n        total_numbers = n * n\n        seen = set()\n        repeated = 0\n        actual_sum = 0\n\n        for row in grid:\n            for value in row:\n                actual_sum += value\n                if value in seen:\n                    repeated = value\n                else:\n                    seen.add(value)\n\n        expected_sum = total_numbers * (total_numbers + 1) // 2\n        missing = expected_sum + repeated - actual_sum\n\n        return [repeated, missing]",
+    "lcb_leetcode_3747": "from typing import List\n\nclass Solution:\n    def maxAdjacentDistance(self, nums: List[int]) -> int:\n        n = len(nums)\n        max_distance = 0\n        \n        for i in range(n):\n            distance = abs(nums[i] - nums[(i + 1) % n])\n            max_distance = max(max_distance, distance)\n        \n        return max_distance",
+    "lcb_atcoder_abc307_a": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N = data[0]\n    A = data[1:]\n\n    ans = [sum(A[i * 7:(i + 1) * 7]) for i in range(N)]\n    print(*ans)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc360_b": "import sys\n\ndef main():\n    S, T = sys.stdin.read().split()\n    n = len(S)\n\n    for w in range(1, n):\n        for c in range(1, w + 1):\n            result = []\n            for i in range(0, n, w):\n                chunk = S[i:i + w]\n                if len(chunk) >= c:\n                    result.append(chunk[c - 1])\n\n            if ''.join(result) == T:\n                print(\"Yes\")\n                return\n\n    print(\"No\")\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_codeforces_1873_D": "import sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        k = int(data[idx + 1])\n        s = data[idx + 2]\n        idx += 3\n\n        operations = 0\n        i = 0\n\n        while i < n:\n            if s[i] == ord('B'):\n                operations += 1\n                i += k\n            else:\n                i += 1\n\n        answers.append(str(operations))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()",
+    "lcb_atcoder_abc343_b": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    idx = 1\n    output = []\n\n    for i in range(n):\n        row = data[idx:idx + n]\n        idx += n\n\n        connected = [str(j + 1) for j, value in enumerate(row) if value == 1]\n        output.append(\" \".join(connected))\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc393_b": "import sys\n\nS = sys.stdin.readline().strip()\nn = len(S)\nanswer = 0\n\nfor j in range(n):\n    if S[j] != 'B':\n        continue\n\n    d = 1\n    while j - d >= 0 and j + d < n:\n        if S[j - d] == 'A' and S[j + d] == 'C':\n            answer += 1\n        d += 1\n\nprint(answer)",
+    "lcb_leetcode_3246": "from typing import List\n\nclass Solution:\n    def hasTrailingZeros(self, nums: List[int]) -> bool:\n        even_count = sum(1 for num in nums if num % 2 == 0)\n        return even_count >= 2",
+    "lcb_atcoder_abc329_b": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    a = data[1:1 + n]\n\n    maximum = max(a)\n    answer = max(x for x in a if x < maximum)\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc309_b": "import sys\n\ndef main():\n    input = sys.stdin.readline\n\n    N = int(input())\n    A = [list(input().strip()) for _ in range(N)]\n    B = [row[:] for row in A]\n\n    order = []\n\n    # Top row: left to right\n    for j in range(N):\n        order.append((0, j))\n\n    # Right column: top to bottom, excluding top-right\n    for i in range(1, N):\n        order.append((i, N - 1))\n\n    # Bottom row: right to left, excluding bottom-right\n    for j in range(N - 2, -1, -1):\n        order.append((N - 1, j))\n\n    # Left column: bottom to top, excluding both corners\n    for i in range(N - 2, 0, -1):\n        order.append((i, 0))\n\n    values = [A[i][j] for i, j in order]\n    L = len(values)\n\n    for k, (i, j) in enumerate(order):\n        B[i][j] = values[(k - 1) % L]\n\n    for row in B:\n        print(\"\".join(row))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_atcoder_abc369_b": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    MAX_KEY = 100\n    INF = 10**18\n\n    # dp[l][r]: minimum fatigue after processed presses,\n    # with left hand at l and right hand at r.\n    dp = [[0] * (MAX_KEY + 1) for _ in range(MAX_KEY + 1)]\n\n    idx = 1\n    for _ in range(N):\n        a = int(data[idx])\n        s = data[idx + 1]\n        idx += 2\n\n        ndp = [[INF] * (MAX_KEY + 1) for _ in range(MAX_KEY + 1)]\n\n        if s == 'L':\n            for r in range(1, MAX_KEY + 1):\n                best = INF\n                for l in range(1, MAX_KEY + 1):\n                    cost = dp[l][r] + abs(a - l)\n                    if cost < best:\n                        best = cost\n                ndp[a][r] = best\n        else:\n            for l in range(1, MAX_KEY + 1):\n                best = INF\n                for r in range(1, MAX_KEY + 1):\n                    cost = dp[l][r] + abs(a - r)\n                    if cost < best:\n                        best = cost\n                ndp[l][a] = best\n\n        dp = ndp\n\n    answer = INF\n    for l in range(1, MAX_KEY + 1):\n        for r in range(1, MAX_KEY + 1):\n            answer = min(answer, dp[l][r])\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_2819": "class Solution:\n    def removeTrailingZeros(self, num: str) -> str:\n        return num.rstrip('0') or \"0\"",
+    "lcb_atcoder_abc378_b": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    qr = [(next(it), next(it)) for _ in range(N)]\n\n    Q = next(it)\n    answers = []\n\n    for _ in range(Q):\n        t = next(it) - 1\n        d = next(it)\n\n        q, r = qr[t]\n        answers.append(str(d + (r - d % q) % q))\n\n    print(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()",
+    "lcb_leetcode_2917": "from typing import List\n\nclass Solution:\n    def countPairs(self, nums: List[int], target: int) -> int:\n        count = 0\n        n = len(nums)\n\n        for i in range(n):\n            for j in range(i + 1, n):\n                if nums[i] + nums[j] < target:\n                    count += 1\n\n        return count",
+    "lcb_leetcode_3188": "from typing import List\n\nclass Solution:\n    def findChampion(self, grid: List[List[int]]) -> int:\n        n = len(grid)\n        \n        for champion in range(n):\n            if all(grid[other][champion] == 0 for other in range(n)):\n                return champion\n        \n        return -1"
+  },
+  "by_benchmark": {
+    "lcb": [
+      [
+        "lcb_atcoder_abc328_a",
+        "There is a programming contest with N problems. For each i = 1, 2, \\ldots, N, the score for the i-th problem is S_i.\nPrint the total score for all problems with a score of X or less.\n\nInput\n\nThe input",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    N, X = data[0], data[1]\n    scores = data[2:2 + N]\n    print(sum(s for s in scores if s <= X))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_3019",
+        "You are given a string moves of length n consisting only of characters 'L', 'R', and '_'. The string represents your movement on a number line starting from the origin 0.\nIn the i^th move, you can cho",
+        "class Solution:\n    def furthestDistanceFromOrigin(self, moves: str) -> int:\n        left = moves.count('L')\n        right = moves.count('R')\n        wildcard = moves.count('_')\n        return abs(left - right) + wildcard"
+      ],
+      [
+        "lcb_leetcode_3626",
+        "You are given two integers n and t. Return the smallest number greater than or equal to n such that the product of its digits is divisible by t.\n \nExample 1:\n\nInput: n = 10, t = 2\nOutput: 10\nExplanati",
+        "class Solution:\n    def smallestNumber(self, n: int, t: int) -> int:\n        num = n\n        while True:\n            product = 1\n            for digit in str(num):\n                product *= int(digit)\n            if product % t == 0:\n                return num\n            num += 1"
+      ],
+      [
+        "lcb_leetcode_3331",
+        "You are given a 0-indexed integer array nums, and an integer k.\nIn one operation, you can remove one occurrence of the smallest element of nums.\nReturn the minimum number of operations needed so that ",
+        "from typing import List\n\nclass Solution:\n    def minOperations(self, nums: List[int], k: int) -> int:\n        return sum(1 for x in nums if x < k)"
+      ],
+      [
+        "lcb_atcoder_abc355_a",
+        "Takahashi's cake has been eaten by someone. There are three suspects: person 1, person 2, and person 3.\nThere are two witnesses, Ringo and Snuke. Ringo remembers that person A is not the culprit, and ",
+        "import sys\n\nA, B = map(int, sys.stdin.readline().split())\n\ncandidates = [i for i in range(1, 4) if i != A and i != B]\n\nif len(candidates) == 1:\n    print(candidates[0])\nelse:\n    print(-1)"
+      ],
+      [
+        "lcb_leetcode_3811",
+        "Given a string s, calculate its reverse degree.\nThe reverse degree is calculated as follows:\n\nFor each character, multiply its position in the reversed alphabet ('a' = 26, 'b' = 25, ..., 'z' = 1) with",
+        "class Solution:\n    def reverseDegree(self, s: str) -> int:\n        total = 0\n        for i, ch in enumerate(s, start=1):\n            total += i * (ord('z') - ord(ch) + 1)\n        return total"
+      ],
+      [
+        "lcb_atcoder_abc308_b",
+        "Takahashi ate N plates of sushi at a sushi restaurant.  The color of the i-th plate is represented by a string C_i.\nThe price of a sushi corresponds to the color of the plate.  For each i=1,\\ldots,M, ",
+        "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    it = iter(tokens)\n\n    N = int(next(it))\n    M = int(next(it))\n\n    C = [next(it) for _ in range(N)]\n    D = [next(it) for _ in range(M)]\n\n    P = [int(next(it)) for _ in range(M + 1)]\n\n    price = {D[i]: P[i + 1] for i in range(M)}\n\n    answer = sum(price.get(color, P[0]) for color in C)\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_3421",
+        "Given an integer array hours representing times in hours, return an integer denoting the number of pairs i, j where i < j and hours[i] + hours[j] forms a complete day.\nA complete day is defined as a t",
+        "from typing import List\n\nclass Solution:\n    def countCompleteDayPairs(self, hours: List[int]) -> int:\n        count = 0\n        remainder_count = [0] * 24\n\n        for hour in hours:\n            remainder = hour % 24\n            needed = (24 - remainder) % 24\n            count += remainder_count[needed]\n            remainder_count[remainder] += 1\n\n        return count"
+      ],
+      [
+        "lcb_leetcode_3533",
+        "There is a snake in an n x n matrix grid and can move in four possible directions. Each cell in the grid is identified by the position: grid[i][j] = (i * n) + j.\nThe snake starts at cell 0 and follows",
+        "from typing import List\n\nclass Solution:\n    def finalPositionOfSnake(self, n: int, commands: List[str]) -> int:\n        row = 0\n        col = 0\n\n        for command in commands:\n            if command == \"UP\":\n                row -= 1\n            elif command == \"DOWN\":\n                row += 1\n            elif command == \"LEFT\":\n                col -= 1\n            elif command == \"RIGHT\":\n                col += 1\n\n        return row * n + col"
+      ],
+      [
+        "lcb_leetcode_3617",
+        "Alice is attempting to type a specific string on her computer. However, she tends to be clumsy and may press a key for too long, resulting in a character being typed multiple times.\nAlthough Alice tri",
+        "class Solution:\n    def possibleStringCount(self, word: str) -> int:\n        ans = 1\n        i = 0\n        n = len(word)\n        \n        while i < n:\n            j = i\n            while j < n and word[j] == word[i]:\n                j += 1\n            ans += (j - i - 1)\n            i = j\n        \n        return ans"
+      ],
+      [
+        "lcb_codeforces_1873_B",
+        "Slavic is preparing a present for a friend's birthday. He has an array $a$ of $n$ digits and the present will be the product of all these digits. Because Slavic is a good kid who wants to make the big",
+        "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        a = data[idx:idx + n]\n        idx += n\n\n        min_pos = 0\n        for i in range(1, n):\n            if a[i] < a[min_pos]:\n                min_pos = i\n\n        a[min_pos] += 1\n\n        product = 1\n        for x in a:\n            product *= x\n\n        answers.append(str(product))\n\n    sys.stdout.wr"
+      ],
+      [
+        "lcb_leetcode_3044",
+        "You are given an array nums of positive integers and an integer k.\nIn one operation, you can remove the last element of the array and add it to your collection.\nReturn the minimum number of operations",
+        "from typing import List\n\nclass Solution:\n    def minOperations(self, nums: List[int], k: int) -> int:\n        seen = set()\n        operations = 0\n\n        for i in range(len(nums) - 1, -1, -1):\n            operations += 1\n            if nums[i] <= k:\n                seen.add(nums[i])\n\n            if len(seen) == k:\n                return operations\n\n        return operations"
+      ],
+      [
+        "lcb_leetcode_2955",
+        "Initially, you have a bank account balance of 100 dollars.\nYou are given an integer purchaseAmount representing the amount you will spend on a purchase in dollars.\nAt the store where you will make the",
+        "class Solution:\n    def accountBalanceAfterPurchase(self, purchaseAmount: int) -> int:\n        roundedAmount = ((purchaseAmount + 5) // 10) * 10\n        return 100 - roundedAmount"
+      ],
+      [
+        "lcb_leetcode_3193",
+        "You are given a 0-indexed integer array nums. A pair of integers x and y is called a strong pair if it satisfies the condition:\n\n|x - y| <= min(x, y)\n\nYou need to select two integers from nums such th",
+        "from typing import List\n\nclass Solution:\n    def maximumStrongPairXor(self, nums: List[int]) -> int:\n        ans = 0\n\n        for i in range(len(nums)):\n            for j in range(i, len(nums)):\n                x, y = nums[i], nums[j]\n                if abs(x - y) <= min(x, y):\n                    ans = max(ans, x ^ y)\n\n        return ans"
+      ],
+      [
+        "lcb_atcoder_abc385_b",
+        "There is a grid with H rows and W columns. Let (i,j) denote the cell at the i-th row from the top and the j-th column from the left.\nIf S_{i,j} is #, the cell (i,j) is impassable; if it is ., the cell",
+        "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    H = int(data[0])\n    W = int(data[1])\n    X = int(data[2]) - 1\n    Y = int(data[3]) - 1\n\n    grid = data[4:4 + H]\n    T = data[4 + H]\n\n    x, y = X, Y\n    visited_houses = set()\n\n    for move in T:\n        nx, ny = x, y\n\n        if move == ord('U'):\n            nx -= 1\n        elif move == ord('D'):\n            nx += 1\n        elif move == ord('L'):\n            ny -= 1\n        elif move == ord('R'):\n            ny += 1\n\n     "
+      ],
+      [
+        "lcb_leetcode_3616",
+        "You are given an integer array nums.\nStart by selecting a starting position curr such that nums[curr] == 0, and choose a movement direction of either left or right.\nAfter that, you repeat the followin",
+        "from typing import List\n\nclass Solution:\n    def countValidSelections(self, nums: List[int]) -> int:\n        total = sum(nums)\n        left = 0\n        ans = 0\n\n        for x in nums:\n            if x == 0:\n                right = total - left\n                diff = abs(left - right)\n\n                if diff == 0:\n                    ans += 2\n                elif diff == 1:\n                    ans += 1\n\n            left += x\n\n        return ans"
+      ],
+      [
+        "lcb_leetcode_3154",
+        "You are given a 0-indexed integer array nums.\nReturn the maximum value over all triplets of indices (i, j, k) such that i < j < k. If all such triplets have a negative value, return 0.\nThe value of a ",
+        "from typing import List\n\nclass Solution:\n    def maximumTripletValue(self, nums: List[int]) -> int:\n        max_value = 0\n        max_i = 0\n        max_diff = 0\n\n        for x in nums:\n            max_value = max(max_value, max_diff * x)\n            max_diff = max(max_diff, max_i - x)\n            max_i = max(max_i, x)\n\n        return max_value"
+      ],
+      [
+        "lcb_atcoder_abc389_a",
+        "You are given a 3-character string S, where the first character is a digit, the second character is the character x, and the third character is a digit.\nFind the product of the two numbers in S.\n\nInpu",
+        "import sys\n\nS = sys.stdin.readline().strip()\na, b = S.split('x')\nprint(int(a) * int(b))"
+      ],
+      [
+        "lcb_atcoder_abc361_a",
+        "You are given an integer sequence A of length N and integers K and X.\r\nPrint the integer sequence B obtained by inserting the integer X immediately after the K-th element of the sequence A.\n\nInput\n\nTh",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    N, K, X = data[0], data[1], data[2]\n    A = data[3:3 + N]\n\n    B = A[:K] + [X] + A[K:]\n    print(*B)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc363_a",
+        "In AtCoder, a user's rating is given as a positive integer, and based on this value, a certain number of ^ is displayed.\r\nSpecifically, when the rating is between 1 and 399, inclusive, the display rul",
+        "import sys\n\nR = int(sys.stdin.readline())\nprint(100 - (R % 100))"
+      ],
+      [
+        "lcb_leetcode_3183",
+        "You are given a 0-indexed integer array nums, and an integer k.\nThe K-or of nums is a non-negative integer that satisfies the following:\n\nThe i^th bit is set in the K-or if and only if there are at le",
+        "from typing import List\n\nclass Solution:\n    def findKOr(self, nums: List[int], k: int) -> int:\n        result = 0\n\n        for bit in range(31):\n            count = sum((num >> bit) & 1 for num in nums)\n            if count >= k:\n                result |= 1 << bit\n\n        return result"
+      ],
+      [
+        "lcb_atcoder_abc305_a",
+        "There is an ultramarathon course totaling 100\\;\\mathrm{km}.\r\nWater stations are set up every 5\\;\\mathrm{km} along the course, including the start and goal, for a total of 21.\nTakahashi is at the N\\;\\m",
+        "import sys\n\nN = int(sys.stdin.readline())\nprint(((N + 2) // 5) * 5)"
+      ],
+      [
+        "lcb_atcoder_abc338_a",
+        "You are given a non-empty string S consisting of uppercase and lowercase English letters. Determine whether the following condition is satisfied:\n\n- The first character of S is uppercase, and all othe",
+        "import sys\n\nS = sys.stdin.readline().strip()\n\nif S[0].isupper() and all(c.islower() for c in S[1:]):\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+      ],
+      [
+        "lcb_leetcode_3651",
+        "You are given an integer array nums that represents a circular array. Your task is to create a new array result of the same size, following these rules:\nFor each index i (where 0 <= i < nums.length), ",
+        "from typing import List\n\nclass Solution:\n    def constructTransformedArray(self, nums: List[int]) -> List[int]:\n        n = len(nums)\n        result = [0] * n\n\n        for i, value in enumerate(nums):\n            landing_index = (i + value) % n\n            result[i] = nums[landing_index]\n\n        return result"
+      ],
+      [
+        "lcb_leetcode_3379",
+        "You are given a string s. The score of a string is defined as the sum of the absolute difference between the ASCII values of adjacent characters.\nReturn the score of s.\n \nExample 1:\n\nInput: s = \"hello",
+        "class Solution:\n    def scoreOfString(self, s: str) -> int:\n        return sum(abs(ord(s[i]) - ord(s[i - 1])) for i in range(1, len(s)))"
+      ],
+      [
+        "lcb_atcoder_abc301_b",
+        "We have a sequence of length N consisting of positive integers: A=(A_1,\\ldots,A_N). Any two adjacent terms have different values.\nLet us insert some numbers into this sequence by the following procedu",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    a = data[1:1 + n]\n\n    ans = [a[0]]\n    prev = a[0]\n\n    for cur in a[1:]:\n        if prev < cur:\n            for x in range(prev + 1, cur + 1):\n                ans.append(x)\n        else:\n            for x in range(prev - 1, cur - 1, -1):\n                ans.append(x)\n        prev = cur\n\n    print(*ans)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc333_a",
+        "You are given an integer N between 1 and 9, inclusive, as input.\nConcatenate N copies of the digit N and print the resulting string.\n\nInput\n\nThe input is given from Standard Input in the following for",
+        "import sys\n\nN = int(sys.stdin.readline().strip())\nprint(str(N) * N)"
+      ],
+      [
+        "lcb_atcoder_abc348_a",
+        "Takahashi will have N penalty kicks in a soccer match.\nFor the i-th penalty kick, he will fail if i is a multiple of 3, and succeed otherwise.\nPrint the results of his penalty kicks.\n\nInput\n\nThe input",
+        "import sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    result = ''.join('x' if i % 3 == 0 else 'o' for i in range(1, n + 1))\n    print(result)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc323_b",
+        "There are N players numbered 1 to N, who have played a round-robin tournament. For every match in this tournament, one player won and the other lost.\nThe results of the matches are given as N strings ",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n    N = int(input())\n    wins = []\n\n    for _ in range(N):\n        s = input().strip()\n        wins.append(s.count('o'))\n\n    players = list(range(1, N + 1))\n    players.sort(key=lambda p: (-wins[p - 1], p))\n\n    print(*players)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_3251",
+        "You are given a 2D 0-indexed integer array dimensions.\nFor all indices i, 0 <= i < dimensions.length, dimensions[i][0] represents the length and dimensions[i][1] represents the width of the rectangle ",
+        "from typing import List\n\nclass Solution:\n    def areaOfMaxDiagonal(self, dimensions: List[List[int]]) -> int:\n        max_diagonal = -1\n        max_area = 0\n\n        for length, width in dimensions:\n            diagonal_squared = length * length + width * width\n            area = length * width\n\n            if diagonal_squared > max_diagonal:\n                max_diagonal = diagonal_squared\n                max_area = area\n            elif diagonal_squared == max_diagonal:\n                max_area"
+      ],
+      [
+        "lcb_leetcode_3236",
+        "You are given a 0-indexed array of integers nums.\nA prefix nums[0..i] is sequential if, for all 1 <= j <= i, nums[j] = nums[j - 1] + 1. In particular, the prefix consisting only of nums[0] is sequenti",
+        "from typing import List\n\nclass Solution:\n    def missingInteger(self, nums: List[int]) -> int:\n        prefix_sum = nums[0]\n        i = 1\n\n        while i < len(nums) and nums[i] == nums[i - 1] + 1:\n            prefix_sum += nums[i]\n            i += 1\n\n        present = set(nums)\n        x = prefix_sum\n\n        while x in present:\n            x += 1\n\n        return x"
+      ],
+      [
+        "lcb_atcoder_abc345_b",
+        "Given an integer X between -10^{18} and 10^{18}, inclusive, print \\left\\lceil \\dfrac{X}{10} \\right\\rceil.\r\nHere, \\left\\lceil a \\right\\rceil denotes the smallest integer not less than a.\n\nInput\n\nThe in",
+        "import sys\n\nx = int(sys.stdin.readline().strip())\nprint((x + 9) // 10)"
+      ],
+      [
+        "lcb_atcoder_abc303_a",
+        "Two characters x and y are called similar characters if and only if one of the following conditions is satisfied:\n\n- x and y are the same character.\n- One of x and y is 1 and the other is l.\n- One of ",
+        "import sys\n\ndef similar(a: str, b: str) -> bool:\n    if a == b:\n        return True\n    return (a == '1' and b == 'l') or (a == 'l' and b == '1') or \\\n           (a == '0' and b == 'o') or (a == 'o' and b == '0')\n\ndef main():\n    input = sys.stdin.readline\n    N = int(input())\n    S = input().strip()\n    T = input().strip()\n\n    for s, t in zip(S, T):\n        if not similar(s, t):\n            print(\"No\")\n            return\n\n    print(\"Yes\")\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc342_a",
+        "You are given a string S consisting of lowercase English letters. The length of S is between 3 and 100, inclusive.\nAll characters but one of S are the same.\nFind x such that the x-th character of S di",
+        "S = input().strip()\n\nfor i, ch in enumerate(S):\n    if S.count(ch) == 1:\n        print(i + 1)\n        break"
+      ],
+      [
+        "lcb_atcoder_abc350_a",
+        "You are given a string S of length 6. It is guaranteed that the first three characters of S are ABC and the last three characters are digits.\nDetermine if S is the abbreviation of a contest held and c",
+        "S = input().strip()\nn = int(S[3:])\n\nif 1 <= n <= 349 and n != 316:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+      ],
+      [
+        "lcb_atcoder_abc387_a",
+        "You are given two positive integers A and B.\nOutput the square of A + B.\n\nInput\n\nThe input is given from Standard Input in the following format:\nA B\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 1 \\leq ",
+        "import sys\n\nA, B = map(int, sys.stdin.readline().split())\nprint((A + B) ** 2)"
+      ],
+      [
+        "lcb_leetcode_3515",
+        "You are given an array of positive integers nums.\nAlice and Bob are playing a game. In the game, Alice can choose either all single-digit numbers or all double-digit numbers from nums, and the rest of",
+        "from typing import List\n\nclass Solution:\n    def canAliceWin(self, nums: List[int]) -> bool:\n        single_sum = 0\n        double_sum = 0\n        total_sum = 0\n\n        for num in nums:\n            total_sum += num\n            if num < 10:\n                single_sum += num\n            else:\n                double_sum += num\n\n        return 2 * single_sum > total_sum or 2 * double_sum > total_sum"
+      ],
+      [
+        "lcb_leetcode_3621",
+        "You are given an integer array nums and an integer k.\nAn integer h is called valid if all values in the array that are strictly greater than h are identical.\nFor example, if nums = [10, 8, 10, 8], a v",
+        "from typing import List\n\nclass Solution:\n    def minOperations(self, nums: List[int], k: int) -> int:\n        if any(x < k for x in nums):\n            return -1\n        \n        return len({x for x in nums if x > k})"
+      ],
+      [
+        "lcb_atcoder_abc370_a",
+        "Takahashi decided to make takoyaki (octopus balls) and serve it to Snuke. Takahashi instructed Snuke to raise only his left hand if he wants to eat takoyaki, and only his right hand otherwise.\nYou are",
+        "import sys\n\nL, R = map(int, sys.stdin.readline().split())\n\nif L == 1 and R == 0:\n    print(\"Yes\")\nelif L == 0 and R == 1:\n    print(\"No\")\nelse:\n    print(\"Invalid\")"
+      ],
+      [
+        "lcb_atcoder_abc348_b",
+        "On the xy-plane, there are N points with ID numbers from 1 to N. Point i is located at coordinates (X_i, Y_i), and no two points have the same coordinates.\nFrom each point, find the farthest point and",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    points = []\n    idx = 1\n\n    for _ in range(n):\n        x = data[idx]\n        y = data[idx + 1]\n        idx += 2\n        points.append((x, y))\n\n    answers = []\n\n    for i in range(n):\n        xi, yi = points[i]\n        best_dist = -1\n        best_id = -1\n\n        for j in range(n):\n            if i == j:\n                continue\n\n            xj, yj = points[j]\n"
+      ],
+      [
+        "lcb_leetcode_3731",
+        "You are given an integer array nums of size n. For each index i where 0 <= i < n, define a subarray nums[start ... i] where start = max(0, i - nums[i]).\nReturn the total sum of all elements from the s",
+        "from typing import List\n\nclass Solution:\n    def subarraySum(self, nums: List[int]) -> int:\n        n = len(nums)\n        prefix = [0] * (n + 1)\n        \n        for i in range(n):\n            prefix[i + 1] = prefix[i] + nums[i]\n        \n        total = 0\n        for i in range(n):\n            start = max(0, i - nums[i])\n            total += prefix[i + 1] - prefix[start]\n        \n        return total"
+      ],
+      [
+        "lcb_atcoder_abc312_b",
+        "Takahashi invented Tak Code, a two-dimensional code.  A TaK Code satisfies all of the following conditions:\n\n- It is a region consisting of nine horizontal rows and nine vertical columns.\n- All the 18",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n\n    N, M = map(int, input().split())\n    S = [input().strip() for _ in range(N)]\n\n    ans = []\n\n    for r in range(N - 8):\n        for c in range(M - 8):\n            ok = True\n\n            # Top-left 3x3 must be black\n            for dr in range(3):\n                for dc in range(3):\n                    if S[r + dr][c + dc] != '#':\n                        ok = False\n                        break\n                if not ok:\n                 "
+      ],
+      [
+        "lcb_atcoder_abc351_b",
+        "You are given two grids, each with N rows and N columns, referred to as grid A and grid B.\r\nEach cell in the grids contains a lowercase English letter.\r\nThe character at the i-th row and j-th column o",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n\n    N = int(input())\n    A = [input().strip() for _ in range(N)]\n\n    for i in range(N):\n        B_row = input().strip()\n\n        if A[i] != B_row:\n            for j in range(N):\n                if A[i][j] != B_row[j]:\n                    print(i + 1, j + 1)\n                    return\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_3484",
+        "Given a string s containing only digits, return the lexicographically smallest string that can be obtained after swapping adjacent digits in s with the same parity at most once.\nDigits have the same p",
+        "class Solution:\n    def getSmallestString(self, s: str) -> str:\n        chars = list(s)\n        for i in range(len(chars) - 1):\n            if (ord(chars[i]) - ord('0')) % 2 == (ord(chars[i + 1]) - ord('0')) % 2:\n                if chars[i] > chars[i + 1]:\n                    chars[i], chars[i + 1] = chars[i + 1], chars[i]\n                    break\n        return ''.join(chars)"
+      ],
+      [
+        "lcb_leetcode_3263",
+        "You are given an array of integers nums of length n.\nThe cost of an array is the value of its first element. For example, the cost of [1,2,3] is 1 while the cost of [3,4,1] is 3.\nYou need to divide nu",
+        "from typing import List\n\nclass Solution:\n    def minimumCost(self, nums: List[int]) -> int:\n        n = len(nums)\n        answer = float('inf')\n        \n        for i in range(1, n - 1):\n            for j in range(i + 1, n):\n                answer = min(answer, nums[0] + nums[i] + nums[j])\n        \n        return answer"
+      ],
+      [
+        "lcb_leetcode_2998",
+        "You are given two positive integers low and high.\nAn integer x consisting of 2 * n digits is symmetric if the sum of the first n digits of x is equal to the sum of the last n digits of x. Numbers with",
+        "class Solution:\n    def countSymmetricIntegers(self, low: int, high: int) -> int:\n        count = 0\n\n        for x in range(low, high + 1):\n            s = str(x)\n            n = len(s)\n\n            if n % 2 != 0:\n                continue\n\n            half = n // 2\n            left_sum = sum(int(ch) for ch in s[:half])\n            right_sum = sum(int(ch) for ch in s[half:])\n\n            if left_sum == right_sum:\n                count += 1\n\n        return count"
+      ],
+      [
+        "lcb_leetcode_3636",
+        "You are given a string num consisting of only digits. A string of digits is called balanced if the sum of the digits at even indices is equal to the sum of digits at odd indices.\nReturn true if num is",
+        "class Solution:\n    def isBalanced(self, num: str) -> bool:\n        even_sum = sum(int(num[i]) for i in range(0, len(num), 2))\n        odd_sum = sum(int(num[i]) for i in range(1, len(num), 2))\n        return even_sum == odd_sum"
+      ],
+      [
+        "lcb_atcoder_abc335_a",
+        "You are given a string S consisting of lowercase English letters and digits.\nS is guaranteed to end with 2023.\r\nChange the last character of S to 4 and print the modified string.\n\nInput\n\nThe input is ",
+        "import sys\n\nS = sys.stdin.readline().strip()\nprint(S[:-1] + '4')"
+      ],
+      [
+        "lcb_atcoder_abc362_a",
+        "Takahashi came to a store to buy a pen. Here, a red pen costs R yen, a green pen costs G yen, and a blue pen costs B yen.\nTakahashi dislikes the color C. If C is Red, he cannot buy a red pen; if C is ",
+        "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    R, G, B = map(int, data[:3])\n    C = data[3]\n\n    pens = {\n        \"Red\": R,\n        \"Green\": G,\n        \"Blue\": B\n    }\n\n    answer = min(price for color, price in pens.items() if color != C)\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc374_a",
+        "KEYENCE has a culture of addressing everyone with the suffix \"-san,\" regardless of roles, age, or positions.\nYou are given a string S consisting of lowercase English letters.\nIf S ends with san, print",
+        "import sys\n\nS = sys.stdin.readline().strip()\n\nif S.endswith(\"san\"):\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+      ],
+      [
+        "lcb_leetcode_3361",
+        "You are given a string s representing a 12-hour format time where some of the digits (possibly none) are replaced with a \"?\".\n12-hour times are formatted as \"HH:MM\", where HH is between 00 and 11, and",
+        "class Solution:\n    def findLatestTime(self, s: str) -> str:\n        for hour in range(11, -1, -1):\n            for minute in range(59, -1, -1):\n                time = f\"{hour:02d}:{minute:02d}\"\n                if all(a == '?' or a == b for a, b in zip(s, time)):\n                    return time\n        return \"\""
+      ],
+      [
+        "lcb_atcoder_abc301_a",
+        "Takahashi and Aoki played N games.\r\nYou are given a string S of length N, representing the results of these games.\r\nTakahashi won the i-th game if the i-th character of S is T, and Aoki won that game ",
+        "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    N = int(data[0])\n    S = data[1]\n\n    t_count = S.count('T')\n    a_count = N - t_count\n\n    if t_count > a_count:\n        print('T')\n    elif a_count > t_count:\n        print('A')\n    else:\n        target = t_count\n        t = 0\n        a = 0\n\n        for ch in S:\n            if ch == 'T':\n                t += 1\n                if t == target:\n                    print('T')\n                    return\n            else:\n              "
+      ],
+      [
+        "lcb_atcoder_abc337_a",
+        "Team Takahashi and Team Aoki played N matches.\r\nIn the i-th match (1\\leq i\\leq N), Team Takahashi scored X _ i points, and Team Aoki scored Y _ i points.\nThe team with the higher total score from the ",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    takahashi = 0\n    aoki = 0\n\n    idx = 1\n    for _ in range(n):\n        takahashi += data[idx]\n        aoki += data[idx + 1]\n        idx += 2\n\n    if takahashi > aoki:\n        print(\"Takahashi\")\n    elif takahashi < aoki:\n        print(\"Aoki\")\n    else:\n        print(\"Draw\")\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc356_b",
+        "Takahashi is health-conscious and concerned about whether he is getting enough of M types of nutrients from his diet.\nFor the i-th nutrient, his goal is to take at least A_i units per day.\nToday, he a",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M = data[0], data[1]\n    A = data[2:2 + M]\n\n    idx = 2 + M\n    totals = [0] * M\n\n    for _ in range(N):\n        for j in range(M):\n            totals[j] += data[idx]\n            idx += 1\n\n    print(\"Yes\" if all(totals[j] >= A[j] for j in range(M)) else \"No\")\n\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc354_b",
+        "N AtCoder users have gathered to play AtCoder RPS 2. The i-th user's name is S_i and their rating is C_i.\nAtCoder RPS 2 is played as follows:\n\n- Assign the numbers 0, 1, \\dots, N - 1 to the users in l",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    users = []\n\n    total = 0\n    for _ in range(n):\n        s, c = input().split()\n        c = int(c)\n        users.append(s)\n        total += c\n\n    users.sort()\n    print(users[total % n])\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_codeforces_1899_A",
+        "Vanya and Vova are playing a game. Players are given an integer $n$. On their turn, the player can add $1$ to the current integer or subtract $1$. The players take turns; Vanya starts. If after Vanya'",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ans = []\n\n    for n in data[1:1 + t]:\n        if n % 3 == 0:\n            ans.append(\"Second\")\n        else:\n            ans.append(\"First\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc339_a",
+        "You are given a string S consisting of lowercase English letters and the character ..\r\nPrint the last substring when S is split by .s.\r\nIn other words, print the longest suffix of S that does not cont",
+        "import sys\n\nS = sys.stdin.readline().strip()\nprint(S[S.rfind('.') + 1:])"
+      ],
+      [
+        "lcb_atcoder_abc318_b",
+        "There are N rectangular sheets spread out on a coordinate plane.\nEach side of the rectangular region covered by each sheet is parallel to the x- or y-axis.\r\nSpecifically, the i-th sheet covers exactly",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n\n    covered = [[False] * 100 for _ in range(100)]\n\n    for _ in range(n):\n        a, b, c, d = map(int, input().split())\n        for x in range(a, b):\n            for y in range(c, d):\n                covered[x][y] = True\n\n    area = sum(sum(row) for row in covered)\n    print(area)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_3568",
+        "You are given three positive integers num1, num2, and num3.\nThe key of num1, num2, and num3 is defined as a four-digit number such that:\n\nInitially, if any number has less than four digits, it is padd",
+        "class Solution:\n    def generateKey(self, num1: int, num2: int, num3: int) -> int:\n        s1 = str(num1).zfill(4)\n        s2 = str(num2).zfill(4)\n        s3 = str(num3).zfill(4)\n\n        key = ''.join(min(s1[i], s2[i], s3[i]) for i in range(4))\n        return int(key)"
+      ],
+      [
+        "lcb_atcoder_abc318_a",
+        "Takahashi likes full moons.\nLet today be day 1. The first day on or after today on which he can see a full moon is day M. After that, he can see a full moon every P days, that is, on day M+P, day M+2P",
+        "import sys\n\ndef main():\n    N, M, P = map(int, sys.stdin.readline().split())\n    if M > N:\n        print(0)\n    else:\n        print((N - M) // P + 1)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc306_a",
+        "You are given a string S of length N consisting of lowercase English letters.\nWe denote the i-th character of S by S_i.\nPrint the string of length 2N obtained by concatenating S_1,S_1,S_2,S_2,\\dots,S_",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    s = input().strip()\n    print(''.join(ch * 2 for ch in s))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_3511",
+        "You are given two positive integers x and y, denoting the number of coins with values 75 and 10 respectively.\nAlice and Bob are playing a game. Each turn, starting with Alice, the player must pick up ",
+        "class Solution:\n    def losingPlayer(self, x: int, y: int) -> str:\n        turns = min(x, y // 4)\n        return \"Alice\" if turns % 2 == 1 else \"Bob\""
+      ],
+      [
+        "lcb_leetcode_3684",
+        "You are given a string s and a pattern string p, where p contains exactly one '*' character.\nThe '*' in p can be replaced with any sequence of zero or more characters.\nReturn true if p can be made a s",
+        "class Solution:\n    def hasMatch(self, s: str, p: str) -> bool:\n        left, right = p.split('*')\n        left_pos = s.find(left)\n        if left_pos == -1:\n            return False\n        return s.find(right, left_pos + len(left)) != -1"
+      ],
+      [
+        "lcb_atcoder_abc307_b",
+        "You are given N strings S_1,S_2,\\ldots,S_N consisting of lowercase English letters.\r\nDetermine if there are distinct integers i and j between 1 and N, inclusive, such that the concatenation of S_i and",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    strings = [input().strip() for _ in range(n)]\n\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            t = strings[i] + strings[j]\n            if t == t[::-1]:\n                print(\"Yes\")\n                return\n\n    print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_2777",
+        "You are given a 0-indexed array nums of length n.\nThe distinct difference array of nums is an array diff of length n such that diff[i] is equal to the number of distinct elements in the suffix nums[i ",
+        "from typing import List\n\nclass Solution:\n    def distinctDifferenceArray(self, nums: List[int]) -> List[int]:\n        n = len(nums)\n        \n        prefix = [0] * n\n        seen = set()\n        for i in range(n):\n            seen.add(nums[i])\n            prefix[i] = len(seen)\n        \n        suffix = [0] * (n + 1)\n        seen.clear()\n        for i in range(n - 1, -1, -1):\n            seen.add(nums[i])\n            suffix[i] = len(seen)\n        \n        return [prefix[i] - suffix[i + 1] for i i"
+      ],
+      [
+        "lcb_leetcode_2870",
+        "You are given a 0-indexed integer array nums. A subarray s of length m is called alternating if:\n\nm is greater than 1.\ns_1 = s_0 + 1.\nThe 0-indexed subarray s looks like [s_0, s_1, s_0, s_1,...,s_(m-1",
+        "from typing import List\n\nclass Solution:\n    def alternatingSubarray(self, nums: List[int]) -> int:\n        n = len(nums)\n        ans = -1\n\n        for i in range(n):\n            for j in range(i + 1, n):\n                expected = nums[i] + ((j - i) % 2)\n\n                if nums[j] != expected:\n                    break\n\n                ans = max(ans, j - i + 1)\n\n        return ans"
+      ],
+      [
+        "lcb_leetcode_3207",
+        "You are given three strings s1, s2, and s3. You have to perform the following operation on these three strings as many times as you want.\nIn one operation you can choose one of these three strings suc",
+        "class Solution:\n    def findMinimumOperations(self, s1: str, s2: str, s3: str) -> int:\n        limit = min(len(s1), len(s2), len(s3))\n        common = 0\n\n        while common < limit and s1[common] == s2[common] == s3[common]:\n            common += 1\n\n        if common == 0:\n            return -1\n\n        return (len(s1) - common) + (len(s2) - common) + (len(s3) - common)"
+      ],
+      [
+        "lcb_atcoder_abc346_b",
+        "There is an infinitely long piano keyboard.\nIs there a continuous segment within this keyboard that consists of W white keys and B black keys?\n\nLet S be the string formed by infinitely repeating the s",
+        "import sys\n\nW, B = map(int, sys.stdin.readline().split())\n\nS = \"wbwbwwbwbwbw\"\nlength = W + B\n\nfor start in range(12):\n    white_count = 0\n    for i in range(length):\n        if S[(start + i) % 12] == 'w':\n            white_count += 1\n\n    if white_count == W:\n        print(\"Yes\")\n        sys.exit()\n\nprint(\"No\")"
+      ],
+      [
+        "lcb_leetcode_2999",
+        "You are given two strings s1 and s2, both of length 4, consisting of lowercase English letters.\nYou can apply the following operation on any of the two strings any number of times:\n\nChoose any two ind",
+        "class Solution:\n    def canBeEqual(self, s1: str, s2: str) -> bool:\n        return (\n            sorted(s1[0::2]) == sorted(s2[0::2]) and\n            sorted(s1[1::2]) == sorted(s2[1::2])\n        )"
+      ],
+      [
+        "lcb_atcoder_abc399_b",
+        "N people labeled from 1 to N participated in a certain contest. The score of person i (1 \\leq i \\leq N) was P_i.\nIn this contest, the rank of each of the N people is determined by the following proced",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    n = data[0]\n    p = data[1:1 + n]\n\n    result = []\n    for score in p:\n        rank = 1 + sum(1 for other in p if other > score)\n        result.append(str(rank))\n\n    print(\"\\n\".join(result))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_3055",
+        "You are given a binary string s that contains at least one '1'.\nYou have to rearrange the bits in such a way that the resulting binary number is the maximum odd binary number that can be created from ",
+        "class Solution:\n    def maximumOddBinaryNumber(self, s: str) -> str:\n        ones = s.count('1')\n        zeros = len(s) - ones\n        return '1' * (ones - 1) + '0' * zeros + '1'"
+      ],
+      [
+        "lcb_atcoder_abc320_a",
+        "You are given positive integers A and B.\r\nPrint the value A^B+B^A.\n\nInput\n\nThe input is given from Standard Input in the following format:\nA B\n\nOutput\n\nPrint the answer as an integer.\n\nConstraints\n\n\n-",
+        "import sys\n\nA, B = map(int, sys.stdin.readline().split())\nprint(A ** B + B ** A)"
+      ],
+      [
+        "lcb_leetcode_3429",
+        "An array is considered special if every pair of its adjacent elements contains two numbers with different parity.\nYou are given an array of integers nums. Return true if nums is a special array, other",
+        "from typing import List\n\nclass Solution:\n    def isArraySpecial(self, nums: List[int]) -> bool:\n        for i in range(1, len(nums)):\n            if nums[i] % 2 == nums[i - 1] % 2:\n                return False\n        return True"
+      ],
+      [
+        "lcb_atcoder_abc389_b",
+        "You are given an integer X not less than 2.\nFind the positive integer N such that N! = X.\nHere, N! denotes the factorial of N, and it is guaranteed that there is exactly one such N.\n\nInput\n\nThe input ",
+        "import sys\n\nX = int(sys.stdin.readline())\n\nfactorial = 1\nn = 1\n\nwhile factorial < X:\n    n += 1\n    factorial *= n\n\nprint(n)"
+      ],
+      [
+        "lcb_leetcode_3034",
+        "You are given a 0-indexed 2D integer array nums representing the coordinates of the cars parking on a number line. For any index i, nums[i] = [start_i, end_i] where start_i is the starting point of th",
+        "from typing import List\n\nclass Solution:\n    def numberOfPoints(self, nums: List[List[int]]) -> int:\n        covered = set()\n        for start, end in nums:\n            covered.update(range(start, end + 1))\n        return len(covered)"
+      ],
+      [
+        "lcb_atcoder_abc319_b",
+        "You are given a positive integer N. Print a string of length (N+1), s_0s_1\\ldots s_N, defined as follows.\n\nFor each i = 0, 1, 2, \\ldots, N,\n\n- if there is a divisor j of N that is between 1 and 9, inc",
+        "import sys\n\ndef main():\n    N = int(sys.stdin.readline().strip())\n    ans = []\n\n    for i in range(N + 1):\n        for j in range(1, 10):\n            if N % j == 0 and i % (N // j) == 0:\n                ans.append(str(j))\n                break\n        else:\n            ans.append('-')\n\n    print(''.join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc369_a",
+        "You are given two integers A and B.\nHow many integers x satisfy the following condition?\n\n- Condition: It is possible to arrange the three integers A, B, and x in some order to form an arithmetic sequ",
+        "import sys\n\ndef main():\n    A, B = map(int, sys.stdin.readline().split())\n\n    candidates = set()\n\n    if (A + B) % 2 == 0:\n        candidates.add((A + B) // 2)\n\n    candidates.add(2 * A - B)\n    candidates.add(2 * B - A)\n\n    print(len(candidates))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc311_b",
+        "There are N people numbered 1 to N.\r\nYou are given their schedule for the following D days. The schedule for person i is represented by a string S_i of length D. If the j-th character of S_i is o, per",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n    N, D = map(int, input().split())\n    S = [input().strip() for _ in range(N)]\n\n    ans = 0\n    current = 0\n\n    for j in range(D):\n        if all(S[i][j] == 'o' for i in range(N)):\n            current += 1\n            ans = max(ans, current)\n        else:\n            current = 0\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc347_b",
+        "You are given a string S consisting of lowercase English letters. How many different non-empty substrings does S have?\nA substring is a contiguous subsequence. For example, xxx is a substring of yxxxy",
+        "import sys\n\nS = sys.stdin.readline().strip()\nsubstrings = set()\n\nfor i in range(len(S)):\n    for j in range(i + 1, len(S) + 1):\n        substrings.add(S[i:j])\n\nprint(len(substrings))"
+      ],
+      [
+        "lcb_atcoder_abc398_a",
+        "Find a length-N string that satisfies all of the following conditions:\n\n- Each character is - or =.\n- It is a palindrome.\n- It contains exactly one or exactly two =s. If it contains two =s, they are a",
+        "import sys\n\nN = int(sys.stdin.readline())\n\nif N % 2 == 1:\n    half = N // 2\n    ans = '-' * half + '=' + '-' * half\nelse:\n    half = N // 2 - 1\n    ans = '-' * half + '==' + '-' * half\n\nprint(ans)"
+      ],
+      [
+        "lcb_leetcode_3398",
+        "You are given a 2D matrix grid of size 3 x 3 consisting only of characters 'B' and 'W'. Character 'W' represents the white color, and character 'B' represents the black color.\nYour task is to change t",
+        "from typing import List\n\nclass Solution:\n    def canMakeSquare(self, grid: List[List[str]]) -> bool:\n        for i in range(2):\n            for j in range(2):\n                black = 0\n                white = 0\n                \n                for r in range(i, i + 2):\n                    for c in range(j, j + 2):\n                        if grid[r][c] == \"B\":\n                            black += 1\n                        else:\n                            white += 1\n                \n             "
+      ],
+      [
+        "lcb_atcoder_abc391_b",
+        "You are given an N \\times N grid S and an M \\times M grid T. The cell at the i-th row from the top and the j-th column from the left is denoted by (i,j).\nThe colors of the cells in S and T are represe",
+        "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    S = data[2:2 + N]\n    T = data[2 + N:2 + N + M]\n\n    for a in range(N - M + 1):\n        for b in range(N - M + 1):\n            match = True\n            for i in range(M):\n                if S[a + i][b:b + M] != T[i]:\n                    match = False\n                    break\n            if match:\n                print(a + 1, b + 1)\n                return\n\ni"
+      ],
+      [
+        "lcb_atcoder_abc344_b",
+        "You are given N integers A_1,A_2,\\dots,A_N, one per line, over N lines. However, N is not given in the input.\r\nFurthermore, the following is guaranteed:\n\n- A_i \\neq 0 ( 1 \\le i \\le N-1 )\n- A_N = 0\n\nPr",
+        "import sys\n\ndef main():\n    numbers = sys.stdin.read().split()\n    numbers.reverse()\n    sys.stdout.write(\"\\n\".join(numbers))\n    if numbers:\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc366_a",
+        "A mayoral election is being held in AtCoder City. The candidates are Takahashi and Aoki.\nThere are N valid votes cast for either of the two candidates, and the counting is currently underway. Here, N ",
+        "import sys\n\nN, T, A = map(int, sys.stdin.readline().split())\n\nremaining = N - T - A\n\nif T > A + remaining or A > T + remaining:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+      ],
+      [
+        "lcb_atcoder_abc353_a",
+        "There are N buildings aligned in a row. The i-th building from the left has a height of H_i.\nDetermine if there is a building taller than the first one from the left. If such a building exists, find t",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    N = data[0]\n    H = data[1:1 + N]\n\n    first_height = H[0]\n\n    for i in range(1, N):\n        if H[i] > first_height:\n            print(i + 1)\n            return\n\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_3227",
+        "You are given a 0-indexed 2D integer matrix grid of size n * n with values in the range [1, n^2]. Each integer appears exactly once except a which appears twice and b which is missing. The task is to ",
+        "from typing import List\n\nclass Solution:\n    def findMissingAndRepeatedValues(self, grid: List[List[int]]) -> List[int]:\n        n = len(grid)\n        total_numbers = n * n\n        seen = set()\n        repeated = 0\n        actual_sum = 0\n\n        for row in grid:\n            for value in row:\n                actual_sum += value\n                if value in seen:\n                    repeated = value\n                else:\n                    seen.add(value)\n\n        expected_sum = total_numbers * ("
+      ],
+      [
+        "lcb_leetcode_3747",
+        "Given a circular array nums, find the maximum absolute difference between adjacent elements.\nNote: In a circular array, the first and last elements are adjacent.\n \nExample 1:\n\nInput: nums = [1,2,4]\nOu",
+        "from typing import List\n\nclass Solution:\n    def maxAdjacentDistance(self, nums: List[int]) -> int:\n        n = len(nums)\n        max_distance = 0\n        \n        for i in range(n):\n            distance = abs(nums[i] - nums[(i + 1) % n])\n            max_distance = max(max_distance, distance)\n        \n        return max_distance"
+      ],
+      [
+        "lcb_atcoder_abc307_a",
+        "Takahashi has recorded the number of steps he walked for N weeks. He walked A_i steps on the i-th day.\nFind the total number of steps Takahashi walked each week.\r\nMore precisely, find the sum of the s",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N = data[0]\n    A = data[1:]\n\n    ans = [sum(A[i * 7:(i + 1) * 7]) for i in range(N)]\n    print(*ans)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc360_b",
+        "You are given two strings S and T consisting of lowercase English letters.\nDetermine if there exists a pair of integers c and w such that 1 \\leq c \\leq w < |S| and the following condition is satisfied",
+        "import sys\n\ndef main():\n    S, T = sys.stdin.read().split()\n    n = len(S)\n\n    for w in range(1, n):\n        for c in range(1, w + 1):\n            result = []\n            for i in range(0, n, w):\n                chunk = S[i:i + w]\n                if len(chunk) >= c:\n                    result.append(chunk[c - 1])\n\n            if ''.join(result) == T:\n                print(\"Yes\")\n                return\n\n    print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_codeforces_1873_D",
+        "You are given a strip of paper $s$ that is $n$ cells long. Each cell is either black or white. In an operation you can take any $k$ consecutive cells and make them all white.\n\nFind the minimum number ",
+        "import sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        k = int(data[idx + 1])\n        s = data[idx + 2]\n        idx += 3\n\n        operations = 0\n        i = 0\n\n        while i < n:\n            if s[i] == ord('B'):\n                operations += 1\n                i += k\n            else:\n                i += 1\n\n        answers.append(str(operations))\n\n    sys.stdout.wri"
+      ],
+      [
+        "lcb_atcoder_abc343_b",
+        "There is a simple undirected graph G with N vertices labeled with numbers 1, 2, \\ldots, N.\nYou are given the adjacency matrix (A_{i,j}) of G. That is, G has an edge connecting vertices i and j if and ",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    idx = 1\n    output = []\n\n    for i in range(n):\n        row = data[idx:idx + n]\n        idx += n\n\n        connected = [str(j + 1) for j, value in enumerate(row) if value == 1]\n        output.append(\" \".join(connected))\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc393_b",
+        "A string S is given.\nFind how many places in S have A, B, and C in this order at even intervals.\nSpecifically, find the number of triples of integers (i,j,k) that satisfy all of the following conditio",
+        "import sys\n\nS = sys.stdin.readline().strip()\nn = len(S)\nanswer = 0\n\nfor j in range(n):\n    if S[j] != 'B':\n        continue\n\n    d = 1\n    while j - d >= 0 and j + d < n:\n        if S[j - d] == 'A' and S[j + d] == 'C':\n            answer += 1\n        d += 1\n\nprint(answer)"
+      ],
+      [
+        "lcb_leetcode_3246",
+        "You are given an array of positive integers nums.\nYou have to check if it is possible to select two or more elements in the array such that the bitwise OR of the selected elements has at least one tra",
+        "from typing import List\n\nclass Solution:\n    def hasTrailingZeros(self, nums: List[int]) -> bool:\n        even_count = sum(1 for num in nums if num % 2 == 0)\n        return even_count >= 2"
+      ],
+      [
+        "lcb_atcoder_abc329_b",
+        "You are given N integers A_1, A_2, \\ldots, A_N. Find the largest among those integers that are not the largest.\nThe constraints of this problem guarantee that the answer exists.\n\nInput\n\nThe input is g",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    a = data[1:1 + n]\n\n    maximum = max(a)\n    answer = max(x for x in a if x < maximum)\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_atcoder_abc309_b",
+        "You are given a grid with N rows and N columns.  An integer A_{i, j} is written on the square at the i-th row from the top and j-th column from the left.  Here, it is guaranteed that A_{i,j} is either",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n\n    N = int(input())\n    A = [list(input().strip()) for _ in range(N)]\n    B = [row[:] for row in A]\n\n    order = []\n\n    # Top row: left to right\n    for j in range(N):\n        order.append((0, j))\n\n    # Right column: top to bottom, excluding top-right\n    for i in range(1, N):\n        order.append((i, N - 1))\n\n    # Bottom row: right to left, excluding bottom-right\n    for j in range(N - 2, -1, -1):\n        order.append((N - 1, j))\n\n    "
+      ],
+      [
+        "lcb_atcoder_abc369_b",
+        "Takahashi has a piano with 100 keys arranged in a row.\r\nThe i-th key from the left is called key i.\nHe will play music by pressing N keys one by one.\r\nFor the i-th press, he will press key A_i, using ",
+        "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    MAX_KEY = 100\n    INF = 10**18\n\n    # dp[l][r]: minimum fatigue after processed presses,\n    # with left hand at l and right hand at r.\n    dp = [[0] * (MAX_KEY + 1) for _ in range(MAX_KEY + 1)]\n\n    idx = 1\n    for _ in range(N):\n        a = int(data[idx])\n        s = data[idx + 1]\n        idx += 2\n\n        ndp = [[INF] * (MAX_KEY + 1) for _ in range(MAX_KEY + 1)]\n\n        if s "
+      ],
+      [
+        "lcb_leetcode_2819",
+        "Given a positive integer num represented as a string, return the integer num without trailing zeros as a string.\n \nExample 1:\n\nInput: num = \"51230100\"\nOutput: \"512301\"\nExplanation: Integer \"51230100\" ",
+        "class Solution:\n    def removeTrailingZeros(self, num: str) -> str:\n        return num.rstrip('0') or \"0\""
+      ],
+      [
+        "lcb_atcoder_abc378_b",
+        "In AtCoder City, N types of garbage are collected regularly. The i-th type of garbage (i=1,2,\\dots,N) is collected on days when the date modulo q_i equals r_i.\nAnswer Q queries. In the j-th query (j=1",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    qr = [(next(it), next(it)) for _ in range(N)]\n\n    Q = next(it)\n    answers = []\n\n    for _ in range(Q):\n        t = next(it) - 1\n        d = next(it)\n\n        q, r = qr[t]\n        answers.append(str(d + (r - d % q) % q))\n\n    print(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "lcb_leetcode_2917",
+        "Given a 0-indexed integer array nums of length n and an integer target, return the number of pairs (i, j) where 0 <= i < j < n and nums[i] + nums[j] < target.\n \nExample 1:\n\nInput: nums = [-1,1,2,3,1],",
+        "from typing import List\n\nclass Solution:\n    def countPairs(self, nums: List[int], target: int) -> int:\n        count = 0\n        n = len(nums)\n\n        for i in range(n):\n            for j in range(i + 1, n):\n                if nums[i] + nums[j] < target:\n                    count += 1\n\n        return count"
+      ],
+      [
+        "lcb_leetcode_3188",
+        "There are n teams numbered from 0 to n - 1 in a tournament.\nGiven a 0-indexed 2D boolean matrix grid of size n * n. For all i, j that 0 <= i, j <= n - 1 and i != j team i is stronger than team j if gr",
+        "from typing import List\n\nclass Solution:\n    def findChampion(self, grid: List[List[int]]) -> int:\n        n = len(grid)\n        \n        for champion in range(n):\n            if all(grid[other][champion] == 0 for other in range(n)):\n                return champion\n        \n        return -1"
+      ]
+    ]
+  }
+}

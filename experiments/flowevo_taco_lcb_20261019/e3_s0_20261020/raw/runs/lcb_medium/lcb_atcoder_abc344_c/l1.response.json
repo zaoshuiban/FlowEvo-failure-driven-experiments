@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "93aa5d16-fe35-4faa-acda-6094434b2821",
+  "created": 1792431112,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 521,
+    "completion_tokens": 1765,
+    "total_tokens": 2286,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1585
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 521
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    A = [next(it) for _ in range(N)]\n\n    M = next(it)\n    B = [next(it) for _ in range(M)]\n\n    L = next(it)\n    C = [next(it) for _ in range(L)]\n\n    Q = next(it)\n    X = [next(it) for _ in range(Q)]\n\n    ab = {a + b for a in A for b in B}\n    possible = {s + c for s in ab for c in C}\n\n    ans = [\"Yes\" if x in possible else \"No\" for x in X]\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 7.734,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given three sequences A=(A_1,\\ldots,A_N), B=(B_1,\\ldots,B_M), and C=(C_1,\\ldots,C_L).\nAdditionally, a sequence X=(X_1,\\ldots,X_Q) is given. For each i=1,\\ldots,Q, solve the following problem:\nProblem: Is it possible to select one element from each of A, B, and C so that their sum is X_i?\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\nA_1 \\ldots A_N\nM\nB_1 \\ldots B_M\nL \nC_1 \\ldots C_L\nQ\nX_1 \\ldots X_Q\n\nOutput\n\nPrint Q lines.\nThe i-th line should contain Yes if it is possible to select one element from each of A, B, and C so that their sum is X_i, and No otherwise.\n\nConstraints\n\n\n- 1 \\leq N,M,L \\leq 100\n- 0 \\leq A_i, B_i ,C_i \\leq 10^8\n- 1 \\leq Q \\leq 2\\times 10^5\n- 0 \\leq X_i \\leq 3\\times 10^8\n- All input values are integers.\n\nSample Input 1\n\n3\n1 2 3\n2\n2 4\n6\n1 2 4 8 16 32\n4\n1 5 10 50\n\nSample Output 1\n\nNo\nYes\nYes\nNo\n\n\n- It is impossible to select one element from each of A, B, and C so that their sum is 1.\n- Selecting 1, 2, and 2 from A, B, and C, respectively, makes the sum 5.\n- Selecting 2, 4, and 4 from A, B, and C, respectively, makes the sum 10.\n- It is impossible to select one element from each of A, B, and C so that their sum is 50.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

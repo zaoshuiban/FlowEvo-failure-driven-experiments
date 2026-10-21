@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4b205d3e-df29-4b93-bf59-166ceb228fbe",
+  "created": 1792463611,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 398,
+    "completion_tokens": 12801,
+    "total_tokens": 13199,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11876
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 398
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1000000007\nSMALL_INDEX = {2: 0, 3: 1, 5: 2, 7: 3}\n\n\ndef build_info(limit=100):\n    spf = list(range(limit + 1))\n    for i in range(2, int(limit ** 0.5) + 1):\n        if spf[i] == i:\n            for j in range(i * i, limit + 1, i):\n                if spf[j] == j:\n                    spf[j] = i\n\n    infos = [(0, 0)] * (limit + 1)\n\n    for n in range(2, limit + 1):\n        x = n\n        mask = 0\n        large_prime = 0\n\n        while x > 1:\n            p = spf[x]\n\n            if p in SMALL_INDEX:\n                mask |= 1 << SMALL_INDEX[p]\n            else:\n                large_prime = p\n\n            while x % p == 0:\n                x //= p\n\n        infos[n] = (mask, large_prime)\n\n    return infos\n\n\ndef count_coefficients(m, infos):\n    small_count = [0] * 16\n    large_counts = {}\n\n    for n in range(2, m + 1):\n        mask, large_prime = infos[n]\n\n        if large_prime == 0:\n            small_count[mask] += 1\n        else:\n            if large_prime not in large_counts:\n                large_counts[large_prime] = [0] * 16\n            large_counts[large_prime][mask] += 1\n\n    max_len = m + 2\n    dp = [[0] * max_len for _ in range(16)]\n    dp[0][0] = 1\n\n    for support in range(1, 16):\n        cnt = small_count[support]\n        if cnt == 0:\n            continue\n\n        new_dp = [row[:] for row in dp]\n\n        for mask in range(16):\n            if mask & support:\n                continue\n\n            src = dp[mask]\n            dest = new_dp[mask | support]\n\n            for k in range(m + 1):\n                if src[k]:\n                    dest[k + 1] = (dest[k + 1] + src[k] * cnt) % MOD\n\n        dp = new_dp\n\n    for p in sorted(large_counts):\n        options = large_counts[p]\n        new_dp = [row[:] for row in dp]\n\n        for mask in range(16):\n            src = dp[mask]\n\n            for support in range(16):\n                cnt = options[support]\n\n                if cnt == 0 or (mask & support):\n                    continue\n\n                dest = new_dp[mask | support]\n\n                for k in range(m + 1):\n                    if src[k]:\n                        dest[k + 1] = (dest[k + 1] + src[k] * cnt) % MOD\n\n        dp = new_dp\n\n    coeff = [0] * max_len\n\n    for mask in range(16):\n        for k in range(max_len):\n            coeff[k] = (coeff[k] + dp[mask][k]) % MOD\n\n    return coeff\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n\n    infos = build_info(100)\n    cache = {}\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        if m not in cache:\n            cache[m] = count_coefficients(m, infos)\n\n        coeff = cache[m]\n\n        ans = 0\n        falling = 1\n\n        for k, ways in enumerate(coeff):\n            if k == 0:\n                falling = 1\n            else:\n                if k > n:\n                    break\n                falling = falling * ((n - k + 1) % MOD) % MOD\n\n            ans = (ans + ways * falling) % MOD\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 61.063,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nSereja asks you to find out number of arrays A of size N, i.e. A_{1}, A_{2}, ..., A_{N} (1 ≤ A_{i} ≤ M), such that for each pair i, j (1 ≤ i < j ≤ N) gcd(A_{i}, A_{j}) = 1. \n\nAs the answer could be large, print it modulo 10^{9} + 7 (1000000007).\n\n------ Input ------ \n\nFirst line of the input contain an integer T - number of test cases. \n\nT tests follow. First line of each test case contain two space separated integers N, M. \n\n------ Output ------ \n\nFor each test case output required answer modulo 10^{9} + 7.\n\n------ Constraints ------ \n\n$1 ≤ T ≤  10 $\n$1 ≤ N ≤  10^{5} $\n$1 ≤ M ≤  100 $\n\n------ Subtasks ------ \n\n$Subtask #1: (10 points, TL = 5 secs) 1 ≤ N, M ≤  10 $\n$Subtask #2: (25 points, TL = 5 secs) 1 ≤ N ≤  100 $\n$Subtask #3: (65 points, TL = 5 secs) original$\n\n------ Example ------ \n\nInput:\n2\n1 1\n3 3\n\nOutput:\n1\n13\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

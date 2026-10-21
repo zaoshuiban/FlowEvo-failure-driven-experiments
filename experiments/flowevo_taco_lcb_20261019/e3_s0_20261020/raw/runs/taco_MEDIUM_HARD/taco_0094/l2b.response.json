@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b2bfbf9a-cadc-49a3-9edf-c4c4ebe5be20",
+  "created": 1792440374,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 710,
+    "completion_tokens": 2683,
+    "total_tokens": 3393,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2405
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 198
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.readline\n\n    n_line = input()\n    if not n_line:\n        return\n\n    n = int(n_line)\n    s = input().strip()\n    t = input().strip()\n\n    parent = list(range(26))\n    size = [1] * 26\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(x, y):\n        rx = find(x)\n        ry = find(y)\n\n        if rx == ry:\n            return False\n\n        if size[rx] < size[ry]:\n            rx, ry = ry, rx\n\n        parent[ry] = rx\n        size[rx] += size[ry]\n        return True\n\n    answer = []\n\n    for a, b in zip(s, t):\n        u = ord(a) - ord('a')\n        v = ord(b) - ord('a')\n\n        if u != v and union(u, v):\n            answer.append((a, b))\n\n    output = [str(len(answer))]\n    output.extend(f\"{a} {b}\" for a, b in answer)\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 12.873,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nValya and Tolya are an ideal pair, but they quarrel sometimes. Recently, Valya took offense at her boyfriend because he came to her in t-shirt with lettering that differs from lettering on her pullover. Now she doesn't want to see him and Tolya is seating at his room and crying at her photos all day long.\n\nThis story could be very sad but fairy godmother (Tolya's grandmother) decided to help them and restore their relationship. She secretly took Tolya's t-shirt and Valya's pullover and wants to make the letterings on them same. In order to do this, for one unit of mana she can buy a spell that can change some letters on the clothes. Your task is calculate the minimum amount of mana that Tolya's grandmother should spend to rescue love of Tolya and Valya.\n\nMore formally, letterings on Tolya's t-shirt and Valya's pullover are two strings with same length n consisting only of lowercase English letters. Using one unit of mana, grandmother can buy a spell of form (c_1, c_2) (where c_1 and c_2 are some lowercase English letters), which can arbitrary number of times transform a single letter c_1 to c_2 and vise-versa on both Tolya's t-shirt and Valya's pullover. You should find the minimum amount of mana that grandmother should spend to buy a set of spells that can make the letterings equal. In addition you should output the required set of spells. \n\n\n-----Input-----\n\nThe first line contains a single integer n (1 ≤ n ≤ 10^5) — the length of the letterings.\n\nThe second line contains a string with length n, consisting of lowercase English letters — the lettering on Valya's pullover.\n\nThe third line contains the lettering on Tolya's t-shirt in the same format.\n\n\n-----Output-----\n\nIn the first line output a single integer — the minimum amount of mana t required for rescuing love of Valya and Tolya.\n\nIn the next t lines output pairs of space-separated lowercase English letters — spells that Tolya's grandmother should buy. Spells and letters in spells can be printed in any order.\n\nIf there are many optimal answers, output any.\n\n\n-----Examples-----\nInput\n3\nabb\ndad\n\nOutput\n2\na d\nb a\nInput\n8\ndrpepper\ncocacola\n\nOutput\n7\nl e\ne d\nd c\nc p\np o\no r\nr a\n\n\n\n-----Note-----\n\nIn first example it's enough to buy two spells: ('a','d') and ('b','a'). Then first letters will coincide when we will replace letter 'a' with 'd'. Second letters will coincide when we will replace 'b' with 'a'. Third letters will coincide when we will at first replace 'b' with 'a' and then 'a' with 'd'.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

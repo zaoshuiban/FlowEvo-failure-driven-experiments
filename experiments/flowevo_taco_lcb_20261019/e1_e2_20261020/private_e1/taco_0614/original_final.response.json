@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7f479092-2454-4023-bc35-5aaa66670923",
+  "created": 1792437719,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 647,
+    "completion_tokens": 482,
+    "total_tokens": 1129,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 364
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 647
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        n = data[idx]\n        s = data[idx + 1]\n        idx += 2\n\n        if s <= n:\n            ans.append(str(s))\n        else:\n            ans.append(str(2 * n - s))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 2.459,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef prepared two dishes yesterday. Chef had assigned the \\textbf{tastiness} T_{1} and T_{2} to the first and to the second dish respectively. The tastiness of the dishes can be any \\textbf{integer} between 0 and N (both inclusive).\n\nUnfortunately, Chef has forgotten the values of T_{1} and T_{2} that he had assigned to the dishes. However, he remembers the sum of the tastiness of both the dishes - denoted by S.\n\nChef wonders, what can be the maximum possible absolute difference between the tastiness of the two dishes. Can you help the Chef in finding the maximum absolute difference?\n\nIt is guaranteed that at least one pair \\{T_{1}, T_{2}\\} exist such that T_{1} + T_{2} = S, 0 ≤ T_{1}, T_{2} ≤ N.\n\n------ Input Format ------ \n\n- The first line of input contains a single integer T, denoting the number of testcases. The description of the T testcases follows.\n- The first and only line of each test case contains two space-separated integers N, S, denoting the maximum tastiness and the sum of tastiness of the two dishes, respectively.\n\n------ Output Format ------ \n\nFor each testcase, output a single line containing the maximum absolute difference between the tastiness of the two dishes.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{3}$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ S ≤ 2 \\cdot 10^{5}$\n\n----- Sample Input 1 ------ \n3\n3 1\n4 4\n2 3\n----- Sample Output 1 ------ \n1\n4\n1\n----- explanation 1 ------ \nTest Case $1$: The possible pairs of $\\{T_{1}, T_{2}\\}$ are $\\{0, 1\\}$ and $\\{1, 0\\}$. Difference in both the cases is $1$, hence the maximum possible absolute difference is $1$.\n\nTest Case $2$: The possible pairs of $\\{T_{1}, T_{2}\\}$ are $\\{0, 4\\}$, $\\{1, 3\\}$, $\\{2, 2\\}$, $\\{3, 1\\}$ and $\\{4, 0\\}$. The maximum possible absolute difference is $4$.\n\nTest Case $3$: The possible pairs of $\\{T_{1}, T_{2}\\}$ are $\\{1, 2\\}$ and $\\{2, 1\\}$. Difference in both the cases is $1$, and hence the maximum possible absolute difference is $1$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

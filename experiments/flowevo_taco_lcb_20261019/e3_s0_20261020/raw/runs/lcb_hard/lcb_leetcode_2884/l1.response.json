@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "17222e06-e4c5-4138-9f1f-e55a2b28aae2",
+  "created": 1792431030,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 469,
+    "completion_tokens": 3774,
+    "total_tokens": 4243,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3635
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 469
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:\n        forbidden_set = set(forbidden)\n        left = 0\n        answer = 0\n\n        for right in range(len(word)):\n            max_len = min(10, right - left + 1)\n\n            for length in range(1, max_len + 1):\n                if word[right - length + 1:right + 1] in forbidden_set:\n                    left = right - length + 2\n                    break\n\n            answer = max(answer, right - left + 1)\n\n        return answer\n```",
+  "latency_s": 18.737,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string word and an array of strings forbidden.\nA string is called valid if none of its substrings are present in forbidden.\nReturn the length of the longest valid substring of the string word.\nA substring is a contiguous sequence of characters in a string, possibly empty.\n \nExample 1:\n\nInput: word = \"cbaaaabc\", forbidden = [\"aaa\",\"cb\"]\nOutput: 4\nExplanation: There are 11 valid substrings in word: \"c\", \"b\", \"a\", \"ba\", \"aa\", \"bc\", \"baa\", \"aab\", \"ab\", \"abc\" and \"aabc\". The length of the longest valid substring is 4. \nIt can be shown that all other substrings contain either \"aaa\" or \"cb\" as a substring. \nExample 2:\n\nInput: word = \"leetcode\", forbidden = [\"de\",\"le\",\"e\"]\nOutput: 4\nExplanation: There are 11 valid substrings in word: \"l\", \"t\", \"c\", \"o\", \"d\", \"tc\", \"co\", \"od\", \"tco\", \"cod\", and \"tcod\". The length of the longest valid substring is 4.\nIt can be shown that all other substrings contain either \"de\", \"le\", or \"e\" as a substring. \n\n \nConstraints:\n\n1 <= word.length <= 10^5\nword consists only of lowercase English letters.\n1 <= forbidden.length <= 10^5\n1 <= forbidden[i].length <= 10\nforbidden[i] consists only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:\n        \n\nUse the required function/method named longestValidSubstring. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

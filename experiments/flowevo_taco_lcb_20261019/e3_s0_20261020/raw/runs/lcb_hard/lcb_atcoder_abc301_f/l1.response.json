@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "37c0b6b0-e006-42ec-927b-b0b6e7369cc4",
+  "created": 1792441042,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 418,
+    "completion_tokens": 25172,
+    "total_tokens": 25590,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24355
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 418
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\n\ndef main():\n    S = sys.stdin.readline().strip()\n    n = len(S)\n\n    # H[i]: number of ways to assign positions i..n-1 as U^+ L^*\n    # where the first character of the suffix must be uppercase.\n    H = [0] * (n + 1)\n    lw_after = 1  # product of lowercase-ways for positions after current position\n\n    for i in range(n - 1, -1, -1):\n        c = S[i]\n        if c == '?':\n            u = 26\n            lw = 26\n        elif 'A' <= c <= 'Z':\n            u = 1\n            lw = 0\n        else:\n            u = 0\n            lw = 1\n\n        H[i] = u * ((lw_after + H[i + 1]) % MOD) % MOD\n        lw_after = lw * lw_after % MOD\n\n    all_lower = lw_after\n    ans = (all_lower + H[0]) % MOD\n\n    fact = [1] * (n + 1)\n    pow26 = [1] * (n + 1)\n\n    for i in range(1, n + 1):\n        fact[i] = fact[i - 1] * i % MOD\n        pow26[i] = pow26[i - 1] * 26 % MOD\n\n    invfact = [1] * (n + 1)\n    invfact[n] = pow(fact[n], MOD - 2, MOD)\n\n    for i in range(n, 0, -1):\n        invfact[i - 1] = invfact[i] * i % MOD\n\n    # F = number of assignments of the processed prefix such that\n    # all uppercase letters in it are distinct.\n    question_count = 0\n    fixed_upper_count = 0\n    upper_mask = 0\n    duplicate_fixed_upper = False\n    F = 1\n\n    invf = invfact\n    pw = pow26\n\n    for i, c in enumerate(S):\n        if c == '?':\n            low_ways = 26\n        elif 'A' <= c <= 'Z':\n            low_ways = 0\n        else:\n            low_ways = 1\n\n        if F and low_ways:\n            ans = (ans + F * low_ways % MOD * H[i + 1]) % MOD\n\n        # Add S[i] to the prefix statistics.\n        if c == '?':\n            question_count += 1\n        elif 'A' <= c <= 'Z':\n            idx = ord(c) - ord('A')\n            bit = 1 << idx\n            if upper_mask & bit:\n                duplicate_fixed_upper = True\n            else:\n                upper_mask |= bit\n                fixed_upper_count += 1\n\n        # Compute F for the prefix including S[i].\n        if duplicate_fixed_upper:\n            F = 0\n        else:\n            available = 26 - fixed_upper_count\n            max_t = min(question_count, available)\n\n            base = fact[question_count] * fact[available] % MOD\n            total = 0\n\n            for t in range(max_t + 1):\n                term = base * invf[t] % MOD\n                term = term * invf[question_count - t] % MOD\n                term = term * invf[available - t] % MOD\n                term = term * pw[question_count - t] % MOD\n\n                total += term\n                if total >= MOD:\n                    total -= MOD\n\n            F = total\n\n    print(ans % MOD)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 122.74,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA DDoS-type string is a string of length 4 consisting of uppercase and lowercase English letters satisfying both of the following conditions.\n\n- The first, second, and fourth characters are uppercase English letters, and the third character is a lowercase English letter.\n- The first and second characters are equal.\n\nFor instance, DDoS and AAaA are DDoS-type strings, while neither ddos nor IPoE is.\nYou are given a string S consisting of uppercase and lowercase English letters and ?.\nLet q be the number of occurrences of ? in S. There are 52^q strings that can be obtained by independently replacing each ? in S with an uppercase or lowercase English letter.\nAmong these strings, find the number of ones that do not contain a DDoS-type string as a subsequence, modulo 998244353.\n\nInput\n\nThe input is given from Standard Input in the following format:\nS\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- S consists of uppercase English letters, lowercase English letters, and ?.\n- The length of S is between 4 and 3\\times 10^5, inclusive.\n\nSample Input 1\n\nDD??S\n\nSample Output 1\n\n676\n\nWhen at least one of the ?s is replaced with a lowercase English letter, the resulting string will contain a DDoS-type string as a subsequence.\n\nSample Input 2\n\n????????????????????????????????????????\n\nSample Output 2\n\n858572093\n\nFind the count modulo 998244353.\n\nSample Input 3\n\n?D??S\n\nSample Output 3\n\n136604\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

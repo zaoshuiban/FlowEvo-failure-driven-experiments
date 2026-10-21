@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8939d9df-d085-44b5-bb1f-fce92bd290ae",
+  "created": 1792432968,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 626,
+    "completion_tokens": 1882,
+    "total_tokens": 2508,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1620
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 242
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    pos = 0\n    n = int(data[pos])\n    pos += 1\n\n    matches = {}\n\n    for _ in range(n):\n        name = data[pos]\n        pos += 1\n\n        seen = set()\n        length = len(name)\n\n        for i in range(length):\n            for j in range(i + 1, length + 1):\n                sub = name[i:j]\n                if sub in seen:\n                    continue\n                seen.add(sub)\n\n                if sub in matches:\n                    matches[sub][0] += 1\n                else:\n                    matches[sub] = [1, name]\n\n    q = int(data[pos])\n    pos += 1\n\n    output = []\n\n    for _ in range(q):\n        query = data[pos]\n        pos += 1\n\n        if query in matches:\n            count, filename = matches[query]\n            output.append(str(count).encode() + b\" \" + filename)\n        else:\n            output.append(b\"0 -\")\n\n    sys.stdout.buffer.write(b\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 8.831,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nPolycarp is working on a new operating system called BerOS. He asks you to help with implementation of a file suggestion feature.\n\nThere are n files on hard drive and their names are f_1, f_2, ..., f_n. Any file name contains between 1 and 8 characters, inclusive. All file names are unique.\n\nThe file suggestion feature handles queries, each represented by a string s. For each query s it should count number of files containing s as a substring (i.e. some continuous segment of characters in a file name equals s) and suggest any such file name.\n\nFor example, if file names are \"read.me\", \"hosts\", \"ops\", and \"beros.18\", and the query is \"os\", the number of matched files is 2 (two file names contain \"os\" as a substring) and suggested file name can be either \"hosts\" or \"beros.18\".\n\nInput\n\nThe first line of the input contains integer n (1 ≤ n ≤ 10000) — the total number of files.\n\nThe following n lines contain file names, one per line. The i-th line contains f_i — the name of the i-th file. Each file name contains between 1 and 8 characters, inclusive. File names contain only lowercase Latin letters, digits and dot characters ('.'). Any sequence of valid characters can be a file name (for example, in BerOS \".\", \"..\" and \"...\" are valid file names). All file names are unique.\n\nThe following line contains integer q (1 ≤ q ≤ 50000) — the total number of queries.\n\nThe following q lines contain queries s_1, s_2, ..., s_q, one per line. Each s_j has length between 1 and 8 characters, inclusive. It contains only lowercase Latin letters, digits and dot characters ('.').\n\nOutput\n\nPrint q lines, one per query. The j-th line should contain the response on the j-th query — two values c_j and t_j, where\n\n  * c_j is the number of matched files for the j-th query, \n  * t_j is the name of any file matched by the j-th query. If there is no such file, print a single character '-' instead. If there are multiple matched files, print any. \n\nExample\n\nInput\n\n4\ntest\ncontests\ntest.\n.test\n6\nts\n.\nst.\n.test\ncontes.\nst\n\n\nOutput\n\n1 contests\n2 .test\n1 test.\n1 .test\n0 -\n4 test.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

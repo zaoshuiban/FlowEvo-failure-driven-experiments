@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7d2d80c0-dc52-48c7-921d-08057c5b8166",
+  "created": 1792442543,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 820,
+    "completion_tokens": 4710,
+    "total_tokens": 5530,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4568
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 436
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        a = int(data[idx])\n        b = int(data[idx + 1])\n        idx += 2\n\n        if a <= b:\n            probability = 0.0\n        else:\n            probability = (a - b) / (a + b)\n\n        answers.append(f\"{probability:.12f}\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 23.566,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLittle Lalit is an extremely good competitive coder. But recently, he was challenged by another fellow competitive programmer called Little Kundu.  Lalit decides to challenge Kundu to prove that he's better than him.  \n\nAfter a tough grueling competitive fight, Lalit manages to beat Kundu.  Let us give you some statistics from the contest. Lalit managed to solve only a  problems, while Kundu solved b problems. \n\nBut, Lalit is not just satisfied with his victory over Kundu now. Lalit wants to know the probability that his number of questions solved in the contest were strictly more than Kundu throughout the contest.\n\nHelp Lalit in finding the probability for the same.\n\nInput format:\nThe first line contains the number of test cases. Then, every single line will contain two integers a and b, denoting the number of problems solved by Lalit and Kundu.\n\nOutput format:\nFor each test case print the required probability.  The answer will be considered correct if its absolute or relative error doesn't exceed 10^-6.\n\nConstraints:\n1 ≤ Test Cases ≤ 1000\n1 ≤ A ≤ 10^5\n1 ≤ B < A   \n\nSAMPLE INPUT\n2\n3 2\n2 1\n\nSAMPLE OUTPUT\n0.200000000000\n0.333333333333\n\nExplanation\n\nLet's consider the second case. Lalit solved two problems, Kundu solved one. Here are the three ways by which this might have happened: \nKLL\nLKL\nLLK\n\nSo, there's only one case where Lalit would be strictly ahead of Kundu. So, the answer would be 1/3, i.e., 0.333333333333.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = int(data[idx])\n        b = int(data[idx + 1])\n        idx += 2\n\n        probability = (a - b) / (a + b)\n        ans.append(f\"{probability:.12f}\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given arrays A and B of length N each. Determine the number of *good* pairs.\n\nA pair (i,j) (1≤ i,j ≤ N) is said to be *good* if all of the following conditions are satisfied:\ni < j;\nA_{i} = B_\nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        A = [next(it) for _ in range(n)]\n        B = [next(it) for _ in range(n)]\n\n        freq = {}\n        ans = 0\n\n        for a, b in zip(A, B):\n            # Need previous i such that:\n            # A[i] = B[j] = b\n            # B[i] = A[j] = a\n            ans += freq.get((b, a), 0)\n\n            # Insert curre"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

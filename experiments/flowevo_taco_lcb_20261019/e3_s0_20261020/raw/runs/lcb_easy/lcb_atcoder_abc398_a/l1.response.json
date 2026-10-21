@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cb790ae2-d437-4977-8e94-0036f0b349c1",
+  "created": 1792430420,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 223,
+    "completion_tokens": 988,
+    "total_tokens": 1211,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 912
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 223
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nN = int(sys.stdin.readline())\n\nif N % 2 == 1:\n    half = N // 2\n    ans = '-' * half + '=' + '-' * half\nelse:\n    half = N // 2 - 1\n    ans = '-' * half + '==' + '-' * half\n\nprint(ans)\n```",
+  "latency_s": 5.52,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFind a length-N string that satisfies all of the following conditions:\n\n- Each character is - or =.\n- It is a palindrome.\n- It contains exactly one or exactly two =s. If it contains two =s, they are adjacent.\n\nSuch a string is unique.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 1 \\leq N \\leq 100\n- N is an integer.\n\nSample Input 1\n\n4\n\nSample Output 1\n\n-==-\n\nSample Input 2\n\n7\n\nSample Output 2\n\n---=---\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

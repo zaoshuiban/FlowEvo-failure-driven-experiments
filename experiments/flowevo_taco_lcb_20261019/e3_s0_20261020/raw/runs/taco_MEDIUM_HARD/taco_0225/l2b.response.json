@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4322c6d1-e680-4da1-9f47-1482fe2c7427",
+  "created": 1792444802,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 725,
+    "completion_tokens": 12867,
+    "total_tokens": 13592,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12581
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 213
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n\n        nxt = [0] * (n + 1)\n        off_diagonal = 0\n\n        for _ in range(m):\n            x = next(it)\n            y = next(it)\n\n            if x != y:\n                nxt[x] = y\n                off_diagonal += 1\n\n        state = bytearray(n + 1)\n        cycles = 0\n\n        for start in range(1, n + 1):\n            if nxt[start] != 0 and state[start] == 0:\n                path = []\n                u = start\n\n                while u != 0 and state[u] == 0:\n                    state[u] = 1\n                    path.append(u)\n                    u = nxt[u]\n\n                if u != 0 and state[u] == 1:\n                    cycles += 1\n\n                for v in path:\n                    state[v] = 2\n\n        answers.append(str(off_diagonal + cycles))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 64.419,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a $n \\times n$ chessboard. Rows and columns of the board are numbered from $1$ to $n$. Cell $(x, y)$ lies on the intersection of column number $x$ and row number $y$.\n\nRook is a chess piece, that can in one turn move any number of cells vertically or horizontally. There are $m$ rooks ($m < n$) placed on the chessboard in such a way that no pair of rooks attack each other. I.e. there are no pair of rooks that share a row or a column.\n\nIn one turn you can move one of the rooks any number of cells vertically or horizontally. Additionally, it shouldn't be attacked by any other rook after movement. What is the minimum number of moves required to place all the rooks on the main diagonal?\n\nThe main diagonal of the chessboard is all the cells $(i, i)$, where $1 \\le i \\le n$.\n\n\n-----Input-----\n\nThe first line contains the number of test cases $t$ ($1 \\leq t \\leq 10^3$). Description of the $t$ test cases follows.\n\nThe first line of each test case contains two integers $n$ and $m$ — size of the chessboard and the number of rooks ($2 \\leq n \\leq 10^5$, $1 \\leq m < n$). Each of the next $m$ lines contains two integers $x_i$ and $y_i$ — positions of rooks, $i$-th rook is placed in the cell $(x_i, y_i)$ ($1 \\leq x_i, y_i \\leq n$). It's guaranteed that no two rooks attack each other in the initial placement.\n\nThe sum of $n$ over all test cases does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each of $t$ test cases print a single integer — the minimum number of moves required to place all the rooks on the main diagonal.\n\nIt can be proved that this is always possible.\n\n\n-----Examples-----\n\nInput\n4\n3 1\n2 3\n3 2\n2 1\n1 2\n5 3\n2 3\n3 1\n1 2\n5 4\n4 5\n5 1\n2 2\n3 3\nOutput\n1\n3\n4\n2\n\n\n-----Note-----\n\nPossible moves for the first three test cases:\n\n$(2, 3) \\to (2, 2)$\n\n$(2, 1) \\to (2, 3)$, $(1, 2) \\to (1, 1)$, $(2, 3) \\to (2, 2)$\n\n$(2, 3) \\to (2, 4)$, $(2, 4) \\to (4, 4)$, $(3, 1) \\to (3, 3)$, $(1, 2) \\to (1, 1)$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

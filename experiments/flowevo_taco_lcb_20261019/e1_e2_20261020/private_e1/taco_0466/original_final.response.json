@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d6e79142-7b6d-4ba5-b63e-5676e67525a1",
+  "created": 1792432423,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 543,
+    "completion_tokens": 9555,
+    "total_tokens": 10098,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8832
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 543
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    ptr = 0\n    n = data[ptr]\n    q = data[ptr + 1]\n    ptr += 2\n\n    a = data[ptr:ptr + n]\n    ptr += n\n\n    # prefix[p] = A[0] xor A[1] xor ... xor A[p]\n    base = [0] * n\n    cur = 0\n    for i in range(n):\n        cur ^= a[i]\n        base[i] = cur\n\n    block_size = int(n ** 0.5) + 1\n    block_count = (n + block_size - 1) // block_size\n\n    lazy = [0] * block_count\n    freq = []\n\n    for b in range(block_count):\n        start = b * block_size\n        end = min(n, start + block_size)\n        d = {}\n        for p in range(start, end):\n            v = base[p]\n            d[v] = d.get(v, 0) + 1\n        freq.append(d)\n\n    answers = []\n\n    for _ in range(q):\n        typ = data[ptr]\n        x = data[ptr + 1]\n        y = data[ptr + 2]\n        ptr += 3\n\n        if typ == 1:\n            idx = x - 1\n            new_value = y\n\n            old_value = a[idx]\n            delta = old_value ^ new_value\n\n            if delta == 0:\n                a[idx] = new_value\n                continue\n\n            a[idx] = new_value\n\n            b = idx // block_size\n            start = b * block_size\n            end = min(n, start + block_size)\n\n            if idx == start:\n                # The whole block and all later blocks are affected.\n                for bb in range(b, block_count):\n                    lazy[bb] ^= delta\n            else:\n                # Update only the suffix part inside this block.\n                d = freq[b]\n                for p in range(idx, end):\n                    old_v = base[p]\n                    new_v = old_v ^ delta\n                    base[p] = new_v\n\n                    cnt = d[old_v] - 1\n                    if cnt:\n                        d[old_v] = cnt\n                    else:\n                        del d[old_v]\n\n                    d[new_v] = d.get(new_v, 0) + 1\n\n                # All blocks after this one are fully affected.\n                for bb in range(b + 1, block_count):\n                    lazy[bb] ^= delta\n\n        else:\n            # Count prefix xor values at positions 0 ... x-1 that equal y.\n            right = x\n            k = y\n            result = 0\n\n            full_blocks = right // block_size\n\n            for b in range(full_blocks):\n                result += freq[b].get(k ^ lazy[b], 0)\n\n            start = full_blocks * block_size\n            if start < right:\n                b = full_blocks\n                lz = lazy[b]\n                for p in range(start, right):\n                    if (base[p] ^ lz) == k:\n                        result += 1\n\n            answers.append(str(result))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 43.399,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin chinese, Russian and Vietnamese as well. \n\nChef always likes to play with arrays. He came up with a new term \"magical subarray\". A subarray is called magical if its starting index is 1 (1-based indexing). Now, Chef has an array of N elements and 2 types of queries:\n\ntype 1: Given two numbers i and x, the value at index i should be updated to x.\ntype 2: Given two numbers i and k, your program should output the total number of magical subarrays with the last index ≤ i in which the xor of all elements is equal to k.\n\n------ Input ------ \n\nThe first line of the input contains two integers N and Q denoting the number of elements in the array and the number of queries respectively.\nThe second line contains N space-separated integers A_{1}, A_{2} ... A_{N} denoting the initial values of the array.\nEach of the following Q lines describes an operation. If the first integer is 1, it means that the operation is of type 1 and it will be followed by two integers i and x. If the first integer is 2, it means that the operations is of type 2 and it will be followed by two integers i and k.\n\n------ Output ------ \n\nFor each operation of type 2, print the number of magical subarrays on a separate line.\n\n------ Constraints ------ \n\n$1 ≤ N, Q ≤ 100,000$\n$1 ≤ A[i] ≤ 1,000,000$\n$1 ≤ i ≤ N$\n$1 ≤ x, k ≤ 1,000,000$\n\n------ Subtasks ------ \n\nSubtask #1 (20 points): 1 ≤ N, Q ≤ 1,000\n\nSubtask #2 (30 points): 1 ≤ N, Q ≤ 10,000\n\nSubtask #3 (50 points): original constraints\n\n----- Sample Input 1 ------ \n5 3\n1 1 1 1 1\n2 5 1\n1 3 2\n2 5 1\n----- Sample Output 1 ------ \n3\n1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f0e35c6e-6081-452b-bf68-a0ae48492f63",
+  "created": 1792434425,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 402,
+    "completion_tokens": 600,
+    "total_tokens": 1002,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 437
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 146
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef count_pretty(n: int) -> int:\n    q, r = divmod(n, 10)\n    return q * 3 + sum(1 for d in (2, 3, 9) if d <= r)\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        l = data[idx]\n        r = data[idx + 1]\n        idx += 2\n\n        ans.append(str(count_pretty(r) - count_pretty(l - 1)))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 2.938,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nVasya likes the number $239$. Therefore, he considers a number pretty if its last digit is $2$, $3$ or $9$. \nVasya wants to watch the numbers between $L$ and $R$ (both inclusive), so he asked you to determine how many pretty numbers are in this range. Can you help him?\n\n-----Input-----\n- The first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\n- The first and only line of each test case contains two space-separated integers $L$ and $R$.\n\n-----Output-----\nFor each test case, print a single line containing one integer — the number of pretty numbers between $L$ and $R$.\n\n-----Constraints-----\n- $1 \\le T \\le 100$\n- $1 \\le L \\le R \\le 10^5$\n\n-----Subtasks-----\nSubtask #1 (100 points): original constraints\n\n-----Example Input-----\n2\n1 10\n11 33\n\n-----Example Output-----\n3\n8\n\n-----Explanation-----\nExample case 1: The pretty numbers between $1$ and $10$ are $2$, $3$ and $9$.\nExample case 2: The pretty numbers between $11$ and $33$ are $12$, $13$, $19$, $22$, $23$, $29$, $32$ and $33$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

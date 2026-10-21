@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9a5f6b68-4de1-4f94-8443-2679a9185d71",
+  "created": 1792428783,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 220,
+    "completion_tokens": 6610,
+    "total_tokens": 6830,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6268
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 220
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef next_lucky(number: str) -> str:\n    s = number.lstrip('0') or '0'\n    m = len(s)\n\n    # prefix_lucky[i] is True if s[:i] consists only of digits 3 and 5\n    prefix_lucky = [True] * (m + 1)\n    for i, ch in enumerate(s):\n        prefix_lucky[i + 1] = prefix_lucky[i] and (ch == '3' or ch == '5')\n\n    # Try to find the smallest same-length lucky number greater than s\n    for i in range(m - 1, -1, -1):\n        if not prefix_lucky[i]:\n            continue\n\n        ch = s[i]\n\n        if ch < '3':\n            digit = '3'\n        elif ch < '5':\n            digit = '5'\n        else:\n            continue\n\n        return s[:i] + digit + '3' * (m - i - 1)\n\n    # No same-length lucky number is greater, so use smallest number\n    # with one more digit: all 3s.\n    return '3' * (m + 1)\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    answers = []\n\n    for i in range(1, t + 1):\n        n = data[i].decode()\n        answers.append(next_lucky(n))\n\n    sys.stdout.write('\\n'.join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 31.327,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLucky numbers are defined as the numbers consisting only of digits 3 and 5. So, given a number N, you have to print the least lucky number strictly greater than N.\n\nInput:\nFirst line of input contains number of test cases T. Each test case contains a single number N.  \n\nOutput:\nFor each test case, print the next lucky number in a separate line.  \n\nConstraints:\n1 ≤ T ≤ 1000  \n1 ≤ N ≤ 10^100\n\nSAMPLE INPUT\n4\n4\n48\n130\n98SAMPLE OUTPUT\n5\n53\n333\n333\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

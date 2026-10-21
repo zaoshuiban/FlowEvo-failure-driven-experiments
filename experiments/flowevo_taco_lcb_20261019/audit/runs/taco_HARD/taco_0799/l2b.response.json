@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b55fb251-f1f1-41dd-ad40-f6e045045164",
+  "created": 1792436280,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 446,
+    "completion_tokens": 29135,
+    "total_tokens": 29581,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 27788
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 190
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n\n    small_primes = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)\n    for p in small_primes:\n        if n % p == 0:\n            return n == p\n\n    d = n - 1\n    s = 0\n    while d % 2 == 0:\n        s += 1\n        d //= 2\n\n    # Deterministic Miller-Rabin bases for 64-bit integers\n    for a in (2, 325, 9375, 28178, 450775, 9780504, 1795265022):\n        if a % n == 0:\n            continue\n        x = pow(a, d, n)\n        if x == 1 or x == n - 1:\n            continue\n        for _ in range(s - 1):\n            x = x * x % n\n            if x == n - 1:\n                break\n        else:\n            return False\n\n    return True\n\n\ndef ntt(a, invert, mod, rev, roots, n):\n    for i in range(n):\n        j = rev[i]\n        if i < j:\n            a[i], a[j] = a[j], a[i]\n\n    length = 2\n    while length <= n:\n        half = length >> 1\n        step = n // length\n\n        for start in range(0, n, length):\n            j = start\n            end = start + half\n\n            if not invert:\n                wpos = 0\n                while j < end:\n                    u = a[j]\n                    v = a[j + half] * roots[wpos] % mod\n\n                    s = u + v\n                    if s >= mod:\n                        s -= mod\n\n                    d = u - v\n                    if d < 0:\n                        d += mod\n\n                    a[j] = s\n                    a[j + half] = d\n\n                    wpos += step\n                    j += 1\n            else:\n                wpos = 0\n                while j < end:\n                    u = a[j]\n                    v = a[j + half] * roots[wpos] % mod\n\n                    s = u + v\n                    if s >= mod:\n                        s -= mod\n\n                    d = u - v\n                    if d < 0:\n                        d += mod\n\n                    a[j] = s\n                    a[j + half] = d\n\n                    wpos -= step\n                    if wpos < 0:\n                        wpos += n\n                    j += 1\n\n        length <<= 1\n\n    if invert:\n        inv_n = pow(n, mod - 2, mod)\n        for i in range(n):\n            a[i] = a[i] * inv_n % mod\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    x = data[1]\n    arr = data[2:2 + n]\n\n    m = sum(1 for v in arr if v < x)\n\n    freq = [0] * (m + 1)\n    freq[0] = 1\n\n    pref = 0\n    for v in arr:\n        if v < x:\n            pref += 1\n        freq[pref] += 1\n\n    ans = [0] * (n + 1)\n\n    # For small number of elements < x, direct computation is faster.\n    if m <= 1000:\n        c0 = 0\n        for v in range(m + 1):\n            c0 += freq[v] * freq[v]\n\n        ans[0] = (c0 - (n + 1)) // 2\n\n        for k in range(1, m + 1):\n            total = 0\n            limit = m - k + 1\n            for v in range(limit):\n                total += freq[v] * freq[v + k]\n            ans[k] = total\n\n        print(*ans)\n        return\n\n    conv_len = 2 * m + 1\n    size = 1 << ((conv_len - 1).bit_length())\n\n    # Find an NTT-friendly prime larger than any possible coefficient.\n    bound = (n + 1) * (n + 1)\n    k = bound // size + 1\n\n    while True:\n        mod = k * size + 1\n        if is_prime(mod):\n            break\n        k += 1\n\n    # Find a primitive size-th root of unity modulo mod.\n    exp = (mod - 1) // size\n    cand = 2\n    while True:\n        root = pow(cand, exp, mod)\n        if pow(root, size // 2, mod) != 1:\n            break\n        cand += 1\n\n    rev = [0] * size\n    lg = size.bit_length() - 1\n    for i in range(1, size):\n        rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << (lg - 1))\n\n    roots = [1] * size\n    for i in range(1, size):\n        roots[i] = roots[i - 1] * root % mod\n\n    a = freq + [0] * (size - len(freq))\n    ntt(a, False, mod, rev, roots, size)\n\n    transformed = a[:]\n    step_factor = pow(root, len(freq) - 1, mod)\n    factor = 1\n    mask = size - 1\n\n    for i in range(size):\n        a[i] = transformed[i] * transformed[(-i) & mask] % mod * factor % mod\n        factor = factor * step_factor % mod\n\n    del transformed\n\n    ntt(a, True, mod, rev, roots, size)\n\n    ans[0] = (a[m] - (n + 1)) // 2\n\n    for k in range(1, m + 1):\n        ans[k] = a[m + k]\n\n    print(*ans)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 130.37,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNikita likes tasks on order statistics, for example, he can easily find the $k$-th number in increasing order on a segment of an array. But now Nikita wonders how many segments of an array there are such that a given number $x$ is the $k$-th number in increasing order on this segment. In other words, you should find the number of segments of a given array such that there are exactly $k$ numbers of this segment which are less than $x$.\n\nNikita wants to get answer for this question for each $k$ from $0$ to $n$, where $n$ is the size of the array.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $x$ $(1 \\le n \\le 2 \\cdot 10^5, -10^9 \\le x \\le 10^9)$.\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ $(-10^9 \\le a_i \\le 10^9)$ — the given array.\n\n\n-----Output-----\n\nPrint $n+1$ integers, where the $i$-th number is the answer for Nikita's question for $k=i-1$.\n\n\n-----Examples-----\nInput\n5 3\n1 2 3 4 5\n\nOutput\n6 5 4 0 0 0 \nInput\n2 6\n-5 9\n\nOutput\n1 2 0 \nInput\n6 99\n-1 -1 -1 -1 -1 -1\n\nOutput\n0 6 5 4 3 2 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

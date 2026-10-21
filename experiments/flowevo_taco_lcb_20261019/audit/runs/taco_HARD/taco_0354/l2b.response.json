@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "85772203-5cb5-44e9-b656-4fe7ad555556",
+  "created": 1792431301,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 937,
+    "completion_tokens": 7410,
+    "total_tokens": 8347,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7039
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 169
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport heapq\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        q = next(it)\n\n        a = [next(it) for _ in range(n)]\n\n        # b[i] = a[i] - a[i + 1], for i = 0 .. n-2\n        b = [0] * max(0, n - 1)\n        heap = []\n\n        for i in range(n - 1):\n            b[i] = a[i] - a[i + 1]\n            heapq.heappush(heap, (-b[i], i))\n\n        for _ in range(q):\n            idx = next(it) - 1\n            x = next(it)\n\n            if a[idx] != x:\n                a[idx] = x\n\n                if idx - 1 >= 0:\n                    pos = idx - 1\n                    b[pos] = a[pos] - a[pos + 1]\n                    heapq.heappush(heap, (-b[pos], pos))\n\n                if idx <= n - 2:\n                    pos = idx\n                    b[pos] = a[pos] - a[pos + 1]\n                    heapq.heappush(heap, (-b[pos], pos))\n\n            while heap and -heap[0][0] != b[heap[0][1]]:\n                heapq.heappop(heap)\n\n            max_drop = -heap[0][0] if heap else 0\n            answers.append(str(max(0, max_drop)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 34.95,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou have an array A of length N. In one operation, you can do the following: \nSelect any subarray A_{L \\ldots R} (1 ≤ L ≤ R ≤ N) and then add i to the i-th element of this subarray. Formally, we set A_{j} := A_{j} + (j - L + 1) for all L ≤ j ≤ R.\n\nFor example: if A = [2, 1, 5, 2] and we apply operation on A_{2 \\ldots 4} then A becomes [2, 1 + 1, 5 + 2, 2 + 3] = [2, 2, 7, 5].\n\nThe minimum number of such operations required to sort A in non-decreasing order is termed as the goodness of A.\n\nWe want to process Q updates on A of the following form:\n\\texttt{i x} : Set A_{i} := x where (1 ≤ i ≤ N).\n\nDetermine the goodness of A after each update.\n\n------ Input Format ------ \n\n- The first line contains a single integer T — the number of test cases. Then the test cases follow.\n- The first line of each test case contains two integers N and Q — the size of the array A and the number of updates.\n- The second line of each test case contains N space-separated integers A_{1}, A_{2}, \\dots, A_{N} denoting the array A.\n- The next Q lines each contain two integers i and x denoting the parameters of the update.\n\n------ Output Format ------ \n\nFor each test case, output Q integers, the goodness of the array after each update.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{4}$\n$2 ≤ N ≤ 10^{5}$\n$1 ≤Q ≤N$\n$1 ≤A_{i} ≤10^{9}$\n$1 ≤x ≤10^{9}$\n- Sum of $N$ over all test cases does not exceed $2 \\cdot 10^{5}$.\n\n------ subtasks ------ \n\nSubtask 1 (50 points): $1 ≤Q ≤\\min(5, N)$\nSubtask 2 (50 points): Original constraints.\n\n----- Sample Input 1 ------ \n2\n3 2\n3 2 1\n3 10\n2 1\n4 2\n2 2 2 2\n4 2\n4 1\n\n----- Sample Output 1 ------ \n1\n2\n0\n1\n\n----- explanation 1 ------ \nTest Case 1: Initially $A = [3, 2, 1]$.\n- After first update: $A = [3, 2, 10]$. \n- Now we can apply the operation on $A_{1 \\ldots 2}$. Then $A$ becomes $[4, 4, 10]$. Therefore the goodness of $A$ is $1$.\n- After second update: $A = [3, 1, 10]$. \n-  Now we can apply the operation on $A_{2 \\ldots 2}$. $A$ becomes $[3, 2, 10]$. Now again we can apply the operation $A_{2 \\ldots 2}$. $A$ becomes $[3, 3, 10]$. Therefore the goodness of $A$ is $2$.\n\nTest Case 2: Initially $A = [2, 2, 2, 2]$.\n- After first update: $A = [2, 2, 2, 2]$. \n- $A$ is already in sorted order. Therefore the goodness of $A$ is $0$.\n- After second update: $A = [2, 2, 2, 1]$. \n-  Now we can apply the operation on $A_{3 \\ldots 4}$. $A$ becomes $[2, 2, 3, 3]$. Therefore the goodness of $A$ is $1$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4efaffe1-942b-4f69-b4ab-7d7df3b5dabb",
+  "created": 1792430685,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 723,
+    "completion_tokens": 11069,
+    "total_tokens": 11792,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10754
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 211
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        p = data[idx:idx + n]\n        idx += n\n\n        pos = [0] * (n + 1)\n        for i, value in enumerate(p):\n            pos[value] = i\n\n        bad_pref = [0] * (n + 1)\n        for value in range(1, n):\n            bad_pref[value] = bad_pref[value - 1] + (\n                1 if pos[value] > pos[value + 1] else 0\n            )\n\n        def can(k: int) -> bool:\n            left = k + 1\n            right = n - k\n\n            if left >= right:\n                return True\n\n            return bad_pref[right - 1] - bad_pref[left - 1] == 0\n\n        low, high = 0, n // 2\n\n        while low < high:\n            mid = (low + high) // 2\n            if can(mid):\n                high = mid\n            else:\n                low = mid + 1\n\n        answers.append(str(low))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 52.112,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a permutation $p$ of length $n$ (a permutation of length $n$ is an array of length $n$ in which each integer from $1$ to $n$ occurs exactly once).\n\nYou can perform the following operation any number of times (possibly zero):\n\nchoose two different elements $x$ and $y$ and erase them from the permutation;\n\ninsert the minimum of $x$ and $y$ into the permutation in such a way that it becomes the first element;\n\ninsert the maximum of $x$ and $y$ into the permutation in such a way that it becomes the last element.\n\nFor example, if $p = [1, 5, 4, 2, 3]$ and we want to apply the operation to the elements $3$ and $5$, then after the first step of the operation, the permutation becomes $p = [1, 4, 2]$; and after we insert the elements, it becomes $p = [3, 1, 4, 2, 5]$.\n\nYour task is to calculate the minimum number of operations described above to sort the permutation $p$ in ascending order (i. e. transform $p$ so that $p_1 < p_2 < \\dots < p_n$).\n\n\n-----Input-----\n\nThe first line contains a single integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases.\n\nThe first line of the test case contains a single integer $n$ ($1 \\le n \\le 2 \\cdot 10^5$) — the number of elements in the permutation.\n\nThe second line of the test case contains $n$ distinct integers from $1$ to $n$ — the given permutation $p$.\n\nThe sum of $n$ over all test cases doesn't exceed $2 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, output a single integer — the minimum number of operations described above to sort the array $p$ in ascending order.\n\n\n-----Examples-----\n\nInput\n4\n5\n1 5 4 2 3\n3\n1 2 3\n4\n2 1 4 3\n6\n5 2 4 1 6 3\nOutput\n2\n0\n1\n3\n\n\n-----Note-----\n\nIn the first example, you can proceed as follows:\n\nin the permutation $p = [1, 5, 4, 2, 3]$, let's choose the elements $4$ and $2$, then, after applying the operation, the permutation becomes $p = [2, 1, 5, 3, 4]$;\n\nin the permutation $p = [2, 1, 5, 3, 4]$, let's choose the elements $1$ and $5$, then, after applying operation, the permutation becomes $p = [1, 2, 3, 4, 5]$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

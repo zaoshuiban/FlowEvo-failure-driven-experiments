@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7aff51d2-6f43-49e9-a06a-b2e94e257bee",
+  "created": 1792443486,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 774,
+    "completion_tokens": 3519,
+    "total_tokens": 4293,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3018
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 134
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    adj = [[False] * n for _ in range(n)]\n\n    for _ in range(m):\n        u = next(it) - 1\n        v = next(it) - 1\n        adj[u][v] = adj[v][u] = True\n\n    # Find any non-edge. A non-edge can only appear between letters 'a' and 'c'.\n    u = v = -1\n    for i in range(n):\n        for j in range(i + 1, n):\n            if not adj[i][j]:\n                u, v = i, j\n                break\n        if u != -1:\n            break\n\n    # The graph is complete, so all vertices can have the same letter.\n    if u == -1:\n        print(\"Yes\")\n        print(\"a\" * n)\n        return\n\n    labels = ['?'] * n\n    labels[u] = 'a'\n    labels[v] = 'c'\n\n    ok = True\n\n    for w in range(n):\n        if w == u or w == v:\n            continue\n\n        # w is not connected to u, so w must be 'c'.\n        if not adj[u][w]:\n            labels[w] = 'c'\n            if not adj[v][w]:\n                ok = False\n                break\n        else:\n            # w is not connected to v, so w must be 'a'.\n            if not adj[v][w]:\n                labels[w] = 'a'\n            else:\n                labels[w] = 'b'\n\n    if ok:\n        value = {'a': 0, 'b': 1, 'c': 2}\n\n        for i in range(n):\n            for j in range(i + 1, n):\n                should_be_edge = abs(value[labels[i]] - value[labels[j]]) <= 1\n                if should_be_edge != adj[i][j]:\n                    ok = False\n                    break\n            if not ok:\n                break\n\n    if ok:\n        print(\"Yes\")\n        print(\"\".join(labels))\n    else:\n        print(\"No\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 16.559,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nOne day student Vasya was sitting on a lecture and mentioned a string s_1s_2... s_{n}, consisting of letters \"a\", \"b\" and \"c\" that was written on his desk. As the lecture was boring, Vasya decided to complete the picture by composing a graph G with the following properties:   G has exactly n vertices, numbered from 1 to n.  For all pairs of vertices i and j, where i ≠ j, there is an edge connecting them if and only if characters s_{i} and s_{j} are either equal or neighbouring in the alphabet. That is, letters in pairs \"a\"-\"b\" and \"b\"-\"c\" are neighbouring, while letters \"a\"-\"c\" are not. \n\nVasya painted the resulting graph near the string and then erased the string. Next day Vasya's friend Petya came to a lecture and found some graph at his desk. He had heard of Vasya's adventure and now he wants to find out whether it could be the original graph G, painted by Vasya. In order to verify this, Petya needs to know whether there exists a string s, such that if Vasya used this s he would produce the given graph G.\n\n\n-----Input-----\n\nThe first line of the input contains two integers n and m $(1 \\leq n \\leq 500,0 \\leq m \\leq \\frac{n(n - 1)}{2})$ — the number of vertices and edges in the graph found by Petya, respectively.\n\nEach of the next m lines contains two integers u_{i} and v_{i} (1 ≤ u_{i}, v_{i} ≤ n, u_{i} ≠ v_{i}) — the edges of the graph G. It is guaranteed, that there are no multiple edges, that is any pair of vertexes appear in this list no more than once.\n\n\n-----Output-----\n\nIn the first line print \"Yes\" (without the quotes), if the string s Petya is interested in really exists and \"No\" (without the quotes) otherwise.\n\nIf the string s exists, then print it on the second line of the output. The length of s must be exactly n, it must consist of only letters \"a\", \"b\" and \"c\" only, and the graph built using this string must coincide with G. If there are multiple possible answers, you may print any of them.\n\n\n-----Examples-----\nInput\n2 1\n1 2\n\nOutput\nYes\naa\n\nInput\n4 3\n1 2\n1 3\n1 4\n\nOutput\nNo\n\n\n\n-----Note-----\n\nIn the first sample you are given a graph made of two vertices with an edge between them. So, these vertices can correspond to both the same and adjacent letters. Any of the following strings \"aa\", \"ab\", \"ba\", \"bb\", \"bc\", \"cb\", \"cc\" meets the graph's conditions. \n\nIn the second sample the first vertex is connected to all three other vertices, but these three vertices are not connected with each other. That means that they must correspond to distinct letters that are not adjacent, but that is impossible as there are only two such letters: a and c.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

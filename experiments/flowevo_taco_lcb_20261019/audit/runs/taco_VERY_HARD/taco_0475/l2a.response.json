@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "758263b2-c0b1-48c0-ae7c-97a6221eabfc",
+  "created": 1792433927,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 829,
+    "completion_tokens": 20880,
+    "total_tokens": 21709,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 20249
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 189
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\n\ndef build_order(n, sources):\n    dist = [-1] * n\n    q = deque()\n\n    for s in sources:\n        dist[s] = 0\n        q.append(s)\n\n    order = []\n\n    while q:\n        v = q.popleft()\n        order.append(v)\n\n        u = v - 1\n        if u < 0:\n            u = n - 1\n        if dist[u] == -1:\n            dist[u] = dist[v] + 1\n            q.append(u)\n\n        u = v + 1\n        if u == n:\n            u = 0\n        if dist[u] == -1:\n            dist[u] = dist[v] + 1\n            q.append(u)\n\n    return order\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        a = data[idx:idx + n]\n        idx += n\n\n        bad = [False] * n\n        forced = []\n\n        for i, val in enumerate(a):\n            if (val | k) != k:\n                bad[i] = True\n                forced.append(i)\n\n        if forced:\n            independent = True\n\n            for i in forced:\n                nxt = i + 1\n                if nxt == n:\n                    nxt = 0\n                if bad[nxt]:\n                    independent = False\n                    break\n\n            if not independent:\n                answers.append(\"-1\")\n                continue\n\n            remaining_or = 0\n            for i, val in enumerate(a):\n                if not bad[i]:\n                    remaining_or |= val\n\n            if remaining_or != k:\n                answers.append(\"-1\")\n                continue\n\n            order = build_order(n, forced)\n            answers.append(\" \".join(str(pos + 1) for pos in order))\n\n        else:\n            total_or = 0\n            for val in a:\n                total_or |= val\n\n            if total_or != k:\n                answers.append(\"-1\")\n                continue\n\n            pref = [0] * (n + 1)\n            for i, val in enumerate(a):\n                pref[i + 1] = pref[i] | val\n\n            suffix_or = 0\n            redundant = -1\n\n            for i in range(n - 1, -1, -1):\n                if (pref[i] | suffix_or) == k:\n                    redundant = i\n                    break\n                suffix_or |= a[i]\n\n            if redundant == -1:\n                answers.append(\"-1\")\n            else:\n                order = build_order(n, [redundant])\n                answers.append(\" \".join(str(pos + 1) for pos in order))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 101.528,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef has a circular sequence $A$ of $N$ non-negative integers $A_1, A_2, \\ldots, A_N$ where $A_i$ and $A_{i+1}$ are considered adjacent, and elements $A_1$ and $A_N$ are considered adjacent.\nAn operation on position $p$ in array $A$ is defined as replacing $A_p$ by the bitwise OR of elements adjacent to $A_p$. Formally, an operation is defined as:\n- If $p = 1$, replace $A_1$ with $A_N | A_{2}$\n- If $1 < p < N$, replace $A_p$ with $A_{p-1} | A_{p+1}$\n- If $p = N$, replace $A_N$ with $A_{N-1} | A_1$\nHere, '|' denotes the bitwise OR operation.\nNow, Chef must apply operations at each position exactly once, but he may apply the operations in any order.\nBeing a friend of Chef, you are required to find a sequence of operations, such that after applying all the $N$ operations, the bitwise OR of the resulting array is $K$, or determine that no such sequence of operations exist.\n\n-----Input:-----\n- The first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\n- The first line of each test case contains two space-separated integers $N$ and $K$ denoting the number of elements, and the required bitwise OR after operations.\n- The second line contains $N$ space-separated integers $A_1, A_2, \\ldots, A_N$.\n\n-----Output:-----\nFor each test case, if no valid sequence of operations exist, print -1.\nOtherwise, print $N$ space-separated integers in which $i$-th integer denote the position chosen in the $i$-th operation. If there are multiple valid sequences of operations, you may print any valid sequence.\n\n-----Constraints-----\n- $1 \\le T \\le 10^5$\n- $3 \\le N \\le 2*10^5$\n- $0 \\le A_i, K \\le 10^9$\n- It's guaranteed that the total length of the arrays in one test file doesn't exceed $10^6$\n\n-----Sample Input:-----\n5\n3 6\n2 1 6\n3 6\n2 1 5\n3 7\n2 4 6\n3 7\n1 2 4\n3 7\n1 2 6\n\n-----Sample Output:-----\n2 1 3\n-1\n-1\n-1\n2 3 1\n\n-----Explanation:-----\nIn the first test case, initially, the sequence is {2, 1, 6}. \n- Chef applies the operation on the $2^{nd}$ index, so the sequence converts to {2, 6, 6}.\n- Next, Chef applies the operation on the $1^{st}$ index, so the sequence converts to {6, 6, 6}.\n- Next, Chef applies the operation on the $3^{rd}$ index, and this time sequence does not change.\nThe final sequence is {6, 6, 6}, and bitwise OR of this sequence is $6$ that is equal to given $K$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

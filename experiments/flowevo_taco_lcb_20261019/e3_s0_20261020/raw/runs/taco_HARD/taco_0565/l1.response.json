@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2546e1b0-38bd-40f3-b9c2-13b7304a277f",
+  "created": 1792438742,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 349,
+    "completion_tokens": 6531,
+    "total_tokens": 6880,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5626
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 349
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = sys.stdin.read().split()\n    if len(data) < 3:\n        return\n\n    s1, s2, virus = data[0], data[1], data[2]\n\n    n, m = len(s1), len(s2)\n    v = len(virus)\n\n    # KMP prefix function for virus\n    pi = [0] * v\n    for i in range(1, v):\n        j = pi[i - 1]\n        while j > 0 and virus[i] != virus[j]:\n            j = pi[j - 1]\n        if virus[i] == virus[j]:\n            j += 1\n        pi[i] = j\n\n    # trans[k][c]: state after adding character c to current matched prefix length k\n    trans = [[0] * 26 for _ in range(v)]\n\n    for k in range(v):\n        for c in range(26):\n            ch = chr(ord('A') + c)\n            q = k\n\n            while q > 0 and virus[q] != ch:\n                q = pi[q - 1]\n\n            if virus[q] == ch:\n                q += 1\n\n            trans[k][c] = q\n\n    # dp[i][j][k] = maximum additional common subsequence length\n    # from s1[i:], s2[j:], with current virus-prefix match length k.\n    width = v\n    row_stride = (m + 1) * width\n    dp = bytearray((n + 1) * row_stride)\n\n    for i in range(n - 1, -1, -1):\n        base_i = i * row_stride\n        base_i1 = (i + 1) * row_stride\n        ch1 = s1[i]\n        char_index = ord(ch1) - ord('A')\n\n        for j in range(m - 1, -1, -1):\n            idx = base_i + j * width\n            down = base_i1 + j * width\n            right = base_i + (j + 1) * width\n\n            if ch1 == s2[j]:\n                take_base = base_i1 + (j + 1) * width\n\n                for k in range(width):\n                    best = dp[down + k]\n                    val = dp[right + k]\n                    if val > best:\n                        best = val\n\n                    next_k = trans[k][char_index]\n                    if next_k < v:\n                        val = 1 + dp[take_base + next_k]\n                        if val > best:\n                            best = val\n\n                    dp[idx + k] = best\n            else:\n                for k in range(width):\n                    best = dp[down + k]\n                    val = dp[right + k]\n                    if val > best:\n                        best = val\n\n                    dp[idx + k] = best\n\n    # Reconstruct one optimal answer\n    answer = []\n    i = j = k = 0\n\n    while i < n and j < m:\n        cur = dp[i * row_stride + j * width + k]\n        if cur == 0:\n            break\n\n        # Try taking s1[i] == s2[j]\n        if s1[i] == s2[j]:\n            char_index = ord(s1[i]) - ord('A')\n            next_k = trans[k][char_index]\n\n            if next_k < v:\n                next_value = 1 + dp[(i + 1) * row_stride + (j + 1) * width + next_k]\n                if next_value == cur:\n                    answer.append(s1[i])\n                    i += 1\n                    j += 1\n                    k = next_k\n                    continue\n\n        # Skip s1[i]\n        if dp[(i + 1) * row_stride + j * width + k] == cur:\n            i += 1\n            continue\n\n        # Skip s2[j]\n        if dp[i * row_stride + (j + 1) * width + k] == cur:\n            j += 1\n            continue\n\n        break\n\n    if answer:\n        print(''.join(answer))\n    else:\n        print(0)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 27.598,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIn mathematics, a subsequence is a sequence that can be derived from another sequence by deleting some elements without changing the order of the remaining elements. For example, the sequence BDF is a subsequence of ABCDEF. A substring of a string is a continuous subsequence of the string. For example, BCD is a substring of ABCDEF.\n\nYou are given two strings s1, s2 and another string called virus. Your task is to find the longest common subsequence of s1 and s2, such that it doesn't contain virus as a substring.\n\nInput\n\nThe input contains three strings in three separate lines: s1, s2 and virus (1 ≤ |s1|, |s2|, |virus| ≤ 100). Each string consists only of uppercase English letters.\n\nOutput\n\nOutput the longest common subsequence of s1 and s2 without virus as a substring. If there are multiple answers, any of them will be accepted. \n\nIf there is no valid common subsequence, output 0.\n\nExamples\n\nInput\n\nAJKEQSLOBSROFGZ\nOVGURWZLWVLUXTH\nOZ\n\n\nOutput\n\nORZ\n\n\nInput\n\nAA\nA\nA\n\n\nOutput\n\n0\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

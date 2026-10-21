@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ad981462-8d4e-4f70-8b6f-4db03813be0f",
+  "created": 1792432821,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 952,
+    "completion_tokens": 25161,
+    "total_tokens": 26113,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24024
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 952
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\nDIRECT_OP = 200_000\nPOW_OP = 5_000\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    max_n = max(data)\n\n    # Euler's totient\n    phi = list(range(max_n + 1))\n    if max_n >= 1:\n        phi[1] = 1\n\n    for i in range(2, max_n + 1):\n        if phi[i] == i:\n            for j in range(i, max_n + 1, i):\n                phi[j] -= phi[j] // i\n\n    # Prefix sums of phi\n    pref_phi = [0] * (max_n + 1)\n    s = 0\n    for i in range(1, max_n + 1):\n        s += phi[i]\n        if s >= MOD:\n            s %= MOD\n        pref_phi[i] = s\n\n    # Modular inverses\n    inv = [0] * (max_n + 2)\n    inv[1] = 1\n    for i in range(2, max_n + 2):\n        inv[i] = MOD - (MOD // i) * inv[MOD % i] % MOD\n\n    pos = 1\n    answers = []\n\n    for _ in range(t):\n        k = data[pos]\n        pos += 1\n\n        dims = data[pos:pos + k]\n        pos += k\n\n        min_n = min(dims)\n\n        cnt = {}\n        for v in dims:\n            cnt[v] = cnt.get(v, 0) + 1\n\n        groups = list(cnt.items())\n        distinct = len(groups)\n        multi_count = sum(1 for _, c in groups if c > 1)\n\n        # Direct computation for small cases\n        if distinct * min_n <= DIRECT_OP and min_n * multi_count <= POW_OP:\n            ans = 0\n            for d in range(1, min_n + 1):\n                prod = 1\n                for v, c in groups:\n                    q = v // d\n                    if c == 1:\n                        prod = prod * q % MOD\n                    else:\n                        prod = prod * pow(q, c, MOD) % MOD\n                ans += phi[d] * prod\n            answers.append(str(ans % MOD))\n            continue\n\n        # Event-based computation\n        init_product = 1\n        events = []\n\n        for v, c in groups:\n            if c == 1:\n                init_product = init_product * v % MOD\n            else:\n                init_product = init_product * pow(v, c, MOD) % MOD\n\n            if min_n >= 2:\n                q = v  # floor(v / 1)\n                while True:\n                    end = v // q\n                    if end >= min_n:\n                        break\n\n                    nxt = end + 1\n                    new_q = v // nxt\n\n                    factor = new_q * inv[q] % MOD\n                    if c != 1:\n                        factor = pow(factor, c, MOD)\n\n                    events.append(nxt * MOD + factor)\n                    q = new_q\n\n        event_count = len(events)\n\n        if event_count == 0:\n            ans = (pref_phi[min_n] - pref_phi[0]) * init_product % MOD\n            answers.append(str(ans))\n            continue\n\n        # Choose between sorting events and bucketing them\n        use_sorted = event_count * event_count.bit_length() < min_n * 8\n\n        if use_sorted:\n            events.sort()\n\n            prod = init_product\n            current = 1\n            ans = 0\n            idx = 0\n\n            while idx < event_count:\n                start = events[idx] // MOD\n                if start > min_n:\n                    break\n\n                if start > current:\n                    ans += (pref_phi[start - 1] - pref_phi[current - 1]) * prod\n                    current = start\n\n                factor_at_start = 1\n\n                while idx < event_count:\n                    code = events[idx]\n                    event_start = code // MOD\n                    if event_start != start:\n                        break\n\n                    factor = code - event_start * MOD\n                    factor_at_start = factor_at_start * factor % MOD\n                    idx += 1\n\n                prod = prod * factor_at_start % MOD\n\n            if current <= min_n:\n                ans += (pref_phi[min_n] - pref_phi[current - 1]) * prod\n\n            answers.append(str(ans % MOD))\n\n        else:\n            event_product = [1] * (min_n + 2)\n\n            for code in events:\n                start = code // MOD\n                factor = code - start * MOD\n                event_product[start] = event_product[start] * factor % MOD\n\n            prod = init_product\n            ans = 0\n\n            for d in range(1, min_n + 1):\n                factor = event_product[d]\n                if factor != 1:\n                    prod = prod * factor % MOD\n\n                ans += phi[d] * prod\n\n            answers.append(str(ans % MOD))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 119.131,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLet there be a K-dimensional Hyperrectangle, where each dimension has a length of n_{1},n_{2},...n_{k}. \n\nEach of the Hyperrectangle's unit cells is addressed at (i,j,k,...) and has a value which is equivalent to GCD(i,j,k,...) where 1 <= i <= n_{1} , 1 <= j <= n_{2} ....  \n\nThe goal is to sum all the GCD(i,j,k,...) cell values and print the result modulo 10^9 + 7. Note that indexing is from 1 to N and not 0 to N-1. \n\nInput Format \n\nThe first line contains an integer T. T testcases follow. \n\nEach testcase contains 2 lines, the first line being K (K-dimension) and the second line contains K space separated integers indicating the size of each dimension - \nn_{1} n_{2} n_{3} ... n_{k}\n\nOutput Format \n\nPrint the sum of all the hyperrectangle cell's GCD values modulo 10^9 + 7 in each line corresponding to each test case. \n\nConstraints \n\n1 <= T <= 1000 \n\n2 <= K <= 500 \n\n1 <= n_{k} <= 100000\n\nSample Input #00  \n\n2\n2\n4 4\n2\n3 3\n\nSample Output #00 \n\n24\n12\n\nSample Input #01  \n\n1\n3\n3 3 3\n\nSample Output #01\n\n30\n\nExplanation #00 \n\nFor the first test case, it's a 4X4 2-dimension Rectangle. The (i,j) address and GCD values of each element at (i,j) will look like  \n\n1,1 1,2 1,3 1,4              1 1 1 1  \n2,1 2,2 2,3 2,4  => GCD(i,j) 1 2 1 2  \n3,1 3,2 3,3 3,4              1 1 3 1  \n4,1 4,2 4,3 4,4              1 2 1 4  \n\nSum of these values is 24  \n\nExplanation #00 \n\nSimilarly for 3X3 GCD (i,j) would look like \n\n1,1 1,2 1,3               1 1 1  \n2,1 2,2 2,3  => GCD(i,j)  1 2 1  \n3,1 3,2 3,3               1 1 3  \n\nSum is 12 \n\nExplanation #01 \n\nHere we have a 3-dimensional 3X3X3 Hyperrectangle or a cube. We can write it's GCD (i,j,k) values in 3 layers. \n\n1,1,1 1,1,2 1,1,3  |  2,1,1 2,1,2 2,1,3  |  3,1,1 3,1,2 3,1,3  \n1,2,1 1,2,2 1,2,3  |  2,2,1 2,2,2 2,2,3  |  3,2,1 3,2,2 3,2,3  \n1,3,1 1,3,2 1,3,3  |  2,3,1 2,3,2 2,3,3  |  3,3,1 3,3,2 3,3,3  \nGCD (i,j,k)\n1 1 1              |  1 1 1              |  1 1 1  \n1 1 1              |  1 2 1              |  1 1 1  \n1 1 1              |  1 1 1              |  1 1 3  \n\nTotal Sum = 30\n\nTimelimits\nTimelimits for this challenge is given here\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

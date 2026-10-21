@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "212a6775-5ebc-4627-a04a-c644ca6809e6",
+  "created": 1792451102,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 527,
+    "completion_tokens": 26494,
+    "total_tokens": 27021,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 25985
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 143
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\nMOD = 1_000_000_007\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0])\n\n    # Maximum number of prime factors with multiplicity for numbers <= n.\n    K = n.bit_length() - 1  # floor(log2(n))\n\n    # Modular inverses up to n.\n    inv = array('I', [0]) * (n + 1)\n    inv[1] = 1\n    for i in range(2, n + 1):\n        inv[i] = MOD - (MOD // i) * inv[MOD % i] % MOD\n\n    # Smallest prime factor sieve.\n    spf = array('I', range(n + 1))\n    limit = int(n ** 0.5)\n    for i in range(2, limit + 1):\n        if spf[i] == i:\n            for j in range(i * i, n + 1, i):\n                if spf[j] == j:\n                    spf[j] = i\n\n    # dp[a] = sum of probabilities of all maximal gcd chains starting from a.\n    dp = array('I', [0]) * (n + 1)\n    dp[1] = 1\n\n    total = 0\n\n    for a in range(2, n + 1):\n        x = a\n        qa = n // a\n        inv_den = inv[n - qa]\n\n        cur = 0\n        omega = 0\n\n        while x > 1:\n            p = spf[x]\n            b = a // p\n\n            numerator = n // b - qa\n            term = numerator * inv_den % MOD\n            term = term * dp[b] % MOD\n            cur += term\n\n            while x % p == 0:\n                x //= p\n                omega += 1\n\n        cur %= MOD\n        dp[a] = cur\n\n        if omega == K:\n            total += cur\n            if total >= MOD:\n                total -= MOD\n\n    fact = 1\n    for i in range(2, n):\n        fact = fact * i % MOD\n\n    answer = fact * total % MOD\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 124.075,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLet's define a function $f(p)$ on a permutation $p$ as follows. Let $g_i$ be the greatest common divisor (GCD) of elements $p_1$, $p_2$, ..., $p_i$ (in other words, it is the GCD of the prefix of length $i$). Then $f(p)$ is the number of distinct elements among $g_1$, $g_2$, ..., $g_n$.\n\nLet $f_{max}(n)$ be the maximum value of $f(p)$ among all permutations $p$ of integers $1$, $2$, ..., $n$.\n\nGiven an integers $n$, count the number of permutations $p$ of integers $1$, $2$, ..., $n$, such that $f(p)$ is equal to $f_{max}(n)$. Since the answer may be large, print the remainder of its division by $1000\\,000\\,007 = 10^9 + 7$.\n\n\n-----Input-----\n\nThe only line contains the integer $n$ ($2 \\le n \\le 10^6$) — the length of the permutations.\n\n\n-----Output-----\n\nThe only line should contain your answer modulo $10^9+7$.\n\n\n-----Examples-----\nInput\n2\n\nOutput\n1\nInput\n3\n\nOutput\n4\nInput\n6\n\nOutput\n120\n\n\n-----Note-----\n\nConsider the second example: these are the permutations of length $3$:  $[1,2,3]$, $f(p)=1$.  $[1,3,2]$, $f(p)=1$.  $[2,1,3]$, $f(p)=2$.  $[2,3,1]$, $f(p)=2$.  $[3,1,2]$, $f(p)=2$.  $[3,2,1]$, $f(p)=2$. \n\nThe maximum value $f_{max}(3) = 2$, and there are $4$ permutations $p$ such that $f(p)=2$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

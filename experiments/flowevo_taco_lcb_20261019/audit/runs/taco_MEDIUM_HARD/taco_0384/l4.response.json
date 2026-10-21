@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c134fa54-3c9f-42eb-b24f-b9bb45e16ce1",
+  "created": 1792439396,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1827,
+    "completion_tokens": 29740,
+    "total_tokens": 31567,
+    "prompt_tokens_details": {
+      "cached_tokens": 1280
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 29453
+    },
+    "prompt_cache_hit_tokens": 1280,
+    "prompt_cache_miss_tokens": 547
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import Counter\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    ptr = 0\n\n    t = data[ptr]\n    ptr += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[ptr]\n        ptr += 1\n\n        a = data[ptr:ptr + n]\n        ptr += n\n\n        b = data[ptr:ptr + n]\n        ptr += n\n\n        m = data[ptr]\n        ptr += 1\n\n        razors = Counter(data[ptr:ptr + m])\n        ptr += m\n\n        possible = True\n        stack = []\n\n        for i in range(n):\n            if a[i] < b[i]:\n                possible = False\n                break\n\n            bi = b[i]\n\n            while stack and stack[-1] < bi:\n                stack.pop()\n\n            if a[i] > bi:\n                if not stack or stack[-1] != bi:\n                    if razors.get(bi, 0) == 0:\n                        possible = False\n                        break\n\n                    razors[bi] -= 1\n                    stack.append(bi)\n\n        answers.append(\"YES\" if possible else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 148.744,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nBoris thinks that chess is a tedious game. So he left his tournament early and went to a barber shop as his hair was a bit messy.\n\nHis current hair can be described by an array $a_1,a_2,\\ldots, a_n$, where $a_i$ is the height of the hair standing at position $i$. His desired haircut can be described by an array $b_1,b_2,\\ldots, b_n$ in a similar fashion.\n\nThe barber has $m$ razors. Each has its own size and can be used at most once. In one operation, he chooses a razor and cuts a segment of Boris's hair. More formally, an operation is:\n\nChoose any razor which hasn't been used before, let its size be $x$;\n\nChoose a segment $[l,r]$ ($1\\leq l \\leq r \\leq n$);\n\nSet $a_i := \\min (a_i,x)$ for each $l\\leq i \\leq r$;\n\nNotice that some razors might have equal sizes — the barber can choose some size $x$ only as many times as the number of razors with size $x$.\n\nHe may perform as many operations as he wants, as long as any razor is used at most once and $a_i = b_i$ for each $1 \\leq i \\leq n$ at the end. He does not have to use all razors.\n\nCan you determine whether the barber can give Boris his desired haircut?\n\n\n-----Input-----\n\nEach test contains multiple test cases. The first line contains the number of test cases $t$ ($1 \\leq t \\leq 20000$). The description of the test cases follows.\n\nThe first line of each test case contains a positive integer $n$ ($3\\leq n\\leq 2\\cdot 10^5$) — the length of arrays $a$ and $b$.\n\nThe second line of each test case contains $n$ positive integers $a_1, a_2, \\ldots, a_n$ ($1 \\leq a_i \\leq 10^9$)  — Boris's current hair.\n\nThe third line of each test case contains $n$ positive integers $b_1, b_2, \\ldots, b_n$ ($1 \\leq b_i \\leq 10^9$)  — Boris's desired hair.\n\nThe fourth line of each test case contains a positive integer $m$ ($1 \\leq m \\leq 2\\cdot 10^5$)  — the number of razors.\n\nThe fifth line of each test case contains $m$ positive integers $x_1,x_2, \\ldots, x_m$ ($1 \\leq x_i \\leq 10^9$)  — the sizes of the razors.\n\nIt is guaranteed that the sum of $n$ and the sum of $m$ over all test cases do not exceed $2\\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, print \"YES\" if the barber can cut Boris's hair as desired. Otherwise, print \"NO\".\n\nYou can output the answer in any case (upper or lower). For example, the strings \"yEs\", \"yes\", \"Yes\", and \"YES\" will be recognized as positive responses.\n\n\n-----Examples-----\n\nInput\n7\n3\n3 3 3\n2 1 2\n2\n1 2\n6\n3 4 4 6 3 4\n3 1 2 3 2 3\n3\n3 2 3\n10\n1 2 3 4 5 6 7 8 9 10\n1 2 3 4 5 6 7 8 9 10\n10\n1 2 3 4 5 6 7 8 9 10\n3\n1 1 1\n1 1 2\n12\n4 2 4 3 1 5 6 3 5 6 2 1\n13\n7 9 4 5 3 3 3 6 8 10 3 2 5\n5 3 1 5 3 2 2 5 8 5 1 1 5\n8\n1 5 3 5 4 2 3 1\n13\n7 9 4 5 3 3 3 6 8 10 3 2 5\n5 3 1 5 3 2 2 5 8 5 1 1 5\n7\n1 5 3 4 2 3 1\n3\n19747843 2736467 938578397\n2039844 2039844 2039844\n1\n2039844\nOutput\nYES\nNO\nYES\nNO\nYES\nNO\nYES\n\n\n-----Note-----\n\nIn the first test case, Boris's hair is initially $[3,3,3]$. Let us describe a sequence of $2$ operations the barber can perform:\n\nThe barber uses the razor with size $1$ on the segment $[2,2]$; hence Boris's hair becomes $[3,1,3]$.\n\nThe barber uses the razor with size $2$ on the segment $[1,3]$; hence Boris's hair becomes $[2,1,2]$ which is the desired haircut.\n\nIn the third test case, no operation has to be done since Boris's hair is already as desired.\n\nIn the fourth test case, no cuts will be able to increase the third element in $[1,1,1]$ in a way that the array becomes $[1,1,2]$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom collections import Counter\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    ptr = 0\n\n    t = data[ptr]\n    ptr += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[ptr]\n        ptr += 1\n\n        a = data[ptr:ptr + n]\n        ptr += n\n\n        b = data[ptr:ptr + n]\n        ptr += n\n\n        m = data[ptr]\n        ptr += 1\n\n        razors = Counter(data[ptr:ptr + m])\n        ptr += m\n\n        possible = True\n\n        for i in range(n):\n            if a[i] < b[i]:\n                possible = False\n                break\n\n        if possible:\n            stack = []\n\n            for i in range(n):\n                bi = b[i]\n\n                while stack and stack[-1] < bi:\n                    stack.pop()\n\n                if a[i] > bi:\n                    if not stack or stack[-1] != bi:\n                        if razors.get(bi, 0) == 0:\n                            possible = False\n                            break\n\n                        razors[bi] -= 1\n                        stack.append(bi)\n\n        answers.append(\"YES\" if possible else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

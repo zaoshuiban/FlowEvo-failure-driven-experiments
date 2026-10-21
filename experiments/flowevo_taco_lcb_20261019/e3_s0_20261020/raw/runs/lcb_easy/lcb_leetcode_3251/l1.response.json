@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "085cb78c-28d9-4b03-96bb-b8ed8d4e1e1d",
+  "created": 1792430222,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 435,
+    "completion_tokens": 272,
+    "total_tokens": 707,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 145
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 435
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def areaOfMaxDiagonal(self, dimensions: List[List[int]]) -> int:\n        max_diagonal = -1\n        max_area = 0\n\n        for length, width in dimensions:\n            diagonal_squared = length * length + width * width\n            area = length * width\n\n            if diagonal_squared > max_diagonal:\n                max_diagonal = diagonal_squared\n                max_area = area\n            elif diagonal_squared == max_diagonal:\n                max_area = max(max_area, area)\n\n        return max_area\n```",
+  "latency_s": 1.937,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a 2D 0-indexed integer array dimensions.\nFor all indices i, 0 <= i < dimensions.length, dimensions[i][0] represents the length and dimensions[i][1] represents the width of the rectangle i.\nReturn the area of the rectangle having the longest diagonal. If there are multiple rectangles with the longest diagonal, return the area of the rectangle having the maximum area.\n \nExample 1:\n\nInput: dimensions = [[9,3],[8,6]]\nOutput: 48\nExplanation: \nFor index = 0, length = 9 and width = 3. Diagonal length = sqrt(9 * 9 + 3 * 3) = sqrt(90) ≈ 9.487.\nFor index = 1, length = 8 and width = 6. Diagonal length = sqrt(8 * 8 + 6 * 6) = sqrt(100) = 10.\nSo, the rectangle at index 1 has a greater diagonal length therefore we return area = 8 * 6 = 48.\n\nExample 2:\n\nInput: dimensions = [[3,4],[4,3]]\nOutput: 12\nExplanation: Length of diagonal is the same for both which is 5, so maximum area = 12.\n\n \nConstraints:\n\n1 <= dimensions.length <= 100\ndimensions[i].length == 2\n1 <= dimensions[i][0], dimensions[i][1] <= 100\n\nStarter code / required signature:\nclass Solution:\n    def areaOfMaxDiagonal(self, dimensions: List[List[int]]) -> int:\n        \n\nUse the required function/method named areaOfMaxDiagonal. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

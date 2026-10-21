@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b393f8b1-eb9d-4baa-a5df-fa1ec8d4bd6f",
+  "created": 1792441022,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 687,
+    "completion_tokens": 2964,
+    "total_tokens": 3651,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2496
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 687
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_left, bisect_right\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    Q = next(it)\n\n    A = [next(it) for _ in range(N)]\n\n    queries = []\n    for qi in range(Q):\n        R = next(it)\n        X = next(it)\n        queries.append((R, X, qi))\n\n    values = sorted(set(A))\n    M = len(values)\n\n    # dp[i] = length of LIS ending at A[i]\n    dp = [0] * N\n    bit = [0] * (M + 1)\n\n    for i, a in enumerate(A):\n        less_count = bisect_left(values, a)\n\n        best = 0\n        idx = less_count\n        while idx > 0:\n            if bit[idx] > best:\n                best = bit[idx]\n            idx -= idx & -idx\n\n        cur = best + 1\n        dp[i] = cur\n\n        idx = less_count + 1\n        while idx <= M:\n            if cur > bit[idx]:\n                bit[idx] = cur\n            idx += idx & -idx\n\n    # Answer queries offline by increasing R\n    queries.sort()\n    bit2 = [0] * (M + 1)\n    ans = [0] * Q\n\n    pos = 0\n    for R, X, qi in queries:\n        while pos < R:\n            a = A[pos]\n            cur = dp[pos]\n            idx = bisect_left(values, a) + 1\n\n            while idx <= M:\n                if cur > bit2[idx]:\n                    bit2[idx] = cur\n                idx += idx & -idx\n\n            pos += 1\n\n        limit = bisect_right(values, X)\n\n        best = 0\n        idx = limit\n        while idx > 0:\n            if bit2[idx] > best:\n                best = bit2[idx]\n            idx -= idx & -idx\n\n        ans[qi] = best\n\n    print(\"\\n\".join(map(str, ans)))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 13.125,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a sequence A = (A_1, A_2, \\dots, A_N) of length N.\nAnswer Q queries. The i-th query (1 \\leq i \\leq Q) is as follows:\n\n- You are given integers R_i and X_i. Consider a subsequence (not necessarily contiguous) of (A_1, A_2, \\dots, A_{R_i}) that is strictly increasing and consists only of elements at most X_i. Find the maximum possible length of such a subsequence.\r\nIt is guaranteed that X_i \\geq \\min\\lbrace A_1, A_2,\\dots,A_{R_i} \\rbrace.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN Q\r\nA_1 A_2 \\dots A_N\r\nR_1 X_1\r\nR_2 X_2\r\n\\vdots\r\nR_Q X_Q\n\nOutput\n\nPrint Q lines. The i-th line should contain the answer to the i-th query.\n\nConstraints\n\n\n- 1 \\leq N,Q \\leq 2 \\times 10^5\n- 1 \\leq A_i \\leq 10^9\n- 1 \\leq R_i \\leq N\n- \\min\\lbrace A_1, A_2,\\dots,A_{R_i} \\rbrace\\leq X_i\\leq 10^9\n- All input values are integers.\n\nSample Input 1\n\n5 3\r\n2 4 1 3 3\r\n2 5\r\n5 2\r\n5 3\n\nSample Output 1\n\n2\r\n1\r\n2\r\n\n\n- 1st query: For the sequence (2,4), the longest strictly increasing subsequence with all elements at most 5 has length 2. Specifically, (2,4) qualifies.\n- 2nd query: For the sequence (2,4,1,3,3), the longest strictly increasing subsequence with all elements at most 2 has length 1. Specifically, (2) and (1) qualify.\n- 3rd query: For the sequence (2,4,1,3,3), the longest strictly increasing subsequence with all elements at most 3 has length 2. Specifically, (2,3) and (1,3) qualify.\n\nSample Input 2\n\n10 8\r\n2 5 6 5 2 1 7 9 7 2\r\n7 8\r\n5 2\r\n2 3\r\n2 6\r\n7 3\r\n8 9\r\n9 6\r\n8 7\n\nSample Output 2\n\n4\r\n1\r\n1\r\n2\r\n1\r\n5\r\n3\r\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7f3b39bd-0586-47b8-8ca1-54a36aae447c",
+  "created": 1792436248,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 318,
+    "completion_tokens": 7285,
+    "total_tokens": 7603,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6780
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 318
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def largestPalindrome(self, n: int, k: int) -> str:\n        half_len = (n + 1) // 2\n        paired = n // 2\n\n        pow10 = [0] * n\n        pow10[0] = 1 % k\n        for i in range(1, n):\n            pow10[i] = (pow10[i - 1] * 10) % k\n\n        weights = [0] * half_len\n        for i in range(half_len):\n            if i < paired:\n                weights[i] = (pow10[i] + pow10[n - 1 - i]) % k\n            else:\n                weights[i] = pow10[i] % k\n\n        dp = [0] * (half_len + 1)\n        dp[half_len] = 1  # Bit 0 is set: remainder 0 is possible.\n\n        for pos in range(half_len - 1, -1, -1):\n            nxt = dp[pos + 1]\n            w = weights[pos]\n            mask = 0\n\n            possible_rems = []\n            for r in range(k):\n                if (nxt >> r) & 1:\n                    possible_rems.append(r)\n\n            start_digit = 1 if pos == 0 else 0\n\n            for digit in range(start_digit, 10):\n                add = (digit * w) % k\n                for r in possible_rems:\n                    mask |= 1 << ((add + r) % k)\n\n            dp[pos] = mask\n\n        result = []\n        current = 0\n\n        for pos in range(half_len):\n            w = weights[pos]\n            nxt = dp[pos + 1]\n\n            digits = range(9, 0, -1) if pos == 0 else range(9, -1, -1)\n\n            for digit in digits:\n                new_rem = (current + digit * w) % k\n                required = (-new_rem) % k\n\n                if (nxt >> required) & 1:\n                    result.append(str(digit))\n                    current = new_rem\n                    break\n\n        half = \"\".join(result)\n\n        if n % 2 == 0:\n            return half + half[::-1]\n        else:\n            return half + half[:-1][::-1]\n```",
+  "latency_s": 32.578,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two positive integers n and k.\nAn integer x is called k-palindromic if:\n\nx is a palindrome.\nx is divisible by k.\n\nReturn the largest integer having n digits (as a string) that is k-palindromic.\nNote that the integer must not have leading zeros.\n \nExample 1:\n\nInput: n = 3, k = 5\nOutput: \"595\"\nExplanation:\n595 is the largest k-palindromic integer with 3 digits.\n\nExample 2:\n\nInput: n = 1, k = 4\nOutput: \"8\"\nExplanation:\n4 and 8 are the only k-palindromic integers with 1 digit.\n\nExample 3:\n\nInput: n = 5, k = 6\nOutput: \"89898\"\n\n \nConstraints:\n\n1 <= n <= 10^5\n1 <= k <= 9\n\nStarter code / required signature:\nclass Solution:\n    def largestPalindrome(self, n: int, k: int) -> str:\n        \n\nUse the required function/method named largestPalindrome. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

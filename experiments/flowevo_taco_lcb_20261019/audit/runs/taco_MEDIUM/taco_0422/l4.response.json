@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3fcce780-069e-45fb-882c-bd698a3cc2c2",
+  "created": 1792444034,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1149,
+    "completion_tokens": 28593,
+    "total_tokens": 29742,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 28305
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 509
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    output = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        results = []\n\n        if n % 2 == 1:\n            # n is odd: a regular tournament is possible, so no ties are needed.\n            for i in range(1, n + 1):\n                for j in range(i + 1, n + 1):\n                    results.append(\"1\" if (i + j) % 2 == 1 else \"-1\")\n        else:\n            # n is even: exactly n/2 ties are necessary.\n            half = n // 2\n            for i in range(1, n + 1):\n                for j in range(i + 1, n + 1):\n                    distance = j - i\n                    if distance == half:\n                        results.append(\"0\")\n                    elif distance < half:\n                        results.append(\"1\")\n                    else:\n                        results.append(\"-1\")\n\n        output.append(\" \".join(results))\n\n    sys.stdout.write(\"\\n\".join(output))\n    if output:\n        sys.stdout.write(\"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 128.698,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA big football championship will occur soon! $n$ teams will compete in it, and each pair of teams will play exactly one game against each other.\n\nThere are two possible outcomes of a game:\n\nthe game may result in a tie, then both teams get $1$ point;\n\none team might win in a game, then the winning team gets $3$ points and the losing team gets $0$ points.\n\nThe score of a team is the number of points it gained during all games that it played.\n\nYou are interested in a hypothetical situation when all teams get the same score at the end of the championship. A simple example of that situation is when all games result in ties, but you want to minimize the number of ties as well.\n\nYour task is to describe a situation (choose the result of each game) so that all teams get the same score, and the number of ties is the minimum possible.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 100$) — the number of test cases.\n\nThen the test cases follow. Each test case is described by one line containing one integer $n$ ($2 \\le n \\le 100$) — the number of teams.\n\n\n-----Output-----\n\nFor each test case, print $\\frac{n(n - 1)}{2}$ integers describing the results of the games in the following order: the first integer should correspond to the match between team $1$ and team $2$, the second — between team $1$ and team $3$, then $1$ and $4$, ..., $1$ and $n$, $2$ and $3$, $2$ and $4$, ..., $2$ and $n$, and so on, until the game between the team $n - 1$ and the team $n$.\n\nThe integer corresponding to the game between the team $x$ and the team $y$ should be $1$ if $x$ wins, $-1$ if $y$ wins, or $0$ if the game results in a tie.\n\nAll teams should get the same score, and the number of ties should be the minimum possible. If there are multiple optimal answers, print any of them. It can be shown that there always exists a way to make all teams have the same score.\n\n\n-----Examples-----\n\nInput\n2\n2\n3\nOutput\n0 \n1 -1 1\n\n\n-----Note-----\n\nIn the first test case of the example, both teams get $1$ point since the game between them is a tie.\n\nIn the second test case of the example, team $1$ defeats team $2$ (team $1$ gets $3$ points), team $1$ loses to team $3$ (team $3$ gets $3$ points), and team $2$ wins against team $3$ (team $2$ gets $3$ points).\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    output = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        results = []\n\n        if n % 2 == 1:\n            for i in range(1, n + 1):\n                for j in range(i + 1, n + 1):\n                    results.append(\"1\" if (i + j) % 2 == 1 else \"-1\")\n        else:\n            half = n // 2\n            for i in range(1, n + 1):\n                for j in range(i + 1, n + 1):\n                    distance = j - i\n                    if distance == half:\n                        results.append(\"0\")\n                    elif distance < half:\n                        results.append(\"1\")\n                    else:\n                        results.append(\"-1\")\n\n        output.append(\" \".join(results))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: The Olympic Games have just started and Federico is eager to watch the marathon race.\n\nThere will be $n$ athletes, numbered from $1$ to $n$, competing in the marathon, and all of them have taken part \nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        rankings = [[next(it) for _ in range(5)] for _ in range(n)]\n\n        candidate = 0\n\n        for i in range(1, n):\n            better = 0\n            for j in range(5):\n                if rankings[i][j] < rankings[candidate][j]:\n                    better += 1\n            if better >= 3:\n                candi"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

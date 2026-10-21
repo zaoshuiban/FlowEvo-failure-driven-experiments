@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ee1b1002-5d6e-4a7b-a5f5-e257a6f83f42",
+  "created": 1792434086,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 862,
+    "completion_tokens": 1982,
+    "total_tokens": 2844,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1734
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 478
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    answers = []\n\n    for case in range(1, t + 1):\n        s = data[case]\n\n        last1 = last2 = last3 = -1\n        best = len(s) + 1\n\n        for i, ch in enumerate(s):\n            if ch == ord('1'):\n                last1 = i\n            elif ch == ord('2'):\n                last2 = i\n            else:\n                last3 = i\n\n            if last1 != -1 and last2 != -1 and last3 != -1:\n                left = last1\n                if last2 < left:\n                    left = last2\n                if last3 < left:\n                    left = last3\n\n                current = i - left + 1\n                if current < best:\n                    best = current\n\n        answers.append(str(best if best != len(s) + 1 else 0))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 9.065,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string $s$ such that each its character is either 1, 2, or 3. You have to choose the shortest contiguous substring of $s$ such that it contains each of these three characters at least once.\n\nA contiguous substring of string $s$ is a string that can be obtained from $s$ by removing some (possibly zero) characters from the beginning of $s$ and some (possibly zero) characters from the end of $s$.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 20000$) — the number of test cases.\n\nEach test case consists of one line containing the string $s$ ($1 \\le |s| \\le 200000$). It is guaranteed that each character of $s$ is either 1, 2, or 3.\n\nThe sum of lengths of all strings in all test cases does not exceed $200000$.\n\n\n-----Output-----\n\nFor each test case, print one integer — the length of the shortest contiguous substring of $s$ containing all three types of characters at least once. If there is no such substring, print $0$ instead.\n\n\n-----Example-----\nInput\n7\n123\n12222133333332\n112233\n332211\n12121212\n333333\n31121\n\nOutput\n3\n3\n4\n4\n0\n0\n4\n\n\n\n-----Note-----\n\nConsider the example test:\n\nIn the first test case, the substring 123 can be used.\n\nIn the second test case, the substring 213 can be used.\n\nIn the third test case, the substring 1223 can be used.\n\nIn the fourth test case, the substring 3221 can be used.\n\nIn the fifth test case, there is no character 3 in $s$.\n\nIn the sixth test case, there is no character 1 in $s$.\n\nIn the seventh test case, the substring 3112 can be used.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.read().split()\n    t = int(data[0])\n    answers = []\n\n    for case in range(1, t + 1):\n        s = data[case]\n        last = [-1, -1, -1]\n        ans = len(s) + 1\n\n        for i, ch in enumerate(s):\n            last[ord(ch) - ord('1')] = i\n            mn = min(last)\n\n            if mn != -1:\n                ans = min(ans, i - mn + 1)\n\n        answers.append(str(ans if ans != len(s) + 1 else 0))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Runtime error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

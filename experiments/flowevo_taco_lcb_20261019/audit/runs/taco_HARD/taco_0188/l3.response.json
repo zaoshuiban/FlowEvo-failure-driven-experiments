@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9a66e623-3fb2-436c-aadd-f0b5b8a9c25d",
+  "created": 1792454083,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1161,
+    "completion_tokens": 21973,
+    "total_tokens": 23134,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 21725
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 521
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    ans = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        a = data[idx:idx + n]\n        idx += n\n\n        if k not in a:\n            ans.append(\"no\")\n            continue\n\n        if n == 1:\n            ans.append(\"yes\")\n            continue\n\n        possible = False\n\n        # Need two elements >= k at distance at most 2.\n        for i in range(n):\n            if a[i] >= k:\n                if i + 1 < n and a[i + 1] >= k:\n                    possible = True\n                    break\n                if i + 2 < n and a[i + 2] >= k:\n                    possible = True\n                    break\n\n        ans.append(\"yes\" if possible else \"no\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 103.12,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nSlime has a sequence of positive integers a_1, a_2, …, a_n.\n\nIn one operation Orac can choose an arbitrary subsegment [l … r] of this sequence and replace all values a_l, a_{l + 1}, …, a_r to the value of median of \\\\{a_l, a_{l + 1}, …, a_r\\}.\n\nIn this problem, for the integer multiset s, the median of s is equal to the ⌊ (|s|+1)/(2)⌋-th smallest number in it. For example, the median of \\{1,4,4,6,5\\} is 4, and the median of \\{1,7,5,8\\} is 5.\n\nSlime wants Orac to make a_1 = a_2 = … = a_n = k using these operations.\n\nOrac thinks that it is impossible, and he does not want to waste his time, so he decided to ask you if it is possible to satisfy the Slime's requirement, he may ask you these questions several times.\n\nInput\n\nThe first line of the input is a single integer t: the number of queries.\n\nThe first line of each query contains two integers n\\ (1≤ n≤ 100 000) and k\\ (1≤ k≤ 10^9), the second line contains n positive integers a_1,a_2,...,a_n\\ (1≤ a_i≤ 10^9)\n\nThe total sum of n is at most 100 000.\n\nOutput\n\nThe output should contain t lines. The i-th line should be equal to 'yes' if it is possible to make all integers k in some number of operations or 'no', otherwise. You can print each letter in lowercase or uppercase.\n\nExample\n\nInput\n\n\n5\n5 3\n1 5 2 6 1\n1 6\n6\n3 2\n1 2 3\n4 3\n3 1 2 3\n10 3\n1 2 3 4 5 6 7 8 9 10\n\n\nOutput\n\n\nno\nyes\nyes\nno\nyes\n\nNote\n\nIn the first query, Orac can't turn all elements into 3.\n\nIn the second query, a_1=6 is already satisfied.\n\nIn the third query, Orac can select the complete array and turn all elements into 2.\n\nIn the fourth query, Orac can't turn all elements into 3.\n\nIn the fifth query, Orac can select [1,6] at first and then select [2,10].\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        a = data[idx:idx + n]\n        idx += n\n\n        if k not in a:\n            answers.append(\"no\")\n            continue\n\n        if n == 1:\n            answers.append(\"yes\" if a[0] == k else \"no\")\n            continue\n\n        possible = False\n\n        for i in range(n):\n            if a[i] >= k:\n                if i + 1 < n and a[i + 1] >= k:\n                    possible = True\n                    break\n                if i + 2 < n and a[i + 2] >= k:\n                    possible = True\n                    break\n\n        answers.append(\"yes\" if possible else \"no\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

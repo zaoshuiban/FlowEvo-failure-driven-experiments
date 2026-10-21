@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0a509c72-3458-4d44-8f83-74a6b83e070a",
+  "created": 1792433327,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 298,
+    "completion_tokens": 1292,
+    "total_tokens": 1590,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1028
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 298
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef who_is_winner(pieces_position_list):\n    board = [[None] * 7 for _ in range(6)]\n    heights = [0] * 7\n\n    def is_winning_move(row, col, color):\n        directions = ((1, 0), (0, 1), (1, 1), (1, -1))\n\n        for dr, dc in directions:\n            count = 1\n\n            for step in (1, -1):\n                r = row + dr * step\n                c = col + dc * step\n\n                while 0 <= r < 6 and 0 <= c < 7 and board[r][c] == color:\n                    count += 1\n                    r += dr * step\n                    c += dc * step\n\n            if count >= 4:\n                return True\n\n        return False\n\n    for move in pieces_position_list:\n        column, color = move.split(\"_\")\n        col = ord(column) - ord(\"A\")\n        row = 5 - heights[col]\n\n        board[row][col] = color\n        heights[col] += 1\n\n        if is_winning_move(row, col, color):\n            return color\n\n    return \"Draw\"\n```",
+  "latency_s": 6.052,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n# Connect Four\n\nTake a look at wiki description of Connect Four game:\n\n[Wiki Connect Four](https://en.wikipedia.org/wiki/Connect_Four)\n\nThe grid is 6 row by 7 columns, those being named from A to G.\n\nYou will receive a list of strings showing the order of the pieces which dropped in columns:\n\n```python\n  pieces_position_list = [\"A_Red\",\n                          \"B_Yellow\",\n                          \"A_Red\",\n                          \"B_Yellow\",\n                          \"A_Red\",\n                          \"B_Yellow\",\n                          \"G_Red\",\n                          \"B_Yellow\"]\n```\n\nThe list may contain up to 42 moves and shows the order the players are playing.\n\nThe first player who connects four items of the same color is the winner.\n\nYou should return \"Yellow\", \"Red\" or \"Draw\" accordingly.\n\nStarter code / required signature:\ndef who_is_winner(pieces_position_list):\n\t\n\nUse the required function/method named who_is_winner. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

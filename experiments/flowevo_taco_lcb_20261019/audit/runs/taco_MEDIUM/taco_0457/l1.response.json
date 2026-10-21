@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a38b63fd-22e2-468e-adce-a9a9e5520136",
+  "created": 1792432639,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 620,
+    "completion_tokens": 3426,
+    "total_tokens": 4046,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3163
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 620
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import isqrt\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    ans = []\n\n    for _ in range(t):\n        m, n, p, q = data[idx], data[idx + 1], data[idx + 2], data[idx + 3]\n        idx += 4\n\n        x = m - p\n        y = n - q\n\n        a, b = min(x, y), max(x, y)\n        d = b - a\n\n        # Wythoff Nim P-position condition:\n        # P-positions are (floor(k*phi), floor(k*phi^2)).\n        # For min = a, max = b, let d = b - a.\n        # Then it is a P-position iff a == floor(d * phi).\n        expected = (d + isqrt(5 * d * d)) // 2\n\n        if a == expected:\n            ans.append(\"Bob\")\n        else:\n            ans.append(\"Alice\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 15.497,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAfter a long period of relaxation Alice and Bob decided to play a game.\nThis time of course not a number game. The rules of the game are as follows:\n\nThere is a vehicle situated at the point (m, n) of a rectangular grid.\nOnly one corner of the rectangular grid is defined, i.e. the left-top point (0, 0),\nwhich is also known as the origin. The grid extends infinitely towards east and infinitely towards south.\nAlice and Bob are both sitting in a vehicle, initially situated at the point (m, n).\nThe game they are playing ends as soon as one of them reaches (p, q).\n\nNow, Alice and Bob have to drive the vehicle in their respective turn.\nIn their own turn they can move the vehicle, from (x, y) to (x', y)\nor (x, y'); where p ≤ x' < x and q ≤ y' < y.\nThey can also move the vehicle to the point (x-a, y-a), where 0 < a ≤ min(x-p, y-q).\nAlso, 0 ≤ p < m and 0 ≤ q < n.\nThe winner is the game is the one who drives the vehicle to (p, q).\n\nCunning Alice uses a biased coin for tossing purpose and always plays first.\nIt is assumed that both Alice and Bob play optimally in their respective turns.\n\n------ Input ------ \n\nThe first line contains a single integer T denoting the number of test cases.\nT test cases follow. Each test case consists of a single line consisting of four space separated integers m, n, p, q\nrespectively.\n\n------ Output ------ \n\nFor each test case print a string - either \"Alice\" or \"Bob\" (without the quotes), denoting the winner.\n\n------ Constraints ------ \n\n1 ≤ T ≤ 1000\n\n1  ≤ m, n  ≤ 1000\n\n0 ≤ p < m\n\n0 ≤ q < n\n\n----- Sample Input 1 ------ \n2\n1 1 0 0\n2 4 1 2\n----- Sample Output 1 ------ \nAlice\nBob\n----- explanation 1 ------ \nIn the second test case, initially the vehicle is at co-ordinate (2, 4).\nAlice now has four possible moves. Alice can move the vehicle to position (1, 4), (1, 3), (2, 3) and (2, 2).\nFor all moves that Alice can do, Bob can move the vehicle to the position (1, 2), winning the game.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

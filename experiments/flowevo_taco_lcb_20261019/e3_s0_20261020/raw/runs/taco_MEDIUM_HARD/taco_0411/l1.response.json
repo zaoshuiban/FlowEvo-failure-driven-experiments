@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "93303498-9ffb-4ebe-be93-7e34d80bd6a2",
+  "created": 1792445716,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 409,
+    "completion_tokens": 3736,
+    "total_tokens": 4145,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3348
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 409
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom functools import lru_cache\n\n\ndef best_in_range(l: int, r: int) -> int:\n    MAX_BIT = 60\n\n    @lru_cache(None)\n    def dp(pos: int, tight_l: bool, tight_r: bool):\n        if pos < 0:\n            return 0, 0\n\n        l_bit = (l >> pos) & 1\n        r_bit = (r >> pos) & 1\n\n        best_pop = -1\n        best_val = 0\n\n        for bit in (0, 1):\n            if tight_l and bit < l_bit:\n                continue\n            if tight_r and bit > r_bit:\n                continue\n\n            next_tight_l = tight_l and (bit == l_bit)\n            next_tight_r = tight_r and (bit == r_bit)\n\n            sub_pop, sub_val = dp(pos - 1, next_tight_l, next_tight_r)\n\n            pop = sub_pop + bit\n            val = (bit << pos) + sub_val\n\n            if pop > best_pop or (pop == best_pop and val < best_val):\n                best_pop = pop\n                best_val = val\n\n        return best_pop, best_val\n\n    return dp(MAX_BIT, True, True)[1]\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    answers = []\n    idx = 1\n\n    for _ in range(n):\n        l = data[idx]\n        r = data[idx + 1]\n        idx += 2\n        answers.append(str(best_in_range(l, r)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 17.097,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLet's denote as $\\text{popcount}(x)$ the number of bits set ('1' bits) in the binary representation of the non-negative integer x.\n\nYou are given multiple queries consisting of pairs of integers l and r. For each query, find the x, such that l ≤ x ≤ r, and $\\text{popcount}(x)$ is maximum possible. If there are multiple such numbers find the smallest of them.\n\n\n-----Input-----\n\nThe first line contains integer n — the number of queries (1 ≤ n ≤ 10000).\n\nEach of the following n lines contain two integers l_{i}, r_{i} — the arguments for the corresponding query (0 ≤ l_{i} ≤ r_{i} ≤ 10^18).\n\n\n-----Output-----\n\nFor each query print the answer in a separate line.\n\n\n-----Examples-----\nInput\n3\n1 2\n2 4\n1 10\n\nOutput\n1\n3\n7\n\n\n\n-----Note-----\n\nThe binary representations of numbers from 1 to 10 are listed below:\n\n1_10 = 1_2\n\n2_10 = 10_2\n\n3_10 = 11_2\n\n4_10 = 100_2\n\n5_10 = 101_2\n\n6_10 = 110_2\n\n7_10 = 111_2\n\n8_10 = 1000_2\n\n9_10 = 1001_2\n\n10_10 = 1010_2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

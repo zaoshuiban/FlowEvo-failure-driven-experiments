@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0735e057-2cb6-4df6-9825-e8dc47d1f421",
+  "created": 1792442094,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 778,
+    "completion_tokens": 29451,
+    "total_tokens": 30229,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 28506
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 138
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\nfrom bisect import bisect_left\n\nMOD = 998244353\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M, K = data[0], data[1], data[2]\n\n    extras = []\n    source_set = set()\n\n    p = 3\n    for _ in range(M):\n        x = data[p] - 1\n        y = data[p + 1] - 1\n        p += 2\n        extras.append((x, y))\n        source_set.add(x)\n\n    if M == 0:\n        print(1)\n        return\n\n    sources = sorted(source_set)\n    S = len(sources)\n    pos_to_idx = {v: i for i, v in enumerate(sources)}\n\n    out = [[] for _ in range(S)]\n    incoming = [[] for _ in range(S)]\n\n    # Base-cycle edges from each source\n    for i, x in enumerate(sources):\n        y = x + 1\n        if y == N:\n            y = 0\n\n        j = bisect_left(sources, y)\n        if j == S:\n            dest_pos = sources[0] + N\n            dest = 0\n        else:\n            dest_pos = sources[j]\n            dest = j\n\n        cost = 1 + (dest_pos - y)\n        out[i].append((dest, cost))\n        incoming[dest].append((i, cost))\n\n    # Extra edges\n    for x, y in extras:\n        i = pos_to_idx[x]\n\n        j = bisect_left(sources, y)\n        if j == S:\n            dest_pos = sources[0] + N\n            dest = 0\n        else:\n            dest_pos = sources[j]\n            dest = j\n\n        cost = 1 + (dest_pos - y)\n        out[i].append((dest, cost))\n        incoming[dest].append((i, cost))\n\n    # First source reached from vertex 0 by following the base cycle.\n    arrival = 0 if sources[0] == 0 else sources[0]\n\n    if arrival > K:\n        print(1)\n        return\n\n    # dp[i][t]: number of ways to be at source i at time t,\n    # just before choosing the next outgoing edge.\n    dp = [array('I', [0]) * (K + 1) for _ in range(S)]\n    dp[0][arrival] = 1\n\n    incoming_ref = []\n    for v in range(S):\n        lst = []\n        for u, cost in incoming[v]:\n            if cost <= K:\n                lst.append((dp[u], cost))\n        incoming_ref.append(lst)\n\n    # grt[i] is the number of outgoing choices from source i\n    # that currently would finish before reaching the next source.\n    grt = [0] * S\n    activations = []\n\n    for u in range(S):\n        for _, cost in out[u]:\n            activate_time = K - cost + 1\n            if activate_time <= 0:\n                grt[u] += 1\n            elif activate_time < K:\n                activations.append((activate_time, u))\n\n    activations.sort()\n    ptr = 0\n    A = len(activations)\n\n    ans = 0\n\n    # Times 0, ..., K-1: after choosing an edge, some paths may finish\n    # before reaching the next source.\n    for t in range(K):\n        while ptr < A and activations[ptr][0] <= t:\n            grt[activations[ptr][1]] += 1\n            ptr += 1\n\n        for v in range(S):\n            val = dp[v][t]\n\n            for arr, cost in incoming_ref[v]:\n                if cost <= t:\n                    val += arr[t - cost]\n\n            val %= MOD\n            dp[v][t] = val\n            ans += val * grt[v]\n\n    # Time K: paths ending exactly at a source at time K are also valid.\n    t = K\n    for v in range(S):\n        val = dp[v][t]\n\n        for arr, cost in incoming_ref[v]:\n            val += arr[t - cost]\n\n        val %= MOD\n        dp[v][t] = val\n        ans += val\n\n    print(ans % MOD)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 143.027,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a simple directed graph G with N vertices and N+M edges. The vertices are numbered 1 to N, and the edges are numbered 1 to N+M.\nEdge i (1 \\leq i \\leq N) goes from vertex i to vertex i+1. (Here, vertex N+1 is considered as vertex 1.)\r\nEdge N+i (1 \\leq i \\leq M) goes from vertex X_i to vertex Y_i.\nTakahashi is at vertex 1. At each vertex, he can move to any vertex to which there is an outgoing edge from the current vertex.\nCompute the number of ways he can move exactly K times.\nThat is, find the number of integer sequences (v_0, v_1, \\dots, v_K) of length K+1 satisfying all of the following three conditions:\n\n- 1 \\leq v_i \\leq N for i = 0, 1, \\dots, K.\n- v_0 = 1.\n- There is a directed edge from vertex v_{i-1} to vertex v_i for i = 1, 2, \\ldots, K.\n\nSince this number can be very large, print it modulo 998244353.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M K\r\nX_1 Y_1\r\nX_2 Y_2\r\n\\vdots\r\nX_M Y_M\n\nOutput\n\nPrint the count modulo 998244353.\n\nConstraints\n\n\n- 2 \\leq N \\leq 2 \\times 10^5\n- 0 \\leq M \\leq 50\n- 1 \\leq K \\leq 2 \\times 10^5\n- 1 \\leq X_i, Y_i \\leq N, X_i \\neq Y_i\n- All of the N+M directed edges are distinct.\n- All input values are integers.\n\nSample Input 1\n\n6 2 5\r\n1 4\r\n2 5\n\nSample Output 1\n\n5\r\n\n\nThe above figure represents the graph G. There are five ways for Takahashi to move:\n\n- Vertex 1 \\to Vertex 2 \\to Vertex 3 \\to Vertex 4 \\to Vertex 5 \\to Vertex 6\n- Vertex 1 \\to Vertex 2 \\to Vertex 5 \\to Vertex 6 \\to Vertex 1 \\to Vertex 2\n- Vertex 1 \\to Vertex 2 \\to Vertex 5 \\to Vertex 6 \\to Vertex 1 \\to Vertex 4\n- Vertex 1 \\to Vertex 4 \\to Vertex 5 \\to Vertex 6 \\to Vertex 1 \\to Vertex 2\n- Vertex 1 \\to Vertex 4 \\to Vertex 5 \\to Vertex 6 \\to Vertex 1 \\to Vertex 4\n\nSample Input 2\n\n10 0 200000\n\nSample Output 2\n\n1\n\nSample Input 3\n\n199 10 1326\r\n122 39\r\n142 49\r\n164 119\r\n197 127\r\n188 145\r\n69 80\r\n6 120\r\n24 160\r\n18 154\r\n185 27\n\nSample Output 3\n\n451022766\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

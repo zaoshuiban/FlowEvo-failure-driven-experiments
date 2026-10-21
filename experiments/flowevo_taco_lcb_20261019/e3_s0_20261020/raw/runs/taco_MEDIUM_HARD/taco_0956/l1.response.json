@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a986af73-9d8c-493c-b8ac-e2a63063f949",
+  "created": 1792431826,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 986,
+    "completion_tokens": 3785,
+    "total_tokens": 4771,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3526
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 986
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        idx += 1\n\n        a = data[idx]\n        idx += 1\n\n        b = data[idx]\n        idx += 1\n\n        parent = list(range(20))\n\n        def find(x):\n            while parent[x] != x:\n                parent[x] = parent[parent[x]]\n                x = parent[x]\n            return x\n\n        ans = 0\n        possible = True\n\n        for ca, cb in zip(a, b):\n            x = ca - ord('a')\n            y = cb - ord('a')\n\n            if x > y:\n                possible = False\n                break\n\n            if x < y:\n                rx = find(x)\n                ry = find(y)\n\n                if rx != ry:\n                    parent[rx] = ry\n                    ans += 1\n\n        answers.append(str(ans) if possible else \"-1\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 17.325,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNote that the only difference between String Transformation 1 and String Transformation 2 is in the move Koa does. In this version the letter $y$ Koa selects must be strictly greater alphabetically than $x$ (read statement for better understanding). You can make hacks in these problems independently.\n\nKoa the Koala has two strings $A$ and $B$ of the same length $n$ ($|A|=|B|=n$) consisting of the first $20$ lowercase English alphabet letters (ie. from a to t).\n\nIn one move Koa:\n\n  selects some subset of positions $p_1, p_2, \\ldots, p_k$ ($k \\ge 1; 1 \\le p_i \\le n; p_i \\neq p_j$ if $i \\neq j$) of $A$ such that $A_{p_1} = A_{p_2} = \\ldots = A_{p_k} = x$ (ie. all letters on this positions are equal to some letter $x$).\n\n  selects a letter $y$ (from the first $20$ lowercase letters in English alphabet) such that $y>x$ (ie. letter $y$ is strictly greater alphabetically than $x$).\n\n  sets each letter in positions $p_1, p_2, \\ldots, p_k$ to letter $y$. More formally: for each $i$ ($1 \\le i \\le k$) Koa sets $A_{p_i} = y$.\n\n Note that you can only modify letters in string $A$.\n\nKoa wants to know the smallest number of moves she has to do to make strings equal to each other ($A = B$) or to determine that there is no way to make them equal. Help her!\n\n\n-----Input-----\n\nEach test contains multiple test cases. The first line contains $t$ ($1 \\le t \\le 10$) — the number of test cases. Description of the test cases follows.\n\nThe first line of each test case contains one integer $n$ ($1 \\le n \\le 10^5$) — the length of strings $A$ and $B$.\n\nThe second line of each test case contains string $A$ ($|A|=n$).\n\nThe third line of each test case contains string $B$ ($|B|=n$).\n\nBoth strings consists of the first $20$ lowercase English alphabet letters (ie. from a to t).\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each test case:\n\nPrint on a single line the smallest number of moves she has to do to make strings equal to each other ($A = B$) or $-1$ if there is no way to make them equal.\n\n\n-----Example-----\nInput\n5\n3\naab\nbcc\n4\ncabc\nabcb\n3\nabc\ntsr\n4\naabd\ncccd\n5\nabcbd\nbcdda\n\nOutput\n2\n-1\n3\n2\n-1\n\n\n\n-----Note-----  In the $1$-st test case Koa:   selects positions $1$ and $2$ and sets $A_1 = A_2 = $ b ($\\color{red}{aa}b \\rightarrow \\color{blue}{bb}b$).  selects positions $2$ and $3$ and sets $A_2 = A_3 = $ c ($b\\color{red}{bb} \\rightarrow b\\color{blue}{cc}$). \n\n  In the $2$-nd test case Koa has no way to make string $A$ equal $B$.\n\n  In the $3$-rd test case Koa:   selects position $1$ and sets $A_1 = $ t ($\\color{red}{a}bc \\rightarrow \\color{blue}{t}bc$).  selects position $2$ and sets $A_2 = $ s ($t\\color{red}{b}c \\rightarrow t\\color{blue}{s}c$).  selects position $3$ and sets $A_3 = $ r ($ts\\color{red}{c} \\rightarrow ts\\color{blue}{r}$).\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

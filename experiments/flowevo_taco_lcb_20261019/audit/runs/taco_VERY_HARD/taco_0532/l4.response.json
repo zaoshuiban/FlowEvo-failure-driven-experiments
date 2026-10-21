@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b1dd23a4-e0d6-4ea1-81ac-7663337ee08b",
+  "created": 1792458606,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 866,
+    "completion_tokens": 12421,
+    "total_tokens": 13287,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12022
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 354
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        d = data[idx + 1]\n        idx += 2\n\n        buckets = [[] for _ in range(d)]\n        possible = True\n\n        end = idx + n\n        residue = 0\n\n        while idx < end:\n            value = data[idx] - 1  # convert to 0-based value\n\n            if value % d != residue:\n                possible = False\n                idx = end\n                break\n\n            buckets[residue].append(value // d)\n\n            idx += 1\n            residue += 1\n            if residue == d:\n                residue = 0\n\n        if not possible:\n            answers.append(\"-1\")\n            continue\n\n        total_swaps = 0\n\n        for arr in buckets:\n            k = len(arr)\n            if k <= 1:\n                continue\n\n            bit = [0] * (k + 1)\n            inversions = 0\n            seen = 0\n\n            for x in arr:\n                # Count already seen values <= x\n                count_le = 0\n                pos = x + 1\n                while pos > 0:\n                    count_le += bit[pos]\n                    pos -= pos & -pos\n\n                inversions += seen - count_le\n\n                pos = x + 1\n                while pos <= k:\n                    bit[pos] += 1\n                    pos += pos & -pos\n\n                seen += 1\n\n            total_swaps += inversions\n\n        answers.append(str(total_swaps))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 59.045,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef received a permutation $P_1, P_2, \\ldots, P_N$ and also an integer $D$ from his good friend Grux, because Grux was afraid he would forget them somewhere. However, since Grux was just playing with the permutation, it was all shuffled, and Chef only likes sorted permutations, so he decided to sort it by performing some swaps.\nChef wants to use the integer $D$ he just received, so he is only willing to swap two elements of the permutation whenever their absolute difference is exactly $D$. He has limited time, so you should determine the minimum number of swaps he needs to perform to sort the permutation, or tell him that it is impossible to sort it his way.\n\n-----Input-----\n- The first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\n- The first line of each test case contains two space-separated integers $N$ and $D$.\n- The second line contains $N$ space-separated integers $P_1, P_2, \\ldots, P_N$.\n\n-----Output-----\nFor each test case, print a single line containing one integer ― the minimum number of swaps, or $-1$ if it is impossible to sort the permutation.\n\n-----Constraints-----\n- $1 \\le T \\le 20$\n- $1 \\le N \\le 200,000$\n- $1 \\le D \\le N$\n- $1 \\le P_i \\le N$ for each valid $i$\n- $P_1, P_2, \\ldots, P_N$ are pairwise distinct\n- the sum of $N$ over all test cases does not exceed $10^6$\n\n-----Subtasks-----\nSubtask #1 (20 points): $D = 1$\nSubtask #2 (30 points):\n- $N \\le 1,000$\n- the sum of $N$ over all test cases does not exceed $10,000$\nSubtask #3 (50 points): original constraints\n\n-----Example Input-----\n2\n5 2   \n3 4 5 2 1\n5 2    \n4 3 2 1 5  \n\n-----Example Output-----\n3\n-1\n\n-----Explanation-----\nExample case 1: Chef can perform the following swaps in this order:\n- swap the first and fifth element\n- swap the third and fifth element\n- swap the second and fourth element\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

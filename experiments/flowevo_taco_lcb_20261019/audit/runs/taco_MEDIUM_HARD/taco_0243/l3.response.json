@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3cea22ba-e754-4de0-affa-2ced471f4712",
+  "created": 1792447148,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 850,
+    "completion_tokens": 32768,
+    "total_tokens": 33618,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 594
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 137.74,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a polyline going through points (0, 0) – (x, x) – (2x, 0) – (3x, x) – (4x, 0) – ... - (2kx, 0) – (2kx + x, x) – .... \n\nWe know that the polyline passes through the point (a, b). Find minimum positive value x such that it is true or determine that there is no such x.\n\n\n-----Input-----\n\nOnly one line containing two positive integers a and b (1 ≤ a, b ≤ 10^9).\n\n\n-----Output-----\n\nOutput the only line containing the answer. Your answer will be considered correct if its relative or absolute error doesn't exceed 10^{ - 9}. If there is no such x then output  - 1 as the answer.\n\n\n-----Examples-----\nInput\n3 1\n\nOutput\n1.000000000000\n\nInput\n1 3\n\nOutput\n-1\n\nInput\n4 1\n\nOutput\n1.250000000000\n\n\n\n-----Note-----\n\nYou can see following graphs for sample 1 and sample 3.  [Image]  [Image]\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    a = int(data[0])\n    b = int(data[1])\n\n    if a < b:\n        print(-1)\n        return\n\n    # Candidate from falling segments:\n    # x = (a + b) / (2 * m), maximize valid m.\n    num_fall = a + b\n    m = num_fall // (2 * b)\n    best_num = num_fall\n    best_den = 2 * m\n\n    # Candidate from rising segments:\n    # x = (a - b) / (2 * k), maximize valid k.\n    if a > b:\n        num_rise = a - b\n        k = num_rise // (2 * b)\n        if k > 0:\n            den_rise = 2 * k\n            # Compare num_rise / den_rise < best_num / best_den\n            if num_rise * best_den < best_num * den_rise:\n                best_num = num_rise\n                best_den = den_rise\n\n    ans = best_num / best_den\n    print(f\"{ans:.15f}\")\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Two positive integers a and b have a sum of s and a bitwise XOR of x. How many possible values are there for the ordered pair (a, b)?\n\nInput\n\nThe first line of the input contains two integers s and x \nSolution:\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    s, x = map(int, data[:2])\n\n    if s < x or (s - x) % 2 != 0:\n        print(0)\n        return\n\n    common = (s - x) // 2\n\n    if common & x:\n        print(0)\n        return\n\n    ans = 1 << x.bit_count()\n\n    # If common == 0, the cases where one of the numbers is zero are included.\n    if common == 0:\n        ans -= 2\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

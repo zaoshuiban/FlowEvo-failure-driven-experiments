@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ca2cbe09-8ee3-4c16-a012-d3cebd0d79ab",
+  "created": 1792456412,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 846,
+    "completion_tokens": 7574,
+    "total_tokens": 8420,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7151
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 206
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    ptr = 0\n\n    n = data[ptr]\n    ptr += 1\n\n    values = []\n    counts = []\n\n    for _ in range(n):\n        ci = data[ptr]\n        ptr += 1\n        counts.append(ci)\n        values.append(data[ptr:ptr + ci])\n        ptr += ci\n\n    m = data[ptr]\n    ptr += 1\n\n    max_indices = [counts[i] - 1 for i in range(n)]\n    best_possible = tuple(max_indices)\n\n    banned = set()\n    banned_builds = []\n\n    for _ in range(m):\n        build = [data[ptr + i] - 1 for i in range(n)]\n        ptr += n\n        build_tuple = tuple(build)\n\n        strength = 0\n        for i in range(n):\n            strength += values[i][build_tuple[i]]\n\n        banned.add(build_tuple)\n        banned_builds.append((build_tuple, strength))\n\n    if best_possible not in banned:\n        print(\" \".join(str(x + 1) for x in best_possible))\n        return\n\n    best_strength = -1\n    best_build = None\n\n    for build, strength in banned_builds:\n        for i in range(n):\n            if build[i] > 0:\n                candidate_strength = (\n                    strength\n                    - values[i][build[i]]\n                    + values[i][build[i] - 1]\n                )\n\n                if candidate_strength > best_strength:\n                    candidate = list(build)\n                    candidate[i] -= 1\n                    candidate = tuple(candidate)\n\n                    if candidate not in banned:\n                        best_strength = candidate_strength\n                        best_build = candidate\n\n    print(\" \".join(str(x + 1) for x in best_build))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 40.583,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIvan is playing yet another roguelike computer game. He controls a single hero in the game. The hero has $n$ equipment slots. There is a list of $c_i$ items for the $i$-th slot, the $j$-th of them increases the hero strength by $a_{i,j}$. The items for each slot are pairwise distinct and are listed in the increasing order of their strength increase. So, $a_{i,1} < a_{i,2} < \\dots < a_{i,c_i}$.\n\nFor each slot Ivan chooses exactly one item. Let the chosen item for the $i$-th slot be the $b_i$-th item in the corresponding list. The sequence of choices $[b_1, b_2, \\dots, b_n]$ is called a build.\n\nThe strength of a build is the sum of the strength increases of the items in it. Some builds are banned from the game. There is a list of $m$ pairwise distinct banned builds. It's guaranteed that there's at least one build that's not banned.\n\nWhat is the build with the maximum strength that is not banned from the game? If there are multiple builds with maximum strength, print any of them.\n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($1 \\le n \\le 10$) — the number of equipment slots.\n\nThe $i$-th of the next $n$ lines contains the description of the items for the $i$-th slot. First, one integer $c_i$ ($1 \\le c_i \\le 2 \\cdot 10^5$) — the number of items for the $i$-th slot. Then $c_i$ integers $a_{i,1}, a_{i,2}, \\dots, a_{i,c_i}$ ($1 \\le a_{i,1} < a_{i,2} < \\dots < a_{i,c_i} \\le 10^8$).\n\nThe sum of $c_i$ doesn't exceed $2 \\cdot 10^5$.\n\nThe next line contains a single integer $m$ ($0 \\le m \\le 10^5$) — the number of banned builds.\n\nEach of the next $m$ lines contains a description of a banned build — a sequence of $n$ integers $b_1, b_2, \\dots, b_n$ ($1 \\le b_i \\le c_i$).\n\nThe builds are pairwise distinct, and there's at least one build that's not banned.\n\n\n-----Output-----\n\nPrint the build with the maximum strength that is not banned from the game. If there are multiple builds with maximum strength, print any of them.\n\n\n-----Examples-----\n\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n3 2 2\nOutput\n2 2 3\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n2 2 3\nOutput\n1 2 3\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n2 2 3\nOutput\n3 2 2\nInput\n4\n1 10\n1 4\n1 7\n1 3\n0\nOutput\n1 1 1 1\n\n\n-----Note-----\n\nNone\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

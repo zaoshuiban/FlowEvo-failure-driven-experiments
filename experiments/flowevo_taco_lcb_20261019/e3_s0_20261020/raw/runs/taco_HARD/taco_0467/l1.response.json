@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bfe94793-fdc5-410c-a933-9123f69ee3d3",
+  "created": 1792433605,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 571,
+    "completion_tokens": 1580,
+    "total_tokens": 2151,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1376
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 571
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\nINV2 = (MOD + 1) // 2\n\ndef main():\n    N, P = map(int, sys.stdin.readline().split())\n\n    invP = pow(P, MOD - 2, MOD)\n\n    a = 1                      # a_i = P^{-(i-1)}\n    mean = 0                   # E[S_{i-1}]\n    expected_square = 0        # F(i-1)\n    ans = []\n\n    for _ in range(N):\n        term = (mean * a + a * a % MOD * INV2) % MOD\n        expected_square = (expected_square + term) % MOD\n        ans.append(str(expected_square))\n\n        mean = (mean + a * INV2) % MOD\n        a = a * invP % MOD\n\n    sys.stdout.write(\" \".join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 6.687,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nStack has a positive integer P(P > 1).  \nHe starts a game where his initial score is 0.\n\nIn the i^{th} turn, with a probability of \\frac{1}{2}, Stack adds \\frac{1}{P^{i-1}} to his score. \n \nStack stops after N turns.\n\nLet S_{i} be his score after i turns and F(i) denote the [expected value] of S_{i}^{2}. \n\nFor each integer i(1 ≤ i ≤ N), find the value of F(i) modulo 998244353. \n\n------ Input Format ------ \n\nThe only line of input contains two space-separated positive integers N and P, as mentioned in the statement.\n\n------ Output Format ------ \n\nPrint N space-separated integers. For each integer i(1 ≤ i ≤ N), output the value of F(i) modulo 998244353. \n\nFormally, let M=998244353. It can be shown that the answer can be expressed as an irreducible fraction \\frac{x}{y}, where x and y are integers and y \\not \\equiv 0 \\pmod{M}.  \nOutput the integer equal to x \\cdot y^{-1} \\bmod M .  \nIn other words, output such an integer z that 0 ≤ z < M and z \\cdot y \\equiv x \\pmod{M}.\n.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 3 \\cdot 10^{5}$\n$2 ≤ P ≤ 10^{5}$\n\n----- Sample Input 1 ------ \n2 2\n\n----- Sample Output 1 ------ \n499122177 124780545\n\n----- explanation 1 ------ \n$S_{1}$ can be $0$ or $1$ with equal probability.\nThus $F(1)=\\frac{0 \\cdot 0}{2}+\\frac{1 \\cdot 1}{2} = \\frac{1}{2}$.\n\n$F(2)=\\frac{7}{8}$.\n\n----- Sample Input 2 ------ \n10 343\n\n----- Sample Output 2 ------ \n499122177 379526990 822885144 761122022 256959043 151932103 340445396 758502677 478338987 125853909\n\n----- explanation 2 ------\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

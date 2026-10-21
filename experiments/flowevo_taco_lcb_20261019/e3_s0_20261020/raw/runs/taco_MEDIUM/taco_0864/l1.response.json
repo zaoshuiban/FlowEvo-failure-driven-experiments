@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "025aa8ff-e0a0-4763-a1f1-e243f1870987",
+  "created": 1792438054,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 635,
+    "completion_tokens": 2967,
+    "total_tokens": 3602,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2818
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 635
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        arr = data[idx:idx + n]\n        idx += n\n\n        if n == 1:\n            answers.append(\"YES\")\n        else:\n            if min(arr) + max(arr) <= k:\n                answers.append(\"YES\")\n            else:\n                answers.append(\"NO\")\n\n    print(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 15.364,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array A = [A_{1}, A_{2}, \\ldots, A_{N}] consisting of N positive integers.\n\nYou are also given a constant K, using which you can perform the following operation on A:\nChoose two distinct indices i and j such that A_{i} + A_{j} ≤ K, and remove either A_{i} or A_{j} from A.\n\nIs it possible to obtain an array consisting of only one element using several (possibly, zero) such operations?\n\n------ Input Format ------ \n\n- The first line of input contains a single integer T, denoting the number of test cases. The description of T test cases follows.\n- The first line of each test case contains two space-separated integers N and K. \n- The second line contains N space-separated integers A_{1}, A_{2}, \\ldots, A_{N}.\n\n------ Output Format ------ \n\nFor each test case, print \"YES\" if it is possible to obtain an array consisting of only one element using the given operation, otherwise print \"NO\".\n\nYou may print each character of the string in uppercase or lowercase (for example, the strings \"yEs\", \"yes\", \"Yes\" and \"YES\" will all be treated as identical).\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{3}$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i}, K ≤ 10^{9}$\n- Sum of $N$ over all test cases does not exceed $2\\cdot 10^{5}$\n\n----- Sample Input 1 ------ \n3\n1 3\n1\n3 3\n2 2 2\n4 7\n1 4 3 5\n\n----- Sample Output 1 ------ \nYES\nNO\nYES\n\n----- explanation 1 ------ \nTest case $1$: The length of the array is already $1$.\n\nTest case $2$: There is no way to delete an element from the given array.\n\nTest case $3$: One possible sequence of operations is:\n\n- Choose $i = 1, j = 4$ and remove $A_{j} = 5$. Hence the array becomes $[1, 4, 3]$.\n- Choose $i = 2, j = 3$ and remove $A_{i} = 4$. Hence the array becomes $[1, 3]$.\n- Choose $i = 1, j = 2$ and remove $A_{i} = 1$. Hence the array becomes $[3]$, which is of length $1$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

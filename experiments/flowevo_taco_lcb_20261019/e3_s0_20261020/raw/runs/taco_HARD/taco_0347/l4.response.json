@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bbd9b6d7-10a3-41c7-9418-f6e177c4a6be",
+  "created": 1792429977,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1085,
+    "completion_tokens": 21608,
+    "total_tokens": 22693,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 21246
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 701
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = (p * p) >> 1\n            for k in range(start, size, p):\n                spf_odd[k] = p\n\n    ans1 = [-1] * n\n    ans2 = [-1] * n\n\n    for i, value in enumerate(a):\n        if value & 1:\n            p = spf_odd[value >> 1]\n            if p == 0:\n                continue\n        else:\n            p = 2\n\n        x = value\n        while x % p == 0:\n            x //= p\n\n        if x > 1:\n            ans1[i] = p\n            ans2[i] = x\n\n    sys.stdout.write(\" \".join(map(str, ans1)) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, ans2)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 98.351,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or say that there is no such pair.\n\nInput\n\nThe first line contains single integer n (1 ≤ n ≤ 5 ⋅ 10^5) — the size of the array a.\n\nThe second line contains n integers a_1, a_2, ..., a_n (2 ≤ a_i ≤ 10^7) — the array a.\n\nOutput\n\nTo speed up the output, print two lines with n integers in each line.\n\nThe i-th integers in the first and second lines should be corresponding divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 or -1 and -1 if there is no such pair. If there are multiple answers, print any of them.\n\nExample\n\nInput\n\n\n10\n2 3 4 5 6 7 8 9 10 24\n\n\nOutput\n\n\n-1 -1 -1 -1 3 -1 -1 -1 2 2 \n-1 -1 -1 -1 2 -1 -1 -1 5 3 \n\nNote\n\nLet's look at a_7 = 8. It has 3 divisors greater than 1: 2, 4, 8. As you can see, the sum of any pair of divisors is divisible by 2 as well as a_7.\n\nThere are other valid pairs of d_1 and d_2 for a_{10}=24, like (3, 4) or (8, 3). You can print any of them.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n\n    # spf[x] will contain some prime divisor of x for composite x, and 0 for primes.\n    spf = [0] * (max_a + 1)\n    limit = isqrt(max_a)\n\n    for i in range(2, limit + 1):\n        if spf[i] == 0:  # i is prime\n            for j in range(i * i, max_a + 1, i):\n                spf[j] = i\n\n    ans1 = [-1] * n\n    ans2 = [-1] * n\n\n    for idx, value in enumerate(a):\n        p = spf[value]\n\n        # value is prime, so no valid pair exists.\n        if p == 0:\n            continue\n\n        x = value\n        while x % p == 0:\n            x //= p\n\n        # value is a prime power, so no valid pair exists.\n        if x == 1:\n            continue\n\n        ans1[idx] = p\n        ans2[idx] = x\n\n    sys.stdout.write(\" \".join(map(str, ans1)) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, ans2)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: As you know, an undirected connected graph with n nodes and n - 1 edges is called a tree. You are given an integer d and a tree consisting of n nodes. Each node i has a value a_{i} associated with it.\nSolution:\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    d, n = data[0], data[1]\n    a = [0] + data[2:2 + n]\n\n    adj = [[] for _ in range(n + 1)]\n    pos = 2 + n\n\n    for _ in range(n - 1):\n        u, v = data[pos], data[pos + 1]\n        pos += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    sys.setrecursionlimit(1_000_000)\n\n    answer = 0\n\n    for root in range(1, n + 1):\n        base = a[root]\n        li"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

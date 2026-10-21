@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3591c294-11de-4ee6-b1d3-46cebaf9a571",
+  "created": 1792450240,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 615,
+    "completion_tokens": 32768,
+    "total_tokens": 33383,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 231
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 180.598,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements [Hindi] , [Vietnamese] , [Mandarin Chinese] , [Russian] and [Bengali] as well.\n\nIn ShareChat, there is a sequence of binary integers $A_{1}, A_{2}, \\ldots, A_{N}$. You should answer $Q$ queries on this sequence. In each query, you are given two indices $L$ and $R$ and a binary integer $X$.\n\nThe answer to a query is the smallest index $i$ ($L ≤ i ≤ R$) such that the value $A_{i} \\oplus X$ is maximum possible, i.e. equal to $\\mathrm{max}(A_{L} \\oplus X, A_{L+1} \\oplus X, \\ldots, A_{R} \\oplus X)$. Here, $\\oplus$ denotes the bitwise XOR operation.\n\n------  Input ------\nThe first line of the input contains two space-separated integers $N$ and $Q$.\n$N$ lines follow. For each $i$ ($1 ≤ i ≤ N$), the $i$-th of these lines contains a single binary string denoting the number $A_{i}$ (in binary representation).\nThe following $Q$ lines describe queries. Each of these lines contains two space-separated integers $L$ and $R$, followed by a space and a binary string denoting the number $X$ (in binary representation).\n\n------  Output ------\nFor each query, print a single line containing one integer — the answer to that query.\n\n------  Constraints ------\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ Q ≤ 10^{5}$\n$1 ≤ A_{i}$ for each valid $i$\n$1 ≤ L ≤ R ≤ N$\n$1 ≤ X$\nthe sum of lengths of strings denoting $A_{1}, A_{2}, \\ldots, A_{N}$ does not exceed $10^{6}$\nthe sum of lengths of strings denoting $X$ over all queries does not exceed $10^{6}$\n\n------  Subtasks ------\nSubtask #1 (33 points): all binary strings on the input have equal lengths\n\nSubtask #2 (67 points): original constraints\n\n----- Sample Input 1 ------ \n5 4\n\n100\n\n101\n\n1\n\n1011\n\n11\n\n2 3 10\n\n1 5 1100\n\n3 5 1010\n\n1 5 11100\n----- Sample Output 1 ------ \n2\n\n5\n\n3\n\n5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

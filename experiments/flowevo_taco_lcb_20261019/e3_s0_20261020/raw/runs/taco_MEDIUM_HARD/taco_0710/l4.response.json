@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "32beac5d-68e4-4c04-ba6b-b27f0f111b5b",
+  "created": 1792436578,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1105,
+    "completion_tokens": 5724,
+    "total_tokens": 6829,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5483
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 337
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    possible = (1 << 26) - 1\n    answer = 0\n\n    idx = 1\n    for _ in range(n - 1):\n        op = data[idx][0]\n        word = data[idx + 1]\n        idx += 2\n\n        if possible.bit_count() == 1 and (op == ord('!') or op == ord('?')):\n            answer += 1\n\n        if op == ord('.'):\n            for ch in word:\n                possible &= ~(1 << (ch - ord('a')))\n        elif op == ord('!'):\n            seen = 0\n            for ch in word:\n                seen |= 1 << (ch - ord('a'))\n            possible &= seen\n        else:  # op == ord('?')\n            possible &= ~(1 << (word[0] - ord('a')))\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 28.538,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nValentin participates in a show called \"Shockers\". The rules are quite easy: jury selects one letter which Valentin doesn't know. He should make a small speech, but every time he pronounces a word that contains the selected letter, he receives an electric shock. He can make guesses which letter is selected, but for each incorrect guess he receives an electric shock too. The show ends when Valentin guesses the selected letter correctly.\n\nValentin can't keep in mind everything, so he could guess the selected letter much later than it can be uniquely determined and get excessive electric shocks. Excessive electric shocks are those which Valentin got after the moment the selected letter can be uniquely determined. You should find out the number of excessive electric shocks.\n\nInput\n\nThe first line contains a single integer n (1 ≤ n ≤ 105) — the number of actions Valentin did.\n\nThe next n lines contain descriptions of his actions, each line contains description of one action. Each action can be of one of three types: \n\n  1. Valentin pronounced some word and didn't get an electric shock. This action is described by the string \". w\" (without quotes), in which \".\" is a dot (ASCII-code 46), and w is the word that Valentin said. \n  2. Valentin pronounced some word and got an electric shock. This action is described by the string \"! w\" (without quotes), in which \"!\" is an exclamation mark (ASCII-code 33), and w is the word that Valentin said. \n  3. Valentin made a guess about the selected letter. This action is described by the string \"? s\" (without quotes), in which \"?\" is a question mark (ASCII-code 63), and s is the guess — a lowercase English letter. \n\n\n\nAll words consist only of lowercase English letters. The total length of all words does not exceed 105.\n\nIt is guaranteed that last action is a guess about the selected letter. Also, it is guaranteed that Valentin didn't make correct guesses about the selected letter before the last action. Moreover, it's guaranteed that if Valentin got an electric shock after pronouncing some word, then it contains the selected letter; and also if Valentin didn't get an electric shock after pronouncing some word, then it does not contain the selected letter.\n\nOutput\n\nOutput a single integer — the number of electric shocks that Valentin could have avoided if he had told the selected letter just after it became uniquely determined.\n\nExamples\n\nInput\n\n5\n! abc\n. ad\n. b\n! cd\n? c\n\n\nOutput\n\n1\n\n\nInput\n\n8\n! hello\n! codeforces\n? c\n. o\n? d\n? h\n. l\n? e\n\n\nOutput\n\n2\n\n\nInput\n\n7\n! ababahalamaha\n? a\n? b\n? a\n? b\n? a\n? h\n\n\nOutput\n\n0\n\nNote\n\nIn the first test case after the first action it becomes clear that the selected letter is one of the following: a, b, c. After the second action we can note that the selected letter is not a. Valentin tells word \"b\" and doesn't get a shock. After that it is clear that the selected letter is c, but Valentin pronounces the word cd and gets an excessive electric shock. \n\nIn the second test case after the first two electric shocks we understand that the selected letter is e or o. Valentin tries some words consisting of these letters and after the second word it's clear that the selected letter is e, but Valentin makes 3 more actions before he makes a correct hypothesis.\n\nIn the third example the selected letter can be uniquely determined only when Valentin guesses it, so he didn't get excessive electric shocks.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

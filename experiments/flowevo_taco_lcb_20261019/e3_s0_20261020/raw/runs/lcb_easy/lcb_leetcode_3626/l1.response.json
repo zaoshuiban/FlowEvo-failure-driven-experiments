@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "62e55af1-b3bd-4ee9-8c13-083f80260992",
+  "created": 1792430139,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 297,
+    "completion_tokens": 422,
+    "total_tokens": 719,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 349
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 297
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def smallestNumber(self, n: int, t: int) -> int:\n        num = n\n        while True:\n            product = 1\n            for digit in str(num):\n                product *= int(digit)\n            if product % t == 0:\n                return num\n            num += 1\n```",
+  "latency_s": 2.479,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two integers n and t. Return the smallest number greater than or equal to n such that the product of its digits is divisible by t.\n \nExample 1:\n\nInput: n = 10, t = 2\nOutput: 10\nExplanation:\nThe digit product of 10 is 0, which is divisible by 2, making it the smallest number greater than or equal to 10 that satisfies the condition.\n\nExample 2:\n\nInput: n = 15, t = 3\nOutput: 16\nExplanation:\nThe digit product of 16 is 6, which is divisible by 3, making it the smallest number greater than or equal to 15 that satisfies the condition.\n\n \nConstraints:\n\n1 <= n <= 100\n1 <= t <= 10\n\nStarter code / required signature:\nclass Solution:\n    def smallestNumber(self, n: int, t: int) -> int:\n        \n\nUse the required function/method named smallestNumber. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

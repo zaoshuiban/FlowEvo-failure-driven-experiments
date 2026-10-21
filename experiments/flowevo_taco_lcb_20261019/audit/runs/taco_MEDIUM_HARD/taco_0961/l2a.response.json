@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3ad3f8a4-5074-4dc6-bf62-ed40ce6c35ae",
+  "created": 1792433921,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 823,
+    "completion_tokens": 3621,
+    "total_tokens": 4444,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3167
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 183
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    outputs = []\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n\n        typ = [0] * (m + 1)\n        left = [0] * (m + 1)\n        right = [0] * (m + 1)\n\n        for i in range(1, m + 1):\n            typ[i] = next(it)\n            left[i] = next(it)\n            right[i] = next(it)\n\n        bit = [0] * (m + 2)\n\n        def bit_add(idx, val):\n            while idx <= m:\n                bit[idx] = (bit[idx] + val) % MOD\n                idx += idx & -idx\n\n        def bit_query(idx):\n            res = 0\n            while idx > 0:\n                res = (res + bit[idx]) % MOD\n                idx -= idx & -idx\n            return res\n\n        diff = [0] * (n + 2)\n\n        for i in range(m, 0, -1):\n            executions = (1 + bit_query(i)) % MOD\n\n            if typ[i] == 1:\n                l = left[i]\n                r = right[i]\n                diff[l] = (diff[l] + executions) % MOD\n                diff[r + 1] = (diff[r + 1] - executions) % MOD\n            else:\n                l = left[i]\n                r = right[i]\n\n                bit_add(l, executions)\n                if r + 1 <= m:\n                    bit_add(r + 1, (-executions) % MOD)\n\n        ans = []\n        current = 0\n\n        for i in range(1, n + 1):\n            current = (current + diff[i]) % MOD\n            ans.append(str(current))\n\n        outputs.append(\" \".join(ans))\n\n    sys.stdout.write(\"\\n\".join(outputs))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 15.938,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in mandarin chinese, russian and vietnamese as well. \n\nSereja has an array A consisting of n integers. Initially, all the elements of array are zero.\n\nSereja writes down m commands on a piece of a paper. The commands are enumerated from 1 to m. These commands can be of the following two types of commands: \nl r (1 ≤ l ≤ r ≤ n) — Increase all elements of the array by one, whose indices belongs to the range [l, r] \nl r (1 ≤ l ≤ r ≤ m) — Execute all the commands whose indices are in the range [l, r]. It's guaranteed that r is strictly less than the enumeration/number of the current command. \nCan you please help Sereja in executing all the commands written on this piece of paper.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows.\nThe first line contains integers n and m. Next m lines contain Sereja's commands in the format, described in statement: t, l, r, where t - number of type (1 or 2).\n\n------ Output ------ \n\nFor each test case on different lines print an array a, after executing all the commands. The numbers have to be separated by spaces. As the numbers can be quite large, print them modulo 10^{9} + 7.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 3$\n$1 ≤ n, m ≤ 10^{5}$\n\n------ Subtasks ------ \n\n$Subtask #1 (20 points): 1 ≤ n, m ≤ 10 $\n$Subtask #2 (30 points): 1 ≤ n, m ≤ 1000 $\n$Subtask #3 (50 points): original constraints $\n\n----- Sample Input 1 ------ \n3\n5 5\n1 1 2\n1 4 5\n2 1 2\n2 1 3\n2 3 4\n1 2\n1 1 1\n1 1 1\n10 10\n1 1 10\n2 1 1\n2 1 2\n2 1 3\n2 1 4\n2 1 5\n2 1 6\n2 1 7\n2 1 8\n2 1 9\n----- Sample Output 1 ------ \n7 7 0 7 7\n2\n512 512 512 512 512 512 512 512 512 512\n\n----- explanation 1 ------ \n\nExample case 1..\nAfter the first command, the resulting array is [1 1 0 0 0], after second [1 1 0 1 1]. \nOn third command, we repeat the 1'st and the 2'nd command, so that resulting array is [2 2 0 2 2]. \nAfter fourth command, the array will looks like [4 4 0 4 4]. \nLast command will apply 3'rd and 4'th commands, \nwhich by themselves will apply 1'st, 2'nd, 1'st, 2'nd, 3'rd(1'st, 2'nd), so resulting arrays is [7 7 0 7 7].\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

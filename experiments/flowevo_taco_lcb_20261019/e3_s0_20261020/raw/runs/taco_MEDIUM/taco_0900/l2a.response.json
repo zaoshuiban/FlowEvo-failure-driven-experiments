@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a67324d4-1a66-4321-8028-fb857895808c",
+  "created": 1792429499,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 494,
+    "completion_tokens": 640,
+    "total_tokens": 1134,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 395
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 238
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n    t = data[idx]\n    idx += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        arr = data[idx:idx + n]\n        idx += n\n\n        prefix_even = [0] * (n + 1)\n        for i in range(1, n + 1):\n            prefix_even[i] = prefix_even[i - 1] + (arr[i - 1] % 2 == 0)\n\n        q = data[idx]\n        idx += 1\n\n        for _ in range(q):\n            l = data[idx]\n            r = data[idx + 1]\n            idx += 2\n\n            even_count = prefix_even[r] - prefix_even[l - 1]\n\n            if even_count == 0:\n                answers.append(\"ODD\")\n            else:\n                answers.append(\"EVEN\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 3.106,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWe all know Gru loves Agnes very much. One day Agnes asked Gru to answer some of her queries. She lined up $N$ minions in a straight line from $1$ to $N$. \nYou are given an array $A$ which contains the height of minions. Agnes will ask him several queries. In each query, Gru has to tell whether the bitwise AND of  $A[L \\ldots R]$ is EVEN or ODD. Since Gru is busy planning the biggest heist on Earth, he asks for your help.\n\n-----Input:-----\n- First line of the input contains an integer $T$ denoting the number of test cases.\nFor each test case:-\n- First line contains an integer $N$ denoting the number of elements.\n- Second line contains $N$ spaced integer representing array elements.\n- Third line contains $Q$ representing number of query.\n- Next $Q$ lines contains two integer $L$ and $R$ as defined above.\n\n-----Output:-----\nFor each query, output \"EVEN\" or \"ODD\" without quotes.\n\n-----Constraints-----\n- $1 \\leq T \\leq 10$\n- $1 \\leq N \\leq 10^5$\n- $1 \\leq A_i \\leq 10^5$\n- $1 \\leq Q \\leq 10^5$\n\n-----Sample Input:-----\n1\n5\n1 3 2 4 5\n3\n1 2 \n1 5\n3 4\n\n-----Sample Output:-----\nODD\nEVEN\nEVEN\n\n-----Explanation-----\n- For the first query, the bitwise AND of 1 and 3 is 1, which is Odd. Hence the first output is ODD.\n- For the third query, the bitwise AND of 2 and 4 is 0, which is Even. Hence the third output is EVEN.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "af53f28a-d6f8-48cd-8c69-e81d79894379",
+  "created": 1792437627,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 587,
+    "completion_tokens": 23373,
+    "total_tokens": 23960,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 22968
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 203
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    pts = []\n    total = 0\n    idx = 1\n\n    for _ in range(n):\n        x = data[idx]\n        y = data[idx + 1]\n        v = data[idx + 2]\n        idx += 3\n        pts.append((x, y, v))\n        total += v\n\n    if n == 1:\n        print(0)\n        return\n\n    best_diff = total + 1\n    best_small = 0\n\n    for i in range(n):\n        xi, yi, wi = pts[i]\n        vectors = []\n\n        for j in range(n):\n            if i == j:\n                continue\n            xj, yj, wj = pts[j]\n            vectors.append((xj - xi, yj - yi, wj))\n\n        for vx, vy, _ in vectors:\n            for sign in (1, -1):\n                dx = vx * sign\n                dy = vy * sign\n\n                current_sum = wi\n\n                for ux, uy, wu in vectors:\n                    cross = dx * uy - dy * ux\n\n                    if cross > 0:\n                        current_sum += wu\n                    elif cross == 0:\n                        dot = dx * ux + dy * uy\n                        if dot < 0:\n                            current_sum += wu\n\n                other_sum = total - current_sum\n                diff = abs(current_sum - other_sum)\n                smaller = min(current_sum, other_sum)\n\n                if diff < best_diff or (diff == best_diff and smaller > best_small):\n                    best_diff = diff\n                    best_small = smaller\n\n    print(best_small)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 125.262,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLittle John has drawn $N$ stars on his paper where each star has a weight $v_i$. He draws a straight line that divides the paper into two parts such that each part has a subset of stars in them. Let the weight of each part be the summation of weights of the stars in the part. He wants to draw the line such that the difference in the sum of weights between the two parts is as small as possible while maximizing the smaller part's weight.  \n\nYour task is to compute the weight of smaller part corresponding to this line where no stars are allowed to be on the line and line can be of any slope.  \n\nInput Format \n\nThe first line of the input contains an integer $N$. \n\nEach of next $N$ lines contains three integers $x_i$ and $y_i$ specifying the positions of $i^{\\mbox{th}}$ star and $v_i$. \n\nNo three points lie on a line.  \n\nConstraints \n\n$1\\leq N\\leq100$ \n\n$-10^9\\leq x_i,y_i\\leq10^9$ \n\n$1\\leq v_i\\leq1000$  \n\nOutput Format \n\nPrint an integer being the answer to the test.  \n\nSample Input 0  \n\n4\n1 1 2\n-1 1 2\n-1 -1 4\n1 -1 5\n\nSample Output 0  \n\n6\n\nExplanation \n\nYou can imagine a line along the $Y-axis$ and see that point $(-1,1)$ and $(-1,-1)$ lie on left side summing up to 6, while the other side has sum as $5+2=7$.  \n\nSample Input 1\n\n10\n748798831 -200797120 595\n-774675771 179630170 159\n-338760201 945958360 750\n955629379 -312997434 516\n755005057 -672683474 405\n-743176829 190325067 86\n-301478753 -718170081 923\n-795908444 985440803 854\n-102868895 671114060 246\n-698209449 12550066 190\n\nSample Output 1\n\n2358\n\nExplanation  \n\n$[595,159,405,86,923,190]$ and $[516,750,854,246]$ are two sets of weights.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

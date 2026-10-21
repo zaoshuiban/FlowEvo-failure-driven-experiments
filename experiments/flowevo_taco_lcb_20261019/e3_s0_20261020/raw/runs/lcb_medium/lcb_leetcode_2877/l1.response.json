@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "30953c50-d157-4b03-9f70-edd1f00778c9",
+  "created": 1792430667,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 490,
+    "completion_tokens": 18951,
+    "total_tokens": 19441,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 18598
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 490
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom itertools import permutations\n\nclass Solution:\n    def minimumString(self, a: str, b: str, c: str) -> str:\n        def merges(cur: str, nxt: str):\n            res = set()\n\n            if nxt in cur:\n                res.add(cur)\n            if cur in nxt:\n                res.add(nxt)\n\n            # No overlap: append nxt after cur\n            res.add(cur + nxt)\n\n            # Try every suffix-prefix overlap\n            for k in range(1, min(len(cur), len(nxt)) + 1):\n                if cur.endswith(nxt[:k]):\n                    res.add(cur + nxt[k:])\n\n            return res\n\n        # Remove duplicate strings\n        raw = []\n        for s in (a, b, c):\n            if s not in raw:\n                raw.append(s)\n\n        # Remove strings contained in another string\n        needed = []\n        for i, s in enumerate(raw):\n            if any(i != j and s in t for j, t in enumerate(raw)):\n                continue\n            needed.append(s)\n\n        best = None\n\n        for p in set(permutations(needed)):\n            candidates = {p[0]}\n\n            for nxt in p[1:]:\n                new_candidates = set()\n                for cur in candidates:\n                    new_candidates.update(merges(cur, nxt))\n                candidates = new_candidates\n\n            for cand in candidates:\n                if (\n                    best is None\n                    or len(cand) < len(best)\n                    or (len(cand) == len(best) and cand < best)\n                ):\n                    best = cand\n\n        return best\n```",
+  "latency_s": 99.375,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven three strings a, b, and c, your task is to find a string that has the minimum length and contains all three strings as substrings.\nIf there are multiple such strings, return the lexicographically smallest one.\nReturn a string denoting the answer to the problem.\nNotes\n\nA string a is lexicographically smaller than a string b (of the same length) if in the first position where a and b differ, string a has a letter that appears earlier in the alphabet than the corresponding letter in b.\nA substring is a contiguous sequence of characters within a string.\n\n \nExample 1:\n\nInput: a = \"abc\", b = \"bca\", c = \"aaa\"\nOutput: \"aaabca\"\nExplanation:  We show that \"aaabca\" contains all the given strings: a = ans[2...4], b = ans[3..5], c = ans[0..2]. It can be shown that the length of the resulting string would be at least 6 and \"aaabca\" is the lexicographically smallest one.\nExample 2:\n\nInput: a = \"ab\", b = \"ba\", c = \"aba\"\nOutput: \"aba\"\nExplanation: We show that the string \"aba\" contains all the given strings: a = ans[0..1], b = ans[1..2], c = ans[0..2]. Since the length of c is 3, the length of the resulting string would be at least 3. It can be shown that \"aba\" is the lexicographically smallest one.\n\n \nConstraints:\n\n1 <= a.length, b.length, c.length <= 100\na, b, c consist only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def minimumString(self, a: str, b: str, c: str) -> str:\n        \n\nUse the required function/method named minimumString. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

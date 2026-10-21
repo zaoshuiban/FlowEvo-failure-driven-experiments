@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "fbf94b0b-b4e2-4a0c-a979-b11dd13de55c",
+  "created": 1792456891,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 994,
+    "completion_tokens": 16265,
+    "total_tokens": 17259,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15334
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 226
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\nMAXN = 500_000\n\nfact = [1] * (MAXN + 1)\nfor i in range(1, MAXN + 1):\n    fact[i] = fact[i - 1] * i % MOD\n\n\ndef find_centroids(n, adj):\n    parent = [0] * (n + 1)\n    order = [1]\n    parent[1] = -1\n\n    for v in order:\n        pv = parent[v]\n        for w in adj[v]:\n            if w != pv:\n                parent[w] = v\n                order.append(w)\n\n    sub = [1] * (n + 1)\n    for v in reversed(order):\n        p = parent[v]\n        if p > 0:\n            sub[p] += sub[v]\n\n    centroids = []\n    for u in range(1, n + 1):\n        largest_part = n - sub[u]\n\n        for w in adj[u]:\n            if parent[w] == u:\n                if sub[w] > largest_part:\n                    largest_part = sub[w]\n\n        if largest_part * 2 <= n:\n            centroids.append(u)\n\n    return centroids\n\n\ndef calc_C(root, n, adj):\n    parent = [0] * (n + 1)\n    order = [root]\n    parent[root] = -1\n\n    for v in order:\n        pv = parent[v]\n        for w in adj[v]:\n            if w != pv:\n                parent[w] = v\n                order.append(w)\n\n    sub = [1] * (n + 1)\n    prod = 1\n\n    for v in reversed(order):\n        sv = sub[v]\n        prod = prod * sv % MOD\n\n        p = parent[v]\n        if p > 0:\n            sub[p] += sv\n\n    c = fact[n] * pow(prod, MOD - 2, MOD) % MOD\n    return c, sub\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    idx = 0\n    length = len(data)\n\n    def next_int():\n        nonlocal idx\n        while idx < length and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < length and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    t = next_int()\n    answers = []\n\n    for _ in range(t):\n        n = next_int()\n        k = next_int()\n\n        adj = [[] for _ in range(n + 1)]\n\n        for _ in range(n - 1):\n            u = next_int()\n            v = next_int()\n            adj[u].append(v)\n            adj[v].append(u)\n\n        if n == 1:\n            answers.append(\"1 1\")\n            continue\n\n        centroids = find_centroids(n, adj)\n\n        if len(centroids) == 2:\n            # Equal maximum C values.\n            # Descending i tie-break: larger index first.\n            if k == 1:\n                chosen = max(centroids)\n            else:\n                chosen = min(centroids)\n\n            c_value, _ = calc_C(chosen, n, adj)\n            answers.append(f\"{chosen} {c_value}\")\n\n        else:\n            centroid = centroids[0]\n\n            if k == 1:\n                c_value, _ = calc_C(centroid, n, adj)\n                answers.append(f\"{centroid} {c_value}\")\n\n            else:\n                c_centroid, sub = calc_C(centroid, n, adj)\n\n                best_node = -1\n                best_a = -1\n\n                for v in adj[centroid]:\n                    a = sub[v]  # component size on v's side after removing centroid-v\n\n                    if a > best_a or (a == best_a and v > best_node):\n                        best_a = a\n                        best_node = v\n\n                best_c = c_centroid * best_a % MOD\n                best_c = best_c * pow(n - best_a, MOD - 2, MOD) % MOD\n\n                answers.append(f\"{best_node} {best_c}\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 74.893,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nChef has a tree $G$ with $N$ nodes (numbered $1$ through $N$) and $N-1$ undirected edges. For each node $u$ in the tree, he can assign directions to the edges in such a way that $u$ is reachable from all the other nodes. Let $C_{u}$ be the number of valid [topological orderings] in the resulting directed acyclic graph.\n\nThis way, Chef obtains $N$ pairs $(C_{1},1), (C_{2},2), \\ldots, (C_{N},N)$ and he sorts all these pairs $(C_{i}, i)$ in descending order (first by $C_{i}$ and in the case of a tie by $i$). \n\nFor example, consider the tree below:\n\nThe sorted list of pairs is $((2,2), (1,3), (1,1))$.\n\nChef quizzes you on this list ― he wants you to find the $K$-th pair in the sorted list. To make that task easier, Chef only asks for $K = 1$ (the largest pair) or $K = 2$ (the second largest pair). Since the number of topological orderings can be very large, compute it modulo $10^{9}+7$. \n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $K$.\nEach of the next $N-1$ lines contains two space-separated integers $u$ and $v$, denoting that nodes $u$ and $v$ are connected by an edge.\n\n------  Output ------\nFor each test case, print a single line containing two space-separated integers $u$ and $C_{u}$ modulo $10^{9}+7$, where $(C_{u}, u)$ is the $K$-th pair in the sorted list.\n\n------  Constraints ------\n$1 ≤ T ≤ 5$\n$1 ≤ N ≤ 5 \\cdot 10^{5}$\n$1 ≤ K ≤ 2$\n$1 ≤ u,v ≤ N$\nthe graph described on the input is a tree\nthe sum of $N$ over all test cases does not exceed $5 \\cdot 10^{5}$\n\n------  Subtasks ------\nSubtask #1 (10 points): $N ≤ 10$\n\nSubtask #2 (30 points): $K = 1$\n\nSubtask #3 (60 points): $K = 2$\n\n----- Sample Input 1 ------ \n1\n\n4 2\n\n1 2\n\n2 3\n\n2 4\n----- Sample Output 1 ------ \n4 2\n----- explanation 1 ------ \nExample case 1: The tree is\n\n- For $u = 1$, there are $C_{1} = 2$ possible topological orderings: $(3,4,2,1)$ and $(4,3,2,1)$\n- For $u = 2$, there are $C_{2} = 6$ possible topological orderings: $(3,4,1,2)$, $(4,3,1,2)$, $(3,1,4,2)$, $(4,1,3,2)$, $(1,3,4,2)$ and $(1,4,3,2)$.\n- For $u = 3$, there are $C_{3} = 2$ possible topological orderings: $(1,4,2,3)$ and $(4,1,2,3)$.\n- For $u = 4$, there are $C_{4} = 2$ possible topological orderings: $(3,1,2,4)$ and $(1,3,2,4)$.\n\nThe sorted list of pairs is $((6,2), (2,4), (2,3), (2,1))$. The node for the $2$-nd pair is $4$ and the corresponding number of topological orderings modulo $10^{9}+7$ is $2$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

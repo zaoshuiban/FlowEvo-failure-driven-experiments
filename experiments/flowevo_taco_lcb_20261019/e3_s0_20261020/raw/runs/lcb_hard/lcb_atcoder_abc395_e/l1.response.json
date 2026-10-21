@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "478b739b-c759-4338-833e-979af8efef23",
+  "created": 1792434139,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 943,
+    "completion_tokens": 3217,
+    "total_tokens": 4160,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2669
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 943
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport heapq\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    M = next(it)\n    X = next(it)\n\n    graph = [[] for _ in range(N + 1)]\n    reverse_graph = [[] for _ in range(N + 1)]\n\n    for _ in range(M):\n        u = next(it)\n        v = next(it)\n        graph[u].append(v)\n        reverse_graph[v].append(u)\n\n    INF = 10**30\n\n    # dist0[v]: minimum cost at vertex v when edges are in the original direction\n    # dist1[v]: minimum cost at vertex v when all edges are reversed\n    dist0 = [INF] * (N + 1)\n    dist1 = [INF] * (N + 1)\n\n    dist0[1] = 0\n    heap = [(0, 1, 0)]  # (cost, vertex, orientation)\n\n    heapq.heapify(heap)\n\n    while heap:\n        cost, v, state = heapq.heappop(heap)\n\n        if state == 0:\n            if cost != dist0[v]:\n                continue\n\n            if v == N:\n                print(cost)\n                return\n\n            # Reverse all edges\n            next_cost = cost + X\n            if next_cost < dist1[v]:\n                dist1[v] = next_cost\n                heapq.heappush(heap, (next_cost, v, 1))\n\n            # Move along an original directed edge\n            next_cost = cost + 1\n            for to in graph[v]:\n                if next_cost < dist0[to]:\n                    dist0[to] = next_cost\n                    heapq.heappush(heap, (next_cost, to, 0))\n\n        else:\n            if cost != dist1[v]:\n                continue\n\n            if v == N:\n                print(cost)\n                return\n\n            # Reverse all edges\n            next_cost = cost + X\n            if next_cost < dist0[v]:\n                dist0[v] = next_cost\n                heapq.heappush(heap, (next_cost, v, 0))\n\n            # Move along a reversed original edge\n            next_cost = cost + 1\n            for to in reverse_graph[v]:\n                if next_cost < dist1[to]:\n                    dist1[to] = next_cost\n                    heapq.heappush(heap, (next_cost, to, 1))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 14.241,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a directed graph with N vertices and M edges.\r\nThe i-th edge (1 \\leq i \\leq M) is a directed edge from vertex u _ i to vertex v _ i.\nInitially, you are at vertex 1. You want to repeat the following operations until you reach vertex N:\n\n- Perform one of the two operations below:\n- Move along a directed edge from your current vertex. This incurs a cost of 1. More precisely, if you are at vertex v, choose a vertex u such that there is a directed edge from v to u, and move to vertex u.\n- Reverse the direction of all edges. This incurs a cost of X. More precisely, if and only if there was a directed edge from v to u immediately before this operation, there is a directed edge from u to v immediately after this operation.\n\n\n\nIt is guaranteed that, for the given graph, you can reach vertex N from vertex 1 by repeating these operations.\nFind the minimum total cost required to reach vertex N.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M X\r\nu _ 1 v _ 1\r\nu _ 2 v _ 2\r\n\\vdots\r\nu _ M v _ M\n\nOutput\n\nPrint the minimum total cost required to reach vertex N.\n\nConstraints\n\n\n- 2 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq M \\leq 2 \\times 10^5\n- 1 \\leq X \\leq 10^9\n- 1 \\leq u _ i \\leq N \\ (1 \\leq i \\leq M)\n- 1 \\leq v _ i \\leq N \\ (1 \\leq i \\leq M)\n- For the given graph, it is guaranteed that you can reach vertex N from vertex 1 by the operations described.\n- All input values are integers.\n\nSample Input 1\n\n5 6 5\r\n1 2\r\n2 4\r\n3 1\r\n3 5\r\n4 3\r\n5 2\n\nSample Output 1\n\n4\r\n\nThe given graph looks like this:\n\nYou can reach vertex 5 with a total cost of 4 by doing the following:\n\n- Move to vertex 2 at a cost of 1.\n- Move to vertex 4 at a cost of 1.\n- Move to vertex 3 at a cost of 1.\n- Move to vertex 5 at a cost of 1.\n\nIt is impossible to reach vertex 5 with a total cost of 3 or less, so print 4.\n\nSample Input 2\n\n5 6 1\r\n1 2\r\n2 4\r\n3 1\r\n3 5\r\n4 3\r\n5 2\n\nSample Output 2\n\n3\r\n\nThe graph is the same as in Sample 1, but the cost to reverse edges is different.\nYou can reach vertex 5 with a total cost of 3 as follows:\n\n- Move to vertex 2 at a cost of 1.\n- Reverse all edges at a cost of 1.\n- Move to vertex 5 at a cost of 1.\n\nIt is impossible to reach vertex 5 with a total cost of 2 or less, so print 3.\n\nSample Input 3\n\n8 7 613566756\r\n2 1\r\n2 3\r\n4 3\r\n4 5\r\n6 5\r\n6 7\r\n8 7\n\nSample Output 3\n\n4294967299\r\n\nNote that the answer may exceed the 32-bit integer range.\n\nSample Input 4\n\n20 13 5\r\n1 3\r\n14 18\r\n18 17\r\n12 19\r\n3 5\r\n4 6\r\n13 9\r\n8 5\r\n14 2\r\n20 18\r\n8 14\r\n4 9\r\n14 8\n\nSample Output 4\n\n21\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

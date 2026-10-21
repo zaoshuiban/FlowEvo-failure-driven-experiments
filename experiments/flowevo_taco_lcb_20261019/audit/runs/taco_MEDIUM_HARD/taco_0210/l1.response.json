@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e5251fe5-adc0-414d-a9f6-c189342e7095",
+  "created": 1792438169,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 421,
+    "completion_tokens": 10775,
+    "total_tokens": 11196,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10259
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 421
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef c2(x: int) -> int:\n    return x * (x - 1) // 2\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    k = int(data[0])\n\n    # Choose the largest m such that K_m has at most k triangles.\n    m = 3\n    while (m + 1) * m * (m - 1) // 6 <= k:\n        m += 1\n\n    base_triangles = m * (m - 1) * (m - 2) // 6\n    rem = k - base_triangles\n\n    # Represent rem as c2(a) + c2(b) + c2(c).\n    rep = None\n    for a in range(m + 1):\n        ca = c2(a)\n        if ca > rem:\n            break\n\n        for b in range(m + 1):\n            cb = c2(b)\n            if ca + cb > rem:\n                break\n\n            need = rem - ca - cb\n\n            for c in range(m + 1):\n                cc = c2(c)\n                if cc == need:\n                    rep = (a, b, c)\n                    break\n                if cc > need:\n                    break\n\n            if rep is not None:\n                break\n\n        if rep is not None:\n            break\n\n    # Each extra vertex is connected to a vertices of the base clique.\n    # It creates exactly C(a, 2) triangles.\n    extras = [x for x in rep if x >= 2]\n\n    n = m + len(extras)\n    graph = [['0'] * n for _ in range(n)]\n\n    def add_edge(u: int, v: int) -> None:\n        graph[u][v] = '1'\n        graph[v][u] = '1'\n\n    # Base clique.\n    for i in range(m):\n        for j in range(i + 1, m):\n            add_edge(i, j)\n\n    # Extra independent vertices.\n    for idx, a in enumerate(extras):\n        v = m + idx\n        for j in range(a):\n            add_edge(v, j)\n\n    output = [str(n)]\n    output.extend(''.join(row) for row in graph)\n    sys.stdout.write('\\n'.join(output))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 47.198,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nJohn Doe started thinking about graphs. After some thought he decided that he wants to paint an undirected graph, containing exactly k cycles of length 3. \n\nA cycle of length 3 is an unordered group of three distinct graph vertices a, b and c, such that each pair of them is connected by a graph edge. \n\nJohn has been painting for long, but he has not been a success. Help him find such graph. Note that the number of vertices there shouldn't exceed 100, or else John will have problems painting it.\n\n\n-----Input-----\n\nA single line contains an integer k (1 ≤ k ≤ 10^5) — the number of cycles of length 3 in the required graph.\n\n\n-----Output-----\n\nIn the first line print integer n (3 ≤ n ≤ 100) — the number of vertices in the found graph. In each of next n lines print n characters \"0\" and \"1\": the i-th character of the j-th line should equal \"0\", if vertices i and j do not have an edge between them, otherwise it should equal \"1\". Note that as the required graph is undirected, the i-th character of the j-th line must equal the j-th character of the i-th line. The graph shouldn't contain self-loops, so the i-th character of the i-th line must equal \"0\" for all i.\n\n\n-----Examples-----\nInput\n1\n\nOutput\n3\n011\n101\n110\n\nInput\n10\n\nOutput\n5\n01111\n10111\n11011\n11101\n11110\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

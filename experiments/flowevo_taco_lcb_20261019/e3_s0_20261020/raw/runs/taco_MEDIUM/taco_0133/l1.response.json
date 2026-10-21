@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "876d5199-dc25-48e5-a1c9-be230aaac0b7",
+  "created": 1792442645,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 691,
+    "completion_tokens": 16826,
+    "total_tokens": 17517,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16324
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 691
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef int_generator():\n    data = sys.stdin.buffer.read()\n    num = 0\n    inside = False\n    for b in data:\n        if 48 <= b <= 57:\n            num = num * 10 + (b - 48)\n            inside = True\n        elif inside:\n            yield num\n            num = 0\n            inside = False\n    if inside:\n        yield num\n\n\ndef main():\n    it = int_generator()\n\n    n = next(it)\n    m = next(it)\n    k = next(it)\n\n    grid = []\n    for _ in range(n):\n        row = bytearray(m)\n        for j in range(m):\n            row[j] = next(it)\n        grid.append(row)\n\n    sentinel = n + 1\n\n    # parent[c][r] = first still-horizontal cell at or below row r in column c\n    parent = []\n    for c in range(m):\n        p = [sentinel] * (n + 2)\n        nxt = sentinel\n        for r in range(n, 0, -1):\n            if grid[r - 1][c] != 2:\n                nxt = r\n                p[r] = r\n            else:\n                p[r] = nxt\n        parent.append(p)\n\n    answers = []\n\n    for _ in range(k):\n        c = next(it) - 1\n        r = 1\n\n        while True:\n            p = parent[c]\n\n            # Find first active cell at or below row r in this column\n            x = r\n            while p[x] != x:\n                p[x] = p[p[x]]\n                x = p[x]\n            rr = x\n\n            if rr == sentinel:\n                answers.append(str(c + 1))\n                break\n\n            direction = grid[rr - 1][c]\n\n            # This cell is visited and becomes direction 2\n            x = rr + 1\n            while p[x] != x:\n                p[x] = p[p[x]]\n                x = p[x]\n            p[rr] = x\n\n            r = rr\n\n            if direction == 1:\n                c += 1\n            else:  # direction == 3\n                c -= 1\n\n    sys.stdout.write(\" \".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 82.504,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMr. Chanek has a new game called Dropping Balls. Initially, Mr. Chanek has a grid a of size n × m\n\nEach cell (x,y) contains an integer a_{x,y} denoting the direction of how the ball will move.\n\n  * a_{x,y}=1 — the ball will move to the right (the next cell is (x, y + 1)); \n  * a_{x,y}=2 — the ball will move to the bottom (the next cell is (x + 1, y)); \n  * a_{x,y}=3 — the ball will move to the left (the next cell is (x, y - 1)). \n\n\n\nEvery time a ball leaves a cell (x,y), the integer a_{x,y} will change to 2. Mr. Chanek will drop k balls sequentially, each starting from the first row, and on the c_1, c_2, ..., c_k-th (1 ≤ c_i ≤ m) columns.\n\nDetermine in which column each ball will end up in (position of the ball after leaving the grid).\n\nInput\n\nThe first line contains three integers n, m, and k (1 ≤ n, m ≤ 1000, 1 ≤ k ≤ 10^5) — the size of the grid and the number of balls dropped by Mr. Chanek.\n\nThe i-th of the next n lines contains m integers a_{i,1},a_{i,2},…,a_{i,m} (1 ≤ a_{i,j} ≤ 3). It will satisfy a_{i, 1} ≠ 3 and a_{i, m} ≠ 1.\n\nThe next line contains k integers c_1, c_2, …, c_k (1 ≤ c_i ≤ m) — the balls' column positions dropped by Mr. Chanek sequentially.\n\nOutput\n\nOutput k integers — the i-th integer denoting the column where the i-th ball will end.\n\nExamples\n\nInput\n\n\n5 5 3\n1 2 3 3 3\n2 2 2 2 2\n2 2 2 2 2\n2 2 2 2 2\n2 2 2 2 2\n1 2 1\n\n\nOutput\n\n\n2 2 1 \n\n\nInput\n\n\n1 2 2\n1 3\n1 2\n\n\nOutput\n\n\n1 2 \n\nNote\n\nIn the first example, the first ball will drop as follows. Note that the cell (1, 1) will change direction to the bottom direction.\n\n<image>\n\nThe second and third balls will drop as follows. \n\n<image>\n\nAll balls will be dropped from the first row and on the c_1, c_2, ..., c_k-th columns respectively. A ball will stop dropping once it leaves the grid.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

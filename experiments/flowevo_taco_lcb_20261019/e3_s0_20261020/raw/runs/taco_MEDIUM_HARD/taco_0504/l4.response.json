@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f447af9e-a30b-4f39-aeb6-9e8730bfa6c8",
+  "created": 1792447826,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1564,
+    "completion_tokens": 32768,
+    "total_tokens": 34332,
+    "prompt_tokens_details": {
+      "cached_tokens": 1280
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 1280,
+    "prompt_cache_miss_tokens": 284
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 165.38,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin chinese, Russian and Vietnamese as well. \n\nChef has to cross a highway with infinite length consisting of $N$ parallel lanes. The width of each lane is $Y$. Between each pair of adjacent lanes, there is a divider with negligible width; at each divider and the side of the highway, Chef can wait for an arbitrarily long time to allow the cars to pass by and then continue crossing the highway. Since Chef is lazy, he wants to cross the highway while walking the minimum possible distance; therefore, he will only move in a straight line perpendicular to the highway. Chef walks with a constant velocity $S$.\n\nThere is exactly one car in each lane. Each car is as wide as a whole lane (so it covers the entire width of its lane), has a known *length* and travels with fixed *velocity* in either direction along the highway. For each $i$ ($1 ≤ i ≤ N$), the car in the $i$-th lane has velocity $V_{i}$ and length $C_{i}$.\n\nLet's measure distances along the highway, i.e. all points which lie on the same line perpendicular to the highway have the same coordinate $x$. Chef's position is $x=0$; for each $i$ ($1 ≤ i ≤ N$), the initial position of the car in the $i$-th lane is $P_{i}$ and the direction in which it's moving is $D_{i}$. If $D_{i} = 1$, the car is moving in the positive direction (its position is increasing) and if $D_{i} = 0$, the car is moving in the negative direction (its position is decreasing).\n\nThe drivers on a highway don't expect anyone to be crossing it, so they drive carelessly and won't be able to apply brakes at any point in time.\n\nFind the minimum time Chef needs to cross the highway without getting hit by a car. Chef does not get hit by a car if the minimum distance between him and any car remains greater than $10^{-6}$ at all times.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains three space-separated integers $N$, $S$ and $Y$ denoting the number of lanes, Chef's walking speed and the width of a lane.\nThe second line contains $N$ space-separated integers $V_{1}, V_{2}, \\dots, V_{N}$ denoting the absolute velocities of the cars.\nThe third line contains $N$ space-separated integers $D_{1}, D_{2}, \\dots, D_{N}$ denoting the directions in which the cars are moving.\nThe fourth line contains $N$ space-separated integers $P_{1}, P_{2}, \\dots, P_{N}$ denoting the initial positions of the cars. The position of a car is the $x$-coordinate of its front side, i.e. for a car moving in the positive direction, it is the largest coordinate of any point of the car, and for a car moving in the negative direction, it is the smallest coordinate of any point of the car.\nThe fifth line contains $N$ space-separated integers $C_{1}, C_{2}, \\dots, C_{N}$ denoting the lengths of the cars.\n\n------  Output ------\nFor each test case, print a single line containing one real number — the minimum time needed to cross the highway. Your answer will be considered correct if its absolute error does not exceed $10^{-3}$.\n\n------  Constraints ------\n\n$1 ≤ T ≤ 100,000$\n$1 ≤ N ≤ 10$\n$1 ≤ S ≤ 10$\n$1 ≤ Y ≤ 1,000$\n$1 ≤ V_{i} ≤ 200$ for each valid $i$\n$0 ≤ D_{i} ≤ 1$ for each valid $i$\n$|P_{i}| ≤ 10^{9}$ for each valid $i$\n$1 ≤ C_{i} ≤ 1,000$ for each valid $i$\n\n------  Subtasks ------\nSubtask #1 (25 points): $N = 1$\n\nSubtask #2 (75 points): original constraints\n\n----- Sample Input 1 ------ \n3\n2 6 6\n5 10\n1 0\n-1 23\n4 7\n1 8 177\n190\n0\n4201\n21\n1 1 1000\n100\n1\n-100000\n10\n----- Sample Output 1 ------ \n4.000000\n44.346053\n2000.100000\n----- explanation 1 ------ \nExample case 1: Chef has to wait at the side of the highway and allow the first car to pass. As soon as the car passes by, he can reach the first divider. At this divider, he has to wait again for the second car to pass. Chef's situation is drawn in the image.\n\nExample case 2: We see that Chef needs time at least $\\frac{177}{8} = 22.125$ to cross the highway, but the car would arrive at Chef's position at an earlier time $22.1105$. Hence, Chef must wait for the car to pass. Also, since Chef must wait until the car passes completely, he will wait for $\\frac{4222}{190}=22.221053$ before starting to cross the lane. Hence, the total time taken to cross the highway is $44.346053$.\n\nExample case 3: Chef can cross the road in time $1000$, but at that time, the car will reach $x=0$. Hence, at that moment, the distance between Chef and the car will be $0$, which is less than $10^{-6}$. Therefore, Chef has to wait for the car to pass before crossing.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Read problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nChef is the head of commercial logging industry that recently bought a farm containing N trees. You are given initial he\nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, W, L = data[0], data[1], data[2]\n    trees = []\n\n    idx = 3\n    for _ in range(n):\n        h, r = data[idx], data[idx + 1]\n        trees.append((h, r))\n        idx += 2\n\n    def can(months):\n        total = 0\n        for h, r in trees:\n            height = h + r * months\n            if height >= L:\n                total += height\n                if total >= W:\n            "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

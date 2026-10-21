@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "798c1034-9dc9-4946-afc1-1d2303b8ff0d",
+  "created": 1792429509,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 923,
+    "completion_tokens": 6754,
+    "total_tokens": 7677,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6373
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 539
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read()\n    if not data:\n        return\n\n    idx = 0\n    size = len(data)\n\n    def next_int() -> int:\n        nonlocal idx\n\n        while idx < size and data[idx] <= 32:\n            idx += 1\n\n        sign = 1\n        if idx < size and data[idx] == 45:  # '-'\n            sign = -1\n            idx += 1\n\n        num = 0\n        while idx < size and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n\n        return sign * num\n\n    t = next_int()\n    answers = []\n\n    for _ in range(t):\n        n = next_int()\n\n        # prefix_odd[i] = number of odd elements among A[1..i]\n        prefix_odd = [0] * (n + 1)\n\n        for i in range(1, n + 1):\n            value = next_int()\n            prefix_odd[i] = prefix_odd[i - 1] + (value & 1)\n\n        q = next_int()\n\n        for _ in range(q):\n            left = next_int()\n            right = next_int()\n\n            odd_count = prefix_odd[right] - prefix_odd[left - 1]\n            length = right - left + 1\n\n            # Bitwise AND is odd iff every number in the range is odd.\n            if odd_count == length:\n                answers.append(\"ODD\")\n            else:\n                answers.append(\"EVEN\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n    if answers:\n        sys.stdout.write(\"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 28.356,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWe all know Gru loves Agnes very much. One day Agnes asked Gru to answer some of her queries. She lined up $N$ minions in a straight line from $1$ to $N$. \nYou are given an array $A$ which contains the height of minions. Agnes will ask him several queries. In each query, Gru has to tell whether the bitwise AND of  $A[L \\ldots R]$ is EVEN or ODD. Since Gru is busy planning the biggest heist on Earth, he asks for your help.\n\n-----Input:-----\n- First line of the input contains an integer $T$ denoting the number of test cases.\nFor each test case:-\n- First line contains an integer $N$ denoting the number of elements.\n- Second line contains $N$ spaced integer representing array elements.\n- Third line contains $Q$ representing number of query.\n- Next $Q$ lines contains two integer $L$ and $R$ as defined above.\n\n-----Output:-----\nFor each query, output \"EVEN\" or \"ODD\" without quotes.\n\n-----Constraints-----\n- $1 \\leq T \\leq 10$\n- $1 \\leq N \\leq 10^5$\n- $1 \\leq A_i \\leq 10^5$\n- $1 \\leq Q \\leq 10^5$\n\n-----Sample Input:-----\n1\n5\n1 3 2 4 5\n3\n1 2 \n1 5\n3 4\n\n-----Sample Output:-----\nODD\nEVEN\nEVEN\n\n-----Explanation-----\n- For the first query, the bitwise AND of 1 and 3 is 1, which is Odd. Hence the first output is ODD.\n- For the third query, the bitwise AND of 2 and 4 is 0, which is Even. Hence the third output is EVEN.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        prefix_odd = [0] * (n + 1)\n\n        for i in range(1, n + 1):\n            value = next(it)\n            prefix_odd[i] = prefix_odd[i - 1] + (value & 1)\n\n        q = next(it)\n\n        for _ in range(q):\n            l = next(it)\n            r = next(it)\n\n            odd_count = prefix_odd[r] - prefix_odd[l - 1]\n            length = r - l + 1\n\n            if odd_count == length:\n                answers.append(\"ODD\")\n            else:\n                answers.append(\"EVEN\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: A batch of $n$ goods ($n$ — an even number) is brought to the store, $i$-th of which has weight $a_i$. Before selling the goods, they must be packed into packages. After packing, the following will be\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        k = next(it)\n\n        base = 0\n        remainders = []\n\n        for _ in range(n):\n            x = next(it)\n            base += x // k\n            remainders.append(x % k)\n\n        remainders.sort()\n\n        left = 0\n        right = n - 1\n        extra = 0\n\n        while left < right:\n            i"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

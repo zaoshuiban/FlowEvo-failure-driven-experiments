@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9d5911a5-3907-4f6d-8bfc-91adaa03dec5",
+  "created": 1792437417,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 421,
+    "completion_tokens": 1495,
+    "total_tokens": 1916,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1403
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 165
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef triangular_sum(n):\n    k = 1\n    while True:\n        a = k * (k + 1) // 2\n        b = (k + 1) * (k + 2) // 2\n        total = a * a + b * b\n\n        if total == n:\n            return True\n        if total > n:\n            return False\n\n        k += 1\n```",
+  "latency_s": 7.153,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n# Task\n`Triangular numbers` are defined by the formula `n * (n + 1) / 2` with `n` starting from 1. They count the number of objects that can form an equilateral triangle as shown in the picture below:\n\n![](https://i.gyazo.com/eec11cc9e17a31324338edc4eb7bb746.png)\n\nSo the sequence of triangular numbers begins as follows:\n\n`1, 3, 6, 10, 15, 21, 28, ....`\n\nIt is proven that the sum of squares of any two consecutive triangular numbers is equal to another triangular number.\n\nYou're given a triangular number `n`. Return `true` if it can be represented as `a sum of squares of two consecutive triangular numbers`, or `false` otherwise.\n\n\n# Input/Output\n\n`[input]` integer `n`\n\nA positive triangular number\n\n`3 ≤ n ≤ 10^9`\n\n`[output]` a boolean value\n\n`true` if it is possible to represent n as the sum of squares of two consecutive triangular numbers, and `false` otherwise.\n\n# Example\n\nFor `n = 6`, the output should be `false`.\n\nNo two squared consecutive triangular numbers add up to 6.\n\nFor `n = 45`, the output should be `true`.\n\n`3 * 3 + 6 * 6 = 9 + 36 = 45`\n\nStarter code / required signature:\ndef triangular_sum(n):\n\t\n\nUse the required function/method named triangular_sum. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

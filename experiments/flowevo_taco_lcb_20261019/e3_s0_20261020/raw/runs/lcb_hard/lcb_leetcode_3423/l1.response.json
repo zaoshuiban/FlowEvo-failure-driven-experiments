@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e3149955-ed20-4a7f-8609-253fd4b03ad7",
+  "created": 1792442667,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 531,
+    "completion_tokens": 8019,
+    "total_tokens": 8550,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7634
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 531
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def maximumSumSubsequence(self, nums: List[int], queries: List[List[int]]) -> int:\n        MOD = 10**9 + 7\n        NEG = -10**18\n\n        n = len(nums)\n        size = 1\n        while size < n:\n            size <<= 1\n\n        tree = [(0, NEG, NEG, NEG) for _ in range(2 * size)]\n\n        for i, value in enumerate(nums):\n            tree[size + i] = (0, NEG, NEG, value)\n\n        def merge(left, right):\n            l00, l01, l10, l11 = left\n            r00, r01, r10, r11 = right\n\n            return (\n                max(l00 + max(r00, r10), l01 + r00),\n                max(l00 + max(r01, r11), l01 + r01),\n                max(l10 + max(r00, r10), l11 + r00),\n                max(l10 + max(r01, r11), l11 + r01),\n            )\n\n        for i in range(size - 1, 0, -1):\n            tree[i] = merge(tree[i << 1], tree[(i << 1) | 1])\n\n        answer = 0\n\n        for pos, value in queries:\n            idx = size + pos\n            tree[idx] = (0, NEG, NEG, value)\n            idx >>= 1\n\n            while idx:\n                tree[idx] = merge(tree[idx << 1], tree[(idx << 1) | 1])\n                idx >>= 1\n\n            best = max(tree[1])\n            answer = (answer + best) % MOD\n\n        return answer\n```",
+  "latency_s": 37.533,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array nums consisting of integers. You are also given a 2D array queries, where queries[i] = [pos_i, x_i].\nFor query i, we first set nums[pos_i] equal to x_i, then we calculate the answer to query i which is the maximum sum of a subsequence of nums where no two adjacent elements are selected.\nReturn the sum of the answers to all queries.\nSince the final answer may be very large, return it modulo 10^9 + 7.\nA subsequence is an array that can be derived from another array by deleting some or no elements without changing the order of the remaining elements.\n \nExample 1:\n\nInput: nums = [3,5,9], queries = [[1,-2],[0,-3]]\nOutput: 21\nExplanation:\nAfter the 1^st query, nums = [3,-2,9] and the maximum sum of a subsequence with non-adjacent elements is 3 + 9 = 12.\nAfter the 2^nd query, nums = [-3,-2,9] and the maximum sum of a subsequence with non-adjacent elements is 9.\n\nExample 2:\n\nInput: nums = [0,-1], queries = [[0,-5]]\nOutput: 0\nExplanation:\nAfter the 1^st query, nums = [-5,-1] and the maximum sum of a subsequence with non-adjacent elements is 0 (choosing an empty subsequence).\n\n \nConstraints:\n\n1 <= nums.length <= 5 * 10^4\n-10^5 <= nums[i] <= 10^5\n1 <= queries.length <= 5 * 10^4\nqueries[i] == [pos_i, x_i]\n0 <= pos_i <= nums.length - 1\n-10^5 <= x_i <= 10^5\n\nStarter code / required signature:\nclass Solution:\n    def maximumSumSubsequence(self, nums: List[int], queries: List[List[int]]) -> int:\n        \n\nUse the required function/method named maximumSumSubsequence. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

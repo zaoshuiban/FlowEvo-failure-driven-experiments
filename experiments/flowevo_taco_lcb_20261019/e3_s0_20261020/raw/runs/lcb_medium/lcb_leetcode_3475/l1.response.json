@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "622bd898-db0f-4529-a0b7-993dd205168e",
+  "created": 1792430943,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 416,
+    "completion_tokens": 585,
+    "total_tokens": 1001,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 464
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 416
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def minOperations(self, nums: List[int]) -> int:\n        a = nums[:]\n        n = len(a)\n        operations = 0\n\n        for i in range(n - 2):\n            if a[i] == 0:\n                operations += 1\n                a[i] ^= 1\n                a[i + 1] ^= 1\n                a[i + 2] ^= 1\n\n        return operations if all(x == 1 for x in a) else -1\n```",
+  "latency_s": 3.07,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a binary array nums.\nYou can do the following operation on the array any number of times (possibly zero):\n\nChoose any 3 consecutive elements from the array and flip all of them.\n\nFlipping an element means changing its value from 0 to 1, and from 1 to 0.\nReturn the minimum number of operations required to make all elements in nums equal to 1. If it is impossible, return -1.\n \nExample 1:\n\nInput: nums = [0,1,1,1,0,0]\nOutput: 3\nExplanation:\nWe can do the following operations:\n\nChoose the elements at indices 0, 1 and 2. The resulting array is nums = [1,0,0,1,0,0].\nChoose the elements at indices 1, 2 and 3. The resulting array is nums = [1,1,1,0,0,0].\nChoose the elements at indices 3, 4 and 5. The resulting array is nums = [1,1,1,1,1,1].\n\n\nExample 2:\n\nInput: nums = [0,1,1,1]\nOutput: -1\nExplanation:\nIt is impossible to make all elements equal to 1.\n\n \nConstraints:\n\n3 <= nums.length <= 10^5\n0 <= nums[i] <= 1\n\nStarter code / required signature:\nclass Solution:\n    def minOperations(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named minOperations. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

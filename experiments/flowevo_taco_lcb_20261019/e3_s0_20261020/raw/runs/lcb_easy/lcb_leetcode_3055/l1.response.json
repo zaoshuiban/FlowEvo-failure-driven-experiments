@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a021decc-76d6-4170-a3e5-4b7002f08ce1",
+  "created": 1792430385,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 334,
+    "completion_tokens": 188,
+    "total_tokens": 522,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 126
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 334
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def maximumOddBinaryNumber(self, s: str) -> str:\n        ones = s.count('1')\n        zeros = len(s) - ones\n        return '1' * (ones - 1) + '0' * zeros + '1'\n```",
+  "latency_s": 1.555,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a binary string s that contains at least one '1'.\nYou have to rearrange the bits in such a way that the resulting binary number is the maximum odd binary number that can be created from this combination.\nReturn a string representing the maximum odd binary number that can be created from the given combination.\nNote that the resulting string can have leading zeros.\n \nExample 1:\n\nInput: s = \"010\"\nOutput: \"001\"\nExplanation: Because there is just one '1', it must be in the last position. So the answer is \"001\".\n\nExample 2:\n\nInput: s = \"0101\"\nOutput: \"1001\"\nExplanation: One of the '1's must be in the last position. The maximum number that can be made with the remaining digits is \"100\". So the answer is \"1001\".\n\n \nConstraints:\n\n1 <= s.length <= 100\ns consists only of '0' and '1'.\ns contains at least one '1'.\n\nStarter code / required signature:\nclass Solution:\n    def maximumOddBinaryNumber(self, s: str) -> str:\n        \n\nUse the required function/method named maximumOddBinaryNumber. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "08450d7d-bd80-4fe4-8e38-cb0de2bc10d7",
+  "created": 1792430234,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 391,
+    "completion_tokens": 174,
+    "total_tokens": 565,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 129
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 391
+  },
+  "finish_reason": "stop",
+  "text": "```python\nS = input().strip()\nn = int(S[3:])\n\nif 1 <= n <= 349 and n != 316:\n    print(\"Yes\")\nelse:\n    print(\"No\")\n```",
+  "latency_s": 1.619,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string S of length 6. It is guaranteed that the first three characters of S are ABC and the last three characters are digits.\nDetermine if S is the abbreviation of a contest held and concluded on AtCoder before the start of this contest.\nHere, a string T is \"the abbreviation of a contest held and concluded on AtCoder before the start of this contest\" if and only if it equals one of the following 348 strings:\nABC001, ABC002, \\ldots, ABC314, ABC315, ABC317, ABC318, \\ldots, ABC348, ABC349.\nNote that ABC316 is not included.\n\nInput\n\nThe input is given from Standard Input in the following format:\nS\n\nOutput\n\nIf S is the abbreviation of a contest held and concluded on AtCoder before the start of this contest, print Yes; otherwise, print No.\n\nConstraints\n\n\n- S is a string of length 6 where the first three characters are ABC and the last three characters are digits.\n\nSample Input 1\n\nABC349\n\nSample Output 1\n\nYes\r\n\nABC349 is the abbreviation of a contest held and concluded on AtCoder last week.\n\nSample Input 2\n\nABC350\n\nSample Output 2\n\nNo\r\n\nABC350 is this contest, which has not concluded yet.\n\nSample Input 3\n\nABC316\n\nSample Output 3\n\nNo\r\n\nABC316 was not held on AtCoder.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

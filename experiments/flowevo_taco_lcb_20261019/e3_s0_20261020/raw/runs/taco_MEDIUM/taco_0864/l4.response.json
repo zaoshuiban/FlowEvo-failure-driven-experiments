@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2c7aae4b-a250-4af9-862f-050360c2b0a0",
+  "created": 1792438146,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1018,
+    "completion_tokens": 10743,
+    "total_tokens": 11761,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10556
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 506
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        first = data[idx]\n        mn = mx = first\n        for i in range(1, n):\n            x = data[idx + i]\n            if x < mn:\n                mn = x\n            if x > mx:\n                mx = x\n        idx += n\n\n        if n == 1 or mn + mx <= k:\n            answers.append(\"YES\")\n        else:\n            answers.append(\"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 52.757,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array A = [A_{1}, A_{2}, \\ldots, A_{N}] consisting of N positive integers.\n\nYou are also given a constant K, using which you can perform the following operation on A:\nChoose two distinct indices i and j such that A_{i} + A_{j} ≤ K, and remove either A_{i} or A_{j} from A.\n\nIs it possible to obtain an array consisting of only one element using several (possibly, zero) such operations?\n\n------ Input Format ------ \n\n- The first line of input contains a single integer T, denoting the number of test cases. The description of T test cases follows.\n- The first line of each test case contains two space-separated integers N and K. \n- The second line contains N space-separated integers A_{1}, A_{2}, \\ldots, A_{N}.\n\n------ Output Format ------ \n\nFor each test case, print \"YES\" if it is possible to obtain an array consisting of only one element using the given operation, otherwise print \"NO\".\n\nYou may print each character of the string in uppercase or lowercase (for example, the strings \"yEs\", \"yes\", \"Yes\" and \"YES\" will all be treated as identical).\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{3}$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i}, K ≤ 10^{9}$\n- Sum of $N$ over all test cases does not exceed $2\\cdot 10^{5}$\n\n----- Sample Input 1 ------ \n3\n1 3\n1\n3 3\n2 2 2\n4 7\n1 4 3 5\n\n----- Sample Output 1 ------ \nYES\nNO\nYES\n\n----- explanation 1 ------ \nTest case $1$: The length of the array is already $1$.\n\nTest case $2$: There is no way to delete an element from the given array.\n\nTest case $3$: One possible sequence of operations is:\n\n- Choose $i = 1, j = 4$ and remove $A_{j} = 5$. Hence the array becomes $[1, 4, 3]$.\n- Choose $i = 2, j = 3$ and remove $A_{i} = 4$. Hence the array becomes $[1, 3]$.\n- Choose $i = 1, j = 2$ and remove $A_{i} = 1$. Hence the array becomes $[3]$, which is of length $1$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n\n    t = int(next(it))\n    answers = []\n\n    for _ in range(t):\n        n = int(next(it))\n        k = int(next(it))\n\n        arr = [int(next(it)) for _ in range(n)]\n\n        if n == 1:\n            answers.append(\"YES\")\n        else:\n            if min(arr) + max(arr) <= k:\n                answers.append(\"YES\")\n            else:\n                answers.append(\"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given arrays A and B of length N each. Determine the number of *good* pairs.\n\nA pair (i,j) (1≤ i,j ≤ N) is said to be *good* if all of the following conditions are satisfied:\ni < j;\nA_{i} = B_\nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        A = [next(it) for _ in range(n)]\n        B = [next(it) for _ in range(n)]\n\n        freq = {}\n        ans = 0\n\n        for a, b in zip(A, B):\n            # Need previous i such that:\n            # A[i] = B[j] = b\n            # B[i] = A[j] = a\n            ans += freq.get((b, a), 0)\n\n            # Insert curre"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

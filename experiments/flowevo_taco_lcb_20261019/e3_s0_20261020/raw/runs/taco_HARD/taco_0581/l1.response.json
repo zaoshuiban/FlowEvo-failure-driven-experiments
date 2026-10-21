@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4adc1b62-38ec-4b15-882a-b078b1c43c83",
+  "created": 1792433847,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1036,
+    "completion_tokens": 8430,
+    "total_tokens": 9466,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7817
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1036
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import gcd\n\n\ndef read_ints():\n    data = sys.stdin.buffer.read()\n    n = len(data)\n    i = 0\n    while i < n:\n        while i < n and data[i] <= 32:\n            i += 1\n        if i >= n:\n            break\n        num = 0\n        while i < n and data[i] > 32:\n            num = num * 10 + (data[i] - 48)\n            i += 1\n        yield num\n\n\ndef solve():\n    it = iter(read_ints())\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        adj = [[] for _ in range(n)]\n        for _ in range(n - 1):\n            a = next(it) - 1\n            b = next(it) - 1\n            adj[a].append(b)\n            adj[b].append(a)\n\n        values = [next(it) for _ in range(n)]\n\n        parent = [-1] * n\n        parent[0] = -2\n        order = [0]\n\n        for v in order:\n            for u in adj[v]:\n                if u == parent[v]:\n                    continue\n                parent[u] = v\n                order.append(u)\n\n        subtree_gcd = values[:]\n\n        for v in reversed(order):\n            p = parent[v]\n            if p >= 0:\n                subtree_gcd[p] = gcd(subtree_gcd[p], subtree_gcd[v])\n\n        outside_gcd = [0] * n\n\n        for v in order:\n            children = []\n            for u in adj[v]:\n                if parent[u] == v:\n                    children.append(u)\n\n            m = len(children)\n            if m == 0:\n                continue\n\n            prefix = [0] * (m + 1)\n            current_gcd = 0\n\n            for i, child in enumerate(children):\n                current_gcd = gcd(current_gcd, subtree_gcd[child])\n                prefix[i + 1] = current_gcd\n\n            base = gcd(values[v], outside_gcd[v])\n            suffix_gcd = 0\n\n            for i in range(m - 1, -1, -1):\n                child = children[i]\n                other_gcd = gcd(prefix[i], suffix_gcd)\n                outside_gcd[child] = gcd(base, other_gcd)\n                suffix_gcd = gcd(suffix_gcd, subtree_gcd[child])\n\n        answer = 0\n\n        for v in range(n):\n            damage = outside_gcd[v]\n\n            for u in adj[v]:\n                if parent[u] == v:\n                    damage += subtree_gcd[u]\n\n            if damage > answer:\n                answer = damage\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 35.492,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nSardar Khan has finally decided to attack Ramadhir - he will bomb one of Ramadhir's businesses in Wasseypur. Sardar Khan knows that Ramadhir has N businesses (numbered 1 to N) and that there are N - 1 roads connecting pairs of these businesses in such a way that all businesses are connected. Further, Sardar knows that each business has a specific value - the i-th business has value A_{i}.\n\nWhen Sardar Khan destroys a business, he also destroys every road directly connected to it.\nFormally, destroying business v also destroys all existing roads of the form (u, v).\n\nSardar thinks that the damage dealt to Ramadhir upon destroying business v equals the sum of the [greatest common divisors] of every remaining maximal connected set of businesses. More formally,\n* Let the connected components of the graph obtained on deleting v and edges incident to it be C_{1}, C_{2}, \\dots, C_{k}.\n* Define \\gcd(C_{i}) to be \\gcd(A_{i_{1}}, A_{i_{2}}, \\dots, A_{i_{r}}) where C_{i} consists of vertices i_{1}, i_{2}, \\dots, i_{r}.\n* The damage caused by destroying v is then \\sum_{i = 1}^k \\gcd(C_{i}).\n\nSardar Khan wants to maximize the damage he deals. Can you find the maximum possible damage he can achieve, given that he destroys exactly one business?\n\nIf the process of computing damage is still unclear, please refer to sample test cases for an explained example.\n\n------ Input Format ------ \n\n- The first line of input contains an integer T, denoting the total number of test cases. The description of T test cases follows.\n- The first line of each test case contains an integer N, denoting the number of businesses Ramadhir owns.\n- Each of the next N-1 lines contains 2 integers a and b, denoting a road between businesses a and b.\n- Finally, the last line of each test case contains N space-separated positive integers A_{1}, A_{2}, \\ldots, A_{N}, where A_{i} is the value of the i-th business.\n\n------ Output Format ------ \n\n- For each test case, output a single line containing one integer - the maximum possible damage that Sardar Khan can deal.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 1000$\n$2 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i} ≤ 10^{9}$\n- Sum of $N$ over all test cases will not exceed $5 \\cdot 10^{5}$.\n- It is guaranteed that the given roads connect every business.\n\n----- Sample Input 1 ------ \n1\n5\n1 2\n1 3\n3 4\n3 5\n4 6 8 12 15\n----- Sample Output 1 ------ \n29\n----- explanation 1 ------ \n* If business $1$ is bombed, the remaining connected components are $\\{(2), (3, 4, 5)\\}$. This gives a damage of $\\gcd(A_{2}) + \\gcd(A_{3}, A_{4}, A_{5}) = 6 + 1 = 7$.\n* If business $2$ is bombed, the remaining connected components are $\\{(1, 3, 4, 5)\\}$. This gives a damage of $\\gcd(A_{1}, A_{3}, A_{4}, A_{5}) = 1$.\n* If business $3$ is bombed, the remaining connected components are $\\{(1, 2), (4), (5)\\}$. This gives a damage of $\\gcd(A_{1}, A_{2}) + \\gcd(A_{4}) + \\gcd(A_{5}) = 2 + 12 + 15 = 29$.\n* If business $4$ is bombed, the remaining connected components are $\\{(1, 2, 3, 5)\\}$. This gives a damage of $\\gcd(A_{1}, A_{2}, A_{3}, A_{5}) = 1$.\n* If business $5$ is bombed, the remaining connected components are $\\{(1, 2, 3, 4)\\}$. This gives a damage of $\\gcd(A_{1}, A_{2}, A_{3}, A_{4}) = 2$.\n\nClearly, bombing business $3$ gives the maximum possible damage, that being 29.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

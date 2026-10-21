@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "725b888a-767b-4bbd-bd95-713beb617321",
+  "created": 1792447270,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 552,
+    "completion_tokens": 3495,
+    "total_tokens": 4047,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3262
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 168
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    cnt = [0, 0, 0, 0]\n\n    idx = 1\n    for _ in range(n):\n        x = data[idx]\n        y = data[idx + 1]\n        idx += 2\n\n        parity_x = (x // 2) & 1\n        parity_y = (y // 2) & 1\n        cnt[parity_x * 2 + parity_y] += 1\n\n    total = n * (n - 1) * (n - 2) // 6\n\n    c0, c1, c2, c3 = cnt\n    bad = (\n        c0 * c1 * c2\n        + c0 * c1 * c3\n        + c0 * c2 * c3\n        + c1 * c2 * c3\n    )\n\n    print(total - bad)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 16.085,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThis is the easy version of the problem. The only difference from the hard version is that in this version all coordinates are even.\n\nThere are $n$ fence-posts at distinct coordinates on a plane. It is guaranteed that no three fence posts lie on the same line.\n\nThere are an infinite number of cows on the plane, one at every point with integer coordinates.\n\nGregor is a member of the Illuminati, and wants to build a triangular fence, connecting $3$ distinct existing fence posts. A cow strictly inside the fence is said to be enclosed. If there are an odd number of enclosed cows and the area of the fence is an integer, the fence is said to be interesting.\n\nFind the number of interesting fences.\n\n\n-----Input-----\n\nThe first line contains the integer $n$ ($3 \\le n \\le 6000$), the number of fence posts which Gregor can choose to form the vertices of a fence.\n\nEach of the next $n$ line contains two integers $x$ and $y$ ($0 \\le x,y \\le 10^7$, $x$ and $y$ are even), where $(x,y)$ is the coordinate of a fence post. All fence posts lie at distinct coordinates. No three fence posts are on the same line.\n\n\n-----Output-----\n\nPrint a single integer, the number of interesting fences. Two fences are considered different if they are constructed with a different set of three fence posts.\n\n\n-----Examples-----\n\nInput\n3\n0 0\n2 0\n0 4\nOutput\n1\nInput\n5\n0 0\n2 16\n30 14\n4 6\n2 10\nOutput\n3\n\n\n-----Note-----\n\nIn the first example, there is only $1$ fence. That fence is interesting since its area is $4$ and there is $1$ enclosed cow, marked in red.\n\nIn the second example, there are $3$ interesting fences.\n\n$(0,0)$ — $(30,14)$ — $(2,10)$\n\n$(2,16)$ — $(30,14)$ — $(2,10)$\n\n$(30,14)$ — $(4,6)$ — $(2,10)$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c6ccb0f4-cac5-48b8-abdc-6c369e0acb93",
+  "created": 1792437544,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 611,
+    "completion_tokens": 28424,
+    "total_tokens": 29035,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 27281
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 227
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = [0] * n\n    b = [0] * n\n\n    p = 1\n    for i in range(n):\n        a[i] = data[p] - 1\n        b[i] = data[p + 1] - 1\n        p += 2\n\n    # All multisets of destination floors, with at most 4 passengers inside.\n    counts = []\n    idmap = {}\n    arr = [0] * 9\n\n    def gen(pos: int, left: int) -> None:\n        if pos == 9:\n            t = tuple(arr)\n            idmap[t] = len(counts)\n            counts.append(t)\n            return\n        for c in range(left + 1):\n            arr[pos] = c\n            gen(pos + 1, left - c)\n\n    gen(0, 4)\n\n    m_states = len(counts)\n    size = [sum(t) for t in counts]\n\n    rem = [[0] * 9 for _ in range(m_states)]\n    add = [[-1] * 9 for _ in range(m_states)]\n    drop_options = [None] * m_states\n\n    for state, t in enumerate(counts):\n        drops = []\n        for floor in range(9):\n            if t[floor] > 0:\n                new_counts = list(t)\n                new_counts[floor] = 0\n                new_id = idmap[tuple(new_counts)]\n                rem[state][floor] = new_id\n                drops.append((floor, new_id))\n            else:\n                rem[state][floor] = state\n        drop_options[state] = drops\n\n        if size[state] < 4:\n            for floor in range(9):\n                new_counts = list(t)\n                new_counts[floor] += 1\n                add[state][floor] = idmap[tuple(new_counts)]\n\n    empty_state = idmap[tuple([0] * 9)]\n    order = sorted(range(m_states), key=lambda x: size[x], reverse=True)\n\n    # Number of consecutive next employees with the same starting floor, capped at 4.\n    run_cap = [1] * n\n    for i in range(n - 2, -1, -1):\n        if a[i] == a[i + 1]:\n            run_cap[i] = min(4, run_cap[i + 1] + 1)\n        else:\n            run_cap[i] = 1\n\n    L = m_states * 9\n    INF = 10 ** 8\n    INF_ROW = [INF] * L\n\n    # bufs[k % 5] stores initial distances for having boarded exactly k people.\n    bufs = [[INF] * L for _ in range(5)]\n    bufs[0][empty_state * 9 + 0] = 0  # Initially floor 1 (index 0)\n\n    answer = INF\n\n    for k in range(n + 1):\n        slot = bufs[k % 5]\n\n        # Deliver any number of currently inside passengers before boarding anyone new.\n        for state in order:\n            drops = drop_options[state]\n            if not drops:\n                continue\n\n            base = state * 9\n            for floor in range(9):\n                val = slot[base + floor]\n                if val >= INF:\n                    continue\n\n                for dest, new_state in drops:\n                    move = floor - dest\n                    if move < 0:\n                        move = -move\n                    new_val = val + move\n                    idx = new_state * 9 + dest\n                    if new_val < slot[idx]:\n                        slot[idx] = new_val\n\n        if k == n:\n            base = empty_state * 9\n            answer = min(slot[base + floor] for floor in range(9))\n            break\n\n        origin = a[k]\n        run_len = run_cap[k]\n\n        # Board the next employees, possibly after some passengers got out at this floor.\n        for state in range(m_states):\n            after_exit = rem[state][origin]\n            free_space = 4 - size[after_exit]\n            if free_space <= 0:\n                continue\n\n            board_count = free_space if free_space < run_len else run_len\n            new_state = after_exit\n            end_k = k + board_count\n\n            for t in range(k, end_k):\n                new_state = add[new_state][b[t]]\n\n            target = bufs[end_k % 5]\n            base = state * 9\n            target_idx = new_state * 9 + origin\n\n            for floor in range(9):\n                val = slot[base + floor]\n                if val >= INF:\n                    continue\n\n                move = floor - origin\n                if move < 0:\n                    move = -move\n\n                new_val = val + move\n                if new_val < target[target_idx]:\n                    target[target_idx] = new_val\n\n        slot[:] = INF_ROW\n\n    # Every employee enters once and exits once: exactly 2 seconds per employee.\n    print(answer + 2 * n)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 148.979,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou work in a big office. It is a 9 floor building with an elevator that can accommodate up to 4 people. It is your responsibility to manage this elevator.\n\nToday you are late, so there are queues on some floors already. For each person you know the floor where he currently is and the floor he wants to reach. Also, you know the order in which people came to the elevator.\n\nAccording to the company's rules, if an employee comes to the elevator earlier than another one, he has to enter the elevator earlier too (even if these employees stay on different floors). Note that the employees are allowed to leave the elevator in arbitrary order.\n\nThe elevator has two commands:   Go up or down one floor. The movement takes 1 second.  Open the doors on the current floor. During this operation all the employees who have reached their destination get out of the elevator. Then all the employees on the floor get in the elevator in the order they are queued up while it doesn't contradict the company's rules and there is enough space in the elevator. Each employee spends 1 second to get inside and outside the elevator. \n\nInitially the elevator is empty and is located on the floor 1.\n\nYou are interested what is the minimum possible time you need to spend to deliver all the employees to their destination. It is not necessary to return the elevator to the floor 1.\n\n\n-----Input-----\n\nThe first line contains an integer n (1 ≤ n ≤ 2000) — the number of employees.\n\nThe i-th of the next n lines contains two integers a_{i} and b_{i} (1 ≤ a_{i}, b_{i} ≤ 9, a_{i} ≠ b_{i}) — the floor on which an employee initially is, and the floor he wants to reach.\n\nThe employees are given in the order they came to the elevator.\n\n\n-----Output-----\n\nPrint a single integer — the minimal possible time in seconds.\n\n\n-----Examples-----\nInput\n2\n3 5\n5 3\n\nOutput\n10\nInput\n2\n5 3\n3 5\n\nOutput\n12\n\n\n-----Note-----\n\n Explaination for the first sample [Image] t = 0\n\n[Image] t = 2\n\n[Image] t = 3\n\n[Image] t = 5\n\n[Image] t = 6\n\n[Image] t = 7\n\n[Image] t = 9\n\n[Image] t = 10\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

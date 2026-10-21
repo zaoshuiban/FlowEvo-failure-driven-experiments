@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "aac4a7a5-af3e-47ef-ab28-19be4049afb1",
+  "created": 1792442103,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1307,
+    "completion_tokens": 32768,
+    "total_tokens": 34075,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 795
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 150.239,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nSherlock rolls a N faced die M times. He adds all the numbers he gets on all throws. What is the probability that he has a sum of K.   \n\nA N faced die has all numbers from 1 to N written on it and each has equal probability of arriving when dice is thrown.\n\nInput \nFirst line T, the number of testcases. Each testcase consists of M, N and K in one line.       \n\nOutput \nFor each testcase, print required probability in scientific notation as defined follows:   \nOutput should be of the form \"x y\" where x is a floating point integer less than 10 and greater than or equal to 1 and y is a integer. This notation is equivalent to x * 10^-y. x should be rounded and output till 3 decimal digits.   \nHowever, if probability is 0, output \"0.000 0\".     \n\nExamples:\nIf output is supposed to be 0.0034567, output should be \"3.457 3\".    \nIf output is supposed to be 0.3034567, output should be \"3.034 1\".     \n\nConstraints \n1 ≤ T ≤ 10     \n1 ≤ N, M ≤ 50       \n1 ≤ K ≤ 10000       \n\nSAMPLE INPUT\n2\n1 5 2\n2 3 2\n\nSAMPLE OUTPUT\n2.000 1\n1.111 1\n\nExplanation\n\nFor first testcase, sum=1,2,3,4,5 are all equally probable. Hence probability is 0.2.\nFor second testcase:\n(1,1), (1,2), (1,3), (2,1), (2,2), (2,3), (3,1), (3,2), (3,3) are all possible ways.\nOut of these 1 has sum 2. So 1/9 is the answer.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef count_ways(M, N, K):\n    if K < M or K > M * N:\n        return 0\n\n    dp = [0] * (K + 1)\n    dp[0] = 1\n\n    for roll in range(1, M + 1):\n        new_dp = [0] * (K + 1)\n        window = 0\n        max_sum = min(K, roll * N)\n\n        for s in range(1, max_sum + 1):\n            window += dp[s - 1]\n\n            remove_idx = s - N - 1\n            if remove_idx >= 0:\n                window -= dp[remove_idx]\n\n            new_dp[s] = window\n\n        dp = new_dp\n\n    return dp[K]\n\n\ndef format_probability(numerator, denominator):\n    if numerator == 0:\n        return \"0.000 0\"\n\n    exponent = 0\n    temp = numerator\n\n    while temp < denominator:\n        temp *= 10\n        exponent += 1\n\n    # We need to round:\n    # numerator / denominator * 10^(exponent + 3)\n    scaled_num = numerator * (10 ** (exponent + 3))\n\n    q, r = divmod(scaled_num, denominator)\n\n    # Round half to even, matching usual printf behaviour.\n    twice = r * 2\n    if twice > denominator or (twice == denominator and q % 2 == 1):\n        q += 1\n\n    if q >= 10000:\n        q = 1000\n        exponent -= 1\n\n    integer_part = q // 1000\n    fractional_part = q % 1000\n\n    return f\"{integer_part}.{fractional_part:03d} {exponent}\"\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        M = int(data[idx])\n        N = int(data[idx + 1])\n        K = int(data[idx + 2])\n        idx += 3\n\n        if K < M or K > M * N:\n            answers.append(\"0.000 0\")\n            continue\n\n        ways = count_ways(M, N, K)\n\n        if ways == 0:\n            answers.append(\"0.000 0\")\n            continue\n\n        total = N ** M\n        answers.append(format_probability(ways, total))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given arrays A and B of length N each. Determine the number of *good* pairs.\n\nA pair (i,j) (1≤ i,j ≤ N) is said to be *good* if all of the following conditions are satisfied:\ni < j;\nA_{i} = B_\nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        A = [next(it) for _ in range(n)]\n        B = [next(it) for _ in range(n)]\n\n        freq = {}\n        ans = 0\n\n        for a, b in zip(A, B):\n            # Need previous i such that:\n            # A[i] = B[j] = b\n            # B[i] = A[j] = a\n            ans += freq.get((b, a), 0)\n\n            # Insert curre"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

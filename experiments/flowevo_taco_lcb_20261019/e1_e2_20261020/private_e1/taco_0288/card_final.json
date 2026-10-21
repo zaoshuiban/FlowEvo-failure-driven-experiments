@@ -1,0 +1,54 @@
+{
+  "task_id": "taco_0288",
+  "dataset": "taco",
+  "difficulty": "VERY_HARD",
+  "old_first_pass": false,
+  "old_final_pass": true,
+  "new_first_status": "NO_COMPLETE_CODE",
+  "new_original_final_status": "WRONG_ANSWER",
+  "any_saved_candidate_pass": false,
+  "first_passing_saved_stage": null,
+  "attempts": 2,
+  "invalid_cases": 0,
+  "reference_corrections": 0,
+  "input_coverage": "structural_and_signature_only",
+  "preflight_status": "READY",
+  "evaluation_epoch": "repair_v2_20261020",
+  "timing_unstable": false,
+  "reported_final_status": "WRONG_ANSWER",
+  "family": "graph_tree",
+  "sampling_group": "regressed_wa",
+  "label": "VERIFIED_EVALUATION_PROBLEM",
+  "root_subtype": "wrong_reference",
+  "finding": "独立穷举 2^5 个硬币配置和两步内运输，两个树的最少硬币数为 4、3，参考顺序反了。",
+  "static_syntax": "OK",
+  "independent_evidence": {
+    "kind": "independent_oracle",
+    "oracle_result": [
+      "4",
+      "3"
+    ],
+    "matches_candidate": true,
+    "reference_result": [
+      "3",
+      "4"
+    ]
+  },
+  "review_scope": "task statement, original final code, test/expected contract, replay actual output/exception, old feedback and full candidate history; unknown retained where evidence insufficient",
+  "candidate_universally_correct": null,
+  "program_defect_excluded": false,
+  "new_status_observed": "WRONG_ANSWER",
+  "source_code_sha256": "bc4cf5e5f0b1d1361e7e5124371baaa6b602c69bf757d979dbc925f59f0431dc",
+  "task_sha256": "139ea6da9309908f5605f6ea7a8c624381f293258f6bb26d5e85488d1b9ec2a7",
+  "evidence_file_hashes": {
+    "private_failure_case.json": "5592b7ddb933acc5e1deff6c9b0b8fb236852f6d835d9616e97b682b3799f263",
+    "isolated_failure_execution.json": "c1cd7f5f379baec07ea763369ac610988c708a5bacaab390aa238c798bb443b2",
+    "history.json": "eb9f3c117a459b240ba1412314f34370babdbc661ebeff1339321b3ddd4218a6",
+    "replay.json": "b57751ceb2734101a6d1ca444593619e7c0033abadcb492bb4c83c7176e66db3",
+    "original.py": "bc4cf5e5f0b1d1361e7e5124371baaa6b602c69bf757d979dbc925f59f0431dc",
+    "preflight.json": "a892bfa11f6e1c817c1179a9261aa9fb58f9394edc4b95b5bcfed6082f16dc85",
+    "statement.txt": "30ffd2154e6d405a5fbaddaf833fef23840c1fd9b9ef7e31d52eb1906aba6519"
+  },
+  "reproduction": "cd /opt/flowevo-benchmark-20261019 && venv/bin/python repair_v2d_20261020/code/adapter.py --task data/tasks/taco_0288.json --candidate e1_e2_20261020/private_e1/taco_0288/original.py --policies repair_v2d_20261020/policies.json --out /tmp/e1_taco_0288.json",
+  "root_cause_certainty": "confirmed specific defect"
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "86ec5ad7-2be0-4f10-a44c-6223bbedf6cf",
+  "created": 1792431145,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 398,
+    "completion_tokens": 1829,
+    "total_tokens": 2227,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1695
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 398
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def maximumLength(self, nums: List[int]) -> int:\n        even_count = odd_count = 0\n        end_even = end_odd = 0\n\n        for num in nums:\n            if num % 2 == 0:\n                even_count += 1\n                end_even = max(end_even, end_odd + 1)\n            else:\n                odd_count += 1\n                end_odd = max(end_odd, end_even + 1)\n\n        return max(even_count, odd_count, end_even, end_odd)\n```",
+  "latency_s": 8.523,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer array nums.\nA subsequence sub of nums with length x is called valid if it satisfies:\n\n(sub[0] + sub[1]) % 2 == (sub[1] + sub[2]) % 2 == ... == (sub[x - 2] + sub[x - 1]) % 2.\n\nReturn the length of the longest valid subsequence of nums.\nA subsequence is an array that can be derived from another array by deleting some or no elements without changing the order of the remaining elements.\n \nExample 1:\n\nInput: nums = [1,2,3,4]\nOutput: 4\nExplanation:\nThe longest valid subsequence is [1, 2, 3, 4].\n\nExample 2:\n\nInput: nums = [1,2,1,1,2,1,2]\nOutput: 6\nExplanation:\nThe longest valid subsequence is [1, 2, 1, 2, 1, 2].\n\nExample 3:\n\nInput: nums = [1,3]\nOutput: 2\nExplanation:\nThe longest valid subsequence is [1, 3].\n\n \nConstraints:\n\n2 <= nums.length <= 2 * 10^5\n1 <= nums[i] <= 10^7\n\nStarter code / required signature:\nclass Solution:\n    def maximumLength(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named maximumLength. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

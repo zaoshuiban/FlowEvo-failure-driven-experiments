@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7420f19e-fecc-47d1-8c21-cad324d7a930",
+  "created": 1792437294,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 742,
+    "completion_tokens": 7617,
+    "total_tokens": 8359,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7225
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 742
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read()\n    if not data:\n        return\n\n    idx = 0\n    length = len(data)\n\n    def next_int() -> int:\n        nonlocal idx\n        while idx < length and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < length and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    n = next_int()\n    k = next_int()\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    for _ in range(k):\n        u = next_int() - 1\n        v = next_int() - 1\n        ru = find(u)\n        rv = find(v)\n\n        if ru != rv:\n            if size[ru] < size[rv]:\n                ru, rv = rv, ru\n            parent[rv] = ru\n            size[ru] += size[rv]\n\n    m = next_int()\n    bad = [False] * n\n\n    for _ in range(m):\n        u = next_int() - 1\n        v = next_int() - 1\n        ru = find(u)\n        rv = find(v)\n\n        if ru == rv:\n            bad[ru] = True\n\n    answer = 0\n\n    for i in range(n):\n        if parent[i] == i and not bad[i]:\n            answer = max(answer, size[i])\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 35.344,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTo celebrate the second ABBYY Cup tournament, the Smart Beaver decided to throw a party. The Beaver has a lot of acquaintances, some of them are friends with each other, and some of them dislike each other. To make party successful, the Smart Beaver wants to invite only those of his friends who are connected by friendship relations, and not to invite those who dislike each other. Both friendship and dislike are mutual feelings.\n\nMore formally, for each invited person the following conditions should be fulfilled: \n\n  * all his friends should also be invited to the party; \n  * the party shouldn't have any people he dislikes; \n  * all people who are invited to the party should be connected with him by friendship either directly or through a chain of common friends of arbitrary length. We'll say that people a1 and ap are connected through a chain of common friends if there exists a sequence of people a2, a3, ..., ap - 1 such that all pairs of people ai and ai + 1 (1 ≤ i < p) are friends. \n\n\n\nHelp the Beaver find the maximum number of acquaintances he can invite.\n\nInput\n\nThe first line of input contains an integer n — the number of the Beaver's acquaintances. \n\nThe second line contains an integer k <image> — the number of pairs of friends. Next k lines contain space-separated pairs of integers ui, vi <image> — indices of people who form the i-th pair of friends.\n\nThe next line contains an integer m <image> — the number of pairs of people who dislike each other. Next m lines describe pairs of people who dislike each other in the same format as the pairs of friends were described.\n\nEach pair of people is mentioned in the input at most once <image>. In particular, two persons cannot be friends and dislike each other at the same time.\n\nThe input limitations for getting 30 points are: \n\n  * 2 ≤ n ≤ 14\n\n\n\nThe input limitations for getting 100 points are: \n\n  * 2 ≤ n ≤ 2000\n\nOutput\n\nOutput a single number — the maximum number of people that can be invited to the party. If a group of people that meets all the requirements is impossible to select, output 0.\n\nExamples\n\nInput\n\n9\n8\n1 2\n1 3\n2 3\n4 5\n6 7\n7 8\n8 9\n9 6\n2\n1 6\n7 9\n\n\nOutput\n\n3\n\nNote\n\nLet's have a look at the example. \n\n<image>\n\nTwo groups of people can be invited: {1, 2, 3} and {4, 5}, thus the answer will be the size of the largest of these groups. Group {6, 7, 8, 9} doesn't fit, since it includes people 7 and 9 who dislike each other. Group {1, 2, 3, 4, 5} also doesn't fit, because not all of its members are connected by a chain of common friends (for example, people 2 and 5 aren't connected).\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

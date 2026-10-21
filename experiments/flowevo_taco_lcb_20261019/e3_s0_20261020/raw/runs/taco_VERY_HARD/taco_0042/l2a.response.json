@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b5d17714-dd48-46a3-b978-ddb8cc03221f",
+  "created": 1792441711,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 743,
+    "completion_tokens": 26121,
+    "total_tokens": 26864,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 25352
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 231
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    t = next(it)\n    output = []\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n        k = next(it)\n\n        adj = [[] for _ in range(n)]\n        first_edge = None\n\n        clique_possible = (k > 2 and k * (k - 1) // 2 <= m)\n        edge_set = set() if clique_possible else None\n\n        for _ in range(m):\n            u = next(it) - 1\n            v = next(it) - 1\n\n            adj[u].append(v)\n            adj[v].append(u)\n\n            if first_edge is None:\n                first_edge = (u, v)\n\n            if clique_possible:\n                if u < v:\n                    edge_set.add(u * n + v)\n                else:\n                    edge_set.add(v * n + u)\n\n        if k == 1:\n            output.append(\"2\")\n            output.append(\"1\")\n            continue\n\n        if k == 2:\n            if m > 0:\n                u, v = first_edge\n                output.append(\"2\")\n                output.append(f\"{u + 1} {v + 1}\")\n            else:\n                output.append(\"-1\")\n            continue\n\n        if clique_possible:\n            for lst in adj:\n                lst.sort()\n\n        degree = [len(x) for x in adj]\n        removed = bytearray(n)\n        active_count = n\n\n        queue = deque(i for i in range(n) if degree[i] < k)\n\n        found_clique = None\n        failed_neighborhoods = set() if clique_possible else None\n\n        while queue:\n            v = queue.popleft()\n\n            if removed[v]:\n                continue\n\n            if degree[v] >= k:\n                continue\n\n            if clique_possible and degree[v] == k - 1:\n                neighbours = []\n                for u in adj[v]:\n                    if not removed[u]:\n                        neighbours.append(u)\n\n                if len(neighbours) == k - 1:\n                    key = tuple(neighbours)\n\n                    if key not in failed_neighborhoods:\n                        ok = True\n                        size = len(neighbours)\n                        es = edge_set\n                        nn = n\n\n                        for i in range(size - 1):\n                            u = neighbours[i]\n                            base = u * nn\n                            for j in range(i + 1, size):\n                                if base + neighbours[j] not in es:\n                                    ok = False\n                                    break\n                            if not ok:\n                                break\n\n                        if ok:\n                            found_clique = [v] + neighbours\n                            break\n                        else:\n                            failed_neighborhoods.add(key)\n\n            removed[v] = 1\n            active_count -= 1\n\n            for u in adj[v]:\n                if not removed[u]:\n                    degree[u] -= 1\n                    if degree[u] < k:\n                        queue.append(u)\n\n        if found_clique is not None:\n            output.append(\"2\")\n            output.append(\" \".join(str(x + 1) for x in found_clique))\n        else:\n            if active_count > 0:\n                answer = [str(i + 1) for i in range(n) if not removed[i]]\n                output.append(\"1 \" + str(len(answer)))\n                output.append(\" \".join(answer))\n            else:\n                output.append(\"-1\")\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 130.036,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an undirected graph with n vertices and m edges. Also, you are given an integer k.\n\nFind either a clique of size k or a non-empty subset of vertices such that each vertex of this subset has at least k neighbors in the subset. If there are no such cliques and subsets report about it.\n\nA subset of vertices is called a clique of size k if its size is k and there exists an edge between every two vertices from the subset. A vertex is called a neighbor of the other vertex if there exists an edge between them.\n\nInput\n\nThe first line contains a single integer t (1 ≤ t ≤ 10^5) — the number of test cases. The next lines contain descriptions of test cases.\n\nThe first line of the description of each test case contains three integers n, m, k (1 ≤ n, m, k ≤ 10^5, k ≤ n).\n\nEach of the next m lines contains two integers u, v (1 ≤ u, v ≤ n, u ≠ v), denoting an edge between vertices u and v.\n\nIt is guaranteed that there are no self-loops or multiple edges. It is guaranteed that the sum of n for all test cases and the sum of m for all test cases does not exceed 2 ⋅ 10^5.\n\nOutput\n\nFor each test case: \n\nIf you found a subset of vertices such that each vertex of this subset has at least k neighbors in the subset in the first line output 1 and the size of the subset. On the second line output the vertices of the subset in any order.\n\nIf you found a clique of size k then in the first line output 2 and in the second line output the vertices of the clique in any order.\n\nIf there are no required subsets and cliques print -1.\n\nIf there exists multiple possible answers you can print any of them.\n\nExample\n\nInput\n\n\n3\n5 9 4\n1 2\n1 3\n1 4\n1 5\n2 3\n2 4\n2 5\n3 4\n3 5\n10 15 3\n1 2\n2 3\n3 4\n4 5\n5 1\n1 7\n2 8\n3 9\n4 10\n5 6\n7 10\n10 8\n8 6\n6 9\n9 7\n4 5 4\n1 2\n2 3\n3 4\n4 1\n1 3\n\n\nOutput\n\n\n2\n4 1 2 3 \n1 10\n1 2 3 4 5 6 7 8 9 10 \n-1\n\nNote\n\nIn the first test case: the subset \\{1, 2, 3, 4\\} is a clique of size 4.\n\nIn the second test case: degree of each vertex in the original graph is at least 3. So the set of all vertices is a correct answer.\n\nIn the third test case: there are no cliques of size 4 or required subsets, so the answer is -1.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

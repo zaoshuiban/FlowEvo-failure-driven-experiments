@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "39957e26-3a12-4eea-85b3-4eb0ce23233f",
+  "created": 1792430107,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 949,
+    "completion_tokens": 6332,
+    "total_tokens": 7281,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5874
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 309
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport heapq\n\n\ndef dijkstra(start, n, graph):\n    INF = 10**18\n    dist = [INF] * (n + 1)\n    dist[start] = 0\n    pq = [(0, start)]\n\n    while pq:\n        cur_dist, u = heapq.heappop(pq)\n\n        if cur_dist != dist[u]:\n            continue\n\n        for v, w in graph[u]:\n            nxt = cur_dist + w\n            if nxt < dist[v]:\n                dist[v] = nxt\n                heapq.heappush(pq, (nxt, v))\n\n    return dist\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    t = data[idx]\n    idx += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        graph = [[] for _ in range(n + 1)]\n\n        for _ in range(m):\n            x = data[idx]\n            y = data[idx + 1]\n            c = data[idx + 2]\n            idx += 3\n\n            graph[x].append((y, c))\n            graph[y].append((x, c))\n\n        s = data[idx]\n        a = data[idx + 1]\n        h = data[idx + 2]\n        idx += 3\n\n        dist_s = dijkstra(s, n, graph)\n        dist_a = dijkstra(a, n, graph)\n        dist_h = dijkstra(h, n, graph)\n\n        special = {s, a, h}\n        answer = 0\n\n        for building in range(1, n + 1):\n            if building not in special:\n                time_needed = (\n                    dist_s[building]\n                    + 2 * dist_a[building]\n                    + dist_h[building]\n                )\n                answer = max(answer, time_needed)\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 30.648,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe secret services of Armin, an otherwise peace-loving country, have decided to perform a surgical strike in the war-torn city of Tashka. Tashka is under enemy control and the objective of the strike is to gain control over the city. \nThe mission is subdivided into the following steps:\n1) Divide in groups and infiltrate all enemy bases in Tashka as unarmed civilians, and find the status of enemy's defense strength at that base.\n ( You can assume that the number of groups are sufficiently large to cover each base separately )\n2) Pick up the required amount of ammunition from our secret ammunition store in the city.\n3) Return to the bases and destroy the enemy defense.\n4) Rush to the Town Hall for the Helicopter pick up out of the town.  \n\nThere are a total of  N buildings in Tashka, numbered from 1 to N .  The agents will be dropped at building denoted by S, post which they will divide into groups and each enemy base will have a group moving towards it. The ammunition store is denoted by A and town hall is denoted by H . All the buildings except these three are enemy bases and are to be infiltrated.  There are a total of M bidirectional roads in the city, each road connects two cities. There can be multiple roads between a pair of cities and each road has a time taken to cross associated with its terrain.\nMonk is made in charge of the pickup.  He can not land the Helicopter before all the groups have arrived at the Town Hall. Find the Minimum units of Time,  post dropping the agents, that the Helicopter should be landed such that all groups are able to reach the Town Hall.  \n\nInput:\nFirst line contains an integer T. T test cases follow.\nFirst line of each test cases contains two space-separated integers N, M.\nEach of the next M lines contains three space-separated integers X, Y, C, denoting that there is a bidirectional road between X and Y that needs C units of time to cross. \nThe next line contains three space-separated integers S, A and H (not necessarily distinct) .  \n\nOutput:\nPrint the answer to each test case in a new line.  \n\nConstraints:\n1 ≤ T ≤ 10\n4 ≤ N ≤ 100\n1 ≤ M ≤ 10000\n1 ≤ X, Y, S, A, H  ≤ N\n1 ≤ C ≤ 100  \n\nNote:\nTime taken to note status of enemy defense, load ammunition or attack enemy enemy base can be considered negligible compared to time taken to travel.\n\nSAMPLE INPUT\n1\n4 4\n1 4 1\n1 2 1\n2 3 1\n2 4 1\n1 2 3\n\nSAMPLE OUTPUT\n5\n\nExplanation\n\nAgents start at 1, rush to enemy base at 4 (Time taken =2 units). Go to ammunition store at 2, and return back to attack enemy base (Time taken=2 units) , destroy the base and head off to pickup point (Time taken =1 units).\nHence, 2+2+1= 5units.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

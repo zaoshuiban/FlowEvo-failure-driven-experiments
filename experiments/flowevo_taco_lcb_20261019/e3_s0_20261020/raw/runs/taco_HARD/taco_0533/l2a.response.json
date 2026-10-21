@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "13b0828e-cf13-48d1-83a0-a149736f7cb7",
+  "created": 1792440694,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 460,
+    "completion_tokens": 6549,
+    "total_tokens": 7009,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6193
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 204
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    bad = [None] * n\n\n    idx = 2\n    for _ in range(m):\n        x = data[idx] - 1\n        y = data[idx + 1] - 1\n        idx += 2\n\n        if bad[x] is None:\n            bad[x] = set()\n        bad[x].add(y)\n\n        if bad[y] is None:\n            bad[y] = set()\n        bad[y].add(x)\n\n    unvisited = set(range(n))\n    component_sizes = []\n\n    for start in range(n):\n        if start not in unvisited:\n            continue\n\n        unvisited.remove(start)\n        queue = [start]\n        head = 0\n\n        while head < len(queue):\n            v = queue[head]\n            head += 1\n\n            if not unvisited:\n                break\n\n            forbidden = bad[v]\n\n            if forbidden is None:\n                queue.extend(unvisited)\n                unvisited.clear()\n                break\n\n            removed = []\n            for u in unvisited:\n                if u not in forbidden:\n                    removed.append(u)\n\n            if removed:\n                for u in removed:\n                    unvisited.remove(u)\n                queue.extend(removed)\n\n        component_sizes.append(len(queue))\n\n    component_sizes.sort()\n\n    output = [\n        str(len(component_sizes)),\n        \" \".join(map(str, component_sizes))\n    ]\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 31.008,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an undirected graph consisting of n vertices and $\\frac{n(n - 1)}{2} - m$ edges. Instead of giving you the edges that exist in the graph, we give you m unordered pairs (x, y) such that there is no edge between x and y, and if some pair of vertices is not listed in the input, then there is an edge between these vertices.\n\nYou have to find the number of connected components in the graph and the size of each component. A connected component is a set of vertices X such that for every two vertices from this set there exists at least one path in the graph connecting these vertices, but adding any other vertex to X violates this rule.\n\n\n-----Input-----\n\nThe first line contains two integers n and m (1 ≤ n ≤ 200000, $0 \\leq m \\leq \\operatorname{min}(\\frac{n(n - 1)}{2}, 200000)$).\n\nThen m lines follow, each containing a pair of integers x and y (1 ≤ x, y ≤ n, x ≠ y) denoting that there is no edge between x and y. Each pair is listed at most once; (x, y) and (y, x) are considered the same (so they are never listed in the same test). If some pair of vertices is not listed in the input, then there exists an edge between those vertices. \n\n\n-----Output-----\n\nFirstly print k — the number of connected components in this graph.\n\nThen print k integers — the sizes of components. You should output these integers in non-descending order.\n\n\n-----Example-----\nInput\n5 5\n1 2\n3 4\n3 2\n4 2\n2 5\n\nOutput\n2\n1 4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

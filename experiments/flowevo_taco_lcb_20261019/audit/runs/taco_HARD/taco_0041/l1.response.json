@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3e417daa-e2fe-4383-b534-ca10e77be34c",
+  "created": 1792449494,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 656,
+    "completion_tokens": 32768,
+    "total_tokens": 33424,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 656
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 172.087,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nDaenerys Targaryen has an army consisting of k groups of soldiers, the i-th group contains a_{i} soldiers. She wants to bring her army to the other side of the sea to get the Iron Throne. She has recently bought an airplane to carry her army through the sea. The airplane has n rows, each of them has 8 seats. We call two seats neighbor, if they are in the same row and in seats {1, 2}, {3, 4}, {4, 5}, {5, 6} or {7, 8}.\n\n [Image] A row in the airplane \n\nDaenerys Targaryen wants to place her army in the plane so that there are no two soldiers from different groups sitting on neighboring seats.\n\nYour task is to determine if there is a possible arranging of her army in the airplane such that the condition above is satisfied.\n\n\n-----Input-----\n\nThe first line contains two integers n and k (1 ≤ n ≤ 10000, 1 ≤ k ≤ 100) — the number of rows and the number of groups of soldiers, respectively.\n\nThe second line contains k integers a_1, a_2, a_3, ..., a_{k} (1 ≤ a_{i} ≤ 10000), where a_{i} denotes the number of soldiers in the i-th group.\n\nIt is guaranteed that a_1 + a_2 + ... + a_{k} ≤ 8·n.\n\n\n-----Output-----\n\nIf we can place the soldiers in the airplane print \"YES\" (without quotes). Otherwise print \"NO\" (without quotes).\n\nYou can choose the case (lower or upper) for each letter arbitrary.\n\n\n-----Examples-----\nInput\n2 2\n5 8\n\nOutput\nYES\n\nInput\n1 2\n7 1\n\nOutput\nNO\n\nInput\n1 2\n4 4\n\nOutput\nYES\n\nInput\n1 4\n2 2 1 2\n\nOutput\nYES\n\n\n\n-----Note-----\n\nIn the first sample, Daenerys can place the soldiers like in the figure below:\n\n [Image] \n\nIn the second sample, there is no way to place the soldiers in the plane since the second group soldier will always have a seat neighboring to someone from the first group.\n\nIn the third example Daenerys can place the first group on seats (1, 2, 7, 8), and the second group an all the remaining seats.\n\nIn the fourth example she can place the first two groups on seats (1, 2) and (7, 8), the third group on seats (3), and the fourth group on seats (5, 6).\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

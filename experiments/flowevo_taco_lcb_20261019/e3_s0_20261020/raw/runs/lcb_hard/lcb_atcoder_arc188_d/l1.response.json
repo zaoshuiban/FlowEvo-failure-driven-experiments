@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a9e608de-55b8-478d-854a-4a4396b54de3",
+  "created": 1792446615,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 979,
+    "completion_tokens": 28184,
+    "total_tokens": 29163,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 27267
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 979
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    A = [0] + [next(it) for _ in range(N)]\n    B = [0] + [next(it) for _ in range(N)]\n\n    # P_i = first element of s_i, determined by A_i.\n    P = [0] * (N + 1)\n    invP = [0] * (N + 1)\n    seen = [False] * (N + 1)\n\n    for i in range(1, N + 1):\n        x = (A[i] + 1) // 2  # ceil(A_i / 2)\n        if x < 1 or x > N or seen[x]:\n            print(0)\n            return\n        seen[x] = True\n        P[i] = x\n        invP[x] = i\n\n    # Build forced edges phi(k) = i from specified B_i.\n    out_to = [-1] * (N + 1)\n    indeg = [0] * (N + 1)\n\n    for i in range(1, N + 1):\n        if B[i] == -1:\n            continue\n\n        bv = B[i]\n        x = (bv + 1) // 2  # block of B_i\n        if x < 1 or x > N:\n            print(0)\n            return\n\n        k = invP[x]\n\n        # In the same block, s_k and t_i must be on opposite sides,\n        # hence their ranks have different parity.\n        if (A[k] & 1) == (bv & 1):\n            print(0)\n            return\n\n        if out_to[k] != -1 and out_to[k] != i:\n            print(0)\n            return\n\n        if out_to[k] == -1:\n            out_to[k] = i\n            indeg[i] += 1\n\n    visited = [False] * (N + 1)\n\n    mono0 = 0\n    mono1 = 0\n    mixed = 0\n\n    # Process path components.\n    for v in range(1, N + 1):\n        if visited[v] or indeg[v] != 0:\n            continue\n\n        cur = v\n        has0 = False\n        has1 = False\n\n        while cur != -1 and not visited[cur]:\n            visited[cur] = True\n            if A[cur] & 1:\n                has1 = True\n            else:\n                has0 = True\n            cur = out_to[cur]\n\n        if has0 and has1:\n            mixed += 1\n        elif has0:\n            mono0 += 1\n        elif has1:\n            mono1 += 1\n\n    # Remaining vertices form closed forced cycles.\n    for v in range(1, N + 1):\n        if visited[v]:\n            continue\n\n        cur = v\n        has0 = False\n        has1 = False\n\n        while not visited[cur]:\n            visited[cur] = True\n            if A[cur] & 1:\n                has1 = True\n            else:\n                has0 = True\n\n            nxt = out_to[cur]\n            if nxt == -1:\n                print(0)\n                return\n            cur = nxt\n\n        # Every cycle must contain both parities.\n        if not (has0 and has1):\n            print(0)\n            return\n\n    fact = [1] * (N + 1)\n    for i in range(1, N + 1):\n        fact[i] = fact[i - 1] * i % MOD\n\n    M = mono0 + mono1 + mixed\n\n    ans = fact[M]\n\n    if mono0 > 0:\n        ans -= mono0 * fact[M - 1]\n    if mono1 > 0:\n        ans -= mono1 * fact[M - 1]\n    if mono0 > 0 and mono1 > 0:\n        ans += mono0 * mono1 % MOD * fact[M - 2]\n\n    ans %= MOD\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 143.822,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are going to create N sequences of length 3, satisfying the following conditions.\n\n- For each of k = 1,2,3, the following holds:\n- Among the k-th elements of the sequences, each integer from 1 through N appears exactly once.\n\n\n\nFor this sequence of sequences, define sequences a=(a_1,a_2,\\ldots,a_N) and b=(b_1,b_2,\\ldots,b_N) as follows.\n\n- Let s_i be the i-th sequence, and let t_i be the reverse of the i-th sequence. When all of these are sorted in lexicographical order, s_i comes a_i-th, and t_i comes b_i-th.\n- Here, if there are identical sequences among the 2N sequences, a and b are not defined.\n\nTherefore, if a and b are defined, each integer from 1 through 2N appears exactly once in the concatenation of a and b.\nYou are given sequences A and B of length N, where each element of A is an integer between 1 and 2N, and each element of B is either an integer between 1 and 2N or -1.\nAlso, in the concatenation of A and B, each integer other than -1 appears at most once.\nHow many pairs of sequences a,b are there such that a and b are defined and the following holds for each integer i from 1 through N?\n\n- a_i = A_i.\n- b_i = B_i if B_i \\neq -1.\n\nFind the count modulo 998244353.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\nA_1 A_2 \\ldots A_N\nB_1 B_2 \\ldots B_N\n\nOutput\n\nPrint the count modulo 998244353.\n\nConstraints\n\n\n- 2 \\leq N \\leq 3000\n- 1 \\leq A_i \\leq 2N\n- 1 \\leq B_i \\leq 2N or B_i = -1.\n- In the concatenation of A and B, each integer other than -1 appears at most once. That is,\n- A_i \\neq A_j if i \\neq j.\n- B_i \\neq B_j if i \\neq j and B_i,B_j \\neq -1.\n- A_i \\neq B_j.\n\n\n- All input values are integers.\n\nSample Input 1\n\n3\n2 3 6\n-1 1 -1\n\nSample Output 1\n\n1\n\nFor example, consider creating the following three sequences:\n\n- (1,2,3)\n- (2,1,1)\n- (3,3,2)\n\nIn this case, when sorting s_i and t_i lexicographically, we have:\n\nt_2 = (1,1,2) < s_1 = (1,2,3) < s_2 = (2,1,1) < t_3 = (2,3,3) < t_1 = (3,2,1) < s_3 = (3,3,2)\n\nThus, (a_1,a_2,a_3,b_1,b_2,b_3) = (2,3,6,5,1,4). Here, a matches the given A, and the second element of b also matches that of B, so this is one pair of sequences a,b satisfying the conditions.\nOn the other hand, if we create the following three sequences, s_1 and t_1 become identical, so a and b are not defined.\n\n- (1,2,1)\n- (2,1,3)\n- (3,3,2)\n\nIn fact, a=(2,3,6), b=(5,1,4) is the only pair of sequences satisfying the conditions.\n\nSample Input 2\n\n15\n5 16 1 12 30 20 4 13 9 8 24 21 26 28 17\n-1 -1 6 -1 -1 -1 -1 -1 -1 -1 -1 29 -1 -1 -1\n\nSample Output 2\n\n758094847\n\nPrint the count modulo 998244353.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

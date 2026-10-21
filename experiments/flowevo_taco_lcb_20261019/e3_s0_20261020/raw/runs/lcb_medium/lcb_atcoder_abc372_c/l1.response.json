@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bc2976c7-67f4-4a59-bc05-f55443011d73",
+  "created": 1792430642,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 615,
+    "completion_tokens": 1164,
+    "total_tokens": 1779,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 882
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 615
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef is_abc(s, i):\n    return s[i] == 65 and s[i + 1] == 66 and s[i + 2] == 67  # 'A', 'B', 'C'\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    q = int(data[1])\n    s = bytearray(data[2])\n\n    count = 0\n    for i in range(n - 2):\n        if is_abc(s, i):\n            count += 1\n\n    answers = []\n    idx = 3\n\n    for _ in range(q):\n        p = int(data[idx]) - 1\n        c = data[idx + 1][0]\n        idx += 2\n\n        left = max(0, p - 2)\n        right = min(n - 3, p)\n\n        for i in range(left, right + 1):\n            if is_abc(s, i):\n                count -= 1\n\n        s[p] = c\n\n        for i in range(left, right + 1):\n            if is_abc(s, i):\n                count += 1\n\n        answers.append(str(count))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 5.853,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string S of length N. You are also given Q queries, which you should process in order.\nThe i-th query is as follows:\n\n- Given an integer X_i and a character C_i, replace the X_i-th character of S with C_i. Then, print the number of times the string ABC appears as a substring in S.\n\nHere, a substring of S is a string obtained by deleting zero or more characters from the beginning and zero or more characters from the end of S.\nFor example, ab is a substring of abc, but ac is not a substring of abc.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN Q\nS\nX_1 C_1\nX_2 C_2\n\\vdots\nX_Q C_Q\n\nOutput\n\nPrint Q lines.\nThe i-th line (1 \\le i \\le Q) should contain the answer to the i-th query.\n\nConstraints\n\n\n- 3 \\le N \\le 2 \\times 10^5\n- 1 \\le Q \\le 2 \\times 10^5\n- S is a string of length N consisting of uppercase English letters.\n- 1 \\le X_i \\le N\n- C_i is an uppercase English letter.\n\nSample Input 1\n\n7 4\nABCDABC\n4 B\n3 A\n5 C\n4 G\n\nSample Output 1\n\n2\n1\n1\n0\n\nAfter processing each query, S becomes as follows.\n\n- After the first query: S= ABCBABC. In this string, ABC appears twice as a substring.\n- After the second query: S= ABABABC. In this string, ABC appears once as a substring.\n- After the third query: S= ABABCBC. In this string, ABC appears once as a substring.\n- After the fourth query: S= ABAGCBC. In this string, ABC appears zero times as a substring.\n\nSample Input 2\n\n3 3\nABC\n1 A\n2 B\n3 C\n\nSample Output 2\n\n1\n1\n1\n\nThere are cases where S does not change through processing a query.\n\nSample Input 3\n\n15 10\nBBCCBCACCBACACA\n9 C\n11 B\n5 B\n11 B\n4 A\n8 C\n8 B\n5 B\n7 B\n14 B\n\nSample Output 3\n\n0\n0\n0\n0\n1\n1\n2\n2\n1\n1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

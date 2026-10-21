@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "42e91304-177d-47ab-a989-b2cf483453f1",
+  "created": 1792437603,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1728,
+    "completion_tokens": 32768,
+    "total_tokens": 34496,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 1216
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 146.864,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nValera has 2·n cubes, each cube contains an integer from 10 to 99. He arbitrarily chooses n cubes and puts them in the first heap. The remaining cubes form the second heap. \n\nValera decided to play with cubes. During the game he takes a cube from the first heap and writes down the number it has. Then he takes a cube from the second heap and write out its two digits near two digits he had written (to the right of them). In the end he obtained a single fourdigit integer — the first two digits of it is written on the cube from the first heap, and the second two digits of it is written on the second cube from the second heap.\n\nValera knows arithmetic very well. So, he can easily count the number of distinct fourdigit numbers he can get in the game. The other question is: how to split cubes into two heaps so that this number (the number of distinct fourdigit integers Valera can get) will be as large as possible?\n\n\n-----Input-----\n\nThe first line contains integer n (1 ≤ n ≤ 100). The second line contains 2·n space-separated integers a_{i} (10 ≤ a_{i} ≤ 99), denoting the numbers on the cubes.\n\n\n-----Output-----\n\nIn the first line print a single number — the maximum possible number of distinct four-digit numbers Valera can obtain. In the second line print 2·n numbers b_{i} (1 ≤ b_{i} ≤ 2). The numbers mean: the i-th cube belongs to the b_{i}-th heap in your division.\n\nIf there are multiple optimal ways to split the cubes into the heaps, print any of them.\n\n\n-----Examples-----\nInput\n1\n10 99\n\nOutput\n1\n2 1 \n\nInput\n2\n13 24 13 45\n\nOutput\n4\n1 2 2 1 \n\n\n\n-----Note-----\n\nIn the first test case Valera can put the first cube in the first heap, and second cube — in second heap. In this case he obtain number 1099. If he put the second cube in the first heap, and the first cube in the second heap, then he can obtain number 9910. In both cases the maximum number of distinct integers is equal to one.\n\nIn the second test case Valera can obtain numbers 1313, 1345, 2413, 2445. Note, that if he put the first and the third cubes in the first heap, he can obtain only two numbers 1324 and 1345.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom collections import Counter, defaultdict\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    arr = data[1:1 + 2 * n]\n\n    freq = Counter(arr)\n    items = list(freq.items())  # (value, count)\n    m = len(items)\n\n    NEG = -10**9\n\n    # dp[used_first][distinct_first] = maximum distinct values in the second heap\n    dp = [[NEG] * (m + 1) for _ in range(n + 1)]\n    dp[0][0] = 0\n\n    # choices[i][used][distinct_first] stores how many copies of items[i]\n    # were put into the first heap for this DP state.\n    choices = []\n\n    for _, count in items:\n        ndp = [[NEG] * (m + 1) for _ in range(n + 1)]\n        choice = [[-1] * (m + 1) for _ in range(n + 1)]\n\n        for used in range(n + 1):\n            for distinct_first in range(m + 1):\n                cur = dp[used][distinct_first]\n                if cur < 0:\n                    continue\n\n                # Put all copies into the second heap.\n                if cur + 1 > ndp[used][distinct_first]:\n                    ndp[used][distinct_first] = cur + 1\n                    choice[used][distinct_first] = 0\n\n                new_distinct_first = distinct_first + 1\n                if new_distinct_first > m:\n                    continue\n\n                # Put all copies into the first heap.\n                new_used = used + count\n                if new_used <= n and cur > ndp[new_used][new_distinct_first]:\n                    ndp[new_used][new_distinct_first] = cur\n                    choice[new_used][new_distinct_first] = count\n\n                # Split copies between both heaps.\n                if count >= 2:\n                    max_take = min(count - 1, n - used)\n                    for take in range(1, max_take + 1):\n                        new_used = used + take\n                        if cur + 1 > ndp[new_used][new_distinct_first]:\n                            ndp[new_used][new_distinct_first] = cur + 1\n                            choice[new_used][new_distinct_first] = take\n\n        dp = ndp\n        choices.append(choice)\n\n    best_answer = -1\n    best_distinct_first = 0\n\n    for distinct_first in range(m + 1):\n        distinct_second = dp[n][distinct_first]\n        if distinct_second >= 0:\n            answer = distinct_first * distinct_second\n            if answer > best_answer:\n                best_answer = answer\n                best_distinct_first = distinct_first\n\n    # Reconstruct how many copies of each value go to the first heap.\n    used = n\n    distinct_first = best_distinct_first\n    chosen_first_count = [0] * m\n\n    for i in range(m - 1, -1, -1):\n        take = choices[i][used][distinct_first]\n        chosen_first_count[i] = take\n\n        used -= take\n        if take > 0:\n            distinct_first -= 1\n\n    positions = defaultdict(list)\n    for index, value in enumerate(arr):\n        positions[value].append(index)\n\n    answer_labels = ['2'] * (2 * n)\n\n    for i, (value, _) in enumerate(items):\n        take = chosen_first_count[i]\n        for index in positions[value][:take]:\n            answer_labels[index] = '1'\n\n    print(best_answer)\n    print(' '.join(answer_labels))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: As you know, an undirected connected graph with n nodes and n - 1 edges is called a tree. You are given an integer d and a tree consisting of n nodes. Each node i has a value a_{i} associated with it.\nSolution:\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    d, n = data[0], data[1]\n    a = [0] + data[2:2 + n]\n\n    adj = [[] for _ in range(n + 1)]\n    pos = 2 + n\n\n    for _ in range(n - 1):\n        u, v = data[pos], data[pos + 1]\n        pos += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    sys.setrecursionlimit(1_000_000)\n\n    answer = 0\n\n    for root in range(1, n + 1):\n        base = a[root]\n        li"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

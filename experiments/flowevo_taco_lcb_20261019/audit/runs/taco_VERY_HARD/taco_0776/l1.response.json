@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cb3760bb-68b3-4d65-95a6-06c0a858c809",
+  "created": 1792447282,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 559,
+    "completion_tokens": 32768,
+    "total_tokens": 33327,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 559
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 165.37,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a tree consisting of n vertices. A number is written on each vertex; the number on vertex i is equal to a_i.\n\nLet's denote the function g(x, y) as the greatest common divisor of the numbers written on the vertices belonging to the simple path from vertex x to vertex y (including these two vertices).\n\nFor every integer from 1 to 2 ⋅ 10^5 you have to count the number of pairs (x, y) (1 ≤ x ≤ y ≤ n) such that g(x, y) is equal to this number.\n\nInput\n\nThe first line contains one integer n — the number of vertices (1 ≤ n ≤ 2 ⋅ 10^5).\n\nThe second line contains n integers a_1, a_2, ..., a_n (1 ≤ a_i ≤ 2 ⋅ 10^5) — the numbers written on vertices.\n\nThen n - 1 lines follow, each containing two integers x and y (1 ≤ x, y ≤ n, x ≠ y) denoting an edge connecting vertex x with vertex y. It is guaranteed that these edges form a tree.\n\nOutput\n\nFor every integer i from 1 to 2 ⋅ 10^5 do the following: if there is no pair (x, y) such that x ≤ y and g(x, y) = i, don't output anything. Otherwise output two integers: i and the number of aforementioned pairs. You have to consider the values of i in ascending order.\n\nSee the examples for better understanding.\n\nExamples\n\nInput\n\n3\n1 2 3\n1 2\n2 3\n\n\nOutput\n\n1 4\n2 1\n3 1\n\n\nInput\n\n6\n1 2 4 8 16 32\n1 6\n6 3\n3 4\n4 2\n6 5\n\n\nOutput\n\n1 6\n2 5\n4 6\n8 1\n16 2\n32 1\n\n\nInput\n\n4\n9 16 144 6\n1 3\n2 3\n4 3\n\n\nOutput\n\n1 1\n2 1\n3 1\n6 2\n9 2\n16 2\n144 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

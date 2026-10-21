@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8f9517cd-4fa3-4957-acef-0685a15460e8",
+  "created": 1792436688,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 527,
+    "completion_tokens": 516,
+    "total_tokens": 1043,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 342
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 527
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    ans = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        k = int(data[idx + 1])\n        s = data[idx + 2]\n        idx += 3\n\n        count = 0\n        found = False\n\n        for ch in s:\n            if ch == ord('*'):\n                count += 1\n                if count >= k:\n                    found = True\n                    break\n            else:\n                count = 0\n\n        ans.append(\"YES\" if found else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 2.599,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nA string is said to be using *strong language* if it contains at least $K$ consecutive characters '*'.\n\nYou are given a string $S$ with length $N$. Determine whether it uses strong language or not.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $K$.\nThe second line contains a single string $S$ with length $N$. \n\n------  Output ------\nPrint a single line containing the string \"YES\" if the string contains strong language or \"NO\" if it does not (without quotes).\n\nYou may print each character of each string in uppercase or lowercase (for example, the strings \"yEs\", \"yes\", \"Yes\" and \"YES\" will all be treated as identical).\n\n------  Constraints  ------\n$1 ≤ T ≤ 10$\n$1 ≤ K ≤ N ≤ 10^{6}$\n$S$ contains only lowercase English letters and characters '*'\nSum of $N$ over all testcases is atmost $10^{6}$.\n\n------  Subtasks ------\nSubtask #1 (30 points): $N ≤ 10^{4}$, Sum of $N$ over all testcases is atmost $10^{4}$\n\nSubtask #2 (70 points): original constraints\n\n----- Sample Input 1 ------ \n3\n\n5 2\n\n*a*b*\n\n5 2\n\n*ab\n\n5 1\n\nabcde\n----- Sample Output 1 ------ \nNO\n\nYES\n\nNO\n----- explanation 1 ------ \nExample case 1: Since there are no two consecutive characters '*', the string does not contain strong language.\n\nExample case 2: There are two adjacent characters '*', so the string contains strong language.\n\nExample case 3: Since there are no characters '*' in the string, it does not contain strong language.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

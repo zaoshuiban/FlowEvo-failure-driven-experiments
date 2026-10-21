@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "06915726-ff25-48d3-a853-3b612ceeec46",
+  "created": 1792445805,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 723,
+    "completion_tokens": 32768,
+    "total_tokens": 33491,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 339
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 167.21,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a sequence of integers (X_1,\\dots,X_M) of length M consisting of 1,\\dots,K.\nFind the number of sequences (A_1,\\dots,A_N) of length N consisting of 1,\\dots,K that satisfy the following condition, modulo 998244353:\n\n- Among all sequences of length M consisting of 1,\\dots,K, the only sequence that cannot be obtained as a (not necessarily contiguous) subsequence of (A_1,\\dots,A_N) is (X_1,\\dots,X_M).\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M K\r\nX_1 X_2 \\dots X_M\n\nOutput\n\nPrint the number of sequences satisfying the condition, modulo 998244353.\n\nConstraints\n\n\n- 2\\le M,K \\le N \\le 400\n- 1\\le X_i \\le K\n- All input values are integers.\n\nSample Input 1\n\n5 2 3\r\n1 1\n\nSample Output 1\n\n4\r\n\nThe following four sequences satisfy the condition:\n\n- (2, 3, 1, 2, 3)\n- (2, 3, 1, 3, 2)\n- (3, 2, 1, 2, 3)\n- (3, 2, 1, 3, 2)\n\nSample Input 2\n\n400 3 9\r\n1 8 6\n\nSample Output 2\n\n417833302\n\nSample Input 3\n\n29 3 10\r\n3 3 3\n\nSample Output 3\n\n495293602\n\nSample Input 4\n\n29 3 10\r\n3 3 4\n\nSample Output 4\n\n0\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given integers N and M.\nPrint all integer sequences (A_1, A_2, \\ldots, A_N) of length N that satisfy all of the following conditions, in lexicographical order.\n\n- 1 \\leq A_i\n- A_{i - 1} + 10 \\\nSolution:\nimport sys\nimport math\n\ndef main():\n    N, M = map(int, sys.stdin.buffer.readline().split())\n\n    K = M - 10 * (N - 1)\n    count = math.comb(N + K - 1, N)\n\n    result = [str(count)]\n    seq = [0] * N\n    offsets = [10 * i for i in range(N)]\n\n    def dfs(index, minimum):\n        if index == N:\n            result.append(\" \".join(str(seq[i] + offsets[i]) for i in range(N)))\n            return\n\n        for value in range(minimum, K + 1):\n            seq[index] = value\n            dfs(index + 1, valu"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

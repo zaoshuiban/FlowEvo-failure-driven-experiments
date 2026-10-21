@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ab7801a4-e6c7-45ae-9817-3e504042b8f4",
+  "created": 1792436800,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 587,
+    "completion_tokens": 783,
+    "total_tokens": 1370,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 584
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 587
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = iter(map(int, sys.stdin.buffer.read().split()))\n    t = next(data)\n    answers = []\n\n    for _ in range(t):\n        n = next(data)\n        k = next(data)\n\n        votes_for = [0] * (n + 1)\n        vote_count = [0] * (n + 1)\n\n        for person in range(1, n + 1):\n            voted_for = next(data)\n            votes_for[person] = voted_for\n            vote_count[voted_for] += 1\n\n        government_size = 0\n\n        for person in range(1, n + 1):\n            if vote_count[person] >= k and votes_for[person] != person:\n                government_size += 1\n\n        answers.append(str(government_size))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 3.196,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nDonald Drumpf has spent the entire summer lobbying to gather votes for the upcoming student government election. At his University, there are a total of N students. Each student in the university casts a vote. The size of student government is determined by the number of students that get at least K votes.\n\nEach person that receives at least K votes is given a post in the student government. The Dean noticed that every year, there are a few students who vote for themselves. He decided to add a rule to disqualify any such individuals who vote for themselves i.e they cannot be part of the student government. \n\nYou are given an array A, where A_{i} denotes the person who the i-th person voted for. Can you compute the size of the student government?\n \n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows.\nFor each test case, first line consists of two space separated integers N, K.\nSecond line consists of N space separated integers denoting the array A,  where i-th integer denotes A_{i}.\n\n------ Output ------ \n\nFor each test case, output a single line containing an integer corresponding to the size of the student government.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 100$\n$1 ≤ K ≤ N$\n$1 ≤ A_{i} ≤ N$\n\n------ Subtasks ------ \n\nSubtask #1: (30 points)\n$1 ≤ N ≤ 3$\nSubtask #2: (70 points)\n$1 ≤ N ≤ 100$\n\n----- Sample Input 1 ------ \n2\n3 2\n2 1 2\n2 1\n1 2\n----- Sample Output 1 ------ \n1\n0\n----- explanation 1 ------ \n\nIn first test case, there are 3 students. A student must receive at least 2\nvotes to be part of the student government. Student 1 votes for student 2, student 2 votes for student 1 and student 3 votes for student 2. Thus, Student 2 receives 2 votes and is the only one eligible for student government.\n\nIn second test case, although both students receive the required amount of votes, they are both disqualified as they had voted for themselves. Thus, size of the student\ngovernment is 0.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

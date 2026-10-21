@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cf0bc92e-2483-452f-9344-625d5c633f3e",
+  "created": 1792433040,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 684,
+    "completion_tokens": 32768,
+    "total_tokens": 33452,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 172
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 161.083,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nThere are N integers X_{1}, X_{2}, ..., X_{N}.\n\nLet's define Y_{i,j} = X_{i} × X_{j} mod 359999.\n\nHow many integer 6-tuples (a, b, c, d, e, f) are there such that:\n\n1 ≤ a, b, c, d, e, f ≤ N\ngcd(Y_{a, b}, Y_{c, d}, Y_{e, f}) = 1\n\nWe define gcd(0, 0) = 0.\n\n------ Input ------ \n\nThe first line of input contains an integer T denoting the number of test cases. The description of T test cases follows.\nThe first line of each test case contains a single integer N.\nThe second line contains N integers separated by single spaces: X_{1}, X_{2}, ..., X_{N}.\n\n------ Output ------ \n\nFor each test case, output a single line containing the answer. Since the answer can be very large, only output it modulo 10^{9} + 7.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 3$\n$1 ≤ X_{i} ≤ 10^{6}$\n\n------ Subtasks ------ \n\nSubtask #1 (47 points):\n\n$1 ≤ N ≤ 10^{3}$\n \nSubtask #2 (53 points):\n\n$1 ≤ N ≤ 10^{6}$\n$The sum of the Ns is ≤ 10^{6}$\n \n------ Example ------ \n\nInput:\n1\n3\n300 3000 30000\n\nOutput:\n234\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

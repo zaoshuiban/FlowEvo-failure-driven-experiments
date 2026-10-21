@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c685dd77-1f8f-42fd-af0d-96f23cf8741c",
+  "created": 1792452311,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 467,
+    "completion_tokens": 7664,
+    "total_tokens": 8131,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7186
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 211
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    p = [x - 1 for x in data[1:1 + n]]\n\n    visited = [False] * n\n    cycles = []\n    fixed = -1\n\n    for start in range(n):\n        if visited[start]:\n            continue\n\n        cycle = []\n        v = start\n        while not visited[v]:\n            visited[v] = True\n            cycle.append(v)\n            v = p[v]\n\n        cycles.append(cycle)\n        if len(cycle) == 1 and fixed == -1:\n            fixed = cycle[0]\n\n    # If there is a fixed vertex, a star centered at it works.\n    if fixed != -1:\n        ans = [\"YES\"]\n        for v in range(n):\n            if v != fixed:\n                ans.append(f\"{fixed + 1} {v + 1}\")\n        sys.stdout.write(\"\\n\".join(ans))\n        return\n\n    # Without fixed vertices, the tree center must be an edge,\n    # whose endpoints form a 2-cycle. Every cycle must be even.\n    center_index = -1\n    for i, cycle in enumerate(cycles):\n        if len(cycle) == 2 and center_index == -1:\n            center_index = i\n\n    if center_index == -1:\n        sys.stdout.write(\"NO\")\n        return\n\n    for cycle in cycles:\n        if len(cycle) % 2 != 0:\n            sys.stdout.write(\"NO\")\n            return\n\n    c1, c2 = cycles[center_index]\n\n    ans = [\"YES\", f\"{c1 + 1} {c2 + 1}\"]\n\n    for i, cycle in enumerate(cycles):\n        if i == center_index:\n            continue\n\n        for pos, v in enumerate(cycle):\n            if pos % 2 == 0:\n                ans.append(f\"{c1 + 1} {v + 1}\")\n            else:\n                ans.append(f\"{c2 + 1} {v + 1}\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 39.041,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA tree of size n is an undirected connected graph consisting of n vertices without cycles.\n\nConsider some tree with n vertices. We call a tree invariant relative to permutation p = p1p2... pn, if for any two vertices of the tree u and v the condition holds: \"vertices u and v are connected by an edge if and only if vertices pu and pv are connected by an edge\".\n\nYou are given permutation p of size n. Find some tree size n, invariant relative to the given permutation.\n\nInput\n\nThe first line contains number n (1 ≤ n ≤ 105) — the size of the permutation (also equal to the size of the sought tree).\n\nThe second line contains permutation pi (1 ≤ pi ≤ n).\n\nOutput\n\nIf the sought tree does not exist, print \"NO\" (without the quotes).\n\nOtherwise, print \"YES\", and then print n - 1 lines, each of which contains two integers — the numbers of vertices connected by an edge of the tree you found. The vertices are numbered from 1, the order of the edges and the order of the vertices within the edges does not matter.\n\nIf there are multiple solutions, output any of them.\n\nExamples\n\nInput\n\n4\n4 3 2 1\n\n\nOutput\n\nYES\n4 1\n4 2\n1 3\n\n\nInput\n\n3\n3 1 2\n\n\nOutput\n\nNO\n\nNote\n\nIn the first sample test a permutation transforms edge (4, 1) into edge (1, 4), edge (4, 2) into edge (1, 3) and edge (1, 3) into edge (4, 2). These edges all appear in the resulting tree.\n\nIt can be shown that in the second sample test no tree satisfies the given condition.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

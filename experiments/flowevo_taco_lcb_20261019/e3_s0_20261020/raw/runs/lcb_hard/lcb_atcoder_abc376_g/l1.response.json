@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d81dcaee-f51c-4d6d-abf7-1eceb89362f8",
+  "created": 1792446433,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 755,
+    "completion_tokens": 29186,
+    "total_tokens": 29941,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 28443
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 755
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport heapq\n\nMOD = 998244353\n\n\nclass Entry:\n    __slots__ = (\"w\", \"t\", \"id\", \"ver\")\n\n    def __init__(self, w, t, idx, ver):\n        self.w = w\n        self.t = t\n        self.id = idx\n        self.ver = ver\n\n    def __lt__(self, other):\n        # Max-heap by density w / t using exact cross multiplication.\n        lhs = self.w * other.t\n        rhs = other.w * self.t\n        if lhs != rhs:\n            return lhs > rhs\n        if self.id != other.id:\n            return self.id < other.id\n        return self.ver < other.ver\n\n\ndef dsu_find(dsu, x):\n    while dsu[x] != x:\n        dsu[x] = dsu[dsu[x]]\n        x = dsu[x]\n    return x\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n\n    T = data[idx]\n    idx += 1\n\n    answers = []\n    heappush = heapq.heappush\n    heappop = heapq.heappop\n    heapify = heapq.heapify\n\n    for _ in range(T):\n        N = data[idx]\n        idx += 1\n\n        if N == 1:\n            # Only vertex 1 can contain the treasure, and it is always searched once.\n            idx += 2  # skip p1 and a1\n            answers.append(\"1\")\n            continue\n\n        parent = [0] * (N + 1)\n        for i in range(1, N + 1):\n            parent[i] = data[idx]\n            idx += 1\n\n        dsu = list(range(N + 1))\n        weight = [0] * (N + 1)\n        time = [0] * (N + 1)\n        cost = [0] * (N + 1)\n        active = bytearray(N + 1)\n        version = [0] * (N + 1)\n\n        heap = []\n        total_weight = 0\n\n        for i in range(1, N + 1):\n            ai = data[idx]\n            idx += 1\n\n            weight[i] = ai\n            time[i] = 1\n            cost[i] = ai % MOD\n            active[i] = 1\n            total_weight += ai\n\n            heap.append(Entry(ai, 1, i, 0))\n\n        heapify(heap)\n\n        for _ in range(N):\n            while True:\n                e = heappop(heap)\n                x = e.id\n                if active[x] and e.ver == version[x]:\n                    break\n\n            y = dsu_find(dsu, parent[x])\n\n            cost[y] = (cost[y] + cost[x] + time[y] * weight[x]) % MOD\n            weight[y] += weight[x]\n            time[y] += time[x]\n\n            active[x] = 0\n            dsu[x] = y\n\n            if y != 0:\n                version[y] += 1\n                heappush(heap, Entry(weight[y], time[y], y, version[y]))\n\n        ans = cost[0] * pow(total_weight, MOD - 2, MOD) % MOD\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 145.27,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a rooted tree with N + 1 vertices numbered from 0 to N. Vertex 0 is the root, and the parent of vertex i is vertex p_i.\r\nOne of the vertices among vertex 1, vertex 2, ..., vertex N hides a treasure. The probability that the treasure is at vertex i is \\frac{a_i}{\\sum_{j=1}^N a_j}.\r\nAlso, each vertex is in one of the two states: \"searched\" and \"unsearched\". Initially, vertex 0 is searched, and all other vertices are unsearched.\r\nUntil the vertex containing the treasure becomes searched, you perform the following operation:\n\n- Choose an unsearched vertex whose parent is searched, and mark it as searched.\n\nFind the expected number of operations required when you act to minimize the expected number of operations, modulo 998244353.\nYou are given T test cases; solve each of them.\n\nHow to find an expected value modulo 998244353\r\n\r\nIt can be proved that the expected value is always a rational number. Under the constraints of this problem, it can also be proved that when the expected value is expressed as an irreducible fraction \\frac{P}{Q}, we have Q \\not\\equiv 0 \\pmod{998244353}. In this case, there is a unique integer R satisfying R \\times Q \\equiv P \\pmod{998244353},\\ 0 \\leq R < 998244353. Report this R.\n\nInput\n\nThe input is given from Standard Input in the following format. Here, \\mathrm{case}_i denotes the i-th test case.\nT\r\n\\mathrm{case}_1\r\n\\mathrm{case}_2\r\n\\vdots\r\n\\mathrm{case}_T\r\n\nEach test case is given in the following format:\nN\r\np_1 p_2 \\dots p_N\r\na_1 a_2 \\dots a_N\n\nOutput\n\nPrint T lines. The i-th line should contain the answer for the i-th test case.\n\nConstraints\n\n\n- 1 \\leq T \\leq 2 \\times 10^5\n- 1 \\leq N \\leq 2 \\times 10^5\n- 0 \\leq p_i < i\n- 1 \\leq a_i\n- \\sum_{i=1}^N a_i \\leq 10^8\n- The sum of N over all test cases is at most 2 \\times 10^5.\n- All input values are integers.\n\nSample Input 1\n\n3\r\n3\r\n0 0 1\r\n1 2 3\r\n5\r\n0 1 0 0 0\r\n8 6 5 1 7\r\n10\r\n0 1 1 3 3 1 4 7 5 4\r\n43 39 79 48 92 90 76 30 16 30\n\nSample Output 1\n\n166374061\r\n295776107\r\n680203339\r\n\nIn the first test case, the expected number of operations is \\frac{13}{6}.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

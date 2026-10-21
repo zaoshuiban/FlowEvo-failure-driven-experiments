@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d5b34e53-6f48-4540-922d-5cf5afaaab93",
+  "created": 1792451421,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 656,
+    "completion_tokens": 14397,
+    "total_tokens": 15053,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13474
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 144
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    a = [[next(it) for _ in range(m)] for _ in range(n)]\n\n    INF = 10**18\n\n    # w[i][j] = minimum difference between rows i and j in the same column\n    w = [[0] * n for _ in range(n)]\n    for i in range(n):\n        wi = w[i]\n        ai = a[i]\n        for j in range(i + 1, n):\n            aj = a[j]\n            mn = INF\n            for c in range(m):\n                d = ai[c] - aj[c]\n                if d < 0:\n                    d = -d\n                if d < mn:\n                    mn = d\n            wi[j] = mn\n            w[j][i] = mn\n\n    # b[first][last] = minimum difference between:\n    # last row in column c and first row in column c + 1\n    b = [[INF] * n for _ in range(n)]\n    if m > 1:\n        for first in range(n):\n            af = a[first]\n            bf = b[first]\n            for last in range(n):\n                al = a[last]\n                mn = INF\n                for c in range(m - 1):\n                    d = al[c] - af[c + 1]\n                    if d < 0:\n                        d = -d\n                    if d < mn:\n                        mn = d\n                bf[last] = mn\n\n    candidates = {0}\n    for i in range(n):\n        for j in range(i + 1, n):\n            candidates.add(w[i][j])\n\n    if m > 1:\n        for first in range(n):\n            for last in range(n):\n                candidates.add(b[first][last])\n\n    candidates = sorted(candidates)\n\n    full = 1 << n\n    allmask = full - 1\n    base_of_mask = [mask * n for mask in range(full)]\n\n    bit_pos = [0] * full\n    for i in range(n):\n        bit_pos[1 << i] = i\n\n    def feasible(k: int) -> bool:\n        adj = [0] * n\n        for i in range(n):\n            wi = w[i]\n            mask = 0\n            for j in range(n):\n                if i != j and wi[j] >= k:\n                    mask |= 1 << j\n            adj[i] = mask\n\n        good = [0] * n\n        for first in range(n):\n            bit = 1 << first\n            bf = b[first]\n            for last in range(n):\n                if bf[last] >= k:\n                    good[last] |= bit\n\n        dp = [0] * (full * n)\n\n        for v in range(n):\n            dp[base_of_mask[1 << v] + v] = 1 << v\n\n        for mask in range(1, allmask):\n            base = base_of_mask[mask]\n            remaining = allmask ^ mask\n            bits = mask\n\n            while bits:\n                lb = bits & -bits\n                last = bit_pos[lb]\n                firsts = dp[base + last]\n\n                if firsts:\n                    can = adj[last] & remaining\n                    while can:\n                        ub = can & -can\n                        nxt = bit_pos[ub]\n                        new_mask = mask | ub\n                        idx = base_of_mask[new_mask] + nxt\n                        dp[idx] |= firsts\n                        can ^= ub\n\n                bits ^= lb\n\n        full_base = base_of_mask[allmask]\n        for last in range(n):\n            if dp[full_base + last] & good[last]:\n                return True\n\n        return False\n\n    lo = 0\n    hi = len(candidates) - 1\n\n    while lo < hi:\n        mid = (lo + hi + 1) // 2\n        if feasible(candidates[mid]):\n            lo = mid\n        else:\n            hi = mid - 1\n\n    print(candidates[lo])\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 63.48,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a matrix $a$, consisting of $n$ rows and $m$ columns. Each cell contains an integer in it.\n\nYou can change the order of rows arbitrarily (including leaving the initial order), but you can't change the order of cells in a row. After you pick some order of rows, you traverse the whole matrix the following way: firstly visit all cells of the first column from the top row to the bottom one, then the same for the second column and so on. During the traversal you write down the sequence of the numbers on the cells in the same order you visited them. Let that sequence be $s_1, s_2, \\dots, s_{nm}$. \n\nThe traversal is $k$-acceptable if for all $i$ ($1 \\le i \\le nm - 1$) $|s_i - s_{i + 1}| \\ge k$.\n\nFind the maximum integer $k$ such that there exists some order of rows of matrix $a$ that it produces a $k$-acceptable traversal.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $m$ ($1 \\le n \\le 16$, $1 \\le m \\le 10^4$, $2 \\le nm$) — the number of rows and the number of columns, respectively.\n\nEach of the next $n$ lines contains $m$ integers ($1 \\le a_{i, j} \\le 10^9$) — the description of the matrix.\n\n\n-----Output-----\n\nPrint a single integer $k$ — the maximum number such that there exists some order of rows of matrix $a$ that it produces an $k$-acceptable traversal.\n\n\n-----Examples-----\nInput\n4 2\n9 9\n10 8\n5 3\n4 3\n\nOutput\n5\n\nInput\n2 4\n1 2 3 4\n10 3 7 3\n\nOutput\n0\n\nInput\n6 1\n3\n6\n2\n5\n1\n4\n\nOutput\n3\n\n\n\n-----Note-----\n\nIn the first example you can rearrange rows as following to get the $5$-acceptable traversal:\n\n5 3\n\n10 8\n\n4 3\n\n9 9\n\n\n\nThen the sequence $s$ will be $[5, 10, 4, 9, 3, 8, 3, 9]$. Each pair of neighbouring elements have at least $k = 5$ difference between them.\n\nIn the second example the maximum $k = 0$, any order is $0$-acceptable.\n\nIn the third example the given order is already $3$-acceptable, you can leave it as it is.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

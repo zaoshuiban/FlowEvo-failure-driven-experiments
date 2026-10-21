@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "12f16034-ee71-411f-b40a-09f633fe8dfc",
+  "created": 1792446939,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1215,
+    "completion_tokens": 17238,
+    "total_tokens": 18453,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16907
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 703
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    t = data[idx]\n    idx += 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        shift = n + m + 5\n        prev = [0] * m\n\n        for i in range(n):\n            curr = [0] * m\n\n            for j in range(m):\n                val = data[idx]\n                idx += 1\n\n                if i == 0:\n                    if j == 0:\n                        curr[j] = 1 << (shift + val)\n                    else:\n                        if val == 1:\n                            curr[j] = curr[j - 1] << 1\n                        else:\n                            curr[j] = curr[j - 1] >> 1\n                else:\n                    if j == 0:\n                        bits = prev[j]\n                    else:\n                        bits = prev[j] | curr[j - 1]\n\n                    if val == 1:\n                        curr[j] = bits << 1\n                    else:\n                        curr[j] = bits >> 1\n\n            prev = curr\n\n        zero_bit = 1 << shift\n        answers.append(\"YES\" if (prev[m - 1] & zero_bit) else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 78.415,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a grid with $n$ rows and $m$ columns. We denote the square on the $i$-th ($1\\le i\\le n$) row and $j$-th ($1\\le j\\le m$) column by $(i, j)$ and the number there by $a_{ij}$. All numbers are equal to $1$ or to $-1$.\n\nYou start from the square $(1, 1)$ and can move one square down or one square to the right at a time. In the end, you want to end up at the square $(n, m)$.\n\nIs it possible to move in such a way so that the sum of the values written in all the visited cells (including $a_{11}$ and $a_{nm}$) is $0$?\n\n\n-----Input-----\n\nEach test contains multiple test cases. The first line contains the number of test cases $t$ ($1 \\leq t \\leq 10^4$). Description of the test cases follows.\n\nThe first line of each test case contains two integers $n$ and $m$ ($1 \\le n, m \\le 1000$)  — the size of the grid.\n\nEach of the following $n$ lines contains $m$ integers. The $j$-th integer on the $i$-th line is $a_{ij}$ ($a_{ij} = 1$ or $-1$)  — the element in the cell $(i, j)$.\n\nIt is guaranteed that the sum of $n\\cdot m$ over all test cases does not exceed $10^6$.\n\n\n-----Output-----\n\nFor each test case, print \"YES\" if there exists a path from the top left to the bottom right that adds up to $0$, and \"NO\" otherwise. You can output each letter in any case.\n\n\n-----Examples-----\n\nInput\n5\n1 1\n1\n1 2\n1 -1\n1 4\n1 -1 1 -1\n3 4\n1 -1 -1 -1\n-1 1 1 -1\n1 1 1 -1\n3 4\n1 -1 1 1\n-1 1 -1 1\n1 -1 1 1\nOutput\nNO\nYES\nYES\nYES\nNO\n\n\n-----Note-----\n\nOne possible path for the fourth test case is given in the picture in the statement.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    it = iter(map(int, sys.stdin.buffer.read().split()))\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n\n        prev_min = [0] * m\n        prev_max = [0] * m\n\n        for i in range(n):\n            curr_min = [0] * m\n            curr_max = [0] * m\n\n            for j in range(m):\n                val = next(it)\n\n                if i == 0:\n                    if j == 0:\n                        curr_min[j] = curr_max[j] = val\n                    else:\n                        curr_min[j] = curr_min[j - 1] + val\n                        curr_max[j] = curr_max[j - 1] + val\n                else:\n                    if j == 0:\n                        curr_min[j] = prev_min[j] + val\n                        curr_max[j] = prev_max[j] + val\n                    else:\n                        curr_min[j] = min(prev_min[j], curr_min[j - 1]) + val\n                        curr_max[j] = max(prev_max[j], curr_max[j - 1]) + val\n\n            prev_min, prev_max = curr_min, curr_max\n\n        # Number of cells on any path is n + m - 1.\n        # For the sum to be 0, this number must be even.\n        if (n + m) % 2 == 0:\n            answers.append(\"NO\")\n        elif prev_min[m - 1] <= 0 <= prev_max[m - 1]:\n            answers.append(\"YES\")\n        else:\n            answers.append(\"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

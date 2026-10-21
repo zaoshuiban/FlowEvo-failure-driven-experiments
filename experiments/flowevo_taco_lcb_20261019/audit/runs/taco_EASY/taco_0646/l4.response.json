@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0ba67e0d-3ecc-4f51-92de-556ad4492f4e",
+  "created": 1792434907,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 961,
+    "completion_tokens": 30856,
+    "total_tokens": 31817,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 30408
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 705
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import isqrt\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    tests = []\n    max_n = 1\n    idx = 1\n\n    for _ in range(t):\n        m = data[idx]\n        n = data[idx + 1]\n        idx += 2\n        tests.append((m, n))\n        if n > max_n:\n            max_n = n\n\n    limit = isqrt(max_n) + 1\n    sieve = bytearray(b'\\x01') * (limit + 1)\n    sieve[0:2] = b'\\x00\\x00'\n\n    for i in range(2, isqrt(limit) + 1):\n        if sieve[i]:\n            start = i * i\n            count = ((limit - start) // i) + 1\n            sieve[start:limit + 1:i] = b'\\x00' * count\n\n    base_primes = [i for i in range(2, limit + 1) if sieve[i]]\n\n    out_lines = []\n\n    for m, n in tests:\n        size = n - m + 1\n        is_prime = bytearray(b'\\x01') * size\n\n        if m == 1:\n            is_prime[0] = 0\n\n        for p in base_primes:\n            if p * p > n:\n                break\n\n            start = max(p * p, ((m + p - 1) // p) * p)\n            if start > n:\n                continue\n\n            offset = start - m\n            count = ((n - start) // p) + 1\n            is_prime[offset:size:p] = b'\\x00' * count\n\n        out_lines.extend(str(m + i) for i, flag in enumerate(is_prime) if flag)\n        out_lines.append(\"\")\n\n    if out_lines:\n        sys.stdout.write(\"\\n\".join(out_lines))\n        sys.stdout.write(\"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 125.064,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRam wants to generate some prime numbers for his cryptosystem. Help him please!\nYour task is to generate all prime numbers between two given numbers.\n\nWarning: large Input/Output data, be careful with certain languages (though most should be OK if the algorithm is well designed)\n\n------ Input Format ------ \n\nThe first line contains t, the number of test cases (less then or equal to 10). \n\nFollowed by t lines which contain two numbers m and n (1 ≤ m ≤ n ≤ 1000000000, n-m≤100000) separated by a space.\n\n------ Output Format ------ \n\nFor every test case print all prime numbers p such that m ≤ p ≤ n,\none number per line.  Separate the answers for each test case by an empty line.\n\n------ Constraints ------ \n\n(1 ≤ m ≤ n ≤ 1000000000, n-m≤100000)\n\n----- Sample Input 1 ------ \n2\n1 10\n3 5\n----- Sample Output 1 ------ \n2\n3\n5\n7\n\n3\n5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom math import isqrt\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    tests = []\n    max_n = 1\n    idx = 1\n\n    for _ in range(t):\n        m = data[idx]\n        n = data[idx + 1]\n        idx += 2\n        tests.append((m, n))\n        if n > max_n:\n            max_n = n\n\n    limit = isqrt(max_n) + 1\n    sieve = bytearray(b'\\x01') * (limit + 1)\n    sieve[0:2] = b'\\x00\\x00'\n\n    for i in range(2, isqrt(limit) + 1):\n        if sieve[i]:\n            start = i * i\n            sieve[start:limit + 1:i] = b'\\x00' * (((limit - start) // i) + 1)\n\n    base_primes = [i for i in range(2, limit + 1) if sieve[i]]\n\n    output_lines = []\n\n    for case_idx, (m, n) in enumerate(tests):\n        size = n - m + 1\n        is_prime = bytearray(b'\\x01') * size\n\n        if m == 1:\n            is_prime[0] = 0\n\n        for p in base_primes:\n            if p * p > n:\n                break\n\n            start = max(p * p, ((m + p - 1) // p) * p)\n            if start > n:\n                continue\n\n            count = ((n - start) // p) + 1\n            is_prime[start - m:n + 1:p] = b'\\x00' * count\n\n        output_lines.extend(str(m + i) for i, flag in enumerate(is_prime) if flag)\n\n        if case_idx != t - 1:\n            output_lines.append(\"\")\n\n    if output_lines:\n        sys.stdout.write(\"\\n\".join(output_lines))\n        sys.stdout.write(\"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

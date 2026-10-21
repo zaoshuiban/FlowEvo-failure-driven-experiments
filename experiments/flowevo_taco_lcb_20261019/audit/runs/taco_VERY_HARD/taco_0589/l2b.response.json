@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "116de15e-e2e0-4fa2-9ccc-4147c54c066c",
+  "created": 1792429895,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1185,
+    "completion_tokens": 14457,
+    "total_tokens": 15642,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13561
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 161
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    idx = 0\n    length = len(data)\n\n    def next_int():\n        nonlocal idx\n        while idx < length and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < length and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    t = next_int()\n    output = []\n\n    for _ in range(t):\n        n = next_int()\n\n        if n == 1:\n            next_int()  # P[0], always 1\n            a = next_int()\n            b = next_int()\n            output.append(\"1\" if a >= b else \"-1\")\n            continue\n\n        adj = [[] for _ in range(n + 1)]\n        for _ in range(n - 1):\n            u = next_int()\n            v = next_int()\n            adj[u].append(v)\n            adj[v].append(u)\n\n        P = [0] * n\n        pos = [0] * (n + 1)\n        for i in range(n):\n            x = next_int()\n            P[i] = x\n            pos[x] = i + 1\n\n        A = [0] * (n + 1)\n        for i in range(1, n + 1):\n            A[i] = next_int()\n\n        B = [0] * (n + 1)\n        for i in range(1, n + 1):\n            B[i] = next_int()\n\n        # Build the elimination tree.\n        parent = [0] * (n + 1)\n        dsu = list(range(n + 1))\n        size = [0] * (n + 1)\n        top = [0] * (n + 1)\n        active = bytearray(n + 1)\n\n        def find(x):\n            while dsu[x] != x:\n                dsu[x] = dsu[dsu[x]]\n                x = dsu[x]\n            return x\n\n        for i in range(n - 1, -1, -1):\n            x = P[i]\n            active[x] = 1\n            dsu[x] = x\n            size[x] = 1\n            top[x] = x\n\n            for y in adj[x]:\n                if not active[y]:\n                    continue\n\n                rx = find(x)\n                ry = find(y)\n                if rx == ry:\n                    continue\n\n                parent[top[ry]] = x\n\n                if size[rx] < size[ry]:\n                    dsu[rx] = ry\n                    size[ry] += size[rx]\n                    top[ry] = x\n                else:\n                    dsu[ry] = rx\n                    size[rx] += size[ry]\n                    top[rx] = x\n\n        # Prefix sums of A on the elimination tree.\n        prefix_sum = [0] * (n + 1)\n        for x in P:\n            p = parent[x]\n            if p:\n                prefix_sum[x] = prefix_sum[p] + A[x]\n            else:\n                prefix_sum[x] = A[x]\n\n        LOG = max(1, n.bit_length())\n        up = [parent]\n\n        for _ in range(1, LOG):\n            prev = up[-1]\n            cur = [prev[prev[v]] for v in range(n + 1)]\n            up.append(cur)\n\n        answer = [0] * (n + 1)\n\n        for v in range(1, n + 1):\n            needed = B[v]\n\n            if prefix_sum[v] < needed:\n                answer[v] = -1\n                continue\n\n            cur = v\n\n            for k in range(LOG - 1, -1, -1):\n                anc = up[k][cur]\n                if anc and prefix_sum[anc] >= needed:\n                    cur = anc\n\n            answer[v] = pos[cur]\n\n        output.append(\" \".join(str(answer[i]) for i in range(1, n + 1)))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 67.342,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese].\n\nIn Chefland, there are $N$ cities (numbered $1$ through $N$) connected by $N-1$ bidirectional roads. Each city has exactly one garden. For each valid $i$, let's denote the population of the $i$-th city by $A_{i}$ and the initial number of fruits in its garden by $B_{i}$; also, at any time, let's denote the current number of fruits in its garden by $F_{i}$ ($F_{i} = B_{i}$ initially).\n\nYou are given a permutation $P$ of the integers $1$ through $N$. For each $i$ ($1 ≤ i ≤ N$), during the $i$-th of the next $N$ days, the people of the city $P_{i}$ do the following:\n1. For each city $j$ which is reachable from the city $P_{i}$ (including the city $P_{i}$ itself), visit the city $j$ and consume $\\mathrm{min}(A_{P_{i}}, F_{j})$ fruits from the garden of the city $j$; afterwards, $F_{j}$ decreases by $\\mathrm{min}(A_{P_{i}}, F_{j})$.\n2. Return to the city $P_{i}$ and cut off all the roads that are connecting it to other cities, so that nobody can visit the city $P_{i}$ or visit any other city from their city if it requires passing through the city $P_{i}$.\n\nFor each valid $i$, let $D_{i}$ be the first day when the number of fruits in the $i$-th city's garden becomes zero, or $-1$ if the fruits in its garden never end up all eaten. Find $D_{1}, D_{2}, \\ldots, D_{N}$.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nEach of the next $N-1$ lines contains two space-separated integers $u$ and $v$ denoting that vertices $u$ and $v$ are connected by an edge.\nThe next line contains $N$ space-separated integers $P_{1}, P_{2}, \\ldots, P_{N}$.\nThe next line contains $N$ space-separated integers $A_{1}, A_{2}, \\ldots, A_{N}$.\nThe last line contains $N$ space-separated integers $B_{1}, B_{2}, \\ldots, B_{N}$.\n\n------  Output ------\nFor each test case, print a single line containing $N$ space-separated integers $D_{1}, D_{2}, \\ldots, D_{N}$.\n\n------  Constraints ------\n$1 ≤ T ≤ 10^{5}$\n$1 ≤ N ≤ 2 \\cdot 10^{5}$\n$1 ≤ u, v ≤ N$\n$1 ≤ P_{i} ≤ N$ for each valid $i$\n$1 ≤ A_{i}, B_{i} ≤ 10^{9}$ for each valid $i$\nthe sum of $N$ over all test cases does not exceed $5 \\cdot 10^{5}$\n\n------  Subtasks ------\nSubtask #1 (30 points):\n$N ≤ 10^{3}$\nthe sum of $N$ over all test cases does not exceed $5 \\cdot 10^{3}$\n\nSubtask #2 (70 points): original constraints\n\n----- Sample Input 1 ------ \n2\n\n3\n\n1 2\n\n2 3\n\n1 2 3\n\n1 2 3\n\n1 3 6\n\n3\n\n1 2\n\n1 3\n\n1 2 3\n\n5 6 3\n\n4 10 12\n----- Sample Output 1 ------ \n1 2 3\n\n1 2 -1\n----- explanation 1 ------ \nExample case 1: The process is as follows:\n- On day $1$, people from city $1$ eat $1$ fruit from each garden. Afterwards, there are $[0, 2, 5]$ fruits in the gardens of cities $[1, 2, 3]$ respectively, so the answer for city $1$ is $1$, since the number of fruits in this garden becomes zero on day $1$.\n- Then, on day $2$, people from city $2$ eat $2$ fruits from each of the gardens in cities $2$ and $3$. Afterwards, there are $0$ fruits in the garden of city $2$ (so the answer for city $2$ is $2$, since the number of fruits in this garden becomes zero on this day) and $3$ fruits in the garden of city $3$.\n- Finally, on day $3$, people from city $3$ eat $3$ fruits from the garden of city $3$, so the answer for city $3$ is $3$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

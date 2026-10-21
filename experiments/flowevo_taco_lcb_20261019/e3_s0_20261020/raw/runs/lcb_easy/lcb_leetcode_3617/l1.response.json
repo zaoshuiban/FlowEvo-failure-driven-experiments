@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cdb1fa08-5b38-4b9d-b949-7dd78b01c218",
+  "created": 1792430156,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 333,
+    "completion_tokens": 1405,
+    "total_tokens": 1738,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1314
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 333
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def possibleStringCount(self, word: str) -> int:\n        ans = 1\n        i = 0\n        n = len(word)\n        \n        while i < n:\n            j = i\n            while j < n and word[j] == word[i]:\n                j += 1\n            ans += (j - i - 1)\n            i = j\n        \n        return ans\n```",
+  "latency_s": 7.381,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAlice is attempting to type a specific string on her computer. However, she tends to be clumsy and may press a key for too long, resulting in a character being typed multiple times.\nAlthough Alice tried to focus on her typing, she is aware that she may still have done this at most once.\nYou are given a string word, which represents the final output displayed on Alice's screen.\nReturn the total number of possible original strings that Alice might have intended to type.\n \nExample 1:\n\nInput: word = \"abbcccc\"\nOutput: 5\nExplanation:\nThe possible strings are: \"abbcccc\", \"abbccc\", \"abbcc\", \"abbc\", and \"abcccc\".\n\nExample 2:\n\nInput: word = \"abcd\"\nOutput: 1\nExplanation:\nThe only possible string is \"abcd\".\n\nExample 3:\n\nInput: word = \"aaaa\"\nOutput: 4\n\n \nConstraints:\n\n1 <= word.length <= 100\nword consists only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def possibleStringCount(self, word: str) -> int:\n        \n\nUse the required function/method named possibleStringCount. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

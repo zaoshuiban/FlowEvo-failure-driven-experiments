@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2e3c6456-45c7-443c-87e7-d75e49e4edfe",
+  "created": 1792431652,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 618,
+    "completion_tokens": 1490,
+    "total_tokens": 2108,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1094
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 234
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    knowledge = [0] + data[2:2 + n]\n\n    parent = list(range(n + 1))\n    size = [1] * (n + 1)\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n\n    idx = 2 + n\n    for _ in range(m):\n        u = data[idx]\n        v = data[idx + 1]\n        idx += 2\n        union(u, v)\n\n    max_knowledge = [-1] * (n + 1)\n    max_count = [0] * (n + 1)\n\n    for i in range(1, n + 1):\n        root = find(i)\n        val = knowledge[i]\n\n        if val > max_knowledge[root]:\n            max_knowledge[root] = val\n            max_count[root] = 1\n        elif val == max_knowledge[root]:\n            max_count[root] += 1\n\n    answer = 1\n    for i in range(1, n + 1):\n        if max_count[i] > 0:\n            answer = (answer * max_count[i]) % MOD\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 5.53,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nToday is Vasya's birthday. On this special occasion, he has organized a party for all of his friends. These friends are enumerated by integers from 1 to N. Each of Vasya's friends has a Knowledge Level. In addition, each of them knows an arbitrary number of other people at the party. This friendship is bidirectional and transitive in nature, i.e if person A knows person B and person B knows person C, then we consider that person A knows person C. All these people who know each other come together and form a single group of friends.  \n\nNow, they decide to play a game. In this game, among all groups of friends, the one with the highest knowledge level within each group is elected to represent the group during the game. Let's call this person the leader of the group.  If there are multiple candidates to be the leader of a group, you can select any of them arbitrarily. The game is then played after selecting these leaders.\n\nNow, Vasya wants to find the number of distinct ways the game can be played. He finds this task too hard and wants you to help him. As this number can be large, print it Modulo 10^9+7.   \n\nInput Format:\n\nThe first line contains two integers N and M denoting the number of people Vasya has invited to the party and the number of relations between these people. The next line contains N space separated integers denoting the where the i^{th} integer denotes the knowledge level of person i. Each of the next M lines contains 2 space separated integers u and v denoting that person u knows person v and vice-versa.  \n\nOutput Format\n\nPrint the required answer on a single line. As the answer may be large, print it Modulo 10^9+7 \n\nConstraints\n\n 1 ≤ N ≤ 10^5 \n\n 0 ≤ M ≤ 10^5 \n\n 0 ≤ A[i] ≤ 10^9  \n\n 1 ≤ u,v ≤ N   \n\n M ≤ (N*(N-1))/2     \n\nNote:\n\nThere can be self loops, i.e edges from and to the same person and multple edges from one person to another. \n\nSAMPLE INPUT\n5 4\n1 2 3 4 5\n1 2\n2 3\n3 4\n4 5\n\nSAMPLE OUTPUT\n1\n\nExplanation\n\nHere, all the people at the party know each other. Among this group the person with the highest knowledge is person 5. Hence, there is only one way.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

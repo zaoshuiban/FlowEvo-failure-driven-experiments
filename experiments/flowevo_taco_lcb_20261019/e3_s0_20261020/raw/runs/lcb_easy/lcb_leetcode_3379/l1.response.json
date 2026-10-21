@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8ec438c3-252b-48ce-ae28-60bc0b0aed71",
+  "created": 1792430212,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 368,
+    "completion_tokens": 119,
+    "total_tokens": 487,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 70
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 368
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def scoreOfString(self, s: str) -> int:\n        return sum(abs(ord(s[i]) - ord(s[i - 1])) for i in range(1, len(s)))\n```",
+  "latency_s": 1.27,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string s. The score of a string is defined as the sum of the absolute difference between the ASCII values of adjacent characters.\nReturn the score of s.\n \nExample 1:\n\nInput: s = \"hello\"\nOutput: 13\nExplanation:\nThe ASCII values of the characters in s are: 'h' = 104, 'e' = 101, 'l' = 108, 'o' = 111. So, the score of s would be |104 - 101| + |101 - 108| + |108 - 108| + |108 - 111| = 3 + 7 + 0 + 3 = 13.\n\nExample 2:\n\nInput: s = \"zaz\"\nOutput: 50\nExplanation:\nThe ASCII values of the characters in s are: 'z' = 122, 'a' = 97. So, the score of s would be |122 - 97| + |97 - 122| = 25 + 25 = 50.\n\n \nConstraints:\n\n2 <= s.length <= 100\ns consists only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def scoreOfString(self, s: str) -> int:\n        \n\nUse the required function/method named scoreOfString. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

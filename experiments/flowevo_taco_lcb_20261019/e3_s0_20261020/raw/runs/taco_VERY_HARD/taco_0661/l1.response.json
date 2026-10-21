@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bb00daad-5130-435e-865f-4d11a7077a42",
+  "created": 1792438589,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 440,
+    "completion_tokens": 5990,
+    "total_tokens": 6430,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5489
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 440
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    g = 0\n    for x in a:\n        g = math.gcd(g, x)\n\n    if g != 1:\n        print(-1)\n        return\n\n    m = max(a)\n\n    freq = [0] * (m + 1)\n    for x in a:\n        freq[x] += 1\n\n    # cnt[d] = number of elements divisible by d\n    cnt = [0] * (m + 1)\n    for d in range(1, m + 1):\n        s = 0\n        for multiple in range(d, m + 1, d):\n            s += freq[multiple]\n        cnt[d] = s\n\n    # Möbius function up to m\n    mu = [0] * (m + 1)\n    mu[1] = 1\n    primes = []\n    is_composite = [False] * (m + 1)\n\n    for i in range(2, m + 1):\n        if not is_composite[i]:\n            primes.append(i)\n            mu[i] = -1\n\n        for p in primes:\n            v = i * p\n            if v > m:\n                break\n\n            is_composite[v] = True\n\n            if i % p == 0:\n                mu[v] = 0\n                break\n            else:\n                mu[v] = -mu[i]\n\n    totals = [0] * 8\n\n    for d in range(1, m + 1):\n        md = mu[d]\n        if md == 0:\n            continue\n\n        c = cnt[d]\n        if c == 0:\n            continue\n\n        comb = 1\n        limit = min(7, c)\n\n        for k in range(1, limit + 1):\n            comb = comb * (c - k + 1) // k\n            totals[k] += md * comb\n\n    for k in range(1, 8):\n        if totals[k] > 0:\n            print(k)\n            return\n\n    print(-1)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 25.366,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nJanusz is a businessman. He owns a company \"Januszex\", which produces games for teenagers. Last hit of Januszex was a cool one-person game \"Make it one\". The player is given a sequence of $n$ integers $a_i$.\n\nIt is allowed to select any subset of them, and the score is equal to the greatest common divisor of selected elements. The goal is to take as little elements as it is possible, getting the score $1$. Now Janusz wonders, for given sequence, how much elements should the player choose?\n\n\n-----Input-----\n\nThe first line contains an only integer $n$ ($1 \\le n \\le 300\\,000$) — the number of integers in the sequence.\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ ($1 \\le a_i \\le 300\\,000$).\n\n\n-----Output-----\n\nIf there is no subset of the given sequence with gcd equal to $1$, output -1.\n\nOtherwise, output exactly one integer — the size of the smallest subset with gcd equal to $1$.\n\n\n-----Examples-----\nInput\n3\n10 6 15\n\nOutput\n3\n\nInput\n3\n2 4 6\n\nOutput\n-1\n\nInput\n7\n30 60 21 42 70 15 30\n\nOutput\n3\n\n\n\n-----Note-----\n\nIn the first example, selecting a subset of all numbers gives a gcd of $1$ and for all smaller subsets the gcd is greater than $1$.\n\nIn the second example, for all subsets of numbers the gcd is at least $2$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

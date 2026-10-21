@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7b8e757b-7140-4882-96bc-ba05b0e13c91",
+  "created": 1792437445,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 485,
+    "completion_tokens": 3230,
+    "total_tokens": 3715,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2962
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 229
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    output = []\n\n    for _ in range(t):\n        a = next(it)\n        b = next(it)\n        q = next(it)\n\n        period = a * b // math.gcd(a, b)\n\n        pref = [0] * (period + 1)\n        count_good = 0\n\n        for x in range(period):\n            if ((x % a) % b) != ((x % b) % a):\n                count_good += 1\n            pref[x + 1] = count_good\n\n        def count_up_to(n):\n            if n < 0:\n                return 0\n            full, rem = divmod(n + 1, period)\n            return full * count_good + pref[rem]\n\n        answers = []\n        for _ in range(q):\n            l = next(it)\n            r = next(it)\n            answers.append(str(count_up_to(r) - count_up_to(l - 1)))\n\n        output.append(\" \".join(answers))\n\n    sys.stdout.write(\"\\n\".join(output))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 14.154,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two integers $a$ and $b$, and $q$ queries. The $i$-th query consists of two numbers $l_i$ and $r_i$, and the answer to it is the number of integers $x$ such that $l_i \\le x \\le r_i$, and $((x \\bmod a) \\bmod b) \\ne ((x \\bmod b) \\bmod a)$. Calculate the answer for each query.\n\nRecall that $y \\bmod z$ is the remainder of the division of $y$ by $z$. For example, $5 \\bmod 3 = 2$, $7 \\bmod 8 = 7$, $9 \\bmod 4 = 1$, $9 \\bmod 9 = 0$.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 100$) — the number of test cases. Then the test cases follow.\n\nThe first line of each test case contains three integers $a$, $b$ and $q$ ($1 \\le a, b \\le 200$; $1 \\le q \\le 500$).\n\nThen $q$ lines follow, each containing two integers $l_i$ and $r_i$ ($1 \\le l_i \\le r_i \\le 10^{18}$) for the corresponding query.\n\n\n-----Output-----\n\nFor each test case, print $q$ integers — the answers to the queries of this test case in the order they appear.\n\n\n-----Example-----\nInput\n2\n4 6 5\n1 1\n1 3\n1 5\n1 7\n1 9\n7 10 2\n7 8\n100 200\n\nOutput\n0 0 0 2 4 \n0 91\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

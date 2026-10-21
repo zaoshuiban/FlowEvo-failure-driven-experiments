@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0f2e804d-ce89-422f-a8de-1af0adb69c8c",
+  "created": 1792431055,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 621,
+    "completion_tokens": 1516,
+    "total_tokens": 2137,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1345
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 621
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n\n    N = int(data[0])\n    S = data[1]\n    Q = int(data[2])\n\n    mp = list(range(26))\n\n    idx = 3\n    for _ in range(Q):\n        c = data[idx][0] - ord('a')\n        d = data[idx + 1][0] - ord('a')\n        idx += 2\n\n        for i in range(26):\n            if mp[i] == c:\n                mp[i] = d\n\n    ans = bytes(mp[ch - ord('a')] + ord('a') for ch in S)\n    sys.stdout.buffer.write(ans + b'\\n')\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 7.073,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string S of length N consisting of lowercase English letters.\nYou will perform an operation Q times on the string S.\r\nThe i-th operation (1\\leq i\\leq Q) is represented by a pair of characters (c _ i,d _ i), which corresponds to the following operation:\n\n- Replace all occurrences of the character c _ i in S with the character d _ i.\n\nPrint the string S after all operations are completed.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\r\nQ\r\nc _ 1 d _ 1\r\nc _ 2 d _ 2\r\n\\vdots\r\nc _ Q d _ Q\n\nOutput\n\nPrint the string S after all operations are completed.\n\nConstraints\n\n\n- 1\\leq N\\leq2\\times10^5\n- S is a string of length N consisting of lowercase English letters.\n- 1\\leq Q\\leq2\\times10^5\n- c _ i and d _ i are lowercase English letters (1\\leq i\\leq Q).\n- N and Q are integers.\n\nSample Input 1\n\n7\r\natcoder\r\n4\r\nr a\r\nt e\r\nd v\r\na r\n\nSample Output 1\n\nrecover\r\n\nS changes as follows: atcoder → atcodea → aecodea → aecovea → recover.\r\nFor example, in the fourth operation, all occurrences of a in S={}aecovea (the first and seventh characters) are replaced with r, resulting in S={}recover.\nAfter all operations are completed, S={}recover, so print recover.\n\nSample Input 2\n\n3\r\nabc\r\n4\r\na a\r\ns k\r\nn n\r\nz b\n\nSample Output 2\n\nabc\r\n\nThere may be operations where c _ i=d _ i or S does not contain c _ i.\n\nSample Input 3\n\n34\r\nsupercalifragilisticexpialidocious\r\n20\r\ng c\r\nl g\r\ng m\r\nc m\r\nr o\r\ns e\r\na a\r\no f\r\nf s\r\ne t\r\nt l\r\nd v\r\np k\r\nv h\r\nx i\r\nh n\r\nn j\r\ni r\r\ns i\r\nu a\n\nSample Output 3\n\nlaklimamriiamrmrllrmlrkramrjimrial\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "88a137a5-89f2-47e7-b9d2-ad850671c880",
+  "created": 1792433033,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 343,
+    "completion_tokens": 5984,
+    "total_tokens": 6327,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5740
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 343
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def validSubstringCount(self, word1: str, word2: str) -> int:\n        n = len(word1)\n        req = [0] * 26\n        for ch in word2:\n            req[ord(ch) - ord('a')] += 1\n\n        have = [0] * 26\n        missing = sum(1 for x in req if x > 0)\n\n        ans = 0\n        right = 0\n\n        for left in range(n):\n            while right < n and missing > 0:\n                c = ord(word1[right]) - ord('a')\n                have[c] += 1\n                if req[c] > 0 and have[c] == req[c]:\n                    missing -= 1\n                right += 1\n\n            if missing == 0:\n                ans += n - right + 1\n\n            if left < right:\n                c = ord(word1[left]) - ord('a')\n                if req[c] > 0 and have[c] == req[c]:\n                    missing += 1\n                have[c] -= 1\n\n        return ans\n```",
+  "latency_s": 28.045,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two strings word1 and word2.\nA string x is called valid if x can be rearranged to have word2 as a prefix.\nReturn the total number of valid substrings of word1.\n \nExample 1:\n\nInput: word1 = \"bcca\", word2 = \"abc\"\nOutput: 1\nExplanation:\nThe only valid substring is \"bcca\" which can be rearranged to \"abcc\" having \"abc\" as a prefix.\n\nExample 2:\n\nInput: word1 = \"abcabc\", word2 = \"abc\"\nOutput: 10\nExplanation:\nAll the substrings except substrings of size 1 and size 2 are valid.\n\nExample 3:\n\nInput: word1 = \"abcabc\", word2 = \"aaabc\"\nOutput: 0\n\n \nConstraints:\n\n1 <= word1.length <= 10^5\n1 <= word2.length <= 10^4\nword1 and word2 consist only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def validSubstringCount(self, word1: str, word2: str) -> int:\n        \n\nUse the required function/method named validSubstringCount. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

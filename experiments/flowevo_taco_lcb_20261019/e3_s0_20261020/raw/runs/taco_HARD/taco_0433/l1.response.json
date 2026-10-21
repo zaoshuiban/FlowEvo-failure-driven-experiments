@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9511cf54-26f5-4aa6-bab1-e13078fdb5a7",
+  "created": 1792456155,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 450,
+    "completion_tokens": 5967,
+    "total_tokens": 6417,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5512
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 450
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import gcd\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    xs = [0] * n\n    ys = [0] * n\n\n    idx = 1\n    for i in range(n):\n        xs[i] = data[idx]\n        ys[i] = data[idx + 1]\n        idx += 2\n\n    # Precompute normalized direction keys for all possible coordinate differences.\n    R = 200\n    size = 2 * R + 1\n    key_map = [[0] * size for _ in range(size)]\n\n    for dx in range(-R, R + 1):\n        for dy in range(-R, R + 1):\n            if dx == 0 and dy == 0:\n                continue\n\n            g = gcd(abs(dx), abs(dy))\n            ax = dx // g\n            ay = dy // g\n\n            # Treat a line as undirected: normalize sign.\n            if ax < 0 or (ax == 0 and ay < 0):\n                ax = -ax\n                ay = -ay\n\n            key_map[dx + R][dy + R] = ax * 401 + (ay + 200)\n\n    total_triangles = n * (n - 1) * (n - 2) // 6\n    collinear_pair_sum = 0\n\n    for i in range(n):\n        xi = xs[i]\n        yi = ys[i]\n        counts = {}\n\n        for j in range(n):\n            if i == j:\n                continue\n\n            dx = xs[j] - xi + R\n            dy = ys[j] - yi + R\n            key = key_map[dx][dy]\n\n            previous = counts.get(key, 0)\n            collinear_pair_sum += previous\n            counts[key] = previous + 1\n\n    collinear_triangles = collinear_pair_sum // 3\n    print(total_triangles - collinear_triangles)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 25.965,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nVanya got bored and he painted n distinct points on the plane. After that he connected all the points pairwise and saw that as a result many triangles were formed with vertices in the painted points. He asks you to count the number of the formed triangles with the non-zero area.\n\n\n-----Input-----\n\nThe first line contains integer n (1 ≤ n ≤ 2000) — the number of the points painted on the plane. \n\nNext n lines contain two integers each x_{i}, y_{i} ( - 100 ≤ x_{i}, y_{i} ≤ 100) — the coordinates of the i-th point. It is guaranteed that no two given points coincide.\n\n\n-----Output-----\n\nIn the first line print an integer — the number of triangles with the non-zero area among the painted points.\n\n\n-----Examples-----\nInput\n4\n0 0\n1 1\n2 0\n2 2\n\nOutput\n3\n\nInput\n3\n0 0\n1 1\n2 0\n\nOutput\n1\n\nInput\n1\n1 1\n\nOutput\n0\n\n\n\n-----Note-----\n\nNote to the first sample test. There are 3 triangles formed: (0, 0) - (1, 1) - (2, 0); (0, 0) - (2, 2) - (2, 0); (1, 1) - (2, 2) - (2, 0).\n\nNote to the second sample test. There is 1 triangle formed: (0, 0) - (1, 1) - (2, 0).\n\nNote to the third sample test. A single point doesn't form a single triangle.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

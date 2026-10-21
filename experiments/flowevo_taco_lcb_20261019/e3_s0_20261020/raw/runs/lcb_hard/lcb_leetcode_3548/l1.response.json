@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9300fa28-c86c-405d-9061-4d62c07b6ec1",
+  "created": 1792436663,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 408,
+    "completion_tokens": 2344,
+    "total_tokens": 2752,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2020
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 408
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def countGoodIntegers(self, n: int, k: int) -> int:\n        half_len = (n + 1) // 2\n        start = 10 ** (half_len - 1)\n        end = 10 ** half_len\n\n        seen = set()\n\n        for i in range(start, end):\n            left = str(i)\n            if n % 2 == 1:\n                palindrome = left + left[:-1][::-1]\n            else:\n                palindrome = left + left[::-1]\n\n            if int(palindrome) % k == 0:\n                count = [0] * 10\n                for ch in palindrome:\n                    count[ord(ch) - ord('0')] += 1\n                seen.add(tuple(count))\n\n        fact = [1] * (n + 1)\n        for i in range(1, n + 1):\n            fact[i] = fact[i - 1] * i\n\n        answer = 0\n\n        for count in seen:\n            denominator = 1\n            for c in count:\n                denominator *= fact[c]\n\n            ways = fact[n] // denominator\n\n            if count[0] > 0:\n                bad_denominator = fact[count[0] - 1]\n                for digit in range(1, 10):\n                    bad_denominator *= fact[count[digit]]\n                ways -= fact[n - 1] // bad_denominator\n\n            answer += ways\n\n        return answer\n```",
+  "latency_s": 10.63,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two positive integers n and k.\nAn integer x is called k-palindromic if:\n\nx is a palindrome.\nx is divisible by k.\n\nAn integer is called good if its digits can be rearranged to form a k-palindromic integer. For example, for k = 2, 2020 can be rearranged to form the k-palindromic integer 2002, whereas 1010 cannot be rearranged to form a k-palindromic integer.\nReturn the count of good integers containing n digits.\nNote that any integer must not have leading zeros, neither before nor after rearrangement. For example, 1010 cannot be rearranged to form 101.\n \nExample 1:\n\nInput: n = 3, k = 5\nOutput: 27\nExplanation:\nSome of the good integers are:\n\n551 because it can be rearranged to form 515.\n525 because it is already k-palindromic.\n\n\nExample 2:\n\nInput: n = 1, k = 4\nOutput: 2\nExplanation:\nThe two good integers are 4 and 8.\n\nExample 3:\n\nInput: n = 5, k = 6\nOutput: 2468\n\n \nConstraints:\n\n1 <= n <= 10\n1 <= k <= 9\n\nStarter code / required signature:\nclass Solution:\n    def countGoodIntegers(self, n: int, k: int) -> int:\n        \n\nUse the required function/method named countGoodIntegers. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

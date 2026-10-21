@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9ab20164-d5b1-4d21-b4e4-719ac866bbac",
+  "created": 1792433093,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 632,
+    "completion_tokens": 870,
+    "total_tokens": 1502,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 719
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 632
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport bisect\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N, M, D = data[0], data[1], data[2]\n\n    A = data[3:3 + N]\n    B = data[3 + N:3 + N + M]\n\n    B.sort()\n\n    ans = -1\n\n    for a in A:\n        idx = bisect.bisect_right(B, a + D) - 1\n\n        if idx >= 0 and B[idx] >= a - D:\n            ans = max(ans, a + B[idx])\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 4.103,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTakahashi has decided to give one gift to Aoki and one gift to Snuke.\r\nThere are N candidates of gifts for Aoki,\r\nand their values are A_1, A_2, \\ldots,A_N.\r\nThere are M candidates of gifts for Snuke,\r\nand their values are B_1, B_2, \\ldots,B_M.  \nTakahashi wants to choose gifts so that the difference in values of the two gifts is at most D.\nDetermine if he can choose such a pair of gifts.  If he can, print the maximum sum of values of the chosen gifts.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M D\r\nA_1 A_2 \\ldots A_N\r\nB_1 B_2 \\ldots B_M\n\nOutput\n\nIf he can choose gifts to satisfy the condition,\r\nprint the maximum sum of values of the chosen gifts.\r\nIf he cannot satisfy the condition, print -1.\n\nConstraints\n\n\n- 1\\leq N,M\\leq 2\\times 10^5\n- 1\\leq A_i,B_i\\leq 10^{18}\n- 0\\leq D \\leq 10^{18}\n- All values in the input are integers.\n\nSample Input 1\n\n2 3 2\r\n3 10\r\n2 5 15\n\nSample Output 1\n\n8\r\n\nThe difference of values of the two gifts should be at most 2.\r\nIf he gives a gift with value 3 to Aoki and another with value 5 to Snuke, the condition is satisfied, achieving the maximum possible sum of values.\r\nThus, 3+5=8 should be printed.\n\nSample Input 2\n\n3 3 0\r\n1 3 3\r\n6 2 7\n\nSample Output 2\n\n-1\r\n\nHe cannot choose gifts to satisfy the condition.\r\nNote that the candidates of gifts for a person may contain multiple gifts with the same value.\n\nSample Input 3\n\n1 1 1000000000000000000\r\n1000000000000000000\r\n1000000000000000000\n\nSample Output 3\n\n2000000000000000000\r\n\nNote that the answer may not fit into a 32-bit integer type.\n\nSample Input 4\n\n8 6 1\r\n2 5 6 5 2 1 7 9\r\n7 2 5 5 2 4\n\nSample Output 4\n\n14\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

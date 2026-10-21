@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "acca0cc8-4847-4c76-b465-8782fdd0035e",
+  "created": 1792430917,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 493,
+    "completion_tokens": 727,
+    "total_tokens": 1220,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 574
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 493
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def numberOfRightTriangles(self, grid: List[List[int]]) -> int:\n        rows = len(grid)\n        cols = len(grid[0])\n\n        row_count = [sum(row) for row in grid]\n        col_count = [0] * cols\n\n        for i in range(rows):\n            for j in range(cols):\n                col_count[j] += grid[i][j]\n\n        answer = 0\n\n        for i in range(rows):\n            for j in range(cols):\n                if grid[i][j] == 1:\n                    answer += (row_count[i] - 1) * (col_count[j] - 1)\n\n        return answer\n```",
+  "latency_s": 3.473,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a 2D boolean matrix grid.\nReturn an integer that is the number of right triangles that can be made with the 3 elements of grid such that all of them have a value of 1.\nNote:\n\nA collection of 3 elements of grid is a right triangle if one of its elements is in the same row with another element and in the same column with the third element. The 3 elements do not have to be next to each other.\n\n \nExample 1:\n\n\n\n\n0\n1\n0\n\n\n0\n1\n1\n\n\n0\n1\n0\n\n\n\n\n\n\n0\n1\n0\n\n\n0\n1\n1\n\n\n0\n1\n0\n\n\n\n\n\nInput: grid = [[0,1,0],[0,1,1],[0,1,0]]\nOutput: 2\nExplanation:\nThere are two right triangles.\n\nExample 2:\n\n\n\n\n1\n0\n0\n0\n\n\n0\n1\n0\n1\n\n\n1\n0\n0\n0\n\n\n\n\n\nInput: grid = [[1,0,0,0],[0,1,0,1],[1,0,0,0]]\nOutput: 0\nExplanation:\nThere are no right triangles.\n\nExample 3:\n\n\n\n\n1\n0\n1\n\n\n1\n0\n0\n\n\n1\n0\n0\n\n\n\n\n\n\n1\n0\n1\n\n\n1\n0\n0\n\n\n1\n0\n0\n\n\n\n\n\nInput: grid = [[1,0,1],[1,0,0],[1,0,0]]\nOutput: 2\nExplanation:\nThere are two right triangles.\n\n \nConstraints:\n\n1 <= grid.length <= 1000\n1 <= grid[i].length <= 1000\n0 <= grid[i][j] <= 1\n\nStarter code / required signature:\nclass Solution:\n    def numberOfRightTriangles(self, grid: List[List[int]]) -> int:\n        \n\nUse the required function/method named numberOfRightTriangles. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

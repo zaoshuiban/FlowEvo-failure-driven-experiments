@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "291af6c9-0f9a-4f1d-ba50-17c53b71b321",
+  "created": 1792441818,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1325,
+    "completion_tokens": 20367,
+    "total_tokens": 21692,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 19837
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 813
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    idx = 1\n\n    hull_x = []\n    hull_y = []\n\n    best_num = None\n    best_den = 1\n\n    for _ in range(n):\n        X = data[idx]\n        H = data[idx + 1]\n        idx += 2\n\n        if hull_x:\n            lo = 0\n            hi = len(hull_x) - 1\n\n            # Find the point on the upper hull minimizing\n            # (H - y) / (X - x).\n            while lo < hi:\n                mid = (lo + hi) // 2\n\n                left = (H - hull_y[mid]) * (X - hull_x[mid + 1])\n                right = (H - hull_y[mid + 1]) * (X - hull_x[mid])\n\n                if left <= right:\n                    hi = mid\n                else:\n                    lo = mid + 1\n\n            i = lo\n            xi = hull_x[i]\n            yi = hull_y[i]\n\n            # Intercept at x = 0 of the line through (xi, yi) and (X, H).\n            num = yi * X - H * xi\n            den = X - xi\n\n            if best_num is None or num * best_den > best_num * den:\n                best_num = num\n                best_den = den\n\n        # Maintain the upper convex hull.\n        while len(hull_x) >= 2:\n            x1, y1 = hull_x[-2], hull_y[-2]\n            x2, y2 = hull_x[-1], hull_y[-1]\n\n            cross = (x2 - x1) * (H - y2) - (y2 - y1) * (X - x2)\n\n            if cross >= 0:\n                hull_x.pop()\n                hull_y.pop()\n            else:\n                break\n\n        hull_x.append(X)\n        hull_y.append(H)\n\n    if best_num is None or best_num < 0:\n        print(-1)\n        return\n\n    integer_part = best_num // best_den\n    remainder = best_num % best_den\n\n    fractional_part = remainder * (10 ** 20) // best_den\n    print(f\"{integer_part}.{fractional_part:020d}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 93.857,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are N buildings numbered 1 to N on a number line.\nBuilding i is at coordinate X_i and has height H_i. The size in directions other than height is negligible.\nFrom a point P with coordinate x and height h, building i is considered visible if there exists a point Q on building i such that the line segment PQ does not intersect with any other building.\nFind the maximum height at coordinate 0 from which it is not possible to see all buildings. Height must be non-negative; if it is possible to see all buildings at height 0 at coordinate 0, report -1 instead.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\nX_1 H_1\n\\vdots\nX_N H_N\n\nOutput\n\nIf it is possible to see all buildings from coordinate 0 and height 0, print -1. Otherwise, print the maximum height at coordinate 0 from which it is not possible to see all buildings. Answers with an absolute or relative error of at most 10^{-9} from the true answer will be considered correct.\n\nConstraints\n\n\n- 1 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq X_1 < \\dots < X_N \\leq 10^9\n- 1 \\leq H_i \\leq 10^9\n- All input values are integers.\n\nSample Input 1\n\n3\n3 2\n5 4\n7 5\n\nSample Output 1\n\n1.500000000000000000\n\nFrom coordinate 0 and height 1.5, building 3 cannot be seen. If the height is even slightly greater than 1.5, all buildings including building 3 can be seen. Thus, the answer is 1.5.\n\nSample Input 2\n\n2\n1 1\n2 100\n\nSample Output 2\n\n-1\n\nNote that -1.000 or similar outputs would be considered incorrect.\n\nSample Input 3\n\n3\n1 1\n2 2\n3 3\n\nSample Output 3\n\n0.000000000000000000\n\nSample Input 4\n\n4\n10 10\n17 5\n20 100\n27 270\n\nSample Output 4\n\n17.142857142857142350\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    pos = 1\n\n    hull_x = []\n    hull_y = []\n\n    best_num = None\n    best_den = 1\n\n    for _ in range(n):\n        X = data[pos]\n        H = data[pos + 1]\n        pos += 2\n\n        if hull_x:\n            lo = 0\n            hi = len(hull_x) - 1\n\n            # Find the point on the upper hull that minimizes\n            # (H - y) / (X - x).\n            while lo < hi:\n                mid = (lo + hi) // 2\n\n                left = (H - hull_y[mid]) * (X - hull_x[mid + 1])\n                right = (H - hull_y[mid + 1]) * (X - hull_x[mid])\n\n                if left <= right:\n                    hi = mid\n                else:\n                    lo = mid + 1\n\n            i = lo\n            xi = hull_x[i]\n            yi = hull_y[i]\n\n            # Intercept at x = 0 of the line through (xi, yi) and (X, H).\n            num = yi * X - H * xi\n            den = X - xi\n\n            if best_num is None or num * best_den > best_num * den:\n                best_num = num\n                best_den = den\n\n        # Maintain the upper convex hull.\n        while len(hull_x) >= 2:\n            x1, y1 = hull_x[-2], hull_y[-2]\n            x2, y2 = hull_x[-1], hull_y[-1]\n\n            cross = (x2 - x1) * (H - y2) - (y2 - y1) * (X - x2)\n\n            if cross >= 0:\n                hull_x.pop()\n                hull_y.pop()\n            else:\n                break\n\n        hull_x.append(X)\n        hull_y.append(H)\n\n    if best_num is None or best_num < 0:\n        print(-1)\n        return\n\n    integer_part = best_num // best_den\n    remainder = best_num % best_den\n\n    digits = 20\n    fractional_part = (remainder * (10 ** digits)) // best_den\n\n    print(f\"{integer_part}.{fractional_part:0{digits}d}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Runtime or compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a 0-indexed integer array nums and an integer k.\nIn one operation, you can pick any index i of nums such that 0 <= i < nums.length - 1 and replace nums[i] and nums[i + 1] with a single o\nSolution:\nfrom typing import List\n\nclass Solution:\n    def minOrAfterOperations(self, nums: List[int], k: int) -> int:\n        n = len(nums)\n        need = n - k\n        ALL = (1 << 30) - 1\n\n        def feasible(allowed: int) -> bool:\n            bad = ALL ^ allowed\n            segments = 0\n            cur = ALL\n\n            for x in nums:\n                cur &= x\n                if (cur & bad) == 0:\n                    segments += 1\n                    if segments >= need:\n                        return "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

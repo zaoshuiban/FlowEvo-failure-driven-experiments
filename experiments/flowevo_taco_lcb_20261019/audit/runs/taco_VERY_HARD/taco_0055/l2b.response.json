@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "66bd6301-a839-4b65-a887-e3c686f2cbd5",
+  "created": 1792454992,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 968,
+    "completion_tokens": 25182,
+    "total_tokens": 26150,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24331
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 200
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom heapq import heapify, heappop, heappush\n\n\nclass FastScanner:\n    def __init__(self):\n        self.data = sys.stdin.buffer.read()\n        self.idx = 0\n        self.n = len(self.data)\n\n    def next_int(self):\n        data = self.data\n        n = self.n\n        i = self.idx\n\n        while i < n and data[i] <= 32:\n            i += 1\n\n        num = 0\n        while i < n and data[i] > 32:\n            num = num * 10 + (data[i] - 48)\n            i += 1\n\n        self.idx = i\n        return num\n\n    def next_token(self):\n        data = self.data\n        n = self.n\n        i = self.idx\n\n        while i < n and data[i] <= 32:\n            i += 1\n\n        start = i\n        while i < n and data[i] > 32:\n            i += 1\n\n        self.idx = i\n        return data[start:i]\n\n\ndef solve():\n    fs = FastScanner()\n    t = fs.next_int()\n    answers = []\n\n    for _ in range(t):\n        n = fs.next_int()\n        m = fs.next_int()\n\n        values1 = [0] * n\n        total1 = 0\n        for i in range(n):\n            x = fs.next_int()\n            values1[i] = x\n            total1 += x\n\n        d1 = fs.next_token()\n\n        attack1 = []\n        defense1 = []\n\n        for i, ch in enumerate(d1):\n            if ch == 65:  # 'A'\n                attack1.append(values1[i])\n            else:\n                defense1.append(-values1[i])\n\n        values2 = [0] * m\n        total2 = 0\n        for i in range(m):\n            x = fs.next_int()\n            values2[i] = x\n            total2 += x\n\n        d2 = fs.next_token()\n\n        attack2 = []\n        defense2 = []\n\n        for i, ch in enumerate(d2):\n            if ch == 65:  # 'A'\n                attack2.append(values2[i])\n            else:\n                defense2.append(-values2[i])\n\n        attack1.sort()\n        attack2.sort()\n\n        heapify(defense1)\n        heapify(defense2)\n\n        current = total1 - total2\n        values_path = [current]\n\n        ptr1 = 0\n        ptr2 = 0\n        len_attack1 = len(attack1)\n        len_attack2 = len(attack2)\n\n        turn = 0  # 0 -> Chef, 1 -> Chefina\n\n        while True:\n            if turn == 0:\n                if ptr1 >= len_attack1 or not defense2:\n                    break\n\n                attacker = attack1[ptr1]\n                ptr1 += 1\n\n                killed = -heappop(defense2)\n                current += killed\n                heappush(defense1, -attacker)\n\n                values_path.append(current)\n                turn = 1\n\n            else:\n                if ptr2 >= len_attack2 or not defense1:\n                    break\n\n                attacker = attack2[ptr2]\n                ptr2 += 1\n\n                killed = -heappop(defense1)\n                current -= killed\n                heappush(defense2, -attacker)\n\n                values_path.append(current)\n                turn = 0\n\n        result = values_path[-1]\n\n        for i in range(len(values_path) - 2, -1, -1):\n            value = values_path[i]\n\n            if i % 2 == 0:  # Chef's turn\n                if value > result:\n                    result = value\n            else:  # Chefina's turn\n                if value < result:\n                    result = value\n\n        answers.append(str(result))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 135.178,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nChef and Chefina are playing a game.\n\nChef has $N$ monsters (numbered $1$ through $N$). For each valid $i$, the $i$-th monster has a value $V_{1,i}$ and it is either in attack mode or defense mode. The initial states of the monsters are described by a string $D_{1}$: for each valid $i$, the $i$-th monster is in attack mode if the $i$-th character of $D_{1}$ is 'A' or in defense mode if the $i$-th character is 'D'.\n\nChefina has $M$ monsters (numbered $1$ through $M$). Their values are $V_{2,1}, V_{2,2}, \\ldots, V_{2,M}$ and their initial states are described by a string $D_{2}$ in the same way.\n\nIn the game, the players alternate turns; Chef plays first. During each turn, the current player may either end the game immediately or do the following: choose one of their own living monsters in attack mode, choose a monster of the other player in defense mode, attack and kill this defending monster and change the attacking monster to defense mode. Note that once a monster is in defense mode, it never changes to attack mode.\n\nEach player is trying to maximise the difference $X-Y$, where $X$ is the sum of values of this player's living monsters (in both modes, but only if they are alive) and $Y$ is the sum of values of the opponent's living monsters. Assuming that both players are playing optimally, calculate the sum of values of Chef's living monsters minus the sum of values of Chefina's living monsters after the game ends.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $M$.\nThe second line contains $N$ space-separated integers $V_{1,1}, V_{1,2}, \\ldots, V_{1,N}$.\nThe third line contains a single string $D_{1}$ with length $N$.\nThe fourth line contains $M$ space-separated integers $V_{2,1}, V_{2,2}, \\ldots, V_{2,M}$.\nThe fifth line contains a single string $D_{2}$ with length $M$.\n\n------  Output ------\nFor each test case, print a single line containing one integer ― the sum of values of Chef's living monsters minus the sum of values of Chefina's living monsters after the game ends.\n\n------  Constraints ------\n$1 ≤ T ≤ 100$\n$1 ≤ N, M ≤ 10^{5}$\ninitially, Chefina has at least one monster in defense mode\n$D_{1}$ and $D_{2}$ contain only characters 'A' and 'D'\n$1 ≤ V_{i,j} ≤ 10^{9}$ for each valid $i, j$\nthe sum of $N$ over all test cases does not exceed $10^{6}$\nthe sum of $M$ over all test cases does not exceed $10^{6}$\n\n------  Subtasks ------\nSubtask #1 (50 points):\n$N, M ≤ 10^{3}$\ninitially, Chefina has exactly one monster in defense mode and Chef has no monsters in defense mode\nthe sum of $N$ over all test cases does not exceed $10^{4}$\nthe sum of $M$ over all test cases does not exceed $10^{4}$\n\nSubtask #2 (50 points): original constraints\n\n----- Sample Input 1 ------ \n1\n\n3 3\n\n5 4 60\n\nAAA\n\n2 15 16\n\nDAA\n----- Sample Output 1 ------ \n38\n----- explanation 1 ------ \nExample case 1: Chef attacks Chefina's first monster with his second monster. On the next turn, Chefina decides to end the game.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

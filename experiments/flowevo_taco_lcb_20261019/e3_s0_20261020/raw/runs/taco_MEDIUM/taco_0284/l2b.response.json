@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0d0d4e33-abb0-40bc-b631-c66be07aebf4",
+  "created": 1792429101,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 652,
+    "completion_tokens": 1361,
+    "total_tokens": 2013,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1082
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 140
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n\n    parent = list(range(26))\n    size = [1] * 26\n    present = [False] * 26\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n\n    for i in range(1, n + 1):\n        s = data[i]\n        first = None\n\n        for ch in s:\n            letter = ch - ord('a')\n            present[letter] = True\n\n            if first is None:\n                first = letter\n            else:\n                union(first, letter)\n\n    answer = 0\n\n    for i in range(26):\n        if present[i] and find(i) == i:\n            answer += 1\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 6.421,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nOne unknown hacker wants to get the admin's password of AtForces testing system, to get problems from the next contest. To achieve that, he sneaked into the administrator's office and stole a piece of paper with a list of $n$ passwords — strings, consists of small Latin letters.\n\nHacker went home and started preparing to hack AtForces. He found that the system contains only passwords from the stolen list and that the system determines the equivalence of the passwords $a$ and $b$ as follows:  two passwords $a$ and $b$ are equivalent if there is a letter, that exists in both $a$ and $b$;  two passwords $a$ and $b$ are equivalent if there is a password $c$ from the list, which is equivalent to both $a$ and $b$. \n\nIf a password is set in the system and an equivalent one is applied to access the system, then the user is accessed into the system.\n\nFor example, if the list contain passwords \"a\", \"b\", \"ab\", \"d\", then passwords \"a\", \"b\", \"ab\" are equivalent to each other, but the password \"d\" is not equivalent to any other password from list. In other words, if:  admin's password is \"b\", then you can access to system by using any of this passwords: \"a\", \"b\", \"ab\";  admin's password is \"d\", then you can access to system by using only \"d\". \n\nOnly one password from the list is the admin's password from the testing system. Help hacker to calculate the minimal number of passwords, required to guaranteed access to the system. Keep in mind that the hacker does not know which password is set in the system.\n\n\n-----Input-----\n\nThe first line contain integer $n$ ($1 \\le n \\le 2 \\cdot 10^5$) — number of passwords in the list. Next $n$ lines contains passwords from the list – non-empty strings $s_i$, with length at most $50$ letters. Some of the passwords may be equal.\n\nIt is guaranteed that the total length of all passwords does not exceed $10^6$ letters. All of them consist only of lowercase Latin letters.\n\n\n-----Output-----\n\nIn a single line print the minimal number of passwords, the use of which will allow guaranteed to access the system.\n\n\n-----Examples-----\nInput\n4\na\nb\nab\nd\n\nOutput\n2\nInput\n3\nab\nbc\nabc\n\nOutput\n1\nInput\n1\ncodeforces\n\nOutput\n1\n\n\n-----Note-----\n\nIn the second example hacker need to use any of the passwords to access the system.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

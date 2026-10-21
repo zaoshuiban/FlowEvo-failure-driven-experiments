@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "fc1514d3-e14b-477c-b536-8fe1d6e43aff",
+  "created": 1792442767,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 359,
+    "completion_tokens": 2475,
+    "total_tokens": 2834,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2335
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 359
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ans = []\n\n    for x in data[1:1 + t]:\n        possible = False\n\n        for use_111 in range(11):\n            remaining = x - 111 * use_111\n            if remaining >= 0 and remaining % 11 == 0:\n                possible = True\n                break\n\n        ans.append(\"YES\" if possible else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 11.449,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer $x$. Can you make $x$ by summing up some number of $11, 111, 1111, 11111, \\ldots$? (You can use any number among them any number of times).\n\nFor instance,\n\n$33=11+11+11$\n\n$144=111+11+11+11$\n\n\n-----Input-----\n\nThe first line of input contains a single integer $t$ $(1 \\leq t \\leq 10000)$ — the number of testcases.\n\nThe first and only line of each testcase contains a single integer $x$ $(1 \\leq x \\leq 10^9)$ — the number you have to make.\n\n\n-----Output-----\n\nFor each testcase, you should output a single string. If you can make $x$, output \"YES\" (without quotes). Otherwise, output \"NO\".\n\nYou can print each letter of \"YES\" and \"NO\" in any case (upper or lower).\n\n\n-----Examples-----\n\nInput\n3\n33\n144\n69\nOutput\nYES\nYES\nNO\n\n\n-----Note-----\n\nWays to make $33$ and $144$ were presented in the statement. It can be proved that we can't present $69$ this way.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

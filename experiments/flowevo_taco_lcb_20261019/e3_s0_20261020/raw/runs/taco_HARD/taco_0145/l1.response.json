@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3d975d75-c5a4-48bf-806c-ba7aa7d6cf39",
+  "created": 1792443374,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 590,
+    "completion_tokens": 12529,
+    "total_tokens": 13119,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12190
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 590
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\ndef solve() -> None:\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    n = int(data[0])\n\n    seen = {}\n    values = []\n\n    r = 1 % n\n    while r not in seen:\n        seen[r] = len(values)\n        values.append(r)\n        r = (r * 2) % n\n\n    mu = seen[r]\n    length = len(values) - mu\n\n    prefix = values[:mu]\n    cycle = values[mu:]\n\n    # Prefix sum:\n    # sum_{d=0}^{mu-1} values[d] / 2^d\n    f = 0\n    for v in prefix:\n        f = (f << 1) + v\n    prefix_num = f << 1  # denominator is 2^mu\n\n    # Cycle sum numerator:\n    # sum_{j=0}^{length-1} cycle[j] * 2^(length-j)\n    e = 0\n    for v in cycle:\n        e = (e << 1) + v\n    cycle_num = e << 1\n\n    pow2_len = 1 << length\n\n    numerator = prefix_num * (pow2_len - 1) + cycle_num\n    denominator = (1 << mu) * (pow2_len - 1)\n\n    g = math.gcd(numerator, denominator)\n    numerator //= g\n    denominator //= g\n\n    print(f\"{numerator}/{denominator}\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 53.348,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThis is the modification of the problem used during the official round. Unfortunately, author's solution of the original problem appeared wrong, so the problem was changed specially for the archive.\n\nOnce upon a time in a far away kingdom lived the King. The King had a beautiful daughter, Victoria. They lived happily, but not happily ever after: one day a vicious dragon attacked the kingdom and stole Victoria. The King was full of grief, yet he gathered his noble knights and promised half of his kingdom and Victoria's hand in marriage to the one who will save the girl from the infernal beast.\n\nHaving travelled for some time, the knights found the dragon's lair and all of them rushed there to save Victoria. Each knight spat on the dragon once and, as the dragon had quite a fragile and frail heart, his heart broke and poor beast died. As for the noble knights, they got Victoria right to the King and started brawling as each one wanted the girl's hand in marriage.\n\nThe problem was that all the noble knights were equally noble and equally handsome, and Victoria didn't want to marry any of them anyway. Then the King (and he was a very wise man and didn't want to hurt anybody's feelings) decided to find out who will get his daughter randomly, i.e. tossing a coin. However, there turned out to be n noble knights and the coin only has two sides. The good thing is that when a coin is tossed, the coin falls on each side with equal probability. The King got interested how to pick one noble knight using this coin so that all knights had equal probability of being chosen (the probability in that case should always be equal to 1 / n). First the King wants to know the expected number of times he will need to toss a coin to determine the winner. Besides, while tossing the coin, the King should follow the optimal tossing strategy (i.e. the strategy that minimizes the expected number of tosses). Help the King in this challenging task.\n\nInput\n\nThe first line contains a single integer n from the problem's statement (1 ≤ n ≤ 10000).\n\nOutput\n\nPrint the sought expected number of tosses as an irreducible fraction in the following form: \"a/b\" (without the quotes) without leading zeroes.\n\nExamples\n\nInput\n\n2\n\n\nOutput\n\n1/1\n\n\nInput\n\n3\n\n\nOutput\n\n8/3\n\n\nInput\n\n4\n\n\nOutput\n\n2/1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

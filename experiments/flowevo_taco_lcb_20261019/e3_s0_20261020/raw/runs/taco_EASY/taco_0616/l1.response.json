@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6c9a8661-6adb-4c7e-8487-c6cfde14d5a0",
+  "created": 1792429115,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 407,
+    "completion_tokens": 983,
+    "total_tokens": 1390,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 855
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 407
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef animals(heads, legs):\n    if heads < 0 or legs < 0:\n        return \"No solutions\"\n    \n    if heads == 0 and legs == 0:\n        return (0, 0)\n    \n    if (legs - 2 * heads) % 2 != 0:\n        return \"No solutions\"\n    \n    cows = (legs - 2 * heads) // 2\n    chickens = heads - cows\n    \n    if chickens < 0 or cows < 0:\n        return \"No solutions\"\n    \n    return (chickens, cows)\n```",
+  "latency_s": 4.371,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n#Description\n\nEverybody has probably heard of the animal heads and legs problem from the earlier years at school. It goes:\n\n```“A farm contains chickens and cows. There are x heads and y legs. How many chickens and cows are there?” ```\n\nWhere x <= 1000 and y <=1000\n\n#Task\n\nAssuming there are no other types of animals, work out how many of each animal are there. \n\n```Return a tuple in Python - (chickens, cows) and an array list - [chickens, cows]/{chickens, cows} in all other languages```\n\nIf either the heads & legs is negative, the result of your calculation is negative or the calculation is a float return \"No solutions\" (no valid cases).\n\nIn the form:\n```python\n(Heads, Legs) = (72, 200)\n\nVALID - (72, 200) =>             (44 , 28) \n                             (Chickens, Cows)\n\nINVALID - (72, 201) => \"No solutions\"\n```\n\nHowever, ```if 0 heads and 0 legs are given always return [0, 0]``` since zero heads must give zero animals.\n\nThere are many different ways to solve this, but they all give the same answer.\n\nYou will only be given integers types - however negative values (edge cases) will be given. \n\nHappy coding!\n\nStarter code / required signature:\ndef animals(heads, legs):\n\t\n\nUse the required function/method named animals. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

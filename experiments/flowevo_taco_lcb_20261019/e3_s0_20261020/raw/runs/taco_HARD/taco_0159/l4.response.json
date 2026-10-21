@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "94aaa7f1-4284-4d5f-801e-a170f5f83b3f",
+  "created": 1792447402,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1101,
+    "completion_tokens": 21362,
+    "total_tokens": 22463,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 21106
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 589
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    cnt = [0] * 4  # parity classes of (x/2, y/2)\n\n    idx = 1\n    for _ in range(n):\n        x = data[idx]\n        y = data[idx + 1]\n        idx += 2\n\n        px = (x >> 1) & 1\n        py = (y >> 1) & 1\n        cnt[px * 2 + py] += 1\n\n    total = n * (n - 1) * (n - 2) // 6\n\n    # A triangle is NOT interesting exactly when its three vertices\n    # belong to three different parity classes.\n    bad = 0\n    for i in range(4):\n        for j in range(i + 1, 4):\n            for k in range(j + 1, 4):\n                bad += cnt[i] * cnt[j] * cnt[k]\n\n    print(total - bad)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 103.303,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThis is the easy version of the problem. The only difference from the hard version is that in this version all coordinates are even.\n\nThere are $n$ fence-posts at distinct coordinates on a plane. It is guaranteed that no three fence posts lie on the same line.\n\nThere are an infinite number of cows on the plane, one at every point with integer coordinates.\n\nGregor is a member of the Illuminati, and wants to build a triangular fence, connecting $3$ distinct existing fence posts. A cow strictly inside the fence is said to be enclosed. If there are an odd number of enclosed cows and the area of the fence is an integer, the fence is said to be interesting.\n\nFind the number of interesting fences.\n\n\n-----Input-----\n\nThe first line contains the integer $n$ ($3 \\le n \\le 6000$), the number of fence posts which Gregor can choose to form the vertices of a fence.\n\nEach of the next $n$ line contains two integers $x$ and $y$ ($0 \\le x,y \\le 10^7$, $x$ and $y$ are even), where $(x,y)$ is the coordinate of a fence post. All fence posts lie at distinct coordinates. No three fence posts are on the same line.\n\n\n-----Output-----\n\nPrint a single integer, the number of interesting fences. Two fences are considered different if they are constructed with a different set of three fence posts.\n\n\n-----Examples-----\n\nInput\n3\n0 0\n2 0\n0 4\nOutput\n1\nInput\n5\n0 0\n2 16\n30 14\n4 6\n2 10\nOutput\n3\n\n\n-----Note-----\n\nIn the first example, there is only $1$ fence. That fence is interesting since its area is $4$ and there is $1$ enclosed cow, marked in red.\n\nIn the second example, there are $3$ interesting fences.\n\n$(0,0)$ — $(30,14)$ — $(2,10)$\n\n$(2,16)$ — $(30,14)$ — $(2,10)$\n\n$(30,14)$ — $(4,6)$ — $(2,10)$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    cnt = [0, 0, 0, 0]\n\n    idx = 1\n    for _ in range(n):\n        x = data[idx]\n        y = data[idx + 1]\n        idx += 2\n\n        # Since x and y are even, use their parity after dividing by 2.\n        px = (x // 2) & 1\n        py = (y // 2) & 1\n        cnt[px * 2 + py] += 1\n\n    # Interesting triangles are exactly those where at least two vertices\n    # have the same parity class among the four classes above.\n    answer = 0\n\n    # All three vertices in the same parity class.\n    for c in cnt:\n        if c >= 3:\n            answer += c * (c - 1) * (c - 2) // 6\n\n    # Exactly two vertices in one parity class and the third outside it.\n    for c in cnt:\n        if c >= 2:\n            answer += (c * (c - 1) // 2) * (n - c)\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Alice was given the $n$ integers from $1$ to $n$. She wrote all possible permutations in increasing lexicographical order, and wrote each permutation in a new line. For example, for $n=3$, there are $\nSolution:\nimport sys\n\ndef solve():\n    MOD = 1_000_000_007\n\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = [0] + data[1:1 + n]\n\n    present = bytearray(n + 2)\n    for i in range(1, n + 1):\n        if a[i] != 0:\n            present[a[i]] = 1\n\n    # pref[v] = number of missing values <= v\n    pref = [0] * (n + 1)\n    missing_count = 0\n    for v in range(1, n + 1):\n        if present[v] == 0:\n            missing_count += 1\n        pref[v] ="
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

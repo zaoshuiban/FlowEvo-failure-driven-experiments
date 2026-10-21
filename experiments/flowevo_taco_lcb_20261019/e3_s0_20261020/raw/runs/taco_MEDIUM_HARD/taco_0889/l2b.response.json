@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7153d1ee-8654-4a94-90d7-bc039858808f",
+  "created": 1792430059,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1352,
+    "completion_tokens": 6859,
+    "total_tokens": 8211,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6364
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 200
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n\n        p = [0] * (n + 1)\n        for i in range(1, n + 1):\n            p[i] = next(it)\n\n        h = [0] * (n + 1)\n        for i in range(1, n + 1):\n            h[i] = next(it)\n\n        adj = [[] for _ in range(n + 1)]\n        for _ in range(n - 1):\n            x = next(it)\n            y = next(it)\n            adj[x].append(y)\n            adj[y].append(x)\n\n        parent = [0] * (n + 1)\n        parent[1] = -1\n        order = [1]\n\n        idx = 0\n        while idx < len(order):\n            u = order[idx]\n            idx += 1\n\n            for v in adj[u]:\n                if v != parent[u]:\n                    parent[v] = u\n                    order.append(v)\n\n        subtree_sum = p[:]\n\n        for u in reversed(order):\n            if parent[u] > 0:\n                subtree_sum[parent[u]] += subtree_sum[u]\n\n        possible = True\n        good = [0] * (n + 1)\n\n        for u in range(1, n + 1):\n            value = subtree_sum[u] + h[u]\n\n            if value % 2 != 0:\n                possible = False\n                continue\n\n            good_count = value // 2\n\n            if good_count < 0 or good_count > subtree_sum[u]:\n                possible = False\n\n            good[u] = good_count\n\n        if possible:\n            children_good_sum = [0] * (n + 1)\n\n            for u in reversed(order):\n                if children_good_sum[u] > good[u]:\n                    possible = False\n                    break\n\n                if parent[u] > 0:\n                    children_good_sum[parent[u]] += good[u]\n\n        answers.append(\"YES\" if possible else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 32.473,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nUncle Bogdan is in captain Flint's crew for a long time and sometimes gets nostalgic for his homeland. Today he told you how his country introduced a happiness index.\n\nThere are $n$ cities and $n−1$ undirected roads connecting pairs of cities. Citizens of any city can reach any other city traveling by these roads. Cities are numbered from $1$ to $n$ and the city $1$ is a capital. In other words, the country has a tree structure.\n\nThere are $m$ citizens living in the country. A $p_i$ people live in the $i$-th city but all of them are working in the capital. At evening all citizens return to their home cities using the shortest paths. \n\nEvery person has its own mood: somebody leaves his workplace in good mood but somebody are already in bad mood. Moreover any person can ruin his mood on the way to the hometown. If person is in bad mood he won't improve it.\n\nHappiness detectors are installed in each city to monitor the happiness of each person who visits the city. The detector in the $i$-th city calculates a happiness index $h_i$ as the number of people in good mood minus the number of people in bad mood. Let's say for the simplicity that mood of a person doesn't change inside the city.\n\nHappiness detector is still in development, so there is a probability of a mistake in judging a person's happiness. One late evening, when all citizens successfully returned home, the government asked uncle Bogdan (the best programmer of the country) to check the correctness of the collected happiness indexes.\n\nUncle Bogdan successfully solved the problem. Can you do the same?\n\nMore formally, You need to check: \"Is it possible that, after all people return home, for each city $i$ the happiness index will be equal exactly to $h_i$\".\n\n\n-----Input-----\n\nThe first line contains a single integer $t$ ($1 \\le t \\le 10000$) — the number of test cases.\n\nThe first line of each test case contains two integers $n$ and $m$ ($1 \\le n \\le 10^5$; $0 \\le m \\le 10^9$) — the number of cities and citizens.\n\nThe second line of each test case contains $n$ integers $p_1, p_2, \\ldots, p_{n}$ ($0 \\le p_i \\le m$; $p_1 + p_2 + \\ldots + p_{n} = m$), where $p_i$ is the number of people living in the $i$-th city.\n\nThe third line contains $n$ integers $h_1, h_2, \\ldots, h_{n}$ ($-10^9 \\le h_i \\le 10^9$), where $h_i$ is the calculated happiness index of the $i$-th city.\n\nNext $n − 1$ lines contain description of the roads, one per line. Each line contains two integers $x_i$ and $y_i$ ($1 \\le x_i, y_i \\le n$; $x_i \\neq y_i$), where $x_i$ and $y_i$ are cities connected by the $i$-th road.\n\nIt's guaranteed that the sum of $n$ from all test cases doesn't exceed $2 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, print YES, if the collected data is correct, or NO — otherwise. You can print characters in YES or NO in any case.\n\n\n-----Examples-----\nInput\n2\n7 4\n1 0 1 1 0 1 0\n4 0 0 -1 0 -1 0\n1 2\n1 3\n1 4\n3 5\n3 6\n3 7\n5 11\n1 2 5 2 1\n-11 -2 -6 -2 -1\n1 2\n1 3\n1 4\n3 5\n\nOutput\nYES\nYES\n\nInput\n2\n4 4\n1 1 1 1\n4 1 -3 -1\n1 2\n1 3\n1 4\n3 13\n3 3 7\n13 1 4\n1 2\n1 3\n\nOutput\nNO\nNO\n\n\n\n-----Note-----\n\nLet's look at the first test case of the first sample:  [Image] \n\nAt first, all citizens are in the capital. Let's describe one of possible scenarios:   a person from city $1$: he lives in the capital and is in good mood;  a person from city $4$: he visited cities $1$ and $4$, his mood was ruined between cities $1$ and $4$;  a person from city $3$: he visited cities $1$ and $3$ in good mood;  a person from city $6$: he visited cities $1$, $3$ and $6$, his mood was ruined between cities $1$ and $3$;  In total,   $h_1 = 4 - 0 = 4$,  $h_2 = 0$,  $h_3 = 1 - 1 = 0$,  $h_4 = 0 - 1 = -1$,  $h_5 = 0$,  $h_6 = 0 - 1 = -1$,  $h_7 = 0$. \n\nThe second case of the first test:  $\\text{of}_{0}$ \n\nAll people have already started in bad mood in the capital — this is the only possible scenario.\n\nThe first case of the second test:  $\\text{of} 0$ \n\nThe second case of the second test:  [Image] \n\nIt can be proven that there is no way to achieve given happiness indexes in both cases of the second test.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

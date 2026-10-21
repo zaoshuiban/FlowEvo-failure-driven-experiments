@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2dcdcbfa-c4cb-47b3-bc30-21bf222cf521",
+  "created": 1792441419,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 571,
+    "completion_tokens": 25536,
+    "total_tokens": 26107,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 25116
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 571
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    X = [0] * n\n    H = [0] * n\n\n    p = 1\n    for i in range(n):\n        X[i] = data[p]\n        H[i] = data[p + 1]\n        p += 2\n\n    if n == 1:\n        print(-1)\n        return\n\n    hull = []\n    bp_num = []\n    bp_den = []\n\n    best_num = None\n    best_den = 1\n\n    for i in range(n):\n        if not hull:\n            hull.append(i)\n            continue\n\n        j = hull[-1]\n        c_num = X[i] * H[j] - X[j] * H[i]\n        c_den = X[i] - X[j]\n\n        while len(hull) >= 2:\n            if c_num * bp_den[-1] <= bp_num[-1] * c_den:\n                hull.pop()\n                bp_num.pop()\n                bp_den.pop()\n\n                j = hull[-1]\n                c_num = X[i] * H[j] - X[j] * H[i]\n                c_den = X[i] - X[j]\n            else:\n                break\n\n        if best_num is None or c_num * best_den > best_num * c_den:\n            best_num = c_num\n            best_den = c_den\n\n        hull.append(i)\n        bp_num.append(c_num)\n        bp_den.append(c_den)\n\n    if best_num is None or best_num < 0:\n        print(-1)\n    else:\n        ans = best_num / best_den\n        if abs(ans) < 5e-20:\n            ans = 0.0\n        print(f\"{ans:.20f}\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 126.635,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are N buildings numbered 1 to N on a number line.\nBuilding i is at coordinate X_i and has height H_i. The size in directions other than height is negligible.\nFrom a point P with coordinate x and height h, building i is considered visible if there exists a point Q on building i such that the line segment PQ does not intersect with any other building.\nFind the maximum height at coordinate 0 from which it is not possible to see all buildings. Height must be non-negative; if it is possible to see all buildings at height 0 at coordinate 0, report -1 instead.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\nX_1 H_1\n\\vdots\nX_N H_N\n\nOutput\n\nIf it is possible to see all buildings from coordinate 0 and height 0, print -1. Otherwise, print the maximum height at coordinate 0 from which it is not possible to see all buildings. Answers with an absolute or relative error of at most 10^{-9} from the true answer will be considered correct.\n\nConstraints\n\n\n- 1 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq X_1 < \\dots < X_N \\leq 10^9\n- 1 \\leq H_i \\leq 10^9\n- All input values are integers.\n\nSample Input 1\n\n3\n3 2\n5 4\n7 5\n\nSample Output 1\n\n1.500000000000000000\n\nFrom coordinate 0 and height 1.5, building 3 cannot be seen. If the height is even slightly greater than 1.5, all buildings including building 3 can be seen. Thus, the answer is 1.5.\n\nSample Input 2\n\n2\n1 1\n2 100\n\nSample Output 2\n\n-1\n\nNote that -1.000 or similar outputs would be considered incorrect.\n\nSample Input 3\n\n3\n1 1\n2 2\n3 3\n\nSample Output 3\n\n0.000000000000000000\n\nSample Input 4\n\n4\n10 10\n17 5\n20 100\n27 270\n\nSample Output 4\n\n17.142857142857142350\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "34384617-1559-424d-992a-a347a95ff8d4",
+  "created": 1792436028,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 980,
+    "completion_tokens": 7769,
+    "total_tokens": 8749,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7423
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 468
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    k = data[1]\n    a = data[2:2 + n]\n\n    total_abs = 0\n    for x in a:\n        if x >= 0:\n            total_abs += x\n        else:\n            total_abs -= x\n\n    # All elements are zero, so every segment sum is 0,\n    # which is not a non-negative integer power of k (|k| >= 1).\n    if total_abs == 0:\n        print(0)\n        return\n\n    if k == 1:\n        targets = (1,)\n    elif k == -1:\n        targets = (1, -1)\n    else:\n        targets_list = []\n        value = 1\n        if k > 1:\n            while value <= total_abs:\n                targets_list.append(value)\n                value *= k\n        else:  # k < -1\n            while abs(value) <= total_abs:\n                targets_list.append(value)\n                value *= k\n        targets = tuple(targets_list)\n\n    freq = {0: 1}\n    prefix = 0\n    answer = 0\n    get = freq.get\n\n    for x in a:\n        prefix += x\n\n        for power in targets:\n            answer += get(prefix - power, 0)\n\n        freq[prefix] = get(prefix, 0) + 1\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 35.671,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMolly Hooper has n different kinds of chemicals arranged in a line. Each of the chemicals has an affection value, The i-th of them has affection value a_{i}.\n\nMolly wants Sherlock to fall in love with her. She intends to do this by mixing a contiguous segment of chemicals together to make a love potion with total affection value as a non-negative integer power of k. Total affection value of a continuous segment of chemicals is the sum of affection values of each chemical in that segment.\n\nHelp her to do so in finding the total number of such segments.\n\n\n-----Input-----\n\nThe first line of input contains two integers, n and k, the number of chemicals and the number, such that the total affection value is a non-negative power of this number k. (1 ≤ n ≤ 10^5, 1 ≤ |k| ≤ 10).\n\nNext line contains n integers a_1, a_2, ..., a_{n} ( - 10^9 ≤ a_{i} ≤ 10^9) — affection values of chemicals.\n\n\n-----Output-----\n\nOutput a single integer — the number of valid segments.\n\n\n-----Examples-----\nInput\n4 2\n2 2 2 2\n\nOutput\n8\n\nInput\n4 -3\n3 -6 -3 12\n\nOutput\n3\n\n\n\n-----Note-----\n\nDo keep in mind that k^0 = 1.\n\nIn the first sample, Molly can get following different affection values:  2: segments [1, 1], [2, 2], [3, 3], [4, 4];\n\n 4: segments [1, 2], [2, 3], [3, 4];\n\n 6: segments [1, 3], [2, 4];\n\n 8: segments [1, 4]. \n\nOut of these, 2, 4 and 8 are powers of k = 2. Therefore, the answer is 8.\n\nIn the second sample, Molly can choose segments [1, 2], [3, 3], [3, 4].\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom collections import defaultdict\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n\n    if k == 1:\n        powers = [1]\n    elif k == -1:\n        powers = [1, -1]\n    else:\n        limit = sum(abs(x) for x in a)\n        powers = []\n        value = 1\n        while True:\n            powers.append(value)\n            value *= k\n            if abs(value) > limit:\n                break\n\n    freq = defaultdict(int)\n    freq[0] = 1\n\n    prefix = 0\n    answer = 0\n\n    for x in a:\n        prefix += x\n\n        for power in powers:\n            answer += freq.get(prefix - power, 0)\n\n        freq[prefix] += 1\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Time limit exceeded.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7090753e-41f4-460a-a1c6-9f7f0f691a31",
+  "created": 1792437750,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1255,
+    "completion_tokens": 30811,
+    "total_tokens": 32066,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 30346
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1255
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\nfrom math import gcd\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ptr = 1\n    output = []\n\n    for _ in range(t):\n        n = data[ptr]\n        ptr += 1\n\n        a = data[ptr:ptr + n]\n        ptr += n\n\n        prv = [(i - 1) % n for i in range(n)]\n        nxt = [(i + 1) % n for i in range(n)]\n        alive = [True] * n\n\n        q = deque()\n\n        # Initially Arkady is listening to song 0. The next songs are\n        # 1, 2, ..., n - 1, 0.\n        for v in range(1, n):\n            p = v - 1\n            if gcd(a[p], a[v]) == 1:\n                q.append((p, v))\n\n        p = n - 1\n        v = 0\n        if gcd(a[p], a[v]) == 1:\n            q.append((p, v))\n\n        answer = []\n        remaining = n\n\n        while q and remaining > 0:\n            p, v = q.popleft()\n\n            if not alive[v] or prv[v] != p:\n                continue\n\n            if gcd(a[p], a[v]) != 1:\n                continue\n\n            answer.append(v + 1)\n            alive[v] = False\n            remaining -= 1\n\n            if remaining == 0:\n                break\n\n            w = nxt[v]\n\n            nxt[p] = w\n            prv[w] = p\n\n            # After a song is deleted, the next song cannot be deleted\n            # immediately. It will be considered again after one full cycle.\n            if gcd(a[p], a[w]) == 1:\n                q.append((p, w))\n\n        line = [str(len(answer))]\n        line.extend(map(str, answer))\n        output.append(\" \".join(line))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 146.956,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nArkady has a playlist that initially consists of $n$ songs, numerated from $1$ to $n$ in the order they appear in the playlist. Arkady starts listening to the songs in the playlist one by one, starting from song $1$. The playlist is cycled, i. e. after listening to the last song, Arkady will continue listening from the beginning.\n\nEach song has a genre $a_i$, which is a positive integer. Let Arkady finish listening to a song with genre $y$, and the genre of the next-to-last listened song be $x$. If $\\operatorname{gcd}(x, y) = 1$, he deletes the last listened song (with genre $y$) from the playlist. After that he continues listening normally, skipping the deleted songs, and forgetting about songs he listened to before. In other words, after he deletes a song, he can't delete the next song immediately.\n\nHere $\\operatorname{gcd}(x, y)$ denotes the greatest common divisor (GCD) of integers $x$ and $y$.\n\nFor example, if the initial songs' genres were $[5, 9, 2, 10, 15]$, then the playlist is converted as follows: [5, 9, 2, 10, 15] $\\to$ [5, 9, 2, 10, 15] $\\to$ [5, 2, 10, 15] (because $\\operatorname{gcd}(5, 9) = 1$) $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 10, 15] (because $\\operatorname{gcd}(5, 2) = 1$) $\\to$ [5, 10, 15] $\\to$ [5, 10, 15] $\\to$ ... The bold numbers represent the two last played songs. Note that after a song is deleted, Arkady forgets that he listened to that and the previous songs.\n\nGiven the initial playlist, please determine which songs are eventually deleted and the order these songs are deleted.\n\n\n-----Input-----\n\nEach test contains multiple test cases. The first line contains the number of test cases $t$ ($1 \\le t \\le 10000$). Description of the test cases follows.\n\nThe first line of each test case contains a single integer $n$ ($1 \\le n \\le 10^5$) — the number of songs.\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ ($1 \\le a_i \\le 10^9$) — the genres of the songs.\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each test case, print a single line. First, print a single integer $k$ — the number of deleted songs. After that print $k$ distinct integers: deleted songs in the order of their deletion.\n\n\n-----Examples-----\n\nInput\n5\n5\n5 9 2 10 15\n6\n1 2 4 2 4 2\n2\n1 2\n1\n1\n1\n2\nOutput\n2 2 3 \n2 2 1 \n2 2 1 \n1 1 \n0\n\n\n-----Note-----\n\nExplanation of the first test case is given in the statement.\n\nIn the second test case, the playlist is converted as follows: [1, 2, 4, 2, 4, 2] $\\to$ [1, 2, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] (because $\\operatorname{gcd}(1, 2) = 1$) $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [4, 2, 4, 2] (because $\\operatorname{gcd}(2, 1) = 1$) $\\to$ [4, 2, 4, 2] $\\to$ ...\n\nIn the third test case, the playlist is converted as follows: [1, 2] $\\to$ [1, 2] $\\to$ [1] (because $\\operatorname{gcd}(1, 2) = 1$) $\\to$ [1] $\\to$ [1] (Arkady listened to the same song twice in a row) $\\to$ [] (because $\\operatorname{gcd}(1, 1) = 1$).\n\nThe fourth test case is same as the third after deletion of the second song.\n\nIn the fifth test case, the same song is listened to over and over again, but since $\\operatorname{gcd}(2, 2) \\ne 1$, it is not deleted.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

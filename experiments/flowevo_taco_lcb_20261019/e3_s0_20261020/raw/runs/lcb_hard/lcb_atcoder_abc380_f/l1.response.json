@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3ec2b7e5-27a6-4836-842c-bbe176acf3ae",
+  "created": 1792440636,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 754,
+    "completion_tokens": 13563,
+    "total_tokens": 14317,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13085
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 754
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom functools import lru_cache\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N, M, L = data[0], data[1], data[2]\n\n    idx = 3\n    A = data[idx:idx + N]\n    idx += N\n    B = data[idx:idx + M]\n    idx += M\n    C = data[idx:idx + L]\n\n    values = A + B + C\n    K = N + M + L\n    full = (1 << K) - 1\n\n    less_mask = [0] * K\n    for i in range(K):\n        mask = 0\n        for j in range(K):\n            if values[j] < values[i]:\n                mask |= 1 << j\n        less_mask[i] = mask\n\n    initial_takahashi = (1 << N) - 1\n    initial_aoki = ((1 << M) - 1) << N\n\n    sys.setrecursionlimit(1_000_000)\n\n    @lru_cache(maxsize=None)\n    def win(my_hand, opponent_hand):\n        if my_hand == 0:\n            return False\n\n        table = full ^ (my_hand | opponent_hand)\n        bits = my_hand\n\n        while bits:\n            card_bit = bits & -bits\n            bits ^= card_bit\n            card_index = card_bit.bit_length() - 1\n\n            next_my_hand = my_hand ^ card_bit\n\n            if not win(opponent_hand, next_my_hand):\n                return True\n\n            take_candidates = table & less_mask[card_index]\n            while take_candidates:\n                take_bit = take_candidates & -take_candidates\n                take_candidates ^= take_bit\n\n                next_my_hand_with_take = next_my_hand | take_bit\n                if not win(opponent_hand, next_my_hand_with_take):\n                    return True\n\n        return False\n\n    if win(initial_takahashi, initial_aoki):\n        print(\"Takahashi\")\n    else:\n        print(\"Aoki\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 66.541,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTakahashi and Aoki will play a game using cards with numbers written on them.\nInitially, Takahashi has N cards with numbers A_1, \\ldots, A_N in his hand, Aoki has M cards with numbers B_1, \\ldots, B_M in his hand, and there are L cards with numbers C_1, \\ldots, C_L on the table.\r\nThroughout the game, both Takahashi and Aoki know all the numbers on all the cards, including the opponent's hand.\nStarting with Takahashi, they take turns performing the following action:\n\n- Choose one card from his hand and put it on the table. Then, if there is a card on the table with a number less than the number on the card he just played, he may take one such card from the table into his hand.\n\nThe player who cannot make a move first loses, and the other player wins. Determine who wins if both players play optimally.\nIt can be proved that the game always ends in a finite number of moves.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M L\r\nA_1 \\ldots A_N\r\nB_1 \\ldots B_M\r\nC_1 \\ldots C_L\n\nOutput\n\nPrint Takahashi if Takahashi wins, and Aoki if Aoki wins.\n\nConstraints\n\n\n- 1 \\leq N, M, L\n- N + M + L \\leq 12\n- 1 \\leq A_i, B_i, C_i \\leq 10^9\n- All input values are integers.\n\nSample Input 1\n\n1 1 2\r\n2\r\n4\r\n1 3\n\nSample Output 1\n\nAoki\r\n\nThe game may proceed as follows (not necessarily optimal moves):\n\n- Takahashi plays 2 from his hand to the table, and takes 1 from the table into his hand. Now, Takahashi's hand is (1), Aoki's hand is (4), and the table cards are (2,3).\n- Aoki plays 4 from his hand to the table, and takes 2 into his hand. Now, Takahashi's hand is (1), Aoki's hand is (2), and the table cards are (3,4).\n- Takahashi plays 1 from his hand to the table. Now, Takahashi's hand is (), Aoki's hand is (2), and the table cards are (1,3,4).\n- Aoki plays 2 from his hand to the table. Now, Takahashi's hand is (), Aoki's hand is (), and the table cards are (1,2,3,4).\n- Takahashi cannot make a move and loses; Aoki wins.\n\nSample Input 2\n\n4 4 4\r\n98 98765 987654 987654321\r\n987 9876 9876543 98765432\r\n123 12345 1234567 123456789\n\nSample Output 2\n\nTakahashi\n\nSample Input 3\n\n1 1 8\r\n10\r\n10\r\n1 2 3 4 5 6 7 8\n\nSample Output 3\n\nAoki\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

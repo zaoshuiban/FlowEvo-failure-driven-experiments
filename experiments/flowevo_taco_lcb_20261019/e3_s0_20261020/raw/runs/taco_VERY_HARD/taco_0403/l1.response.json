@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5291409c-fd3f-4f4b-bbdb-463a35ce3a83",
+  "created": 1792451325,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 649,
+    "completion_tokens": 18886,
+    "total_tokens": 19535,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 17994
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 649
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\nPRIMITIVE_ROOT = 3\n\n\ndef ntt(a, invert):\n    n = len(a)\n\n    j = 0\n    for i in range(1, n):\n        bit = n >> 1\n        while j & bit:\n            j ^= bit\n            bit >>= 1\n        j ^= bit\n        if i < j:\n            a[i], a[j] = a[j], a[i]\n\n    length = 2\n    mod = MOD\n    root = PRIMITIVE_ROOT\n\n    while length <= n:\n        wlen = pow(root, (mod - 1) // length, mod)\n        if invert:\n            wlen = pow(wlen, mod - 2, mod)\n\n        half = length >> 1\n\n        for start in range(0, n, length):\n            w = 1\n            end = start + half\n            for idx in range(start, end):\n                u = a[idx]\n                v = a[idx + half] * w % mod\n\n                s = u + v\n                if s >= mod:\n                    s -= mod\n\n                d = u - v\n                if d < 0:\n                    d += mod\n\n                a[idx] = s\n                a[idx + half] = d\n                w = w * wlen % mod\n\n        length <<= 1\n\n    if invert:\n        inv_n = pow(n, mod - 2, mod)\n        for i in range(n):\n            a[i] = a[i] * inv_n % mod\n\n\ndef solve_case(arr):\n    n = len(arr)\n    m = max(arr)\n\n    # d < n is impossible by pigeonhole principle.\n    # Check d = n first, because it is often the answer.\n    seen = set()\n    valid = True\n    for x in arr:\n        r = x % n\n        if r in seen:\n            valid = False\n            break\n        seen.add(r)\n\n    if valid:\n        return n\n\n    # For small n, direct pairwise differences are faster.\n    if n * (n - 1) // 2 <= 200000:\n        arr.sort()\n        diff = bytearray(m + 1)\n\n        for i in range(n):\n            ai = arr[i]\n            for j in range(i):\n                diff[ai - arr[j]] = 1\n\n        for d in range(n, m + 1):\n            ok = True\n            for delta in range(d, m + 1, d):\n                if diff[delta]:\n                    ok = False\n                    break\n            if ok:\n                return d\n\n        return m\n\n    # Use NTT to compute all pairwise differences.\n    size = 1\n    while size <= 2 * m:\n        size <<= 1\n\n    f = [0] * size\n    for x in arr:\n        f[x] = 1\n\n    ntt(f, False)\n\n    w = pow(PRIMITIVE_ROOT, (MOD - 1) // size, MOD)\n    base = pow(w, m, MOD)\n\n    h = [0] * size\n    cur = 1\n\n    for k in range(size):\n        idx = 0 if k == 0 else size - k\n        h[k] = f[k] * f[idx] % MOD * cur % MOD\n        cur = cur * base % MOD\n\n    ntt(h, True)\n\n    for d in range(n, m + 1):\n        ok = True\n        for delta in range(d, m + 1, d):\n            if h[m + delta] != 0:\n                ok = False\n                break\n        if ok:\n            return d\n\n    return m\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    pos = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[pos]\n        pos += 1\n        arr = data[pos:pos + n]\n        pos += n\n\n        answers.append(str(solve_case(arr)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 90.332,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array A consisting of N distinct positive integers.\n\nFind the smallest positive integer d such that there exists no pair of integers (i, j) (1≤ i< j ≤ N) where abs(A_{i} - A_{j}) is divisible by d. \n\nIn other words, d \\nmid abs(A_{i} - A_{j}) for all (1≤ i < j≤ N). \n\n------ Input Format ------ \n\n- The first line of input will contain a single integer T, denoting the number of test cases.\n- Each test case consists of multiple lines of input.\n- The first line of each test case contains an integers N — the number of the array A.\n- The second line of each test case contains N space-separated distinct integers A_{1}, A_{2}, \\ldots , A_{N} denoting the array A.\n\n------ Output Format ------ \n\nFor each test case, output the smallest positive integer d such that d \\nmid (A_{i} - A_{j}) for all (1≤ i < j≤ N). \n\n------ Constraints ------ \n\n$1 ≤ T ≤ 1000$ \n$2 ≤ N ≤ 2 \\cdot 10^{5}$\n$1 ≤ A_{i} ≤ 2 \\cdot 10^{5}$\n- The sums of $N$ and $max(A)$ over all test cases does not exceed $3 \\cdot 10 ^ 5$.\n\n----- Sample Input 1 ------ \n3\n3\n1 2 3\n3\n1 2 10\n3\n1 3 10\n----- Sample Output 1 ------ \n3\n5\n4\n----- explanation 1 ------ \nTest case $1$: The possible differences are $abs(A_{1} - A_{2}) = 1, abs(A_{1} - A_{3}) = 2, abs(A_{2} - A_{3}) = 1$. The smallest positive integer not dividing any of these differences is $3$.\n\nTest case $2$: The possible differences are $abs(A_{1} - A_{2}) = 1, abs(A_{1} - A_{3}) = 9, abs(A_{2} - A_{3}) = 8$. The smallest positive integer not dividing any of these differences is $5$.\n\nTest case $3$: The possible differences are $abs(A_{1} - A_{2}) = 2, abs(A_{1} - A_{3}) = 9, abs(A_{2} - A_{3}) = 7$. The smallest positive integer not dividing any of these differences is $4$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

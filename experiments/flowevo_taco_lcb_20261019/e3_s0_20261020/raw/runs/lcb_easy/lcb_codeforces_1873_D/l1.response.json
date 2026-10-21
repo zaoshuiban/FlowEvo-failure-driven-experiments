@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5b25411c-cb48-4557-b78b-5e92d1efc39a",
+  "created": 1792430453,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 566,
+    "completion_tokens": 2265,
+    "total_tokens": 2831,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2106
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 566
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        k = int(data[idx + 1])\n        s = data[idx + 2]\n        idx += 3\n\n        operations = 0\n        i = 0\n\n        while i < n:\n            if s[i] == ord('B'):\n                operations += 1\n                i += k\n            else:\n                i += 1\n\n        answers.append(str(operations))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 11.322,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a strip of paper $s$ that is $n$ cells long. Each cell is either black or white. In an operation you can take any $k$ consecutive cells and make them all white.\n\nFind the minimum number of operations needed to remove all black cells.\n\nInput\n\nThe first line contains a single integer $t$ ($1 \\leq t \\leq 1000$) — the number of test cases.\n\nThe first line of each test case contains two integers $n$ and $k$ ($1 \\leq k \\leq n \\leq 2 \\cdot 10^5$) — the length of the paper and the integer used in the operation.\n\nThe second line of each test case contains a string $s$ of length $n$ consisting of characters $\\texttt{B}$ (representing a black cell) or $\\texttt{W}$ (representing a white cell).\n\nThe sum of $n$ over all test cases does not exceed $2 \\cdot 10^5$.\n\nOutput\n\nFor each test case, output a single integer — the minimum number of operations needed to remove all black cells.Sample Input 1:\n8\n\n6 3\n\nWBWWWB\n\n7 3\n\nWWBWBWW\n\n5 4\n\nBWBWB\n\n5 5\n\nBBBBB\n\n8 2\n\nBWBWBBBB\n\n10 2\n\nWBBWBBWBBW\n\n4 1\n\nBBBB\n\n3 2\n\nWWW\n\n\n\nSample Output 1:\n\n2\n1\n2\n1\n4\n3\n4\n0\n\n\nNote\n\nIn the first test case you can perform the following operations: $$\\color{red}{\\texttt{WBW}}\\texttt{WWB} \\to \\texttt{WWW}\\color{red}{\\texttt{WWB}} \\to \\texttt{WWWWWW}$$\n\nIn the second test case you can perform the following operations: $$\\texttt{WW}\\color{red}{\\texttt{BWB}}\\texttt{WW} \\to \\texttt{WWWWWWW}$$\n\nIn the third test case you can perform the following operations: $$\\texttt{B}\\color{red}{\\texttt{WBWB}} \\to \\color{red}{\\texttt{BWWW}}\\texttt{W} \\to \\texttt{WWWWW}$$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

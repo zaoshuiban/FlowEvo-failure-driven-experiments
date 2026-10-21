@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8329a87e-a84d-46d3-93ef-1e1a9fc03508",
+  "created": 1792431938,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 934,
+    "completion_tokens": 5197,
+    "total_tokens": 6131,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5028
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 422
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = iter(sys.stdin.buffer.read().split())\n    t = int(next(data))\n    answers = []\n\n    for _ in range(t):\n        n = int(next(data))\n        a = int(next(data))\n        b = int(next(data))\n\n        count_a = 0\n        count_b = 0\n\n        for _ in range(n):\n            x = int(next(data))\n            if x == a:\n                count_a += 1\n            if x == b:\n                count_b += 1\n\n        probability = (count_a / n) * (count_b / n)\n        answers.append(f\"{probability:.10f}\")\n\n    sys.stdout.write(\"\\n\".join(answers) + \"\\n\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 22.796,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin chinese, Russian and Vietnamese as well. \n\nOnce, after a stressful day, Chef decided to relax and visit a casino near his house to gamble. He feels lucky and he's going to bet almost all of his money.\n\nThe game Chef is going to play in the casino consists of tossing a die with $N$ faces twice. There is a number written on each face of the die (these numbers are not necessarily distinct). In order to win, Chef must get the number $A$ on the first toss and the number $B$ on the second toss of the die.\n\nThe excited viewers want to know the probability that Chef will win the game. Can you help them find that number? Assume that Chef gets each face of the die with the same probability on each toss and that tosses are mutually independent.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains three space-separated integers $N$, $A$ and $B$.\nThe second line contains $N$ space-separated integers $x_{1}, x_{2}, \\dots, x_{N}$ denoting the numbers written on the faces of the die.\n\n------  Output ------\nFor each test case, print a single line containing one real number — the probability that Chef will win. Your answer will be considered correct if its absolute error does not exceed $10^{-6}$.\n\n------  Constraints ------\n$1 ≤ T ≤ 70$\n$1 ≤ N ≤ 10^{4}$\n$1 ≤ A ≤ N$\n$1 ≤ B ≤ N$\n$1 ≤ x_{i} ≤ N$ for each valid $i$\n\n------  Subtasks ------\nSubtask #1 (20 points):\n$T ≤ 10$\n$N ≤ 100$\n\nSubtask #2 (80 points): original constraints\n\n----- Sample Input 1 ------ \n2\n5 1 1\n1 1 1 1 1\n2 1 1\n1 2\n----- Sample Output 1 ------ \n1.0000000000\n0.2500000000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    ans = []\n\n    for _ in range(t):\n        n, a, b = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n\n        faces = data[idx:idx + n]\n        idx += n\n\n        count_a = 0\n        count_b = 0\n\n        for x in faces:\n            if x == a:\n                count_a += 1\n            if x == b:\n                count_b += 1\n\n        probability = (count_a / n) * (count_b / n)\n        ans.append(f\"{probability:.10f}\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cf1b6897-8137-4f08-bb0b-3553d6baaae0",
+  "created": 1792430342,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 288,
+    "completion_tokens": 134,
+    "total_tokens": 422,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 78
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 288
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    s = input().strip()\n    print(''.join(ch * 2 for ch in s))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 1.28,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string S of length N consisting of lowercase English letters.\nWe denote the i-th character of S by S_i.\nPrint the string of length 2N obtained by concatenating S_1,S_1,S_2,S_2,\\dots,S_N, and S_N in this order.\nFor example, if S is beginner, print bbeeggiinnnneerr.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\nS\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- N is an integer such that 1 \\le N \\le 50.\n- S is a string of length N consisting of lowercase English letters.\n\nSample Input 1\n\n8\nbeginner\n\nSample Output 1\n\nbbeeggiinnnneerr\n\nIt is the same as the example described in the problem statement.\n\nSample Input 2\n\n3\naaa\n\nSample Output 2\n\naaaaaa\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

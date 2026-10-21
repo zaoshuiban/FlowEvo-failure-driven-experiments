@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5b101311-a801-422c-8a81-4730d1609c5e",
+  "created": 1792430423,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 984,
+    "completion_tokens": 3956,
+    "total_tokens": 4940,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3670
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 600
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 2\n    for _ in range(m):\n        u, v = data[idx], data[idx + 1]\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    parent = [0] * (n + 1)\n    parent[1] = -1\n\n    order = []\n    stack = [1]\n\n    while stack:\n        u = stack.pop()\n        order.append(u)\n\n        for v in adj[u]:\n            if v == parent[u] or parent[v] != 0:\n                continue\n            parent[v] = u\n            stack.append(v)\n\n    subtree_size = [1] * (n + 1)\n    removed_edges = 0\n\n    for u in reversed(order):\n        if u != 1 and subtree_size[u] % 2 == 0:\n            removed_edges += 1\n\n        if parent[u] > 0:\n            subtree_size[parent[u]] += subtree_size[u]\n\n    print(removed_edges)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 18.911,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a tree (a simple connected graph with no cycles). \n\nFind the maximum number of edges you can remove from the tree to get a forest such that each connected component of the forest contains an even number of nodes.\n\nAs an example, the following tree with $4$ nodes can be cut at most $1$ time to create an even forest.  \n\nFunction Description  \n\nComplete the evenForest function in the editor below.  It should return an integer as described.  \n\nevenForest has the following parameter(s):  \n\nt_nodes: the number of nodes in the tree  \nt_edges: the number of undirected edges in the tree  \nt_from: start nodes for each edge  \nt_to: end nodes for each edge, (Match by index to t_from.)  \n\nInput Format\n\nThe first line of input contains two integers $t_{n}odes$ and $t_e dges$, the number of nodes and edges. \n\nThe next $t_e dges$ lines contain two integers $t_{f}rom[i]$ and $t_to[i]$ which specify nodes connected by an edge of the tree. The root of the tree is node $1$.\n\nConstraints\n\n$2\\leq n\\leq100$ \n$n\\in\\mathbb{Z}^+_{\\text{even}}$  \n\nNote: The tree in the input will be such that it can always be decomposed into components containing an even number of nodes. $\\mathbb{Z}_{\\text{even}}^{+}$ is the set of positive even integers.\n\nOutput Format\n\nPrint the number of removed edges.\n\nSample Input 1\n\n10 9\n2 1\n3 1\n4 3\n5 2\n6 1\n7 2\n8 6\n9 8\n10 8\n\nSample Output 1\n\n2\n\nExplanation 1\n\nRemove edges ${(1,3)}$  and ${(1,6)}$ to get the desired result.\n\nNo more edges can be removed.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 2\n    for _ in range(m):\n        u, v = data[idx], data[idx + 1]\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    parent = [0] * (n + 1)\n    parent[1] = -1\n    order = [1]\n\n    for u in order:\n        for v in adj[u]:\n            if v != parent[u]:\n                parent[v] = u\n                order.append(v)\n\n    subtree_size = [1] * (n + 1)\n    removed_edges = 0\n\n    for u in reversed(order):\n        if u != 1:\n            if subtree_size[u] % 2 == 0:\n                removed_edges += 1\n            subtree_size[parent[u]] += subtree_size[u]\n\n    print(removed_edges)\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a tree (a connected undirected graph without cycles) of $n$ vertices. Each of the $n - 1$ edges of the tree is colored in either black or red.\n\nYou are also given an integer $k$. Conside\nSolution:\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    k = next(it)\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n        if size[ra] < size["
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

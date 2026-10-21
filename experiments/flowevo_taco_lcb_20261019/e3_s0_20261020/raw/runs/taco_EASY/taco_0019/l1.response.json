@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1dec7a98-8088-4d4a-9ccc-e5db5067923e",
+  "created": 1792430173,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 216,
+    "completion_tokens": 1152,
+    "total_tokens": 1368,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1071
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 216
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef is_sorted_and_how(arr):\n    if all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1)):\n        return \"yes, ascending\"\n    if all(arr[i] >= arr[i + 1] for i in range(len(arr) - 1)):\n        return \"yes, descending\"\n    return \"no\"\n```",
+  "latency_s": 5.865,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nComplete the method which accepts an array of integers, and returns one of the following:\n\n* `\"yes, ascending\"` - if the numbers in the array are sorted in an ascending order\n* `\"yes, descending\"` - if the numbers in the array are sorted in a descending order\n* `\"no\"` - otherwise\n\n\nYou can assume the array will always be valid, and there will always be one correct answer.\n\nStarter code / required signature:\ndef is_sorted_and_how(arr):\n\t\n\nUse the required function/method named is_sorted_and_how. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

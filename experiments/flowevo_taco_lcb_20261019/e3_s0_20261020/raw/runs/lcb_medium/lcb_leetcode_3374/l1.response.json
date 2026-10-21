@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "00b2986a-7674-4c52-a89c-76ef87772dea",
+  "created": 1792431006,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 294,
+    "completion_tokens": 298,
+    "total_tokens": 592,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 207
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 294
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def countAlternatingSubarrays(self, nums: List[int]) -> int:\n        total = 0\n        current = 1\n\n        for i in range(len(nums)):\n            if i > 0 and nums[i] != nums[i - 1]:\n                current += 1\n            else:\n                current = 1\n\n            total += current\n\n        return total\n```",
+  "latency_s": 1.721,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a binary array nums.\nWe call a subarray alternating if no two adjacent elements in the subarray have the same value.\nReturn the number of alternating subarrays in nums.\n \nExample 1:\n\nInput: nums = [0,1,1,1]\nOutput: 5\nExplanation:\nThe following subarrays are alternating: [0], [1], [1], [1], and [0,1].\n\nExample 2:\n\nInput: nums = [1,0,1,0]\nOutput: 10\nExplanation:\nEvery subarray of the array is alternating. There are 10 possible subarrays that we can choose.\n\n \nConstraints:\n\n1 <= nums.length <= 10^5\nnums[i] is either 0 or 1.\n\nStarter code / required signature:\nclass Solution:\n    def countAlternatingSubarrays(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named countAlternatingSubarrays. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

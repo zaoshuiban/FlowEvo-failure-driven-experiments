@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "aec87390-4dfc-4735-8945-33f65ce37e6a",
+  "created": 1792436163,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 446,
+    "completion_tokens": 26243,
+    "total_tokens": 26689,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 25120
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 190
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, x = data[0], data[1]\n    arr = data[2:2 + n]\n\n    pos = []\n    ans0 = 0\n    run = 0\n\n    for i, val in enumerate(arr):\n        if val < x:\n            pos.append(i)\n            ans0 += run * (run + 1) // 2\n            run = 0\n        else:\n            run += 1\n\n    ans0 += run * (run + 1) // 2\n\n    m = len(pos)\n    ans = [0] * (n + 1)\n    ans[0] = ans0\n\n    if m == 0:\n        sys.stdout.write(' '.join(map(str, ans)) + '\\n')\n        return\n\n    # Gap array d. For a block of k consecutive elements < x,\n    # the number of valid segments is sum d[i] * d[i + k].\n    d = [0] * (m + 1)\n    d[0] = pos[0] + 1\n\n    for i in range(1, m):\n        d[i] = pos[i] - pos[i - 1]\n\n    d[m] = n - pos[-1]\n\n    gsize = m + 1\n    need = 2 * gsize - 1\n    L = 1\n    while L < need:\n        L <<= 1\n\n    # Large NTT-friendly prime:\n    # MOD = 15 * 2^37 + 1\n    MOD = 2061584302081\n\n    # Find a primitive root modulo MOD.\n    factors = (2, 3, 5)\n    primitive = 2\n    while True:\n        ok = True\n        for q in factors:\n            if pow(primitive, (MOD - 1) // q, MOD) == 1:\n                ok = False\n                break\n        if ok:\n            break\n        primitive += 1\n\n    rev = [0] * L\n    bits = L.bit_length() - 1\n    for i in range(1, L):\n        rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << (bits - 1))\n\n    roots_f = []\n    roots_i = []\n\n    length = 2\n    while length <= L:\n        half = length >> 1\n        wlen = pow(primitive, (MOD - 1) // length, MOD)\n        wlen_inv = pow(wlen, MOD - 2, MOD)\n\n        rf = [1] * half\n        ri = [1] * half\n\n        for j in range(1, half):\n            rf[j] = rf[j - 1] * wlen % MOD\n            ri[j] = ri[j - 1] * wlen_inv % MOD\n\n        roots_f.append(rf)\n        roots_i.append(ri)\n        length <<= 1\n\n    a = [0] * L\n    for i, v in enumerate(d):\n        a[i] = v\n\n    def ntt(arr, roots):\n        n_local = L\n        mod = MOD\n        rev_local = rev\n\n        for i in range(n_local):\n            j = rev_local[i]\n            if i < j:\n                arr[i], arr[j] = arr[j], arr[i]\n\n        length = 2\n        level = 0\n\n        while length <= n_local:\n            half = length >> 1\n            rt = roots[level]\n\n            for start in range(0, n_local, length):\n                j = start\n                k = start + half\n                r = 0\n                end = k\n\n                while j < end:\n                    u = arr[j]\n                    v = arr[k] * rt[r] % mod\n\n                    s = u + v\n                    if s >= mod:\n                        s -= mod\n\n                    t = u - v\n                    if t < 0:\n                        t += mod\n\n                    arr[j] = s\n                    arr[k] = t\n\n                    j += 1\n                    k += 1\n                    r += 1\n\n            length <<= 1\n            level += 1\n\n    ntt(a, roots_f)\n\n    # Circular autocorrelation: F[t] * F[-t].\n    mid = L >> 1\n\n    a0 = a[0] * a[0] % MOD\n    a[0] = a0\n\n    for i in range(1, mid):\n        prod = a[i] * a[L - i] % MOD\n        a[i] = prod\n        a[L - i] = prod\n\n    amid = a[mid] * a[mid] % MOD\n    a[mid] = amid\n\n    ntt(a, roots_i)\n\n    invL = pow(L, MOD - 2, MOD)\n\n    for k in range(1, m + 1):\n        ans[k] = a[L - k] * invL % MOD\n\n    sys.stdout.write(' '.join(map(str, ans)) + '\\n')\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 114.296,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNikita likes tasks on order statistics, for example, he can easily find the $k$-th number in increasing order on a segment of an array. But now Nikita wonders how many segments of an array there are such that a given number $x$ is the $k$-th number in increasing order on this segment. In other words, you should find the number of segments of a given array such that there are exactly $k$ numbers of this segment which are less than $x$.\n\nNikita wants to get answer for this question for each $k$ from $0$ to $n$, where $n$ is the size of the array.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $x$ $(1 \\le n \\le 2 \\cdot 10^5, -10^9 \\le x \\le 10^9)$.\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ $(-10^9 \\le a_i \\le 10^9)$ — the given array.\n\n\n-----Output-----\n\nPrint $n+1$ integers, where the $i$-th number is the answer for Nikita's question for $k=i-1$.\n\n\n-----Examples-----\nInput\n5 3\n1 2 3 4 5\n\nOutput\n6 5 4 0 0 0 \nInput\n2 6\n-5 9\n\nOutput\n1 2 0 \nInput\n6 99\n-1 -1 -1 -1 -1 -1\n\nOutput\n0 6 5 4 3 2 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6f6bc3e4-513b-4c17-9a23-87932b89fed7",
+  "created": 1792433762,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 659,
+    "completion_tokens": 2742,
+    "total_tokens": 3401,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2442
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 147
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        k = next(it)\n\n        a = [next(it) for _ in range(n)]\n\n        pairs = n // 2\n        max_sum = 2 * k\n\n        diff = [0] * (max_sum + 3)\n        freq = [0] * (max_sum + 2)\n\n        base_cost = 2 * pairs\n\n        for i in range(pairs):\n            u = a[i]\n            v = a[n - 1 - i]\n\n            s = u + v\n            low = min(u, v) + 1\n            high = max(u, v) + k\n\n            diff[low] -= 1\n            diff[high + 1] += 1\n\n            freq[s] += 1\n\n        current = 0\n        best = 10**9\n\n        for x in range(2, max_sum + 1):\n            current += diff[x]\n            cost = base_cost + current - freq[x]\n            if cost < best:\n                best = cost\n\n        answers.append(str(best))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 12.062,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array $a$ consisting of $n$ integers (it is guaranteed that $n$ is even, i.e. divisible by $2$). All $a_i$ does not exceed some integer $k$.\n\nYour task is to replace the minimum number of elements (replacement is the following operation: choose some index $i$ from $1$ to $n$ and replace $a_i$ with some integer in range $[1; k]$) to satisfy the following conditions:  after all replacements, all $a_i$ are positive integers not greater than $k$;  for all $i$ from $1$ to $\\frac{n}{2}$ the following equation is true: $a_i + a_{n - i + 1} = x$, where $x$ should be the same for all $\\frac{n}{2}$ pairs of elements. \n\nYou have to answer $t$ independent test cases.\n\n\n-----Input-----\n\nThe first line of the input contains one integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases. Then $t$ test cases follow.\n\nThe first line of the test case contains two integers $n$ and $k$ ($2 \\le n \\le 2 \\cdot 10^5, 1 \\le k \\le 2 \\cdot 10^5$) — the length of $a$ and the maximum possible value of some $a_i$ correspondingly. It is guratanteed that $n$ is even (i.e. divisible by $2$). The second line of the test case contains $n$ integers $a_1, a_2, \\dots, a_n$ ($1 \\le a_i \\le k$), where $a_i$ is the $i$-th element of $a$.\n\nIt is guaranteed that the sum of $n$ (as well as the sum of $k$) over all test cases does not exceed $2 \\cdot 10^5$ ($\\sum n \\le 2 \\cdot 10^5$, $\\sum k \\le 2 \\cdot 10^5$).\n\n\n-----Output-----\n\nFor each test case, print the answer — the minimum number of elements you have to replace in $a$ to satisfy the conditions from the problem statement.\n\n\n-----Example-----\nInput\n4\n4 2\n1 2 1 2\n4 3\n1 2 2 1\n8 7\n6 1 1 7 6 3 4 6\n6 6\n5 2 6 1 3 4\n\nOutput\n0\n1\n4\n2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

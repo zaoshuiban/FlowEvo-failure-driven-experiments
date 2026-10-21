@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f95670d1-1017-4d2b-97de-2983adca13ca",
+  "created": 1792438413,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 465,
+    "completion_tokens": 2555,
+    "total_tokens": 3020,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2450
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 465
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef even_magic(n):\n    total = n * n + 1\n    square = []\n\n    for i in range(n):\n        row = []\n        for j in range(n):\n            value = i * n + j + 1\n            if i % 4 == j % 4 or (i % 4) + (j % 4) == 3:\n                value = total - value\n            row.append(value)\n        square.append(row)\n\n    return square\n```",
+  "latency_s": 11.544,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA Magic Square contains the integers 1 to n^(2), arranged in an n by n array such that the columns, rows and both main diagonals add up to the same number.For doubly even positive integers (multiples of 4) the following method can be used to create a magic square.\nFill an array with the numbers 1 to n^(2) in succession. Then, for each 4 by 4 subarray, replace the entries on the blue and red diagonals by n^(2)+1-aij.\nSo, in the following example, a11 (row 1, column 1) was initially 1 and is replaced by 8^(2)+1-1 = 64\n\n\n    tab1 { padding-left: 2em; }\n    fc1  { font color=\"blue\"}\n\n\nn=8\n642 3 61606 7 57 \n9 55541213515016\n1747462021434224\n4026273736303133\n3234352928383925\n4123224445191848\n4915145253111056\n8 58595 4 62631 \n\nThe function even_magic() should return a 2D array as follows:-\nExample:\nn=4: Output: [[16,2,3,13],[5,11,10,8],[9,7,6,12],[4,14,15,1]]\n\n162 3 13\n5 11108 \n9 7 6 12\n4 14151 \n\n\nOnly doubly even numbers will be passed to the function in the tests.\n\nSee mathworld.wolfram.com for further details.\n\nStarter code / required signature:\ndef even_magic(n):\n\t\n\nUse the required function/method named even_magic. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

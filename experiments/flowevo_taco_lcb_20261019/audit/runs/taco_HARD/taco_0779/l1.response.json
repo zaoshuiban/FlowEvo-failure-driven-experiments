@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2ab2adf3-d789-44fb-9717-0d22d34837ea",
+  "created": 1792433036,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 580,
+    "completion_tokens": 21659,
+    "total_tokens": 22239,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 21262
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 580
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef read_ints():\n    data = sys.stdin.buffer.read()\n    num = 0\n    inside = False\n    for c in data:\n        if 48 <= c <= 57:\n            num = num * 10 + (c - 48)\n            inside = True\n        else:\n            if inside:\n                yield num\n                num = 0\n                inside = False\n    if inside:\n        yield num\n\n\ndef solve():\n    it = read_ints()\n\n    try:\n        t = next(it)\n    except StopIteration:\n        return\n\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        k = next(it)\n\n        adj = [[] for _ in range(n + 1)]\n\n        for _ in range(n - 1):\n            u = next(it)\n            v = next(it)\n            adj[u].append(v)\n            adj[v].append(u)\n\n        parent = [0] * (n + 1)\n        parent[1] = -1\n\n        order = [1]\n        idx = 0\n\n        while idx < len(order):\n            v = order[idx]\n            idx += 1\n\n            for u in adj[v]:\n                if u != parent[v]:\n                    parent[u] = v\n                    order.append(u)\n\n        height = [0] * (n + 1)\n        answer = 0\n\n        for v in reversed(order):\n            max_child_height = 0\n\n            for u in adj[v]:\n                if u != parent[v]:\n                    if height[u] > max_child_height:\n                        max_child_height = height[u]\n\n            height[v] = max_child_height + 1\n\n            if height[v] <= k:\n                answer += 1\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 110.708,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a tree with $N$ nodes, which are numbered from $1$ to $N$. It is rooted at Node $1$. We define a single $operation$ as follows :- \nPut a chip on the root.\nWithin an operation, you can \"move\" as many times as you like.\nA move is defined as picking a node which has a chip on it and then removing the chip from that node and placing a chip on all of its children. \n\nA node is covered if it has at least $1$ chip placed on it.\nYou can do at most $K$ operations. What is the maximum number of covered nodes that you can obtain?  \n\nNote that there is no constraint on the amount of chips placed on any node.\n\n------ Input: ------\n\nThe input contains a single integer, $T$, which denotes the number of testcases.\nThe first line of each testcase will contain two integers, $N$ and $K$, denoting the number of nodes and operations allowed, respectively.\nThe next $N-1$ lines contain two integers $u$ and $v$ indicating that there is an edge between nodes $u$ and $v$ in the tree.\n\n------ Output: ------\nThe output should consist of $T$ integers printed on separate lines. The integer on the i-th line should be the maximum number of nodes which can be covered in that testcase.\n\n------ Constraints  ------\n$1 ≤ T ≤ 5$\n$2 ≤ N ≤ 5*10^{5}$\n$1 ≤ K ≤ N$\nSum of $N$ over all testcases $ ≤ 5*10^{5}$\n$1 ≤ u,v ≤ N$\nThe given graph is a tree\n\n------ Subtasks ------\n30 points : Sum of $N$ of over all testcases $ ≤ 5000 $\n70 points : Original Constraints. \n\n----- Sample Input 1 ------ \n1\n7 2\n1 2\n1 3\n2 4\n2 5\n3 6\n3 7\n----- Sample Output 1 ------ \n6\n----- explanation 1 ------ \nYou can cover nodes 4,5,6,7 in the first operation and 2,3 in the second. \n2,3 for example can be covered by placing the chip on the root and then moving it to its children.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

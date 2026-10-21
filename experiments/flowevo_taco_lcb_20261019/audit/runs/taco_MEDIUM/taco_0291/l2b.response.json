@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "35f6d358-50c6-48a1-ab7b-0d45e531e0b4",
+  "created": 1792438273,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 623,
+    "completion_tokens": 3178,
+    "total_tokens": 3801,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2964
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 239
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        f = next(it)\n        unreadable_sum = 0\n        for _ in range(f):\n            unreadable_sum += next(it)\n\n        torn = next(it)\n\n        total_printed_sum = n * (n + 1) // 2 - unreadable_sum\n        leaves = (n + 1) // 2  # ceil(n / 2)\n\n        if leaves == 0:\n            expected_sum = 0.0\n        else:\n            expected_sum = total_printed_sum * (leaves - torn) / leaves\n\n        answers.append(f\"{expected_sum:.4f}\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 15.043,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTaru likes reading. Every month he gets a copy of the magazine \"BIT\". The magazine contains information about the latest advancements in technology.  Taru \n\nreads the book at night and writes the page number to which he has read on a piece of paper so that he can continue from there the next day. But sometimes \n\nthe page number is not printed or is so dull that it is unreadable.  To make matters worse Taru's brother who is really naughty tears of some of the pages of \n\nthe Magazine and throws them in the dustbin. He remembers the number of leaves he had torn but he does not remember which page numbers got removed. When Taru \n\nfinds this out he is furious and wants to beat him up. His brother apologizes, and says he won't ever do this again. But Taru did not want to be easy on him \n\nand he says \"I will leave you only if you help me find the answer to this. I will tell you how many pages (Printed sides) were there in the Magazine plus the \n\npages on which the page numbers were not printed. You already know the number of leaves you tore (T). Can you tell me the expected sum of the page numbers \n\nleft in the Magazine?\" Taru's brother replied \"huh!! This is a coding problem\". Please help Taru's brother.\n\nNote: The magazine is like a standard book with all odd page numbers in front and the successive even page number on its back. If the book contains 6 pages, \n\nPage number 1 and Page number 2 are front and back respectively. Tearing a leaf removes both the front and back page numbers.\n\n------ Input ------ \n\nThe first line contains the number of test cases t. 3t lines follow. The first line of each test case contains the number of pages (printed sides) in the \n\nbook. The second line's first integer is F, F integers follow which tell us the numbers of the page numbers not printed. The third line contains a single integer telling us the number of leaves Taru's brother tore.\n\n------ Output ------ \n\nOutput one real number correct up to 4 decimal digits which is equal to the expected sum of the page numbers left in the book.\n\n------ Constraints ------ \n\nNumber of printed Sides≤2000. All other values abide by the number of printed sides.\n\n----- Sample Input 1 ------ \n2\n10\n2 1 2\n2\n10\n1 8\n0\n----- Sample Output 1 ------ \n31.2000\n47.0000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "083f0041-166a-4d44-b753-5800cba7df7a",
+  "created": 1792443052,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 562,
+    "completion_tokens": 7315,
+    "total_tokens": 7877,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7029
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 562
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def maxSubarrays(self, n: int, conflictingPairs: List[List[int]]) -> int:\n        by_end = [[] for _ in range(n + 1)]\n        \n        for idx, (x, y) in enumerate(conflictingPairs):\n            a, b = min(x, y), max(x, y)\n            by_end[b].append((a, idx))\n        \n        count = [0] * (n + 1)\n        owner = [-1] * (n + 1)\n        gain = [0] * len(conflictingPairs)\n        \n        max1 = 0\n        max2 = 0\n        base = 0\n        \n        for r in range(1, n + 1):\n            for a, idx in by_end[r]:\n                if count[a] == 0:\n                    if a > max1:\n                        max2 = max1\n                        max1 = a\n                    elif a > max2:\n                        max2 = a\n                    owner[a] = idx\n                \n                count[a] += 1\n            \n            base += r - max1\n            \n            if max1 > 0 and count[max1] == 1:\n                gain[owner[max1]] += max1 - max2\n        \n        return base + (max(gain) if gain else 0)\n```",
+  "latency_s": 36.548,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer n which represents an array nums containing the numbers from 1 to n in order. Additionally, you are given a 2D array conflictingPairs, where conflictingPairs[i] = [a, b] indicates that a and b form a conflicting pair.\nRemove exactly one element from conflictingPairs. Afterward, count the number of non-empty subarrays of nums which do not contain both a and b for any remaining conflicting pair [a, b].\nReturn the maximum number of subarrays possible after removing exactly one conflicting pair.\n \nExample 1:\n\nInput: n = 4, conflictingPairs = [[2,3],[1,4]]\nOutput: 9\nExplanation:\n\nRemove [2, 3] from conflictingPairs. Now, conflictingPairs = [[1, 4]].\nThere are 9 subarrays in nums where [1, 4] do not appear together. They are [1], [2], [3], [4], [1, 2], [2, 3], [3, 4], [1, 2, 3] and [2, 3, 4].\nThe maximum number of subarrays we can achieve after removing one element from conflictingPairs is 9.\n\n\nExample 2:\n\nInput: n = 5, conflictingPairs = [[1,2],[2,5],[3,5]]\nOutput: 12\nExplanation:\n\nRemove [1, 2] from conflictingPairs. Now, conflictingPairs = [[2, 5], [3, 5]].\nThere are 12 subarrays in nums where [2, 5] and [3, 5] do not appear together.\nThe maximum number of subarrays we can achieve after removing one element from conflictingPairs is 12.\n\n\n \nConstraints:\n\n2 <= n <= 10^5\n1 <= conflictingPairs.length <= 2 * n\nconflictingPairs[i].length == 2\n1 <= conflictingPairs[i][j] <= n\nconflictingPairs[i][0] != conflictingPairs[i][1]\n\nStarter code / required signature:\nclass Solution:\n    def maxSubarrays(self, n: int, conflictingPairs: List[List[int]]) -> int:\n        \n\nUse the required function/method named maxSubarrays. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

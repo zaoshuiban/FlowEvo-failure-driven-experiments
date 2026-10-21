@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d22f730c-393a-47c0-be58-43b7c3e980c6",
+  "created": 1792447666,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 491,
+    "completion_tokens": 28306,
+    "total_tokens": 28797,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 26479
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 235
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nsys.setrecursionlimit(1_000_000)\n\n\ndef factor(x):\n    e2 = e3 = e5 = 0\n    while x % 2 == 0:\n        e2 += 1\n        x //= 2\n    while x % 3 == 0:\n        e3 += 1\n        x //= 3\n    while x % 5 == 0:\n        e5 += 1\n        x //= 5\n    return e2, e3, e5, x\n\n\nclass SegTree:\n    __slots__ = (\"n\", \"mx\", \"mn\", \"lz\")\n\n    def __init__(self, arr):\n        n = len(arr)\n        self.n = n\n        size = 4 * n + 5\n        self.mx = [0] * size\n        self.mn = [0] * size\n        self.lz = [0] * size\n        self._build(1, 0, n - 1, arr)\n\n    def _build(self, idx, left, right, arr):\n        if left == right:\n            v = arr[left]\n            self.mx[idx] = v\n            self.mn[idx] = v\n            return\n\n        mid = (left + right) >> 1\n        li = idx << 1\n        ri = li | 1\n\n        self._build(li, left, mid, arr)\n        self._build(ri, mid + 1, right, arr)\n\n        self.mx[idx] = self.mx[li] if self.mx[li] >= self.mx[ri] else self.mx[ri]\n        self.mn[idx] = self.mn[li] if self.mn[li] <= self.mn[ri] else self.mn[ri]\n\n    def range_dec(self, ql, qr):\n        self._dec(1, 0, self.n - 1, ql, qr)\n\n    def _dec(self, idx, left, right, ql, qr):\n        mx = self.mx\n        mn = self.mn\n        lz = self.lz\n\n        if qr < left or right < ql or mx[idx] == 0:\n            return\n\n        if ql <= left and right <= qr and mn[idx] > 0:\n            mx[idx] -= 1\n            mn[idx] -= 1\n            lz[idx] -= 1\n            return\n\n        li = idx << 1\n        ri = li | 1\n\n        z = lz[idx]\n        if z:\n            mx[li] += z\n            mn[li] += z\n            lz[li] += z\n\n            mx[ri] += z\n            mn[ri] += z\n            lz[ri] += z\n\n            lz[idx] = 0\n\n        mid = (left + right) >> 1\n\n        if ql <= mid:\n            self._dec(li, left, mid, ql, qr)\n        if qr > mid:\n            self._dec(ri, mid + 1, right, ql, qr)\n\n        mx[idx] = mx[li] if mx[li] >= mx[ri] else mx[ri]\n        mn[idx] = mn[li] if mn[li] <= mn[ri] else mn[ri]\n\n    def set_value(self, pos, val):\n        self._set(1, 0, self.n - 1, pos, val)\n\n    def _set(self, idx, left, right, pos, val):\n        mx = self.mx\n        mn = self.mn\n        lz = self.lz\n\n        if left == right:\n            mx[idx] = val\n            mn[idx] = val\n            lz[idx] = 0\n            return\n\n        li = idx << 1\n        ri = li | 1\n\n        z = lz[idx]\n        if z:\n            mx[li] += z\n            mn[li] += z\n            lz[li] += z\n\n            mx[ri] += z\n            mn[ri] += z\n            lz[ri] += z\n\n            lz[idx] = 0\n\n        mid = (left + right) >> 1\n\n        if pos <= mid:\n            self._set(li, left, mid, pos, val)\n        else:\n            self._set(ri, mid + 1, right, pos, val)\n\n        mx[idx] = mx[li] if mx[li] >= mx[ri] else mx[ri]\n        mn[idx] = mn[li] if mn[li] <= mn[ri] else mn[ri]\n\n    def collect(self):\n        out = [0] * self.n\n        self._collect(1, 0, self.n - 1, out)\n        return out\n\n    def _collect(self, idx, left, right, out):\n        mx = self.mx\n        lz = self.lz\n\n        if left == right:\n            out[left] = mx[idx]\n            return\n\n        li = idx << 1\n        ri = li | 1\n\n        z = lz[idx]\n        if z:\n            mx[li] += z\n            lz[li] += z\n\n            mx[ri] += z\n            lz[ri] += z\n\n            lz[idx] = 0\n\n        mid = (left + right) >> 1\n        self._collect(li, left, mid, out)\n        self._collect(ri, mid + 1, right, out)\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    ptr = 0\n\n    n = data[ptr]\n    ptr += 1\n\n    arr = data[ptr:ptr + n]\n    ptr += n\n\n    m = data[ptr]\n    ptr += 1\n\n    e2 = [0] * n\n    e3 = [0] * n\n    e5 = [0] * n\n    base = [0] * n\n\n    for i, x in enumerate(arr):\n        a, b, c, rest = factor(x)\n        e2[i] = a\n        e3[i] = b\n        e5[i] = c\n        base[i] = rest\n\n    tree2 = SegTree(e2)\n    tree3 = SegTree(e3)\n    tree5 = SegTree(e5)\n\n    del e2, e3, e5, arr\n\n    for _ in range(m):\n        typ = data[ptr]\n        ptr += 1\n\n        if typ == 1:\n            l = data[ptr] - 1\n            r = data[ptr + 1] - 1\n            p = data[ptr + 2]\n            ptr += 3\n\n            if p == 2:\n                tree2.range_dec(l, r)\n            elif p == 3:\n                tree3.range_dec(l, r)\n            else:\n                tree5.range_dec(l, r)\n\n        else:\n            pos = data[ptr] - 1\n            d = data[ptr + 1]\n            ptr += 2\n\n            a, b, c, rest = factor(d)\n\n            tree2.set_value(pos, a)\n            tree3.set_value(pos, b)\n            tree5.set_value(pos, c)\n            base[pos] = rest\n\n    final2 = tree2.collect()\n    final3 = tree3.collect()\n    final5 = tree5.collect()\n\n    pow2 = [1] * 64\n    pow3 = [1] * 40\n    pow5 = [1] * 30\n\n    for i in range(1, 64):\n        pow2[i] = pow2[i - 1] * 2\n    for i in range(1, 40):\n        pow3[i] = pow3[i - 1] * 3\n    for i in range(1, 30):\n        pow5[i] = pow5[i - 1] * 5\n\n    ans = [None] * n\n    for i in range(n):\n        value = base[i] * pow2[final2[i]] * pow3[final3[i]] * pow5[final5[i]]\n        ans[i] = str(value)\n\n    sys.stdout.write(\" \".join(ans))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 137.865,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \n\nChef has an array containing N integers. You have to make M queries. Each query has one of the two types:\n\n1 l r p - Select all the numbers having indices between l and r (inclusive) that are divisible by p and divide them by p,\nwhere p is in set {2, 3, 5}.\n2 l d - Modify the l-th number in the array to d.\n\nPlease help Chef in finding out the array after all the M queries.\n\n------ Input ------ \n\nThe first line of the input contains a single integer N denoting the number of integers in given array. \nThe second line contains N space-separated integers A_{1}, A_{2}, ..., A_{N} denoting the given array.\nNext line contains a single integer M denoting the number of queries.\nEach of the following M lines describes a single query in the format given in the statement.\n\n------ Output ------ \n\nOutput a single line containing N integers denoting the array after all the M queries.\n\n------ Constraints ------ \n\n$1 ≤ M ≤ 10^{5}$\n$1 ≤ l ≤ r ≤ N$\n$1 ≤ A_{i} ≤ 10^{9}$\n$In each query of first type, p is in set {2, 3, 5} $\n$Subtask 1 (20 points): 1 ≤ N ≤ 100$\n$Subtask 2 (35 points): 1 ≤ N ≤ 10^{5}, there is no query of second type$\n$Subtask 3 (45 points): 1 ≤ N ≤ 10^{5}$\n\n------ Example ------ \n\nInput:\n3\n1 2 3\n5\n1 2 2 2\n1 2 2 2\n2 2 3\n1 2 3 3\n2 1 5\n\nOutput:\n5 1 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

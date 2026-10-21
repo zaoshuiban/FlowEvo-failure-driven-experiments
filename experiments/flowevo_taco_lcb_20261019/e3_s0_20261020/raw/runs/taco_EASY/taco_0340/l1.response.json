@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a29811b5-8f26-4a11-b00e-343c61590ee2",
+  "created": 1792431322,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 686,
+    "completion_tokens": 590,
+    "total_tokens": 1276,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 469
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 686
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        ans = data[idx]\n        for i in range(idx + 1, idx + n):\n            ans &= data[i]\n\n        idx += n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 2.687,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMocha is a young girl from high school. She has learned so much interesting knowledge from her teachers, especially her math teacher. Recently, Mocha is learning about binary system and very interested in bitwise operation.\n\nThis day, Mocha got a sequence $a$ of length $n$. In each operation, she can select an arbitrary interval $[l, r]$ and for all values $i$ ($0\\leq i \\leq r-l$), replace $a_{l+i}$ with $a_{l+i} \\,\\&\\, a_{r-i}$ at the same time, where $\\&$ denotes the bitwise AND operation . This operation can be performed any number of times.\n\nFor example, if $n=5$, the array is $[a_1,a_2,a_3,a_4,a_5]$, and Mocha selects the interval $[2,5]$, then the new array is $[a_1,a_2\\,\\&\\, a_5, a_3\\,\\&\\, a_4, a_4\\,\\&\\, a_3, a_5\\,\\&\\, a_2]$.\n\nNow Mocha wants to minimize the maximum value in the sequence. As her best friend, can you help her to get the answer?\n\n\n-----Input-----\n\nEach test contains multiple test cases.\n\nThe first line contains a single integer $t$ ($1 \\le t \\le 100$) — the number of test cases. Each test case consists of two lines.\n\nThe first line of each test case contains a single integer $n$ ($1 \\le n \\le 100$) — the length of the sequence.\n\nThe second line of each test case contains $n$ integers $a_1, a_2, \\ldots, a_n$ ($0 \\le a_i \\le 10^9$).\n\n\n-----Output-----\n\nFor each test case, print one integer — the minimal value of the maximum value in the sequence.\n\n\n-----Examples-----\n\nInput\n4\n2\n1 2\n3\n1 1 3\n4\n3 11 3 7\n5\n11 7 15 3 7\nOutput\n0\n1\n3\n3\n\n\n-----Note-----\n\nIn the first test case, Mocha can choose the interval $[1,2]$, then the sequence becomes $[ 0, 0]$, where the first element is $1\\,\\&\\,2$, and the second element is $2\\,\\&\\,1$.\n\nIn the second test case, Mocha can choose the interval $[1,3]$, then the sequence becomes $[ 1,1,1]$, where the first element is $1\\,\\&\\,3$, the second element is $1\\,\\&\\,1$, and the third element is $3\\,\\&\\,1$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

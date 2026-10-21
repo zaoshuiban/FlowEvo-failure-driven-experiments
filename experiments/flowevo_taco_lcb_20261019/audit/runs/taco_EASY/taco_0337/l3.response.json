@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e8e6f1d0-ac36-48de-b5d5-ef8ed14deb87",
+  "created": 1792437861,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1203,
+    "completion_tokens": 8924,
+    "total_tokens": 10127,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8716
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 435
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        idx += 1\n\n        grid = [data[idx + i].decode() for i in range(n)]\n        idx += n\n\n        possible = True\n\n        for i in range(n - 1):\n            for j in range(n - 1):\n                if (\n                    grid[i][j] == '1'\n                    and grid[i][j + 1] == '0'\n                    and grid[i + 1][j] == '0'\n                ):\n                    possible = False\n                    break\n            if not possible:\n                break\n\n        answers.append(\"YES\" if possible else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 38.531,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nPolygon is not only the best platform for developing problems but also a square matrix with side $n$, initially filled with the character 0.\n\nOn the polygon, military training was held. The soldiers placed a cannon above each cell in the first row and a cannon to the left of each cell in the first column. Thus, exactly $2n$ cannons were placed. [Image] Initial polygon for $n=4$. \n\nCannons shoot character 1. At any moment of time, no more than one cannon is shooting. When a 1 flies out of a cannon, it flies forward (in the direction of the shot) until it collides with a polygon border or another 1. After that, it takes the cell in which it was before the collision and remains there. Take a look at the examples for better understanding.\n\nMore formally:   if a cannon stands in the row $i$, to the left of the first column, and shoots with a 1, then the 1 starts its flight from the cell ($i, 1$) and ends in some cell ($i, j$);  if a cannon stands in the column $j$, above the first row, and shoots with a 1, then the 1 starts its flight from the cell ($1, j$) and ends in some cell ($i, j$). \n\nFor example, consider the following sequence of shots: [Image] \n\n 1. Shoot the cannon in the row $2$.                         2. Shoot the cannon in the row $2$.                         3. Shoot the cannon in column $3$. \n\nYou have a report from the military training on your desk. This report is a square matrix with side length $n$ consisting of 0 and 1. You wonder if the training actually happened. In other words, is there a sequence of shots such that, after the training, you get the given matrix?\n\nEach cannon can make an arbitrary number of shots. Before the training, each cell of the polygon contains 0.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 1000$) — the number of test cases. Then $t$ test cases follow.\n\nEach test case starts with a line containing an integer $n$ ($1 \\le n \\le 50$) — the size of the polygon.\n\nThis is followed by $n$ lines of length $n$, consisting of 0 and 1 — the polygon matrix after the training.\n\nThe total area of the matrices in all test cases in one test does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each test case print:  YES if there is a sequence of shots leading to a given matrix;  NO if such a sequence does not exist. \n\nThe letters in the words YES and NO can be printed in any case.\n\n\n-----Example-----\nInput\n5\n4\n0010\n0011\n0000\n0000\n2\n10\n01\n2\n00\n00\n4\n0101\n1111\n0101\n0111\n4\n0100\n1110\n0101\n0111\n\nOutput\nYES\nNO\nYES\nYES\nNO\n\n\n\n-----Note-----\n\nThe first test case was explained in the statement.\n\nThe answer to the second test case is NO, since a 1 in a cell ($1, 1$) flying out of any cannon would continue its flight further.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    t = int(next(it))\n    answers = []\n\n    for _ in range(t):\n        n = int(next(it))\n        grid = [next(it) for _ in range(n)]\n\n        possible = True\n\n        for i in range(n - 1):\n            for j in range(n - 1):\n                if (\n                    grid[i][j] == ord('1')\n                    and grid[i][j + 1] == ord('0')\n                    and grid[i + 1][j] == ord('0')\n                ):\n                    possible = False\n                    break\n            if not possible:\n                break\n\n        answers.append(\"YES\" if possible else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

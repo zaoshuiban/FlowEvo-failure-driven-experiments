@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "06db7123-c5f5-4113-b170-91214e110adf",
+  "created": 1792437519,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 587,
+    "completion_tokens": 20240,
+    "total_tokens": 20827,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 19226
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 203
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\nfrom functools import cmp_to_key\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    raw_points = []\n    idx = 1\n\n    for _ in range(n):\n        x = data[idx]\n        y = data[idx + 1]\n        w = data[idx + 2]\n        idx += 3\n        raw_points.append((x, y, w))\n\n    # Points at the same coordinates can never be separated by a valid line.\n    merged = {}\n    for x, y, w in raw_points:\n        merged[(x, y)] = merged.get((x, y), 0) + w\n\n    points = list(merged.keys())\n    weights = [merged[p] for p in points]\n    n = len(points)\n\n    total = sum(weights)\n    ans = 0\n\n    events = []\n\n    for i in range(n):\n        xi, yi = points[i]\n        for j in range(i + 1, n):\n            xj, yj = points[j]\n\n            dx = xj - xi\n            dy = yj - yi\n\n            if dx == 0 and dy == 0:\n                continue\n\n            # Normal vector perpendicular to (dx, dy)\n            nx = -dy\n            ny = dx\n\n            g = math.gcd(abs(nx), abs(ny))\n            nx //= g\n            ny //= g\n\n            events.append((nx, ny, i, j))\n            events.append((-nx, -ny, i, j))\n\n    def half(nx, ny):\n        return 0 if (ny > 0 or (ny == 0 and nx >= 0)) else 1\n\n    def angle_cmp(a, b):\n        nx1, ny1 = a[0], a[1]\n        nx2, ny2 = b[0], b[1]\n\n        h1 = half(nx1, ny1)\n        h2 = half(nx2, ny2)\n\n        if h1 != h2:\n            return -1 if h1 < h2 else 1\n\n        cross = nx1 * ny2 - ny1 * nx2\n        if cross > 0:\n            return -1\n        if cross < 0:\n            return 1\n        return 0\n\n    events.sort(key=cmp_to_key(angle_cmp))\n\n    # Initial direction chosen so that no two projections are equal.\n    K = 10 ** 18\n    start_nx, start_ny = 1, K\n\n    start_pos = 0\n    for i, e in enumerate(events):\n        nx, ny = e[0], e[1]\n\n        h = half(nx, ny)\n\n        if h > 0:\n            start_pos = i\n            break\n\n        cross = nx * start_ny - ny * start_nx\n        if cross < 0:\n            start_pos = i\n            break\n    else:\n        start_pos = 0\n\n    ordered_events = events[start_pos:] + events[:start_pos]\n\n    order = list(range(n))\n    order.sort(key=lambda i: points[i][0] * start_nx + points[i][1] * start_ny)\n\n    position = [0] * n\n    for i, p in enumerate(order):\n        position[p] = i\n\n    def evaluate():\n        nonlocal ans\n\n        pref = 0\n        for k in range(n + 1):\n            if k > 0:\n                pref += weights[order[k - 1]]\n\n            other = total - pref\n            smaller = pref if pref < other else other\n\n            if smaller > ans:\n                ans = smaller\n\n    evaluate()\n\n    m = len(ordered_events)\n    group_start = 0\n\n    while group_start < m:\n        nx = ordered_events[group_start][0]\n        ny = ordered_events[group_start][1]\n\n        group_end = group_start + 1\n        while (\n            group_end < m\n            and ordered_events[group_end][0] == nx\n            and ordered_events[group_end][1] == ny\n        ):\n            group_end += 1\n\n        # All swaps with the same normal direction happen simultaneously.\n        for t in range(group_start, group_end):\n            _, _, i, j = ordered_events[t]\n\n            pi = position[i]\n            pj = position[j]\n\n            order[pi], order[pj] = order[pj], order[pi]\n            position[i] = pj\n            position[j] = pi\n\n        evaluate()\n\n        group_start = group_end\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 104.489,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLittle John has drawn $N$ stars on his paper where each star has a weight $v_i$. He draws a straight line that divides the paper into two parts such that each part has a subset of stars in them. Let the weight of each part be the summation of weights of the stars in the part. He wants to draw the line such that the difference in the sum of weights between the two parts is as small as possible while maximizing the smaller part's weight.  \n\nYour task is to compute the weight of smaller part corresponding to this line where no stars are allowed to be on the line and line can be of any slope.  \n\nInput Format \n\nThe first line of the input contains an integer $N$. \n\nEach of next $N$ lines contains three integers $x_i$ and $y_i$ specifying the positions of $i^{\\mbox{th}}$ star and $v_i$. \n\nNo three points lie on a line.  \n\nConstraints \n\n$1\\leq N\\leq100$ \n\n$-10^9\\leq x_i,y_i\\leq10^9$ \n\n$1\\leq v_i\\leq1000$  \n\nOutput Format \n\nPrint an integer being the answer to the test.  \n\nSample Input 0  \n\n4\n1 1 2\n-1 1 2\n-1 -1 4\n1 -1 5\n\nSample Output 0  \n\n6\n\nExplanation \n\nYou can imagine a line along the $Y-axis$ and see that point $(-1,1)$ and $(-1,-1)$ lie on left side summing up to 6, while the other side has sum as $5+2=7$.  \n\nSample Input 1\n\n10\n748798831 -200797120 595\n-774675771 179630170 159\n-338760201 945958360 750\n955629379 -312997434 516\n755005057 -672683474 405\n-743176829 190325067 86\n-301478753 -718170081 923\n-795908444 985440803 854\n-102868895 671114060 246\n-698209449 12550066 190\n\nSample Output 1\n\n2358\n\nExplanation  \n\n$[595,159,405,86,923,190]$ and $[516,750,854,246]$ are two sets of weights.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

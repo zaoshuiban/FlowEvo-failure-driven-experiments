@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "874b6b1b-397c-4bc1-aa5a-532974fa583c",
+  "created": 1792432849,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 716,
+    "completion_tokens": 2693,
+    "total_tokens": 3409,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2472
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 204
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        freq = [0] * (n + 2)\n\n        for _ in range(n):\n            x = data[idx]\n            idx += 1\n\n            while x > n:\n                x //= 2\n\n            freq[x] += 1\n\n        for value in range(n, 1, -1):\n            while freq[value] > 1:\n                freq[value] -= 1\n                freq[value // 2] += 1\n\n        if all(freq[i] == 1 for i in range(1, n + 1)):\n            answers.append(\"YES\")\n        else:\n            answers.append(\"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 13.254,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array $a$ consisting of $n$ positive integers. You can perform operations on it.\n\nIn one operation you can replace any element of the array $a_i$ with $\\lfloor \\frac{a_i}{2} \\rfloor$, that is, by an integer part of dividing $a_i$ by $2$ (rounding down).\n\nSee if you can apply the operation some number of times (possible $0$) to make the array $a$ become a permutation of numbers from $1$ to $n$ —that is, so that it contains all numbers from $1$ to $n$, each exactly once.\n\nFor example, if $a = [1, 8, 25, 2]$, $n = 4$, then the answer is yes. You could do the following:\n\nReplace $8$ with $\\lfloor \\frac{8}{2} \\rfloor = 4$, then $a = [1, 4, 25, 2]$.\n\nReplace $25$ with $\\lfloor \\frac{25}{2} \\rfloor = 12$, then $a = [1, 4, 12, 2]$.\n\nReplace $12$ with $\\lfloor \\frac{12}{2} \\rfloor = 6$, then $a = [1, 4, 6, 2]$.\n\nReplace $6$ with $\\lfloor \\frac{6}{2} \\rfloor = 3$, then $a = [1, 4, 3, 2]$.\n\n\n-----Input-----\n\nThe first line of input data contains an integer $t$ ($1 \\le t \\le 10^4$) —the number of test cases.\n\nEach test case contains exactly two lines. The first one contains an integer $n$ ($1 \\le n \\le 50$), the second one contains integers $a_1, a_2, \\dots, a_n$ ($1 \\le a_i \\le 10^9$).\n\n\n-----Output-----\n\nFor each test case, output on a separate line:\n\nYES if you can make the array $a$ become a permutation of numbers from $1$ to $n$,\n\nNO otherwise.\n\nYou can output YES and NO in any case (for example, strings yEs, yes, Yes and YES will be recognized as a positive response).\n\n\n-----Examples-----\n\nInput\n6\n4\n1 8 25 2\n2\n1 1\n9\n9 8 3 4 2 7 1 5 6\n3\n8 2 1\n4\n24 7 16 7\n5\n22 6 22 4 22\nOutput\nYES\nNO\nYES\nNO\nNO\nYES\n\n\n-----Note-----\n\nThe first test case is explained in the text of the problem statement.\n\nIn the second test case, it is not possible to get a permutation.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

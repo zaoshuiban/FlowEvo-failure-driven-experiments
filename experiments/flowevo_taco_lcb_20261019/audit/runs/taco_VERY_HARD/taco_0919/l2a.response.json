@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "534351be-d1c4-4211-bab3-dc2b4a43fb76",
+  "created": 1792467941,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 659,
+    "completion_tokens": 7610,
+    "total_tokens": 8269,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7143
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 147
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    if not data:\n        return\n\n    idx = 0\n\n    def next_int():\n        nonlocal idx\n        n = len(data)\n        while idx < n and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < n and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    T = next_int()\n    answers = []\n\n    for _ in range(T):\n        N = next_int()\n        E = next_int()\n        O = next_int()\n\n        total = N * (N + 1) // 2\n\n        if E + O != total:\n            answers.append(\"-1\")\n            continue\n\n        # If c0 is the number of even prefix sums among N+1 prefixes,\n        # then O = c0 * (N + 1 - c0).\n        M = N + 1\n        D = M * M - 4 * O\n\n        if D < 0:\n            answers.append(\"-1\")\n            continue\n\n        root = math.isqrt(D)\n        if root * root != D:\n            answers.append(\"-1\")\n            continue\n\n        k = None\n        for candidate in ((M - root) // 2, (M + root) // 2):\n            if 1 <= candidate <= M and candidate * (M - candidate) == O:\n                k = candidate\n                break\n\n        if k is None:\n            answers.append(\"-1\")\n            continue\n\n        # Construct an array with all even values (2), except one odd value (1)\n        # at position k, if k <= N.\n        if N == 0:\n            answers.append(\"\")\n        elif k > N:\n            answers.append(\"2 \" * (N - 1) + \"2\")\n        else:\n            answers.append(\"2 \" * (k - 1) + \"1\" + \" 2\" * (N - k))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 33.102,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese , Russian and Vietnamese as well. \nAkhil has an array consisting of N positive integers. As we know that there are (N*(N+1))/2 non-empty contiguous subarrays in an array of size N. Akhil found that exactly E of the contiguous subarrays had even sum and remaining O = (N*(N+1))/2 - E have odd sum.\n\nNext day, he lost the original array. But he still remembered the E and O values correctly. Now, he wants to recreate any such array which has exactly E even sum continuous subarrays and O odd ones. If there are many such possible arrays, printing any one of them will make him happy.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows:\nFirst line of each test case contains an integer N denoting the length of lost array.\nSecond line of each test case contains two space separated integers E and O, denoting number of contiguous subarrays with even and odd sums, respectively. \n\n------ Output ------ \n\nFor each test case, output a single line containing all the integers of an array separated by a space.\nEach integer should lie between 0 and 100(both inclusive).\nIf there is no such possible array, print -1 in a single line.\n\n------ Constraints ------ \n\n$0 ≤ E, O ≤ N*(N+1)/2$\n$E + O = N*(N+1)/2$\n\n------ Subtasks ------ \n\nSubtask #1 (20 points) : 1 ≤ sum of N over all test cases ≤ 15\nSubtask #2 (20 points) : 1 ≤ sum of N over all test cases ≤ 2 * 10^{3}\nSubtask #3 (60 points) : 1 ≤  sum of N over all test cases  ≤ 10^{6}\n\n------ Example ------ \n\nInput:\n3\n3\n2 4\n3\n3 3\n3\n0 6\n\nOutput:\n2 1 2\n1 2 2\n-1\n\n------ Explanation ------ \n\nExample case 1. There are total 6 subarrays : {2},{1},{2},{2,1},{1,2},{2,1,2}. Their sums {2, 1, 2, 3, 3, 5} are respectively. As 2 of them are even and 4 of them are odd. So, this is one possible answer which satisfies Akhil's requirements.\nExample case 3. There is no array of length 3 whose all the subarrays have odd sum. Akhil might have remembered something incorrectly. Hence, you should print -1.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

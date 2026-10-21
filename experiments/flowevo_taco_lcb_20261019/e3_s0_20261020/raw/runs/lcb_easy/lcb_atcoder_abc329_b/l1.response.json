@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "35664ace-f4f3-4ab2-bec0-50e51085dc68",
+  "created": 1792430473,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 361,
+    "completion_tokens": 256,
+    "total_tokens": 617,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 177
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 361
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    a = data[1:1 + n]\n\n    maximum = max(a)\n    answer = max(x for x in a if x < maximum)\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 1.978,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given N integers A_1, A_2, \\ldots, A_N. Find the largest among those integers that are not the largest.\nThe constraints of this problem guarantee that the answer exists.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nA_1 A_2 \\ldots A_N\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 2 \\leq N \\leq 100\n- 1 \\leq A_i \\leq 100\n- It is not the case that all A_1, A_2, \\ldots, A_N are equal.\n- All input values are integers.\n\nSample Input 1\n\n5\r\n2 1 3 3 2\n\nSample Output 1\n\n2\r\n\nThe largest integer among 2,1,3,3,2 is 3.\nThe integers that are not 3 among 2,1,3,3,2 are 2,1,2, among which the largest is 2.\n\nSample Input 2\n\n4\r\n4 3 2 1\n\nSample Output 2\n\n3\n\nSample Input 3\n\n8\r\n22 22 18 16 22 18 18 22\n\nSample Output 3\n\n18\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

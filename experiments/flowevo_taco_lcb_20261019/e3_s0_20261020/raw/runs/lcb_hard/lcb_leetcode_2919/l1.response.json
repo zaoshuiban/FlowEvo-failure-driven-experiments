@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "15396c5f-b812-4ac7-9615-1dfdd4e412b9",
+  "created": 1792438793,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 604,
+    "completion_tokens": 2753,
+    "total_tokens": 3357,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2655
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 604
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def maxIncreasingGroups(self, usageLimits: List[int]) -> int:\n        usageLimits.sort()\n        total = 0\n        groups = 0\n        \n        for limit in usageLimits:\n            total += limit\n            needed = (groups + 1) * (groups + 2) // 2\n            if total >= needed:\n                groups += 1\n                \n        return groups\n```",
+  "latency_s": 12.955,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a 0-indexed array usageLimits of length n.\nYour task is to create groups using numbers from 0 to n - 1, ensuring that each number, i, is used no more than usageLimits[i] times in total across all groups. You must also satisfy the following conditions:\n\nEach group must consist of distinct numbers, meaning that no duplicate numbers are allowed within a single group.\nEach group (except the first one) must have a length strictly greater than the previous group.\n\nReturn an integer denoting the maximum number of groups you can create while satisfying these conditions.\n \nExample 1:\n\nInput: usageLimits = [1,2,5]\nOutput: 3\nExplanation: In this example, we can use 0 at most once, 1 at most twice, and 2 at most five times.\nOne way of creating the maximum number of groups while satisfying the conditions is: \nGroup 1 contains the number [2].\nGroup 2 contains the numbers [1,2].\nGroup 3 contains the numbers [0,1,2]. \nIt can be shown that the maximum number of groups is 3. \nSo, the output is 3. \nExample 2:\n\nInput: usageLimits = [2,1,2]\nOutput: 2\nExplanation: In this example, we can use 0 at most twice, 1 at most once, and 2 at most twice.\nOne way of creating the maximum number of groups while satisfying the conditions is:\nGroup 1 contains the number [0].\nGroup 2 contains the numbers [1,2].\nIt can be shown that the maximum number of groups is 2.\nSo, the output is 2. \n\nExample 3:\n\nInput: usageLimits = [1,1]\nOutput: 1\nExplanation: In this example, we can use both 0 and 1 at most once.\nOne way of creating the maximum number of groups while satisfying the conditions is:\nGroup 1 contains the number [0].\nIt can be shown that the maximum number of groups is 1.\nSo, the output is 1. \n\n \nConstraints:\n\n1 <= usageLimits.length <= 10^5\n1 <= usageLimits[i] <= 10^9\n\nStarter code / required signature:\nclass Solution:\n    def maxIncreasingGroups(self, usageLimits: List[int]) -> int:\n        \n\nUse the required function/method named maxIncreasingGroups. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

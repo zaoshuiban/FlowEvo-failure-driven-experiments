@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5e00e418-5e42-4ed0-abdf-86b561bebed4",
+  "created": 1792433718,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1019,
+    "completion_tokens": 31767,
+    "total_tokens": 32786,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 30614
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1019
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n\n    N = data[idx]\n    idx += 1\n\n    W = [0] * (N + 1)\n    for i in range(1, N + 1):\n        W[i] = data[idx]\n        idx += 1\n\n    M = 2 * N + 2\n    INF = 10**30\n\n    L = [0] * (N + 1)\n    R = [0] * (N + 1)\n\n    min_by_l = [INF] * (M + 2)\n    min_by_r = [INF] * (M + 2)\n\n    for i in range(1, N + 1):\n        l = data[idx]\n        r = data[idx + 1]\n        idx += 2\n\n        L[i] = l\n        R[i] = r\n        w = W[i]\n\n        if w < min_by_l[l]:\n            min_by_l[l] = w\n        if w < min_by_r[r]:\n            min_by_r[r] = w\n\n    Q = data[idx]\n    idx += 1\n\n    # prefix minimum by right endpoint\n    prefix_r = [INF] * (M + 2)\n    cur = INF\n    for c in range(1, M + 1):\n        if min_by_r[c] < cur:\n            cur = min_by_r[c]\n        prefix_r[c] = cur\n\n    # suffix minimum by left endpoint\n    suffix_l = [INF] * (M + 2)\n    cur = INF\n    for c in range(M, 0, -1):\n        if min_by_l[c] < cur:\n            cur = min_by_l[c]\n        suffix_l[c] = cur\n\n    # segment trees for range minimum queries\n    size = 1\n    while size < M:\n        size <<= 1\n\n    tree_l = [INF] * (2 * size)\n    tree_r = [INF] * (2 * size)\n\n    for c in range(1, M + 1):\n        tree_l[size + c - 1] = min_by_l[c]\n        tree_r[size + c - 1] = min_by_r[c]\n\n    for i in range(size - 1, 0, -1):\n        left = tree_l[i << 1]\n        right = tree_l[i << 1 | 1]\n        tree_l[i] = left if left < right else right\n\n        left = tree_r[i << 1]\n        right = tree_r[i << 1 | 1]\n        tree_r[i] = left if left < right else right\n\n    def range_min(tree, l, r):\n        if l > r:\n            return INF\n\n        l += size - 1\n        r += size - 1\n        res = INF\n\n        while l <= r:\n            if l & 1:\n                if tree[l] < res:\n                    res = tree[l]\n                l += 1\n\n            if not (r & 1):\n                if tree[r] < res:\n                    res = tree[r]\n                r -= 1\n\n            l >>= 1\n            r >>= 1\n\n        return res\n\n    answers = []\n\n    for _ in range(Q):\n        s = data[idx]\n        t = data[idx + 1]\n        idx += 2\n\n        Ls, Rs = L[s], R[s]\n        Lt, Rt = L[t], R[t]\n\n        # Direct edge exists iff the intervals are disjoint.\n        if Rs < Lt or Rt < Ls:\n            answers.append(str(W[s] + W[t]))\n            continue\n\n        best = INF\n\n        # Length-2 path: s -> u -> t\n        min_left = Ls if Ls < Lt else Lt\n        max_right = Rs if Rs > Rt else Rt\n\n        if min_left > 1:\n            if prefix_r[min_left - 1] < best:\n                best = prefix_r[min_left - 1]\n\n        if max_right + 1 <= M:\n            if suffix_l[max_right + 1] < best:\n                best = suffix_l[max_right + 1]\n\n        # Length-3 path: s -> a -> b -> t\n        # Case 1: s is shifted left relative to t.\n        if Rs + 1 <= Rt and Ls <= Lt - 1:\n            amin = range_min(tree_l, Rs + 1, Rt)\n            if amin < INF:\n                bmin = range_min(tree_r, Ls, Lt - 1)\n                val = amin + bmin\n                if val < best:\n                    best = val\n\n        # Case 2: t is shifted left relative to s.\n        if Rt + 1 <= Rs and Lt <= Ls - 1:\n            bmin = range_min(tree_l, Rt + 1, Rs)\n            if bmin < INF:\n                amin = range_min(tree_r, Lt, Ls - 1)\n                val = amin + bmin\n                if val < best:\n                    best = val\n\n        if best >= INF // 2:\n            answers.append(\"-1\")\n        else:\n            answers.append(str(W[s] + W[t] + best))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 150.493,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFor integers l, r, let [l, r] denote the set of all integers from l through r. That is, [l, r] = \\lbrace l, l+1, l+2, \\ldots, r-1, r\\rbrace.\nYou are given N pairs of integers (L_1, R_1), (L_2, R_2), \\ldots, (L_N, R_N).\nBased on these pairs, consider an undirected graph G defined as follows:\n\n- It has N vertices numbered 1, 2, \\ldots, N.\n- For all i, j \\in [1, N], there is an undirected edge between vertices i and j if and only if the intersection of [L_i, R_i] and [L_j, R_j] is empty.\n\nIn addition, for each i = 1, 2, \\ldots, N, define the weight of vertex i to be W_i.\nYou are given Q queries about G. Process these queries in the order they are given.\nFor each i = 1, 2, \\ldots, Q, the i-th query is the following:\n\nYou are given integers s_i and t_i (both between 1 and N, inclusive) such that s_i \\neq t_i. Determine whether there exists a path from vertex s_i to vertex t_i in G. If it exists, print the minimum possible weight of such a path.\n\nHere, the weight of a path from vertex s to vertex t is defined as the sum of the weights of the vertices on that path (including both endpoints s and t).\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\nW_1 W_2 \\cdots W_N\nL_1 R_1\nL_2 R_2\n\\vdots\nL_N R_N\nQ\ns_1 t_1\ns_2 t_2\n\\vdots\ns_Q t_Q\n\nOutput\n\nPrint Q lines.\nFor each i = 1, 2, \\ldots, Q, on the i-th line, if there exists a path from vertex s_i to vertex t_i, print the minimum possible weight of such a path, and print -1 otherwise.\n\nConstraints\n\n\n- 2 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq Q \\leq 2 \\times 10^5\n- 1 \\leq W_i \\leq 10^9\n- 1 \\leq L_i \\leq R_i \\leq 2N\n- 1 \\leq s_i, t_i \\leq N\n- s_i \\neq t_i\n- All input values are integers.\n\nSample Input 1\n\n5\n5 1 4 2 2\n2 4\n1 2\n7 8\n4 5\n2 7\n3\n1 4\n4 3\n5 2\n\nSample Output 1\n\n11\n6\n-1\n\nG is a graph with four undirected edges: \\lbrace 1, 3\\rbrace, \\lbrace 2, 3\\rbrace, \\lbrace 2, 4\\rbrace, \\lbrace 3, 4\\rbrace.\n\n- For the first query, there is a path from vertex 1 to vertex 4 given by 1 \\to 3 \\to 4. The weight of this path is W_1 + W_3 + W_4 = 5 + 4 + 2 = 11, and this is the minimum possible.\n- For the second query, there is a path from vertex 4 to vertex 3 given by 4 \\to 3. The weight of this path is W_4 + W_3 = 2 + 4 = 6, and this is the minimum possible.\n- For the third query, there is no path from vertex 5 to vertex 2. Hence, print -1.\n\nSample Input 2\n\n8\n44 75 49 4 78 79 12 32\n5 13\n10 16\n6 8\n6 15\n12 15\n5 7\n1 15\n1 2\n5\n5 6\n3 2\n7 5\n4 5\n5 4\n\nSample Output 2\n\n157\n124\n-1\n114\n114\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

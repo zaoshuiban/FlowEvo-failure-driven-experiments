@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "78caa6fe-cd01-4ddd-92c2-66bf803dbc46",
+  "created": 1792439128,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 474,
+    "completion_tokens": 11131,
+    "total_tokens": 11605,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10690
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 218
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    children = [[] for _ in range(n)]\n\n    for i, p in enumerate(data[1:], start=1):\n        p -= 1\n        children[p].append(i)\n\n    # f[v] = number of antichains inside v's rooted subtree,\n    # assuming v itself is selectable.\n    f = [0] * n\n    for v in range(n - 1, -1, -1):\n        prod = 1\n        for c in children[v]:\n            prod = prod * f[c] % MOD\n        f[v] = (1 + prod) % MOD\n\n    up = [0] * n\n    ans = [0] * n\n\n    for v in range(n):\n        prod_children = 1\n        for c in children[v]:\n            prod_children = prod_children * f[c] % MOD\n\n        if v == 0:\n            ans[v] = prod_children\n            parent_value = 1\n        else:\n            ans[v] = up[v] * prod_children % MOD\n            parent_value = up[v]\n\n        ch = children[v]\n        m = len(ch)\n        if m == 0:\n            continue\n\n        prefix = [1] * (m + 1)\n        for i in range(m):\n            prefix[i + 1] = prefix[i] * f[ch[i]] % MOD\n\n        suffix = 1\n        for i in range(m - 1, -1, -1):\n            c = ch[i]\n            prod_except = prefix[i] * suffix % MOD\n            prod_except = prod_except * parent_value % MOD\n            up[c] = (1 + prod_except) % MOD\n            suffix = suffix * f[c] % MOD\n\n    print(*ans)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 54.03,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe country has n cities and n - 1 bidirectional roads, it is possible to get from every city to any other one if you move only along the roads. The cities are numbered with integers from 1 to n inclusive.\n\nAll the roads are initially bad, but the government wants to improve the state of some roads. We will assume that the citizens are happy about road improvement if the path from the capital located in city x to any other city contains at most one bad road.\n\nYour task is — for every possible x determine the number of ways of improving the quality of some roads in order to meet the citizens' condition. As those values can be rather large, you need to print each value modulo 1 000 000 007 (10^9 + 7).\n\n\n-----Input-----\n\nThe first line of the input contains a single integer n (2 ≤ n ≤ 2·10^5) — the number of cities in the country. Next line contains n - 1 positive integers p_2, p_3, p_4, ..., p_{n} (1 ≤ p_{i} ≤ i - 1) — the description of the roads in the country. Number p_{i} means that the country has a road connecting city p_{i} and city i. \n\n\n-----Output-----\n\nPrint n integers a_1, a_2, ..., a_{n}, where a_{i} is the sought number of ways to improve the quality of the roads modulo 1 000 000 007 (10^9 + 7), if the capital of the country is at city number i.\n\n\n-----Examples-----\nInput\n3\n1 1\n\nOutput\n4 3 3\nInput\n5\n1 2 3 4\n\nOutput\n5 8 9 8 5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

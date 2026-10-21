@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "31145fab-dc93-4945-b6e4-78978746a3d2",
+  "created": 1792446592,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 455,
+    "completion_tokens": 24411,
+    "total_tokens": 24866,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24209
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 455
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom fractions import Fraction\nfrom math import gcd\n\ndef expand(x, digit):\n    if isinstance(x, float):\n        x = Fraction(str(x))\n    else:\n        x = Fraction(x)\n\n    p, q = x.numerator, x.denominator\n\n    if digit <= 1 or p == 0:\n        return [1, 1]\n\n    limit = 10 ** (digit - 1)\n\n    # S_n = N / D, where D = q^n * n!\n    N, D = 1, 1\n    n = 1\n    p_pow = p\n\n    while True:\n        factor = q * n\n        D *= factor\n        N = N * factor + p_pow\n\n        g = gcd(abs(N), D)\n        if abs(N) // g >= limit:\n            return [N // g, D // g]\n\n        n += 1\n        p_pow *= p\n```",
+  "latency_s": 107.381,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe aim is to calculate `exponential(x)` (written `exp(x)` in most math libraries) as an irreducible fraction, the numerator of this fraction having a given number of digits.\n\nWe call this function `expand`, it takes two parameters, `x` of which we want to evaluate the exponential, `digits` which is the required number of digits for the numerator. \n\nThe function `expand` will return an array of the form `[numerator, denominator]`; we stop the loop in the Taylor expansion (see references below) when the numerator has a number of digits `>=` the required number of digits\n\n# Examples:\n```\nexpand(1, 2) --> 65/24 (we will write this [65, 24] or (65, 24) in Haskell; \n65/24 ~ 2.708...)\n\nexpand(2, 5) --> [20947, 2835]\n\nexpand(3, 10) --> [7205850259, 358758400]\n\nexpand(1.5, 10) --> [36185315027,8074035200]\n```\n**Note**\n```expand(1,5) = [109601, 40320]``` is the same as ```expand(1, 6)```\n\n#Method:\nAs said above the way here is to use `Taylor expansion` of the exponential function though it is not always the best approximation by a rational.\n\n#References:\nhttps://en.wikipedia.org/wiki/Exponential_function#Formal_definition\n\nhttp://www.efunda.com/math/taylor_series/exponential.cfm\n\nStarter code / required signature:\ndef expand(x, digit):\n\t\n\nUse the required function/method named expand. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

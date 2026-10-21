@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "dc52f677-1b3e-45be-b2ee-9ebafe2ff8b8",
+  "created": 1792443232,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1023,
+    "completion_tokens": 11675,
+    "total_tokens": 12698,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11211
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 255
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, q = data[0], data[1]\n    angles = data[2:2 + q]\n\n    # For p = (i * j) mod 7, the cell is Y iff p^2 mod 7 is in {0, 1}.\n    # Equivalently, p is in {0, 1, 6}.\n    value = (1, 1, 0, 0, 0, 0, 1)\n\n    row_patterns = []\n    for r in range(7):\n        row = bytearray(n)\n        for j in range(n):\n            c = (j + 1) % 7\n            row[j] = value[(r * c) % 7]\n        row_patterns.append(bytes(row))\n\n    matrix = bytearray()\n    for i in range(n):\n        r = (i + 1) % 7\n        matrix.extend(row_patterns[r])\n\n    diff_90 = 0\n    diff_180 = 0\n\n    for i in range(n):\n        base = i * n\n\n        idx_90 = (n - 1) * n + i\n        row_180 = (n - 1 - i) * n\n        idx_180 = row_180 + n - 1\n\n        for j in range(n):\n            current = matrix[base + j]\n\n            if current != matrix[idx_90]:\n                diff_90 += 1\n\n            if current != matrix[idx_180]:\n                diff_180 += 1\n\n            idx_90 -= n\n            idx_180 -= 1\n\n    answers = []\n    for angle in angles:\n        angle %= 360\n\n        if angle == 0:\n            answers.append(\"0\")\n        elif angle == 90 or angle == 270:\n            answers.append(str(diff_90))\n        else:  # angle == 180\n            answers.append(str(diff_180))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 48.94,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWe define a $hackonacci$ series as follows:\n\n$hackonacci(n)=1\\cdot hackonacci(n-1)+2\\cdot hackon acesi(n-2)+3\\cdot hackon aci(n-3)$   \n$hackonacci(1)=1$  \n$hackonacci(2)=2$  \n$hackonacci(3)=3$  \n\nWe define a Hackonacci Matrix to be an $n\\times n$ matrix where the rows and columns are indexed from ${1}$ to $n$, and the top-left cell is $(1,1)$. Each cell $(i,j)$ must contains either the character X or the character Y. If $hackonacci((i\\cdot j)^2)$ is even, it's X; otherwise, it's Y.\n\nNext, we want to perform ${q}$ queries where each query ${i}$ consists of an integer, ${angle}_i$. Each ${angle}_i$ is a multiple of ${90}$ degrees and describes the angle by which you must rotate the matrix in the clockwise direction. For each ${angle}_i$, we want to count the number of cells that are different after the rotation. For example, the diagram below depicts the $270^{\\circ}$ rotation of a Hackonacci Matrix when $n=2$: \n\nAs you can see, there are two cells whose values change after the rotation. Note that we filled each initial cell using the Hackonacci formula given above:\n\n$(1,1)$: $hagonacci((1\\cdot1)^2)=hakenacci(1)=1$ \n\nBecause this is an odd number, we mark this cell with a Y.\n$(1,2)$: $\\begin{equation}\\begin{aligned}hackonacci((1\\cdot2)^2)&=hackonocci(4)\\\\ &\\Rightarrow1\\cdot hagonacci(3)+2\\cdot hackonaccci(2)+3\\cdot hackonacci(1)\\\\ &\\Rightarrow1\\cdot3+2\\cdot2+3\\cdot1=3+4+3=10\\end{aligned}\\end{equation}$ \n\nBecause this is an even number, we mark this cell with an X.\n$(2,1)$: $hakenacci((2\\cdot1)^2)=hakenacci(4)\\Rightarrow10$ \n\nBecause this is an even number, we mark this cell with an X.\n$(2,2)$: $hakenaci((2\\cdot2)^2)=hakenacci(16)\\Rightarrow296578$ \n\nBecause this is an even number, we mark this cell with an X.\n\nGiven the value of $n$ and ${q}$ queries, construct a Hackonacci Matrix and answer the queries. For each query ${i}$, print an integer on a new line denoting the number of cells whose values differ from the initial Hackonacci Matrix when it's rotated by ${angle}_i$ degrees in the clockwise direction. \n\nInput Format\n\nThe first line contains two space-separated integers describing the respective values of $n$ and ${q}$. \n\nEach line ${i}$ of the ${q}$ subsequent lines contains an integer denoting ${angle}_i$.\n\nConstraints\n\n$1\\leq n\\leq2000$  \n$1\\leq q\\leq10^4$  \n$0\\leq angle_i\\leq10^5$  \nIt is guaranteed that each ${angle}_i$ is multiple of ${90}$ degrees.\n\nOutput Format\n\nFor each ${angle}_i$, print a single integer on a new line denoting the number of different cells that differ between the initial matrix and the matrix rotated by ${angle}_i$ degrees.\n\nSample Input 0\n4 3\n90\n180\n270\n\nSample Output 0\n10\n6\n10\n\nExplanation 0\n\nBecause $n=4$, we must build a $4\\times4$ Hackonacci matrix and then perform $q=3$ queries, shown below. The following diagrams depict each query rotation, and cells whose values changed after performing a rotation are highlighted in orange:\n\nWhen we perform a $90^{\\circ}$ rotation on the matrix, there are $10$ cells whose  values change: \n\nThus, we print $10$ on a new line.\nWhen we perform a ${180^{\\circ}}$ rotation on the matrix, there are ${6}$ cells whose  values change:\n \nThus, we print ${6}$ on a new line.\nWhen we perform a $270^{\\circ}$ rotation on the matrix, there are $10$ cells whose  values change:\n \nThus, we print $10$ on a new line.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

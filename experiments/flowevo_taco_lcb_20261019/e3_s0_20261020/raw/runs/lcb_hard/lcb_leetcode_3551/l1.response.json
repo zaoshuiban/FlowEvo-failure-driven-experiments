@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ad358f27-e8cc-49c0-8469-85df4090d796",
+  "created": 1792434564,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 759,
+    "completion_tokens": 5601,
+    "total_tokens": 6360,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5273
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 759
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def maximumSubarrayXor(self, nums: List[int], queries: List[List[int]]) -> List[int]:\n        n = len(nums)\n        q = len(queries)\n\n        queries_by_length = [[] for _ in range(n + 1)]\n        for idx, (l, r) in enumerate(queries):\n            length = r - l + 1\n            queries_by_length[length].append((l, idx))\n\n        answer = [0] * q\n\n        # For intervals of length 1\n        prev_score = nums[:]\n        prev_max = nums[:]\n\n        for l, idx in queries_by_length[1]:\n            answer[idx] = prev_max[l]\n\n        # Process interval lengths from 2 to n\n        for length in range(2, n + 1):\n            size = n - length + 1\n\n            cur_score = [0] * size\n            cur_max = [0] * size\n\n            for l in range(size):\n                score = prev_score[l] ^ prev_score[l + 1]\n                cur_score[l] = score\n\n                best = prev_max[l]\n                if prev_max[l + 1] > best:\n                    best = prev_max[l + 1]\n                if score > best:\n                    best = score\n\n                cur_max[l] = best\n\n            for l, idx in queries_by_length[length]:\n                answer[idx] = cur_max[l]\n\n            prev_score = cur_score\n            prev_max = cur_max\n\n        return answer\n```",
+  "latency_s": 22.538,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array nums of n integers, and a 2D integer array queries of size q, where queries[i] = [l_i, r_i].\nFor each query, you must find the maximum XOR score of any subarray of nums[l_i..r_i].\nThe XOR score of an array a is found by repeatedly applying the following operations on a so that only one element remains, that is the score:\n\nSimultaneously replace a[i] with a[i] XOR a[i + 1] for all indices i except the last one.\nRemove the last element of a.\n\nReturn an array answer of size q where answer[i] is the answer to query i.\n \nExample 1:\n\nInput: nums = [2,8,4,32,16,1], queries = [[0,2],[1,4],[0,5]]\nOutput: [12,60,60]\nExplanation:\nIn the first query, nums[0..2] has 6 subarrays [2], [8], [4], [2, 8], [8, 4], and [2, 8, 4] each with a respective XOR score of 2, 8, 4, 10, 12, and 6. The answer for the query is 12, the largest of all XOR scores.\nIn the second query, the subarray of nums[1..4] with the largest XOR score is nums[1..4] with a score of 60.\nIn the third query, the subarray of nums[0..5] with the largest XOR score is nums[1..4] with a score of 60.\n\nExample 2:\n\nInput: nums = [0,7,3,2,8,5,1], queries = [[0,3],[1,5],[2,4],[2,6],[5,6]]\nOutput: [7,14,11,14,5]\nExplanation:\n\n\n\nIndex\nnums[l_i..r_i]\nMaximum XOR Score Subarray\nMaximum Subarray XOR Score\n\n\n\n\n0\n[0, 7, 3, 2]\n[7]\n7\n\n\n1\n[7, 3, 2, 8, 5]\n[7, 3, 2, 8]\n14\n\n\n2\n[3, 2, 8]\n[3, 2, 8]\n11\n\n\n3\n[3, 2, 8, 5, 1]\n[2, 8, 5, 1]\n14\n\n\n4\n[5, 1]\n[5]\n5\n\n\n\n\n \nConstraints:\n\n1 <= n == nums.length <= 2000\n0 <= nums[i] <= 2^31 - 1\n1 <= q == queries.length <= 10^5\nqueries[i].length == 2 \nqueries[i] = [l_i, r_i]\n0 <= l_i <= r_i <= n - 1\n\nStarter code / required signature:\nclass Solution:\n    def maximumSubarrayXor(self, nums: List[int], queries: List[List[int]]) -> List[int]:\n        \n\nUse the required function/method named maximumSubarrayXor. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

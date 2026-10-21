@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c0e74f08-35e0-4f86-9a7a-c7d16a497536",
+  "created": 1792430431,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 428,
+    "completion_tokens": 445,
+    "total_tokens": 873,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 389
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 428
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    numbers = sys.stdin.read().split()\n    numbers.reverse()\n    sys.stdout.write(\"\\n\".join(numbers))\n    if numbers:\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 2.812,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given N integers A_1,A_2,\\dots,A_N, one per line, over N lines. However, N is not given in the input.\r\nFurthermore, the following is guaranteed:\n\n- A_i \\neq 0 ( 1 \\le i \\le N-1 )\n- A_N = 0\n\nPrint A_N, A_{N-1},\\dots,A_1 in this order.\n\nInput\n\nThe input is given from Standard Input in the following format:\nA_1\r\nA_2\r\n\\vdots\r\nA_N\n\nOutput\n\nPrint A_N, A_{N-1}, \\dots, A_1 in this order, as integers, separated by newlines.\n\nConstraints\n\n\n- All input values are integers.\n- 1 \\le N \\le 100\n- 1 \\le A_i \\le 10^9 ( 1 \\le i \\le N-1 )\n- A_N = 0\n\nSample Input 1\n\n3\r\n2\r\n1\r\n0\n\nSample Output 1\n\n0\r\n1\r\n2\r\n3\r\n\nNote again that N is not given in the input.\r\nHere, N=4 and A=(3,2,1,0).\n\nSample Input 2\n\n0\n\nSample Output 2\n\n0\r\n\nA=(0).\n\nSample Input 3\n\n123\r\n456\r\n789\r\n987\r\n654\r\n321\r\n0\n\nSample Output 3\n\n0\r\n321\r\n654\r\n987\r\n789\r\n456\r\n123\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

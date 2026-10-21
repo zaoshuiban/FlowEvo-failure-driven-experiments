@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5e2daa2c-5ebb-48e2-9984-85b1db848a9b",
+  "created": 1792432028,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 435,
+    "completion_tokens": 1783,
+    "total_tokens": 2218,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1522
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 435
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport bisect\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, m = data[0], data[1]\n    a = data[2:2 + n]\n\n    mid = n // 2\n    left = a[:mid]\n    right = a[mid:]\n\n    def subset_sums(arr):\n        sums = [0]\n        for value in arr:\n            value %= m\n            sums += [(x + value) % m for x in sums]\n        return sums\n\n    left_sums = subset_sums(left)\n    right_sums = subset_sums(right)\n\n    left_sums.sort()\n\n    ans = 0\n    max_left = left_sums[-1]\n\n    for s in right_sums:\n        target = m - 1 - s\n        idx = bisect.bisect_right(left_sums, target) - 1\n\n        if idx >= 0:\n            ans = max(ans, s + left_sums[idx])\n\n        ans = max(ans, (s + max_left) % m)\n\n        if ans == m - 1:\n            break\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 7.973,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array a consisting of n integers, and additionally an integer m. You have to choose some sequence of indices b_1, b_2, ..., b_{k} (1 ≤ b_1 < b_2 < ... < b_{k} ≤ n) in such a way that the value of $\\sum_{i = 1}^{k} a_{b_{i}} \\operatorname{mod} m$ is maximized. Chosen sequence can be empty.\n\nPrint the maximum possible value of $\\sum_{i = 1}^{k} a_{b_{i}} \\operatorname{mod} m$.\n\n\n-----Input-----\n\nThe first line contains two integers n and m (1 ≤ n ≤ 35, 1 ≤ m ≤ 10^9).\n\nThe second line contains n integers a_1, a_2, ..., a_{n} (1 ≤ a_{i} ≤ 10^9).\n\n\n-----Output-----\n\nPrint the maximum possible value of $\\sum_{i = 1}^{k} a_{b_{i}} \\operatorname{mod} m$.\n\n\n-----Examples-----\nInput\n4 4\n5 2 4 1\n\nOutput\n3\n\nInput\n3 20\n199 41 299\n\nOutput\n19\n\n\n\n-----Note-----\n\nIn the first example you can choose a sequence b = {1, 2}, so the sum $\\sum_{i = 1}^{k} a_{b_{i}}$ is equal to 7 (and that's 3 after taking it modulo 4).\n\nIn the second example you can choose a sequence b = {3}.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

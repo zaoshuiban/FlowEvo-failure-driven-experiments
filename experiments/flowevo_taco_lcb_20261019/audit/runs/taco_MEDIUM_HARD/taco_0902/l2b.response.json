@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "db08cd2f-79d7-4822-ad78-d60da60e1488",
+  "created": 1792443882,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 677,
+    "completion_tokens": 5648,
+    "total_tokens": 6325,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5556
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 165
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    n, p = map(int, sys.stdin.buffer.readline().split())\n\n    for k in range(1, 31):\n        s = n - k * p\n        if s <= 0:\n            continue\n\n        if s.bit_count() <= k <= s:\n            print(k)\n            return\n\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 24.986,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nVasya will fancy any number as long as it is an integer power of two. Petya, on the other hand, is very conservative and only likes a single integer p (which may be positive, negative, or zero). To combine their tastes, they invented p-binary numbers of the form 2^x + p, where x is a non-negative integer.\n\nFor example, some -9-binary (\"minus nine\" binary) numbers are: -8 (minus eight), 7 and 1015 (-8=2^0-9, 7=2^4-9, 1015=2^{10}-9).\n\nThe boys now use p-binary numbers to represent everything. They now face a problem: given a positive integer n, what's the smallest number of p-binary numbers (not necessarily distinct) they need to represent n as their sum? It may be possible that representation is impossible altogether. Help them solve this problem.\n\nFor example, if p=0 we can represent 7 as 2^0 + 2^1 + 2^2.\n\nAnd if p=-9 we can represent 7 as one number (2^4-9).\n\nNote that negative p-binary numbers are allowed to be in the sum (see the Notes section for an example).\n\nInput\n\nThe only line contains two integers n and p (1 ≤ n ≤ 10^9, -1000 ≤ p ≤ 1000).\n\nOutput\n\nIf it is impossible to represent n as the sum of any number of p-binary numbers, print a single integer -1. Otherwise, print the smallest possible number of summands.\n\nExamples\n\nInput\n\n\n24 0\n\n\nOutput\n\n\n2\n\n\nInput\n\n\n24 1\n\n\nOutput\n\n\n3\n\n\nInput\n\n\n24 -1\n\n\nOutput\n\n\n4\n\n\nInput\n\n\n4 -7\n\n\nOutput\n\n\n2\n\n\nInput\n\n\n1 1\n\n\nOutput\n\n\n-1\n\nNote\n\n0-binary numbers are just regular binary powers, thus in the first sample case we can represent 24 = (2^4 + 0) + (2^3 + 0).\n\nIn the second sample case, we can represent 24 = (2^4 + 1) + (2^2 + 1) + (2^0 + 1).\n\nIn the third sample case, we can represent 24 = (2^4 - 1) + (2^2 - 1) + (2^2 - 1) + (2^2 - 1). Note that repeated summands are allowed.\n\nIn the fourth sample case, we can represent 4 = (2^4 - 7) + (2^1 - 7). Note that the second summand is negative, which is allowed.\n\nIn the fifth sample case, no representation is possible.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

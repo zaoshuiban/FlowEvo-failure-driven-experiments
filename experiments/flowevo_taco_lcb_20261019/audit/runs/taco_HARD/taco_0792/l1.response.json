@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cc12b6a7-a3d7-44bb-beaa-c64e5daafd81",
+  "created": 1792436808,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 680,
+    "completion_tokens": 18526,
+    "total_tokens": 19206,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 18014
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 680
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    input = sys.stdin.buffer.readline\n    first = input().split()\n    if not first:\n        return\n\n    n, e = map(int, first)\n\n    adj = [[] for _ in range(n + 1)]\n    deg = [0] * (n + 1)\n\n    for i in range(e):\n        a, b = map(int, input().split())\n        adj[a].append((b, i))\n        adj[b].append((a, i))\n        deg[a] += 1\n        deg[b] += 1\n\n    # For an Eulerian directed graph, every vertex must have even degree\n    # in the underlying undirected graph.\n    for i in range(1, n + 1):\n        if deg[i] & 1:\n            sys.stdout.write(\"NO\\n\")\n            return\n\n    # The underlying undirected graph must be connected.\n    visited = [False] * (n + 1)\n    visited[1] = True\n    stack = [1]\n    count = 0\n\n    while stack:\n        x = stack.pop()\n        count += 1\n        for y, _ in adj[x]:\n            if not visited[y]:\n                visited[y] = True\n                stack.append(y)\n\n    if count != n:\n        sys.stdout.write(\"NO\\n\")\n        return\n\n    # Orient edges along an Euler tour of the undirected graph.\n    used = [False] * e\n    ptr = [0] * (n + 1)\n    ans_u = [0] * e\n    ans_v = [0] * e\n\n    stack = [1]\n\n    while stack:\n        x = stack[-1]\n\n        while ptr[x] < len(adj[x]) and used[adj[x][ptr[x]][1]]:\n            ptr[x] += 1\n\n        if ptr[x] == len(adj[x]):\n            stack.pop()\n        else:\n            y, eid = adj[x][ptr[x]]\n            ptr[x] += 1\n\n            used[eid] = True\n            ans_u[eid] = x\n            ans_v[eid] = y\n            stack.append(y)\n\n    output = [\"YES\\n\"]\n    for i in range(e):\n        output.append(f\"{ans_u[i]} {ans_v[i]}\\n\")\n\n    sys.stdout.write(\"\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 93.285,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe grand kingdom of Mancunia is famous for its tourist attractions and visitors flock to it throughout the year. King Mancunian is the benevolent ruler of the prosperous country whose main source of revenue is, of course, tourism.\n\nThe country can be represented by a network of unidirectional roads between the cities. But Mancunian, our benign monarch, has a headache. The road network of the country is not tourist-friendly and this is affecting revenue. To increase the GDP of the nation, he wants to redirect some of the roads to make the road network tourist-friendly and hence, ensure happiness and prosperity for his loyal subjects.\n\nNow is the time for some formal definitions. :(\n\nA road network is said to be tourist-friendly if for every city in the country, if a tourist starts his journey there, there is a path she can take to visit each and every city of the nation and traverse each road exactly once before ending up at the city where she started.\n\nGiven a description of the road network of Mancunia, can you come up with a scheme to redirect some (possibly none) of the roads to make it tourist-friendly?\n\n-----Input-----\nThe first line contains two integers N and E denoting the number of cities and roads in the beautiful country of Mancunia respectively.\nEach of the next E lines contains two integers a and b implying that there is a unidirectional road from city a to city b.\n\nIt is guaranteed that there aren't multiple roads in the exact same direction and that there is no road from a city to itself.\n\n-----Output-----\nIf there is no solution, print \"NO\" (without quotes). Else, print \"YES\" (without quotes), followed by exactly E lines.\nThe ith line of output should represent the ith road in the input. It should have two integers a and b denoting that the final orientation of that road is from a to b.\n\n-----Constraints-----\n\n- 1 ≤ N ≤ 100000\n- 1 ≤ E ≤ 200000\n- 1 ≤ a, b ≤ N\n\nSubtask 1: (20 points)\n- 1 ≤ N ≤ 20\n- 1 ≤ E ≤ 21\n\nSubtask 2: (80 points)\n- Same as original constraints\n\n-----Example 1-----\nInput:\n3 3\n1 2\n2 3\n3 1\n\nOutput:\nYES\n1 2\n2 3\n3 1\n\n-----Example 2-----\nInput:\n3 2\n1 2\n2 3\n\nOutput:\nNO\n\n-----Example 3-----\nInput:\n5 6\n1 2\n2 3\n3 4\n2 4\n2 5\n1 5\n\nOutput:\nYES\n1 2\n2 3\n3 4\n4 2\n2 5\n5 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

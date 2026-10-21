@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d15e6dba-2954-4486-882b-8d9d88545082",
+  "created": 1792435419,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1368,
+    "completion_tokens": 6429,
+    "total_tokens": 7797,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6183
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 600
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        a = data[idx:idx + n]\n        idx += n\n\n        depth = [0] * n\n        stack = [(0, n - 1, 0)]\n\n        while stack:\n            left, right, d = stack.pop()\n            if left > right:\n                continue\n\n            max_pos = left\n            for i in range(left + 1, right + 1):\n                if a[i] > a[max_pos]:\n                    max_pos = i\n\n            depth[max_pos] = d\n\n            stack.append((left, max_pos - 1, d + 1))\n            stack.append((max_pos + 1, right, d + 1))\n\n        answers.append(\" \".join(map(str, depth)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 28.609,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA permutation — is a sequence of length $n$ integers from $1$ to $n$, in which all the numbers occur exactly once. For example, $[1]$, $[3, 5, 2, 1, 4]$, $[1, 3, 2]$ — permutations, and $[2, 3, 2]$, $[4, 3, 1]$, $[0]$ — no.\n\nPolycarp was recently gifted a permutation $a[1 \\dots n]$ of length $n$. Polycarp likes trees more than permutations, so he wants to transform permutation $a$ into a rooted binary tree. He transforms an array of different integers into a tree as follows:\n\nthe maximum element of the array becomes the root of the tree;\n\nall elements to the left of the maximum — form a left subtree (which is built according to the same rules but applied to the left part of the array), but if there are no elements to the left of the maximum, then the root has no left child;\n\nall elements to the right of the maximum — form a right subtree (which is built according to the same rules but applied to the right side of the array), but if there are no elements to the right of the maximum, then the root has no right child.\n\nFor example, if he builds a tree by permutation $a=[3, 5, 2, 1, 4]$, then the root will be the element $a_2=5$, and the left subtree will be the tree that will be built for the subarray $a[1 \\dots 1] = [3]$, and the right one — for the subarray $a[3 \\dots 5] = [2, 1, 4]$. As a result, the following tree will be built:\n\nThe tree corresponding to the permutation $a=[3, 5, 2, 1, 4]$.\n\nAnother example: let the permutation be $a=[1, 3, 2, 7, 5, 6, 4]$. In this case, the tree looks like this:\n\nThe tree corresponding to the permutation $a=[1, 3, 2, 7, 5, 6, 4]$.\n\nLet us denote by $d_v$ the depth of the vertex $a_v$, that is, the number of edges on the path from the root to the vertex numbered $a_v$. Note that the root depth is zero. Given the permutation $a$, for each vertex, find the value of $d_v$.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 100$) — the number of test cases. Then $t$ test cases follow.\n\nThe first line of each test case contains an integer $n$ ($1 \\le n \\le 100$) — the length of the permutation.\n\nThis is followed by $n$ numbers $a_1, a_2, \\ldots, a_n$ — permutation $a$.\n\n\n-----Output-----\n\nFor each test case, output $n$ values — $d_1, d_2, \\ldots, d_n$.\n\n\n-----Examples-----\n\nInput\n3\n5\n3 5 2 1 4\n1\n1\n4\n4 3 1 2\nOutput\n1 0 2 3 1 \n0 \n0 1 3 2\n\n\n-----Note-----\n\nNone\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        a = data[idx:idx + n]\n        idx += n\n\n        left = [-1] * n\n        right = [-1] * n\n        parent = [-1] * n\n        stack = []\n\n        for i in range(n):\n            last = -1\n\n            while stack and a[stack[-1]] < a[i]:\n                last = stack.pop()\n\n            if stack:\n                parent[i] = stack[-1]\n                right[stack[-1]] = i\n\n            if last != -1:\n                parent[last] = i\n                left[i] = last\n\n            stack.append(i)\n\n        root = 0\n        for i in range(n):\n            if parent[i] == -1:\n                root = i\n                break\n\n        depth = [0] * n\n        traversal = [(root, 0)]\n\n        while traversal:\n            node, d = traversal.pop()\n            depth[node] = d\n\n            if left[node] != -1:\n                traversal.append((left[node], d + 1))\n            if right[node] != -1:\n                traversal.append((right[node], d + 1))\n\n        answers.append(\" \".join(map(str, depth)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

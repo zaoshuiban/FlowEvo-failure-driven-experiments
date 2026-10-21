@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "486c4050-956c-4279-9533-993dcad70529",
+  "created": 1792430665,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 513,
+    "completion_tokens": 376,
+    "total_tokens": 889,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 260
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 513
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nvalues = list(map(int, sys.stdin.read().split()))\na, b, c, d, e, f = values[:6]\ng, h, i, j, k, l = values[6:12]\n\noverlap_x = max(a, g) < min(d, j)\noverlap_y = max(b, h) < min(e, k)\noverlap_z = max(c, i) < min(f, l)\n\nprint(\"Yes\" if overlap_x and overlap_y and overlap_z else \"No\")\n```",
+  "latency_s": 1.812,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are trying to implement collision detection in a 3D game.\n\nIn a 3-dimensional space, let C(a,b,c,d,e,f) denote the cuboid with a diagonal connecting (a,b,c) and (d,e,f), and with all faces parallel to the xy-plane, yz-plane, or zx-plane.\r\n(This definition uniquely determines C(a,b,c,d,e,f).)\nGiven two cuboids C(a,b,c,d,e,f) and C(g,h,i,j,k,l), determine whether their intersection has a positive volume.\n\nInput\n\nThe input is given from Standard Input in the following format:\na b c d e f\r\ng h i j k l\n\nOutput\n\nPrint Yes if the intersection of the two cuboids has a positive volume, and No otherwise.\n\nConstraints\n\n\n- 0 \\leq a < d \\leq 1000\n- 0 \\leq b < e \\leq 1000\n- 0 \\leq c < f \\leq 1000\n- 0 \\leq g < j \\leq 1000\n- 0 \\leq h < k \\leq 1000\n- 0 \\leq i < l \\leq 1000\n- All input values are integers.\n\nSample Input 1\n\n0 0 0 4 5 6\r\n2 3 4 5 6 7\n\nSample Output 1\n\nYes\r\n\nThe positional relationship of the two cuboids is shown in the figure below, and their intersection has a volume of 8.\n\nSample Input 2\n\n0 0 0 2 2 2\r\n0 0 2 2 2 4\n\nSample Output 2\n\nNo\r\n\nThe two cuboids touch at a face, where the volume of the intersection is 0.\n\nSample Input 3\n\n0 0 0 1000 1000 1000\r\n10 10 10 100 100 100\n\nSample Output 3\n\nYes\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,302 @@
+{
+  "solutions": {
+    "taco_0616": "def animals(heads, legs):\n    if heads < 0 or legs < 0:\n        return \"No solutions\"\n    \n    if heads == 0 and legs == 0:\n        return (0, 0)\n    \n    if (legs - 2 * heads) % 2 != 0:\n        return \"No solutions\"\n    \n    cows = (legs - 2 * heads) // 2\n    chickens = heads - cows\n    \n    if chickens < 0 or cows < 0:\n        return \"No solutions\"\n    \n    return (chickens, cows)",
+    "taco_0645": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n\n    min_r1 = 10**18\n    max_l1 = -1\n\n    for _ in range(n):\n        l = next(it)\n        r = next(it)\n        min_r1 = min(min_r1, r)\n        max_l1 = max(max_l1, l)\n\n    m = next(it)\n\n    min_r2 = 10**18\n    max_l2 = -1\n\n    for _ in range(m):\n        l = next(it)\n        r = next(it)\n        min_r2 = min(min_r2, r)\n        max_l2 = max(max_l2, l)\n\n    answer = max(0, max_l2 - min_r1, max_l1 - min_r2)\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0255": "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    \n    depth = {\"polycarp\": 1}\n    \n    for _ in range(n):\n        parts = input().split()\n        name1 = parts[0].lower()\n        name2 = parts[2].lower()\n        depth[name1] = depth[name2] + 1\n    \n    print(max(depth.values()))\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0592": "import sys\n\nMOD = 1_000_000_007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ns = data[1:1 + t]\n\n    max_n = max(ns) if ns else 0\n\n    fact = [1] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        fact[i] = fact[i - 1] * i % MOD\n\n    answers = []\n    for n in ns:\n        ans = n * (n - 1) % MOD\n        ans = ans * fact[n] % MOD\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0684": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        x = data[idx + 1]\n        s = data[idx + 2]\n        idx += 3\n\n        for _ in range(s):\n            a = data[idx]\n            b = data[idx + 1]\n            idx += 2\n\n            if x == a:\n                x = b\n            elif x == b:\n                x = a\n\n        answers.append(str(x))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0697": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0875": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    parents = data[1:n + 1]\n\n    children = [[] for _ in range(n)]\n    roots = []\n\n    for i, p in enumerate(parents):\n        if p == -1:\n            roots.append(i)\n        else:\n            children[p - 1].append(i)\n\n    max_groups = 0\n    stack = [(root, 1) for root in roots]\n\n    while stack:\n        employee, depth = stack.pop()\n        if depth > max_groups:\n            max_groups = depth\n\n        for child in children[employee]:\n            stack.append((child, depth + 1))\n\n    print(max_groups)\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0935": "import sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    mirror_letters = set(\"AHIMOTUVWXY\")\n    if s == s[::-1] and all(ch in mirror_letters for ch in s):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0843": "def find_lowest_int(k):\n    n = 9\n    step = 9 * k\n    a = step  # a = k * n\n\n    while True:\n        if sorted(str(a)) == sorted(str(a + n)):\n            return n\n        n += 9\n        a += step",
+    "taco_0019": "def is_sorted_and_how(arr):\n    if all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1)):\n        return \"yes, ascending\"\n    if all(arr[i] >= arr[i + 1] for i in range(len(arr) - 1)):\n        return \"yes, descending\"\n    return \"no\"",
+    "taco_0872": "def tops(msg):\n    result = []\n    i = 1\n    step = 5\n    n = len(msg)\n\n    while i < n:\n        result.append(msg[i])\n        i += step\n        step += 4\n\n    result.reverse()\n    return ''.join(result)",
+    "taco_0834": "def bears(x, s):\n    pairs = []\n    i = 0\n\n    while i < len(s) - 1:\n        if (s[i] == 'B' and s[i + 1] == '8') or (s[i] == '8' and s[i + 1] == 'B'):\n            pairs.append(s[i])\n            pairs.append(s[i + 1])\n            i += 2\n        else:\n            i += 1\n\n    pair_string = ''.join(pairs)\n    return [pair_string, len(pairs) // 2 >= x]",
+    "taco_0849": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, k = data[0], data[1]\n    participations = data[2:2 + n]\n\n    eligible = sum(1 for y in participations if y + k <= 5)\n    print(eligible // 3)\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0397": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    ans = []\n    idx = 1\n    for _ in range(n):\n        k = int(data[idx])\n        x = int(data[idx + 1])\n        idx += 2\n        ans.append(str(x + (k - 1) * 9))\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0287": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    n = data[0]\n    divisors = data[1:1 + n]\n\n    x = max(divisors)\n\n    count = {}\n    for d in divisors:\n        count[d] = count.get(d, 0) + 1\n\n    for d in list(count.keys()):\n        if x % d == 0:\n            count[d] -= 1\n\n    y = max(d for d, c in count.items() if c > 0)\n\n    print(x, y)\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0332": "import sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n\n    ans = 0\n    rem = 0  # garbage left from the previous day that must be disposed today\n\n    for x in a:\n        if rem > 0:\n            need = k - rem\n            use = min(x, need)\n            x -= use\n            ans += 1\n            rem = 0\n\n        ans += x // k\n        rem = x % k\n\n    if rem > 0:\n        ans += 1\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0093": "import sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        s = next(it)\n        a = [next(it) for _ in range(n)]\n\n        total = sum(a)\n\n        if total < s:\n            answers.append(\"-1\")\n            continue\n\n        left = 0\n        current_sum = 0\n        max_length = -1\n\n        for right in range(n):\n            current_sum += a[right]\n\n            while current_sum > s and left <= right:\n                current_sum -= a[left]\n                left += 1\n\n            if current_sum == s:\n                max_length = max(max_length, right - left + 1)\n\n        if max_length == -1:\n            answers.append(\"-1\")\n        else:\n            answers.append(str(n - max_length))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0496": "import sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        current = 0\n        best_red = 0\n        for _ in range(n):\n            current += next(it)\n            best_red = max(best_red, current)\n\n        m = next(it)\n\n        current = 0\n        best_blue = 0\n        for _ in range(m):\n            current += next(it)\n            best_blue = max(best_blue, current)\n\n        answers.append(str(best_red + best_blue))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0340": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        ans = data[idx]\n        for i in range(idx + 1, idx + n):\n            ans &= data[i]\n\n        idx += n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0600": "import sys\n\nn = int(sys.stdin.readline())\n\nif n % 2 == 1:\n    print(0)\nelse:\n    m = n // 2\n    print((m - 1) // 2)",
+    "taco_0529": "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    counts = [0] * 26\n\n    for _ in range(n):\n        name = input().strip()\n        counts[ord(name[0]) - ord('a')] += 1\n\n    answer = 0\n\n    for k in counts:\n        best = float('inf')\n        for left in range(k + 1):\n            right = k - left\n            pairs = left * (left - 1) // 2 + right * (right - 1) // 2\n            best = min(best, pairs)\n        answer += best\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0404": "import sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n    l = next(it)\n\n    a = [0] * (n + 1)\n    over = [False] * (n + 1)\n\n    runs = 0\n    for i in range(1, n + 1):\n        a[i] = next(it)\n        if a[i] > l:\n            over[i] = True\n            if i == 1 or not over[i - 1]:\n                runs += 1\n\n    answers = []\n\n    for _ in range(m):\n        t = next(it)\n\n        if t == 0:\n            answers.append(str(runs))\n        else:\n            p = next(it)\n            d = next(it)\n\n            if not over[p]:\n                a[p] += d\n\n                if a[p] > l:\n                    left = p > 1 and over[p - 1]\n                    right = p < n and over[p + 1]\n\n                    runs += 1\n                    if left:\n                        runs -= 1\n                    if right:\n                        runs -= 1\n\n                    over[p] = True\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0076": "from math import comb\nfrom functools import lru_cache\n\n# Bell numbers, extended as needed\nBell = [1]\n\ndef ensure_bell(n):\n    while len(Bell) <= n:\n        idx = len(Bell)\n        val = 0\n        for k in range(idx):\n            val += comb(idx - 1, k) * Bell[k]\n        Bell.append(val)\n\n_coeff_cache = {}\n\ndef coefficients(length):\n    if length in _coeff_cache:\n        return _coeff_cache[length]\n\n    ensure_bell(length)\n    w = []\n\n    for i in range(length):\n        left = i\n        right = length - 1 - i\n\n        total = 0\n        left_combs = [comb(left, l) for l in range(left + 1)]\n        right_combs = [comb(right, r) for r in range(right + 1)]\n        powers10 = [10 ** r for r in range(right + 1)]\n\n        for l, cl in enumerate(left_combs):\n            for r, cr in enumerate(right_combs):\n                # This would mean all digits are in the same bucket,\n                # but distributions into only one bucket are excluded.\n                if l == left and r == right:\n                    continue\n\n                outside = length - 1 - l - r\n                total += cl * cr * powers10[r] * Bell[outside]\n\n        w.append(total)\n\n    _coeff_cache[length] = w\n    return w\n\n\n@lru_cache(maxsize=None)\ndef f_value(n):\n    s = str(n)\n    w = coefficients(len(s))\n    return sum((ord(s[i]) - 48) * w[i] for i in range(len(s)))\n\n\ndef digits_to_int(digits):\n    value = 0\n    for d in digits:\n        value = value * 10 + d\n    return value\n\n\ndef min_same_length_greater(n, target):\n    s = str(n)\n    m = len(s)\n    digits = [ord(c) - 48 for c in s]\n    w = coefficients(m)\n\n    prefix = [0] * (m + 1)\n    for i, d in enumerate(digits):\n        prefix[i + 1] = prefix[i] + d * w[i]\n\n    suffix_weight = [0] * (m + 1)\n    for i in range(m - 1, -1, -1):\n        suffix_weight[i] = suffix_weight[i + 1] + w[i]\n\n    # First differing position from the right to the left,\n    # so that we obtain the smallest number greater than n.\n    for p in range(m - 1, -1, -1):\n        base = prefix[p]\n        max_after = 9 * suffix_weight[p + 1]\n\n        for d in range(digits[p] + 1, 10):\n            cur = base + d * w[p]\n\n            if cur + max_after <= target:\n                continue\n\n            result_digits = digits[:p] + [d]\n            cur2 = cur\n            possible = True\n\n            for j in range(p + 1, m):\n                max_after_j = 9 * suffix_weight[j + 1]\n                chosen = -1\n\n                for nd in range(10):\n                    if cur2 + nd * w[j] + max_after_j > target:\n                        chosen = nd\n                        cur2 += nd * w[j]\n                        break\n\n                if chosen == -1:\n                    possible = False\n                    break\n\n                result_digits.append(chosen)\n\n            if possible:\n                return digits_to_int(result_digits)\n\n    return None\n\n\ndef min_length_number(target, length):\n    w = coefficients(length)\n\n    suffix_weight = [0] * (length + 1)\n    for i in range(length - 1, -1, -1):\n        suffix_weight[i] = suffix_weight[i + 1] + w[i]\n\n    cur = 0\n    result = []\n\n    for i in range(length):\n        start = 1 if i == 0 else 0\n        max_after = 9 * suffix_weight[i + 1]\n        chosen = -1\n\n        for d in range(start, 10):\n            if cur + d * w[i] + max_after > target:\n                chosen = d\n                cur += d * w[i]\n                break\n\n        if chosen == -1:\n            return None\n\n        result.append(chosen)\n\n    return digits_to_int(result)\n\n\ndef find(n, z):\n    target = f_value(n) + z\n    m = len(str(n))\n\n    answer = min_same_length_greater(n, target)\n    if answer is not None:\n        return answer\n\n    length = m + 1\n\n    while True:\n        w = coefficients(length)\n\n        if 9 * sum(w) > target:\n            answer = min_length_number(target, length)\n            if answer is not None:\n                return answer\n\n        length += 1",
+    "taco_0057": "import sys\n\ndef beats(a, b):\n    return (a == \"rock\" and b == \"scissors\") or \\\n           (a == \"scissors\" and b == \"paper\") or \\\n           (a == \"paper\" and b == \"rock\")\n\ndef main():\n    gestures = [line.strip() for line in sys.stdin.read().splitlines()[:3]]\n    names = [\"F\", \"M\", \"S\"]\n\n    for i in range(3):\n        j = (i + 1) % 3\n        k = (i + 2) % 3\n        if beats(gestures[i], gestures[j]) and beats(gestures[i], gestures[k]):\n            print(names[i])\n            return\n\n    print(\"?\")\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0728": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n\n        # There are b cab drivers, each described by two place numbers.\n        idx += 2 * b\n\n        # Minimum edges needed to connect a places is a - 1.\n        answers.append(str(a - 1))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0851": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    t = int(data[0])\n    ans = []\n\n    for i in range(1, t + 1):\n        s = data[i]\n        first = ord(s[0]) - ord('a')\n        second = ord(s[1]) - ord('a')\n\n        index = first * 25 + second + (1 if second < first else 0)\n        ans.append(str(index))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0333": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    t = int(data[1])\n    s = list(data[2])\n\n    for _ in range(t):\n        i = 0\n        while i + 1 < len(s):\n            if s[i] == 'B' and s[i + 1] == 'G':\n                s[i], s[i + 1] = s[i + 1], s[i]\n                i += 2\n            else:\n                i += 1\n\n    sys.stdout.write(''.join(s) + '\\n')\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0901": "import sys\n\ns = sys.stdin.readline().strip()\n\ncolor_at_mod = [None] * 4\n\nfor i, ch in enumerate(s):\n    if ch != '!':\n        color_at_mod[i % 4] = ch\n\nanswer = {'R': 0, 'B': 0, 'Y': 0, 'G': 0}\n\nfor i, ch in enumerate(s):\n    if ch == '!':\n        answer[color_at_mod[i % 4]] += 1\n\nprint(answer['R'], answer['B'], answer['Y'], answer['G'])",
+    "taco_0252": "def count_pal(n):\n    if n <= 0:\n        return [0, 0]\n\n    exact = 9 * 10 ** ((n - 1) // 2)\n\n    if n % 2 == 0:\n        total = 2 * (10 ** (n // 2) - 1)\n    else:\n        total = 11 * 10 ** (n // 2) - 2\n\n    return [exact, total]",
+    "taco_0564": "_VALID_SIGNED_8_BIT = {str(i) for i in range(-128, 128)}\n\ndef signed_eight_bit_number(number):\n    return isinstance(number, str) and number in _VALID_SIGNED_8_BIT",
+    "taco_0839": "def sum_mix(arr):\n    return sum(int(x) for x in arr)",
+    "taco_0608": "import sys\n\ndef main():\n    p, x, y = map(int, sys.stdin.readline().split())\n\n    target = p - 26\n    good = [False] * 475\n\n    for start in range(475):\n        i = start\n        for _ in range(25):\n            i = (i * 96 + 42) % 475\n            if i == target:\n                good[start] = True\n                break\n\n    q0 = x // 50\n    r = x % 50\n    qmin = (y - r + 49) // 50\n\n    successful = 0\n    while True:\n        upper = q0 + 2 * successful\n\n        if upper >= qmin:\n            length = upper - qmin + 1\n            limit = min(length, 475)\n\n            for q in range(qmin, qmin + limit):\n                if good[q % 475]:\n                    print(successful)\n                    return\n\n        successful += 1\n\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0227": "def binary_to_string(binary):\n    return ''.join(chr(int(binary[i:i + 8], 2)) for i in range(0, len(binary), 8))",
+    "taco_0267": "def diagonal_sum(array):\n    return sum(row[i] for i, row in enumerate(array))",
+    "taco_0535": "import sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    k = int(data[1])\n\n    damages = list(map(int, data[2:2 + n]))\n    s = data[2 + n]\n\n    answer = 0\n    i = 0\n\n    while i < n:\n        j = i\n        values = []\n\n        while j < n and s[j] == s[i]:\n            values.append(damages[j])\n            j += 1\n\n        if len(values) <= k:\n            answer += sum(values)\n        else:\n            values.sort(reverse=True)\n            answer += sum(values[:k])\n\n        i = j\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0051": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    parents = data[1:1 + n]\n\n    children = [[] for _ in range(n)]\n    roots = []\n\n    for i, p in enumerate(parents):\n        if p == -1:\n            roots.append(i)\n        else:\n            children[p - 1].append(i)\n\n    max_depth = 0\n    stack = [(root, 1) for root in roots]\n\n    while stack:\n        employee, depth = stack.pop()\n        max_depth = max(max_depth, depth)\n\n        for child in children[employee]:\n            stack.append((child, depth + 1))\n\n    print(max_depth)\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0855": "import sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    q = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(q):\n        c, m, x = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n\n        ans.append(str(min((c + m + x) // 3, min(c, m))))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0607": "def alan(arr):\n    stops = [\n        'Rejection',\n        'Disappointment',\n        'Backstabbing Central',\n        'Shattered Dreams Parkway'\n    ]\n    if all(stop in arr for stop in stops):\n        return 'Smell my cheese you mother!'\n    return 'No, seriously, run. You will miss it.'",
+    "taco_0372": "import sys\n\ns = sys.stdin.readline().strip()\nt = s.rstrip('0')\n\nprint(\"YES\" if t == t[::-1] else \"NO\")",
+    "taco_0218": "def reg_sum_hits(n, s):\n    if n <= 0:\n        return [[0, 1]]\n    if s == 1:\n        return [[n, 1]]\n    if n == 1:\n        return [[i, 1] for i in range(1, s + 1)]\n\n    max_k = n * (s - 1)\n    result = [[n, 1]]\n\n    total = 1\n    residue_sums = [0] * s\n    residue_sums[0] = 1\n\n    ns = n * s\n\n    for k in range(1, max_k + 1):\n        count = (n * total - ns * residue_sums[k % s]) // k\n        result.append([n + k, count])\n\n        total += count\n        residue_sums[k % s] += count\n\n    return result",
+    "taco_0934": "def shortest_time(speed):\n    a, b, c, d = sorted(speed)\n    return min(\n        a + 3 * b + d,\n        2 * a + b + c + d\n    )",
+    "taco_0988": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    ax, ay = data[1], data[2]\n    bx, by = data[3], data[4]\n    cx, cy = data[5], data[6]\n\n    if (ax - bx) * (ax - cx) > 0 and (ay - by) * (ay - cy) > 0:\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0614": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        n = data[idx]\n        s = data[idx + 1]\n        idx += 2\n\n        if s <= n:\n            ans.append(str(s))\n        else:\n            ans.append(str(2 * n - s))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0054": "import sys\n\ndef main():\n    A, B = map(int, sys.stdin.readline().split())\n    answer = str(A - B)\n\n    if answer[0] == '1':\n        answer = '2' + answer[1:]\n    else:\n        answer = '1' + answer[1:]\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0858": "import sys\n\n\ndef min_operations(a: int, b: int) -> int:\n    best = 10**18\n    inc = 0\n\n    while True:\n        new_b = b + inc\n\n        if new_b > 1:\n            divisions = 0\n            x = a\n\n            while x > 0:\n                x //= new_b\n                divisions += 1\n\n            best = min(best, inc + divisions)\n\n        inc += 1\n\n        # Further increments alone already cost at least 'best',\n        # so they cannot produce a better answer.\n        if inc >= best:\n            break\n\n    return best\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    answer = []\n\n    idx = 1\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n\n        answer.append(str(min_operations(a, b)))\n\n    sys.stdout.write(\"\\n\".join(answer))\n\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0026": "import sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        idx += 1\n\n        enemy = bytearray(data[idx])\n        idx += 1\n\n        gregor = data[idx]\n        idx += 1\n\n        ans = 0\n\n        for i in range(n):\n            if gregor[i] != ord('1'):\n                continue\n\n            if i > 0 and enemy[i - 1] == ord('1'):\n                ans += 1\n                enemy[i - 1] = ord('0')\n            elif enemy[i] == ord('0'):\n                ans += 1\n            elif i + 1 < n and enemy[i + 1] == ord('1'):\n                ans += 1\n                enemy[i + 1] = ord('0')\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()",
+    "taco_0065": "import sys\nfrom bisect import bisect_left\nfrom array import array\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    q = data[0]\n\n    max_r = 0\n    for i in range(q):\n        r = data[3 * i + 2]\n        if r > max_r:\n            max_r = r\n\n    n_max = max_r\n\n    f = array('I', [0]) * (n_max + 1)\n    f[0] = 1\n\n    g = bytearray(n_max + 1)\n    positions = [array('I') for _ in range(10)]\n\n    for n in range(1, n_max + 1):\n        digit = n % 10\n        prev = n // 10\n\n        if digit == 0:\n            fn = f[prev]\n        else:\n            fn = f[prev] * digit\n\n        f[n] = fn\n\n        if n < 10:\n            gn = n\n        else:\n            gn = g[fn]\n\n        g[n] = gn\n        positions[gn].append(n)\n\n    out = []\n    idx = 1\n\n    for _ in range(q):\n        l = data[idx]\n        r = data[idx + 1]\n        k = data[idx + 2]\n        idx += 3\n\n        arr = positions[k]\n        ans = bisect_left(arr, r + 1) - bisect_left(arr, l)\n        out.append(str(ans))\n\n    sys.stdout.write('\\n'.join(out))\n\n\nif __name__ == \"__main__\":\n    main()",
+    "taco_0796": "def even_magic(n):\n    total = n * n + 1\n    square = []\n\n    for i in range(n):\n        row = []\n        for j in range(n):\n            value = i * n + j + 1\n            if i % 4 == j % 4 or (i % 4) + (j % 4) == 3:\n                value = total - value\n            row.append(value)\n        square.append(row)\n\n    return square",
+    "taco_0763": "def pig_latin(word):\n    if len(word) > 3:\n        return word[1:] + word[0] + \"ay\"\n    return word"
+  },
+  "by_benchmark": {
+    "taco": [
+      [
+        "taco_0616",
+        "#Description\n\nEverybody has probably heard of the animal heads and legs problem from the earlier years at school. It goes:\n\n```“A farm contains chickens and cows. There are x heads and y legs. How man",
+        "def animals(heads, legs):\n    if heads < 0 or legs < 0:\n        return \"No solutions\"\n    \n    if heads == 0 and legs == 0:\n        return (0, 0)\n    \n    if (legs - 2 * heads) % 2 != 0:\n        return \"No solutions\"\n    \n    cows = (legs - 2 * heads) // 2\n    chickens = heads - cows\n    \n    if chickens < 0 or cows < 0:\n        return \"No solutions\"\n    \n    return (chickens, cows)"
+      ],
+      [
+        "taco_0645",
+        "Anton likes to play chess. Also he likes to do programming. No wonder that he decided to attend chess classes and programming classes.\n\nAnton has n variants when he will attend chess classes, i-th var",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n\n    min_r1 = 10**18\n    max_l1 = -1\n\n    for _ in range(n):\n        l = next(it)\n        r = next(it)\n        min_r1 = min(min_r1, r)\n        max_l1 = max(max_l1, l)\n\n    m = next(it)\n\n    min_r2 = 10**18\n    max_l2 = -1\n\n    for _ in range(m):\n        l = next(it)\n        r = next(it)\n        min_r2 = min(min_r2, r)\n        max_l2 = max(max_l2, l)\n\n    answer = max(0, max_l2"
+      ],
+      [
+        "taco_0255",
+        "One day Polycarp published a funny picture in a social network making a poll about the color of his handle. Many of his friends started reposting Polycarp's joke to their news feed. Some of them repos",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    \n    depth = {\"polycarp\": 1}\n    \n    for _ in range(n):\n        parts = input().split()\n        name1 = parts[0].lower()\n        name2 = parts[2].lower()\n        depth[name1] = depth[name2] + 1\n    \n    print(max(depth.values()))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0592",
+        "A permutation of length $n$ is an array consisting of $n$ distinct integers from $1$ to $n$ in arbitrary order. For example, $[2,3,1,5,4]$ is a permutation, but $[1,2,2]$ is not a permutation ($2$ app",
+        "import sys\n\nMOD = 1_000_000_007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ns = data[1:1 + t]\n\n    max_n = max(ns) if ns else 0\n\n    fact = [1] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        fact[i] = fact[i - 1] * i % MOD\n\n    answers = []\n    for n in ns:\n        ans = n * (n - 1) % MOD\n        ans = ans * fact[n] % MOD\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name"
+      ],
+      [
+        "taco_0684",
+        "Read problems statements [Hindi] ,[Bengali] , [Mandarin chinese] , [Russian] and [Vietnamese] as well.\n\nWhen Chef was visiting a fair in Byteland, he met a magician. The magician had $N$ boxes (number",
+        "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        x = data[idx + 1]\n        s = data[idx + 2]\n        idx += 3\n\n        for _ in range(s):\n            a = data[idx]\n            b = data[idx + 1]\n            idx += 2\n\n            if x == a:\n                x = b\n            elif x == b:\n                x = a\n\n        answers.append(str(x))\n\n    sys.stdout.write(\"\\n\""
+      ],
+      [
+        "taco_0697",
+        "You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0875",
+        "A company has n employees numbered from 1 to n. Each employee either has no immediate manager or exactly one immediate manager, who is another employee with a different number. An employee A is said t",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    parents = data[1:n + 1]\n\n    children = [[] for _ in range(n)]\n    roots = []\n\n    for i, p in enumerate(parents):\n        if p == -1:\n            roots.append(i)\n        else:\n            children[p - 1].append(i)\n\n    max_groups = 0\n    stack = [(root, 1) for root in roots]\n\n    while stack:\n        employee, depth = stack.pop()\n        if depth > max_groups:\n"
+      ],
+      [
+        "taco_0935",
+        "Recently, a start up by two students of a state university of city F gained incredible popularity. Now it's time to start a new company. But what do we call it?\n\nThe market analysts came up with a ver",
+        "import sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    mirror_letters = set(\"AHIMOTUVWXY\")\n    if s == s[::-1] and all(ch in mirror_letters for ch in s):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0843",
+        "We have two consecutive integers k1 and k2, k2 = k1 + 1\n\nWe need to calculate the lowest integer `n`, such that:\nthe values nk1 and nk2 have the same digits but in different order.\n\nE.g.# 1:\n```\nk1 = ",
+        "def find_lowest_int(k):\n    n = 9\n    step = 9 * k\n    a = step  # a = k * n\n\n    while True:\n        if sorted(str(a)) == sorted(str(a + n)):\n            return n\n        n += 9\n        a += step"
+      ],
+      [
+        "taco_0019",
+        "Complete the method which accepts an array of integers, and returns one of the following:\n\n* `\"yes, ascending\"` - if the numbers in the array are sorted in an ascending order\n* `\"yes, descending\"` - i",
+        "def is_sorted_and_how(arr):\n    if all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1)):\n        return \"yes, ascending\"\n    if all(arr[i] >= arr[i + 1] for i in range(len(arr) - 1)):\n        return \"yes, descending\"\n    return \"no\""
+      ],
+      [
+        "taco_0872",
+        "# Task\n\nWrite a function that accepts `msg` string and returns local tops of string from the highest to the lowest.  \nThe string's tops are from displaying the string in the below way:\n\n```      \n    ",
+        "def tops(msg):\n    result = []\n    i = 1\n    step = 5\n    n = len(msg)\n\n    while i < n:\n        result.append(msg[i])\n        i += step\n        step += 4\n\n    result.reverse()\n    return ''.join(result)"
+      ],
+      [
+        "taco_0834",
+        "In order to prove it's success and gain funding, the wilderness zoo needs to prove to environmentalists that it has x number of mating pairs of bears. \n\nYou must check within string (s) to find all of",
+        "def bears(x, s):\n    pairs = []\n    i = 0\n\n    while i < len(s) - 1:\n        if (s[i] == 'B' and s[i + 1] == '8') or (s[i] == '8' and s[i + 1] == 'B'):\n            pairs.append(s[i])\n            pairs.append(s[i + 1])\n            i += 2\n        else:\n            i += 1\n\n    pair_string = ''.join(pairs)\n    return [pair_string, len(pairs) // 2 >= x]"
+      ],
+      [
+        "taco_0849",
+        "The Saratov State University Olympiad Programmers Training Center (SSU OPTC) has n students. For each student you know the number of times he/she has participated in the ACM ICPC world programming cha",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, k = data[0], data[1]\n    participations = data[2:2 + n]\n\n    eligible = sum(1 for y in participations if y + k <= 5)\n    print(eligible // 3)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0397",
+        "Today at the lesson of mathematics, Petya learns about the digital root.\n\nThe digital root of a non-negative integer is the single digit value obtained by an iterative process of summing digits, on ea",
+        "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    ans = []\n    idx = 1\n    for _ in range(n):\n        k = int(data[idx])\n        x = int(data[idx + 1])\n        idx += 2\n        ans.append(str(x + (k - 1) * 9))\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0287",
+        "Recently you have received two positive integer numbers $x$ and $y$. You forgot them, but you remembered a shuffled list containing all divisors of $x$ (including $1$ and $x$) and all divisors of $y$ ",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    n = data[0]\n    divisors = data[1:1 + n]\n\n    x = max(divisors)\n\n    count = {}\n    for d in divisors:\n        count[d] = count.get(d, 0) + 1\n\n    for d in list(count.keys()):\n        if x % d == 0:\n            count[d] -= 1\n\n    y = max(d for d, c in count.items() if c > 0)\n\n    print(x, y)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0332",
+        "Enough is enough. Too many times it happened that Vasya forgot to dispose of garbage and his apartment stank afterwards. Now he wants to create a garbage disposal plan and stick to it.\n\nFor each of ne",
+        "import sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n\n    ans = 0\n    rem = 0  # garbage left from the previous day that must be disposed today\n\n    for x in a:\n        if rem > 0:\n            need = k - rem\n            use = min(x, need)\n            x -= use\n            ans += 1\n            rem = 0\n\n        ans += x // k\n        rem = x % k\n\n    if rem > 0:\n        ans += 1\n"
+      ],
+      [
+        "taco_0093",
+        "Slavic has an array of length $n$ consisting only of zeroes and ones. In one operation, he removes either the first or the last element of the array.\n\nWhat is the minimum number of operations Slavic h",
+        "import sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        s = next(it)\n        a = [next(it) for _ in range(n)]\n\n        total = sum(a)\n\n        if total < s:\n            answers.append(\"-1\")\n            continue\n\n        left = 0\n        current_sum = 0\n        max_length = -1\n\n        for right in range(n):\n            current_sum += a[right]\n\n         "
+      ],
+      [
+        "taco_0496",
+        "Monocarp had a sequence $a$ consisting of $n + m$ integers $a_1, a_2, \\dots, a_{n + m}$. He painted the elements into two colors, red and blue; $n$ elements were painted red, all other $m$ elements we",
+        "import sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        current = 0\n        best_red = 0\n        for _ in range(n):\n            current += next(it)\n            best_red = max(best_red, current)\n\n        m = next(it)\n\n        current = 0\n        best_blue = 0\n        for _ in range(m):\n            current += next(it)\n            best_blue = max(best_blue"
+      ],
+      [
+        "taco_0340",
+        "Mocha is a young girl from high school. She has learned so much interesting knowledge from her teachers, especially her math teacher. Recently, Mocha is learning about binary system and very intereste",
+        "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        ans = data[idx]\n        for i in range(idx + 1, idx + n):\n            ans &= data[i]\n\n        idx += n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()"
+      ],
+      [
+        "taco_0600",
+        "Pasha has a wooden stick of some positive integer length n. He wants to perform exactly three cuts to get four parts of the stick. Each part must have some positive integer length and the sum of these",
+        "import sys\n\nn = int(sys.stdin.readline())\n\nif n % 2 == 1:\n    print(0)\nelse:\n    m = n // 2\n    print((m - 1) // 2)"
+      ],
+      [
+        "taco_0529",
+        "There are $n$ students in the first grade of Nlogonia high school. The principal wishes to split the students into two classrooms (each student must be in exactly one of the classrooms). Two distinct ",
+        "import sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    counts = [0] * 26\n\n    for _ in range(n):\n        name = input().strip()\n        counts[ord(name[0]) - ord('a')] += 1\n\n    answer = 0\n\n    for k in counts:\n        best = float('inf')\n        for left in range(k + 1):\n            right = k - left\n            pairs = left * (left - 1) // 2 + right * (right - 1) // 2\n            best = min(best, pairs)\n        answer += best\n\n    print(answer)\n\nif __name__ == \"__main__"
+      ],
+      [
+        "taco_0404",
+        "Alice's hair is growing by leaps and bounds. Maybe the cause of it is the excess of vitamins, or maybe it is some black magic...\n\nTo prevent this, Alice decided to go to the hairdresser. She wants for",
+        "import sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n    l = next(it)\n\n    a = [0] * (n + 1)\n    over = [False] * (n + 1)\n\n    runs = 0\n    for i in range(1, n + 1):\n        a[i] = next(it)\n        if a[i] > l:\n            over[i] = True\n            if i == 1 or not over[i - 1]:\n                runs += 1\n\n    answers = []\n\n    for _ in range(m):\n        t = next(it)\n\n        if t == 0:\n            answe"
+      ],
+      [
+        "taco_0076",
+        "We have the integer `9457`. \n\nWe distribute its digits in two buckets having the following possible distributions (we put the generated numbers as strings and we add the corresponding formed integers ",
+        "from math import comb\nfrom functools import lru_cache\n\n# Bell numbers, extended as needed\nBell = [1]\n\ndef ensure_bell(n):\n    while len(Bell) <= n:\n        idx = len(Bell)\n        val = 0\n        for k in range(idx):\n            val += comb(idx - 1, k) * Bell[k]\n        Bell.append(val)\n\n_coeff_cache = {}\n\ndef coefficients(length):\n    if length in _coeff_cache:\n        return _coeff_cache[length]\n\n    ensure_bell(length)\n    w = []\n\n    for i in range(length):\n        left = i\n        right = l"
+      ],
+      [
+        "taco_0057",
+        "Uncle Fyodor, Matroskin the Cat and Sharic the Dog live their simple but happy lives in Prostokvashino. Sometimes they receive parcels from Uncle Fyodor’s parents and sometimes from anonymous benefact",
+        "import sys\n\ndef beats(a, b):\n    return (a == \"rock\" and b == \"scissors\") or \\\n           (a == \"scissors\" and b == \"paper\") or \\\n           (a == \"paper\" and b == \"rock\")\n\ndef main():\n    gestures = [line.strip() for line in sys.stdin.read().splitlines()[:3]]\n    names = [\"F\", \"M\", \"S\"]\n\n    for i in range(3):\n        j = (i + 1) % 3\n        k = (i + 2) % 3\n        if beats(gestures[i], gestures[j]) and beats(gestures[i], gestures[k]):\n            print(names[i])\n            return\n\n    print(\""
+      ],
+      [
+        "taco_0728",
+        "Leonard has decided to quit living with Dr. Sheldon Cooper and has started to live with Penny. Yes, you read it right. (And you read it here for the first time!) He is fed up of Sheldon, after all. Si",
+        "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n\n        # There are b cab drivers, each described by two place numbers.\n        idx += 2 * b\n\n        # Minimum edges needed to connect a places is a - 1.\n        answers.append(str(a - 1))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == "
+      ],
+      [
+        "taco_0851",
+        "The Berland language consists of words having exactly two letters. Moreover, the first letter of a word is different from the second letter. Any combination of two different Berland letters (which, by",
+        "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    t = int(data[0])\n    ans = []\n\n    for i in range(1, t + 1):\n        s = data[i]\n        first = ord(s[0]) - ord('a')\n        second = ord(s[1]) - ord('a')\n\n        index = first * 25 + second + (1 if second < first else 0)\n        ans.append(str(index))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0333",
+        "During the break the schoolchildren, boys and girls, formed a queue of n people in the canteen. Initially the children stood in the order they entered the canteen. However, after a while the boys star",
+        "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    t = int(data[1])\n    s = list(data[2])\n\n    for _ in range(t):\n        i = 0\n        while i + 1 < len(s):\n            if s[i] == 'B' and s[i + 1] == 'G':\n                s[i], s[i + 1] = s[i + 1], s[i]\n                i += 2\n            else:\n                i += 1\n\n    sys.stdout.write(''.join(s) + '\\n')\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0901",
+        "Nothing is eternal in the world, Kostya understood it on the 7-th of January when he saw partially dead four-color garland.\n\nNow he has a goal to replace dead light bulbs, however he doesn't know how ",
+        "import sys\n\ns = sys.stdin.readline().strip()\n\ncolor_at_mod = [None] * 4\n\nfor i, ch in enumerate(s):\n    if ch != '!':\n        color_at_mod[i % 4] = ch\n\nanswer = {'R': 0, 'B': 0, 'Y': 0, 'G': 0}\n\nfor i, ch in enumerate(s):\n    if ch == '!':\n        answer[color_at_mod[i % 4]] += 1\n\nprint(answer['R'], answer['B'], answer['Y'], answer['G'])"
+      ],
+      [
+        "taco_0252",
+        "A friend of mine told me privately: \"I don't like palindromes\". \"why not?\" - I replied. \"Because when I want to do some programming challenges, I encounter 2 or 3 ones first related with palindromes. ",
+        "def count_pal(n):\n    if n <= 0:\n        return [0, 0]\n\n    exact = 9 * 10 ** ((n - 1) // 2)\n\n    if n % 2 == 0:\n        total = 2 * (10 ** (n // 2) - 1)\n    else:\n        total = 11 * 10 ** (n // 2) - 2\n\n    return [exact, total]"
+      ],
+      [
+        "taco_0564",
+        "Implement `String.eight_bit_signed_number?` (Ruby), `String.eightBitSignedNumber()` (Python), `eight_bit_signed_number()` (JS) or `StringUtils.isSignedEightBitNumber(String)` (Java) which should retur",
+        "_VALID_SIGNED_8_BIT = {str(i) for i in range(-128, 128)}\n\ndef signed_eight_bit_number(number):\n    return isinstance(number, str) and number in _VALID_SIGNED_8_BIT"
+      ],
+      [
+        "taco_0839",
+        "Given an array of integers as strings and numbers, return the sum of the array values as if all were numbers.\n\nReturn your answer as a number.",
+        "def sum_mix(arr):\n    return sum(int(x) for x in arr)"
+      ],
+      [
+        "taco_0608",
+        "Not so long ago the Codecraft-17 contest was held on Codeforces. The top 25 participants, and additionally random 25 participants out of those who got into top 500, will receive a Codeforces T-shirt.\n",
+        "import sys\n\ndef main():\n    p, x, y = map(int, sys.stdin.readline().split())\n\n    target = p - 26\n    good = [False] * 475\n\n    for start in range(475):\n        i = start\n        for _ in range(25):\n            i = (i * 96 + 42) % 475\n            if i == target:\n                good[start] = True\n                break\n\n    q0 = x // 50\n    r = x % 50\n    qmin = (y - r + 49) // 50\n\n    successful = 0\n    while True:\n        upper = q0 + 2 * successful\n\n        if upper >= qmin:\n            length"
+      ],
+      [
+        "taco_0227",
+        "Write a function that takes in a binary string and returns the equivalent decoded text (the text is ASCII encoded).\n\nEach 8 bits on the binary string represent 1 character on the ASCII table.\n\nThe inp",
+        "def binary_to_string(binary):\n    return ''.join(chr(int(binary[i:i + 8], 2)) for i in range(0, len(binary), 8))"
+      ],
+      [
+        "taco_0267",
+        "Given a square matrix (i.e. an array of subarrays), find the sum of values from the first value of the first array, the second value of the second array, the third value of the third array, and so on.",
+        "def diagonal_sum(array):\n    return sum(row[i] for i, row in enumerate(array))"
+      ],
+      [
+        "taco_0535",
+        "You are playing a new famous fighting game: Kortal Mombat XII. You have to perform a brutality on your opponent's character.\n\nYou are playing the game on the new generation console so your gamepad hav",
+        "import sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    k = int(data[1])\n\n    damages = list(map(int, data[2:2 + n]))\n    s = data[2 + n]\n\n    answer = 0\n    i = 0\n\n    while i < n:\n        j = i\n        values = []\n\n        while j < n and s[j] == s[i]:\n            values.append(damages[j])\n            j += 1\n\n        if len(values) <= k:\n            answer += sum(values)\n        else:\n            values.sort(reverse=True)\n            answer += sum(v"
+      ],
+      [
+        "taco_0051",
+        "A company has n employees numbered from 1 to n. Each employee either has no immediate manager or exactly one immediate manager, who is another employee with a different number. An employee A is said t",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    parents = data[1:1 + n]\n\n    children = [[] for _ in range(n)]\n    roots = []\n\n    for i, p in enumerate(parents):\n        if p == -1:\n            roots.append(i)\n        else:\n            children[p - 1].append(i)\n\n    max_depth = 0\n    stack = [(root, 1) for root in roots]\n\n    while stack:\n        employee, depth = stack.pop()\n        max_depth = max(max_depth, depth)\n\n        for child in c"
+      ],
+      [
+        "taco_0855",
+        "You may have already known that a standard ICPC team consists of exactly three members. The perfect team however has more restrictions. A student can have some specialization: coder or mathematician. ",
+        "import sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    q = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(q):\n        c, m, x = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n\n        ans.append(str(min((c + m + x) // 3, min(c, m))))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()"
+      ],
+      [
+        "taco_0607",
+        "Ever the learned traveller, Alan Partridge has pretty strong views on London:\n\n```\n\"Go to London. I guarantee you'll either be mugged or not appreciated.\nCatch the train to London, stopping at Rejecti",
+        "def alan(arr):\n    stops = [\n        'Rejection',\n        'Disappointment',\n        'Backstabbing Central',\n        'Shattered Dreams Parkway'\n    ]\n    if all(stop in arr for stop in stops):\n        return 'Smell my cheese you mother!'\n    return 'No, seriously, run. You will miss it.'"
+      ],
+      [
+        "taco_0372",
+        "Let quasi-palindromic number be such number that adding some leading zeros (possible none) to it produces a palindromic string. \n\nString t is called a palindrome, if it reads the same from left to rig",
+        "import sys\n\ns = sys.stdin.readline().strip()\nt = s.rstrip('0')\n\nprint(\"YES\" if t == t[::-1] else \"NO\")"
+      ],
+      [
+        "taco_0218",
+        "Perhaps it would be convenient to solve first ```Probabilities for Sums in Rolling Cubic Dice``` see at: http://www.codewars.com/kata/probabilities-for-sums-in-rolling-cubic-dice\n\nSuppose that we roll",
+        "def reg_sum_hits(n, s):\n    if n <= 0:\n        return [[0, 1]]\n    if s == 1:\n        return [[n, 1]]\n    if n == 1:\n        return [[i, 1] for i in range(1, s + 1)]\n\n    max_k = n * (s - 1)\n    result = [[n, 1]]\n\n    total = 1\n    residue_sums = [0] * s\n    residue_sums[0] = 1\n\n    ns = n * s\n\n    for k in range(1, max_k + 1):\n        count = (n * total - ns * residue_sums[k % s]) // k\n        result.append([n + k, count])\n\n        total += count\n        residue_sums[k % s] += count\n\n    return"
+      ],
+      [
+        "taco_0934",
+        "## Story\n\nThere are four warriors, they need to go through a dark tunnel. Tunnel is very narrow, every time only can let two warriors through, and there are lot of dangerous traps. Fortunately, they h",
+        "def shortest_time(speed):\n    a, b, c, d = sorted(speed)\n    return min(\n        a + 3 * b + d,\n        2 * a + b + c + d\n    )"
+      ],
+      [
+        "taco_0988",
+        "Alice and Bob are playing chess on a huge chessboard with dimensions $n \\times n$. Alice has a single piece left — a queen, located at $(a_x, a_y)$, while Bob has only the king standing at $(b_x, b_y)",
+        "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    ax, ay = data[1], data[2]\n    bx, by = data[3], data[4]\n    cx, cy = data[5], data[6]\n\n    if (ax - bx) * (ax - cx) > 0 and (ay - by) * (ay - cy) > 0:\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0614",
+        "Chef prepared two dishes yesterday. Chef had assigned the \\textbf{tastiness} T_{1} and T_{2} to the first and to the second dish respectively. The tastiness of the dishes can be any \\textbf{integer} b",
+        "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        n = data[idx]\n        s = data[idx + 1]\n        idx += 2\n\n        if s <= n:\n            ans.append(str(s))\n        else:\n            ans.append(str(2 * n - s))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()"
+      ],
+      [
+        "taco_0054",
+        "In Ciel's restaurant, a waiter is training.\nSince the waiter isn't good at arithmetic, sometimes he gives guests wrong change.\nCiel gives him a simple problem.\nWhat is A-B (A minus B) ?\n\nSurprisingly,",
+        "import sys\n\ndef main():\n    A, B = map(int, sys.stdin.readline().split())\n    answer = str(A - B)\n\n    if answer[0] == '1':\n        answer = '2' + answer[1:]\n    else:\n        answer = '1' + answer[1:]\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()"
+      ],
+      [
+        "taco_0858",
+        "You have two positive integers $a$ and $b$.\n\nYou can perform two kinds of operations:\n\n$a = \\lfloor \\frac{a}{b} \\rfloor$ (replace $a$ with the integer part of the division between $a$ and $b$)\n\n$b=b+1",
+        "import sys\n\n\ndef min_operations(a: int, b: int) -> int:\n    best = 10**18\n    inc = 0\n\n    while True:\n        new_b = b + inc\n\n        if new_b > 1:\n            divisions = 0\n            x = a\n\n            while x > 0:\n                x //= new_b\n                divisions += 1\n\n            best = min(best, inc + divisions)\n\n        inc += 1\n\n        # Further increments alone already cost at least 'best',\n        # so they cannot produce a better answer.\n        if inc >= best:\n            brea"
+      ],
+      [
+        "taco_0026",
+        "There is a chessboard of size $n$ by $n$. The square in the $i$-th row from top and $j$-th column from the left is labelled $(i,j)$.\n\nCurrently, Gregor has some pawns in the $n$-th row. There are also",
+        "import sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        idx += 1\n\n        enemy = bytearray(data[idx])\n        idx += 1\n\n        gregor = data[idx]\n        idx += 1\n\n        ans = 0\n\n        for i in range(n):\n            if gregor[i] != ord('1'):\n                continue\n\n            if i > 0 and enemy[i - 1] == ord('1'):\n                ans += 1\n                enem"
+      ],
+      [
+        "taco_0065",
+        "Let us define two functions f and g on positive integer numbers.  $f(n) = \\text{product of non-zero digits of} n$\n\n$g(n) = \\left\\{\\begin{array}{ll}{n} & {\\text{if} n < 10} \\\\{g(f(n))} & {\\text{otherwi",
+        "import sys\nfrom bisect import bisect_left\nfrom array import array\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    q = data[0]\n\n    max_r = 0\n    for i in range(q):\n        r = data[3 * i + 2]\n        if r > max_r:\n            max_r = r\n\n    n_max = max_r\n\n    f = array('I', [0]) * (n_max + 1)\n    f[0] = 1\n\n    g = bytearray(n_max + 1)\n    positions = [array('I') for _ in range(10)]\n\n    for n in range(1, n_max + 1):\n        digit = n "
+      ],
+      [
+        "taco_0796",
+        "A Magic Square contains the integers 1 to n^(2), arranged in an n by n array such that the columns, rows and both main diagonals add up to the same number.For doubly even positive integers (multiples ",
+        "def even_magic(n):\n    total = n * n + 1\n    square = []\n\n    for i in range(n):\n        row = []\n        for j in range(n):\n            value = i * n + j + 1\n            if i % 4 == j % 4 or (i % 4) + (j % 4) == 3:\n                value = total - value\n            row.append(value)\n        square.append(row)\n\n    return square"
+      ],
+      [
+        "taco_0763",
+        "Task:\nMake a function that converts a word to pig latin. The rules of pig latin are:\n\n```\nIf the word has more than 3 letters:\n  1. Take the first letter of a word and move it to the end\n  2. Add -ay ",
+        "def pig_latin(word):\n    if len(word) > 3:\n        return word[1:] + word[0] + \"ay\"\n    return word"
+      ]
+    ]
+  }
+}

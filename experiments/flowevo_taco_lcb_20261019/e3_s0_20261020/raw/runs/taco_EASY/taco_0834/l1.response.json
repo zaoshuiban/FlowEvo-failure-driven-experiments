@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ea3c704a-c67c-431c-9cf7-6866d796b7aa",
+  "created": 1792430226,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 355,
+    "completion_tokens": 3155,
+    "total_tokens": 3510,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3027
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 355
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef bears(x, s):\n    pairs = []\n    i = 0\n\n    while i < len(s) - 1:\n        if (s[i] == 'B' and s[i + 1] == '8') or (s[i] == '8' and s[i + 1] == 'B'):\n            pairs.append(s[i])\n            pairs.append(s[i + 1])\n            i += 2\n        else:\n            i += 1\n\n    pair_string = ''.join(pairs)\n    return [pair_string, len(pairs) // 2 >= x]\n```",
+  "latency_s": 15.098,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIn order to prove it's success and gain funding, the wilderness zoo needs to prove to environmentalists that it has x number of mating pairs of bears. \n\nYou must check within string (s) to find all of the mating pairs, and return a string containing only them. Line them up for inspection.\n\nRules:\nBears are either 'B' (male) or '8' (female),\nBears must be together in male/female pairs 'B8' or '8B',\nMating pairs must involve two distinct bears each ('B8B' may look fun, but does not count as two pairs).\n\nReturn an array containing a string of only the mating pairs available. e.g:\n\n'EvHB8KN8ik8BiyxfeyKBmiCMj' ---> 'B88B'    (empty string if there are no pairs)\n\nand true if the number is more than or equal to x, false if not:\n\n(6, 'EvHB8KN8ik8BiyxfeyKBmiCMj') ---> ['B88B', false];\n\nx will always be a positive integer, and s will never be empty\n\nStarter code / required signature:\ndef bears(x,s):\n\t\n\nUse the required function/method named bears. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

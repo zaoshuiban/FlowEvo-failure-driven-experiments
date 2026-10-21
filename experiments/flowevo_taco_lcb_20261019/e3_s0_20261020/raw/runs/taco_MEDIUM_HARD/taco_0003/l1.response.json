@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0fb63c4f-5160-415b-bb36-cc14e571fc11",
+  "created": 1792439986,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1249,
+    "completion_tokens": 12042,
+    "total_tokens": 13291,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11542
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1249
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n\n    # Find maximum N to precompute factorials.\n    pos = 1\n    max_n = 0\n    for _ in range(t):\n        n = data[pos]\n        pos += 1\n        if n > max_n:\n            max_n = n\n        pos += n\n\n    fact = [1] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        fact[i] = fact[i - 1] * i % MOD\n\n    inv_fact = [1] * (max_n + 1)\n    inv_fact[max_n] = pow(fact[max_n], MOD - 2, MOD)\n    for i in range(max_n, 0, -1):\n        inv_fact[i - 1] = inv_fact[i] * i % MOD\n\n    pow2 = [1] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        pow2[i] = pow2[i - 1] * 2 % MOD\n\n    def comb(n, k):\n        if k < 0 or k > n:\n            return 0\n        return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD\n\n    answers = []\n    pos = 1\n\n    for _ in range(t):\n        n = data[pos]\n        pos += 1\n\n        end = pos + n\n        maximum = -1\n        count_max = 0\n\n        for i in range(pos, end):\n            value = data[i]\n            if value > maximum:\n                maximum = value\n                count_max = 1\n            elif value == maximum:\n                count_max += 1\n\n        pos = end\n\n        total = pow2[n]\n\n        if count_max % 2 == 0:\n            draw_ways = comb(count_max, count_max // 2) * pow2[n - count_max] % MOD\n            total = (total - draw_ways) % MOD\n\n        answers.append(str(total))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 62.181,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nChef is playing a card game with his friend Chefu. The rules of the game are as follows:\nThere are two piles of cards. One pile belongs to Chef and the other to Chefu. One pile may be empty.\nAt any moment, each card used in the game has a positive integer value. Whenever the value of a card becomes non-positive, it is removed from the game.\nThe game is played in rounds. In each round, each player simultaneously draws one card from the top of his pile.\nIf one player's pile is empty, this player cannot draw a card and therefore loses the game. (Note that it is impossible for both piles to be empty.)\nIf the values of the drawn cards are equal, each player simply places the card he drew to the bottom of his pile.\nOtherwise, the player whose card has the higher value wins this round. This player places the card he drew to the bottom of his pile. Then, the card his opponent drew is transferred to him and he places this card to the bottom of his pile (below the card he just drew) as well.\nWhenever a card is transferred from one player to the other, the value of that card decreases by $1$.\nWhen there is no transfer of cards between the players during $10^{100}$ consecutive rounds, each player calculates the sum of values of the cards that are currently in his pile. If one player has a higher sum, this player wins the game. Otherwise, the game ends in a draw.\n\nYou are given $N$ cards (numbered $1$ through $N$). For each valid $i$, the value of the $i$-th card is $C_{i}$. Your task is to distribute the cards between the players before the start of the game ― assign each card to one of the players. It is not necessary to distribute the cards equally between the players in any way. After you distribute the cards, each player arranges the cards in his pile in some order he chooses (not necessarily good for this player). Once the game starts, they may not rearrange their piles anymore.\n\nFind the number of distributions of cards such that it is impossible for the game to end in a draw, regardless of how the players form their starting piles. Since this number might be large, compute it modulo $1,000,000,007$. Two distributions of cards are different if there is an integer $i$ ($1 ≤ i ≤ N$) such that the $i$-th card belongs to Chef in one distribution and to Chefu in the other distribution.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nThe second line contains $N$ space-separated integers $C_{1}, C_{2}, \\ldots, C_{N}$.\n\n------  Output ------\nFor each test case, print a single line containing one integer ― the number of ways to distribute the cards between the players such that the game does not end in a draw, modulo $1,000,000,007$.\n\n------  Constraints ------\n$1 ≤ T ≤ 200$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ C_{i} ≤ 10^{9}$ for each valid $i$\nthe sum of $N$ over all test cases does not exceed $10^{6}$\n\n------  Subtasks ------\nSubtask #1 (5 points): $N ≤ 8$\n\nSubtask #2 (25 points): $N ≤ 200$\n\nSubtask #3 (70 points): original constraints\n\n----- Sample Input 1 ------ \n2\n\n2\n\n2 2\n\n4\n\n1 2 2 6\n----- Sample Output 1 ------ \n2\n\n16\n----- explanation 1 ------ \nExample case 1: We can only give both cards to Chef or both to Chefu. If we gave one of them to Chef and the other to Chefu, the game would end in a draw.\n\nExample case 2: One of the possible ways to avoid a draw is to give cards $1$ and $4$ to Chef and the rest to Chefu. Let's assume that Chef forms a pile with cards $[6,1]$ (from top to bottom); Chefu's pile is $[2,2]$. Then, the game proceeds like this:\n- In the first round, Chef draws the card with value $6$ and wins a card with value $2$ from Chefu, so his pile is $[1,6,1]$ and Chefu's pile is $[2]$ after this round. Note that the value of the card transferred from Chefu to Chef decreased to $1$.\n- In the second round, Chef draws a card with value $1$ and Chefu draws his card with value $2$, so Chefu wins the round. The value of the card that is transferred from Chef to Chefu decreases to $0$, so this card is removed from the game. After this round, Chef's pile is $[6,1]$ and Chefu's pile is $[2]$.\n- In the third round, Chef again draws the card with value $6$ and wins Chefu's last card. After this round, Chef's pile is $[1,6,1]$ and Chefu's pile is empty. Therefore, Chefu loses the game.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

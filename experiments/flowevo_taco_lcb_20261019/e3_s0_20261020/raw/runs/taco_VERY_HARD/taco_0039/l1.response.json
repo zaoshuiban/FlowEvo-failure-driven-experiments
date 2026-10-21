@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5a317862-9c1b-4a12-9bba-bc906c6c11d5",
+  "created": 1792430753,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 967,
+    "completion_tokens": 17821,
+    "total_tokens": 18788,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 17013
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 967
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n    k = int(next(it))\n    s = next(it)\n\n    first = [-1] * n\n    second = [-1] * n\n\n    for j in range(k):\n        c = int(next(it))\n        for _ in range(c):\n            x = int(next(it)) - 1\n            if first[x] == -1:\n                first[x] = j\n            else:\n                second[x] = j\n\n    del data, it\n\n    parent = list(range(k))\n    parity = [0] * k          # value[node] xor value[parent[node]]\n    size = [1] * k\n    cnt0 = [1] * k            # variables in component with parity 0 from root\n    cnt1 = [0] * k            # variables in component with parity 1 from root\n    fixed = [-1] * k          # fixed value of root, -1 if unknown\n\n    total = 0\n\n    sys.setrecursionlimit(1_000_000)\n\n    def find(x):\n        if parent[x] != x:\n            p = parent[x]\n            r, w = find(p)\n            parity[x] ^= w\n            parent[x] = r\n        return parent[x], parity[x]\n\n    def cost(r):\n        if fixed[r] == -1:\n            return min(cnt0[r], cnt1[r])\n        if fixed[r] == 0:\n            return cnt1[r]\n        return cnt0[r]\n\n    def set_fixed(x, value):\n        nonlocal total\n        r, p = find(x)\n        need_root_value = p ^ value\n\n        if fixed[r] == -1:\n            total -= cost(r)\n            fixed[r] = need_root_value\n            total += cost(r)\n\n    def unite(x, y, relation):\n        nonlocal total\n\n        rx, px = find(x)\n        ry, py = find(y)\n\n        # value[x] xor value[y] = relation\n        # value[rx] xor value[ry] = w\n        w = relation ^ px ^ py\n\n        if rx == ry:\n            return\n\n        total -= cost(rx) + cost(ry)\n\n        if size[rx] < size[ry]:\n            child, par = rx, ry\n        else:\n            child, par = ry, rx\n\n        parent[child] = par\n        parity[child] = w\n        size[par] += size[child]\n\n        if w == 0:\n            cnt0[par] += cnt0[child]\n            cnt1[par] += cnt1[child]\n        else:\n            cnt0[par] += cnt1[child]\n            cnt1[par] += cnt0[child]\n\n        child_fixed = fixed[child]\n        if child_fixed != -1:\n            expected_parent_value = child_fixed ^ w\n            if fixed[par] == -1:\n                fixed[par] = expected_parent_value\n\n        fixed[child] = -1\n        total += cost(par)\n\n    answers = []\n\n    for i in range(n):\n        u = first[i]\n        v = second[i]\n\n        # Need: s[i] xor (xor of chosen subsets containing i) = 1\n        target = 1 if s[i] == ord('0') else 0\n\n        if u == -1 and v == -1:\n            pass\n        elif v == -1:\n            set_fixed(u, target)\n        else:\n            unite(u, v, target)\n\n        answers.append(str(total))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 79.801,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are n lamps on a line, numbered from 1 to n. Each one has an initial state off (0) or on (1).\n\nYou're given k subsets A_1, …, A_k of \\{1, 2, ..., n\\}, such that the intersection of any three subsets is empty. In other words, for all 1 ≤ i_1 < i_2 < i_3 ≤ k, A_{i_1} ∩ A_{i_2} ∩ A_{i_3} = ∅.\n\nIn one operation, you can choose one of these k subsets and switch the state of all lamps in it. It is guaranteed that, with the given subsets, it's possible to make all lamps be simultaneously on using this type of operation.\n\nLet m_i be the minimum number of operations you have to do in order to make the i first lamps be simultaneously on. Note that there is no condition upon the state of other lamps (between i+1 and n), they can be either off or on.\n\nYou have to compute m_i for all 1 ≤ i ≤ n.\n\nInput\n\nThe first line contains two integers n and k (1 ≤ n, k ≤ 3 ⋅ 10^5).\n\nThe second line contains a binary string of length n, representing the initial state of each lamp (the lamp i is off if s_i = 0, on if s_i = 1).\n\nThe description of each one of the k subsets follows, in the following format:\n\nThe first line of the description contains a single integer c (1 ≤ c ≤ n) — the number of elements in the subset.\n\nThe second line of the description contains c distinct integers x_1, …, x_c (1 ≤ x_i ≤ n) — the elements of the subset.\n\nIt is guaranteed that: \n\n  * The intersection of any three subsets is empty; \n  * It's possible to make all lamps be simultaneously on using some operations. \n\nOutput\n\nYou must output n lines. The i-th line should contain a single integer m_i — the minimum number of operations required to make the lamps 1 to i be simultaneously on.\n\nExamples\n\nInput\n\n\n7 3\n0011100\n3\n1 4 6\n3\n3 4 7\n2\n2 3\n\n\nOutput\n\n\n1\n2\n3\n3\n3\n3\n3\n\n\nInput\n\n\n8 6\n00110011\n3\n1 3 8\n5\n1 2 5 6 7\n2\n6 8\n2\n3 5\n2\n4 7\n1\n2\n\n\nOutput\n\n\n1\n1\n1\n1\n1\n1\n4\n4\n\n\nInput\n\n\n5 3\n00011\n3\n1 2 3\n1\n4\n3\n3 4 5\n\n\nOutput\n\n\n1\n1\n1\n1\n1\n\n\nInput\n\n\n19 5\n1001001001100000110\n2\n2 3\n2\n5 6\n2\n8 9\n5\n12 13 14 15 16\n1\n19\n\n\nOutput\n\n\n0\n1\n1\n1\n2\n2\n2\n3\n3\n3\n3\n4\n4\n4\n4\n4\n4\n4\n5\n\nNote\n\nIn the first example: \n\n  * For i = 1, we can just apply one operation on A_1, the final states will be 1010110; \n  * For i = 2, we can apply operations on A_1 and A_3, the final states will be 1100110; \n  * For i ≥ 3, we can apply operations on A_1, A_2 and A_3, the final states will be 1111111. \n\n\n\nIn the second example: \n\n  * For i ≤ 6, we can just apply one operation on A_2, the final states will be 11111101; \n  * For i ≥ 7, we can apply operations on A_1, A_3, A_4, A_6, the final states will be 11111111.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

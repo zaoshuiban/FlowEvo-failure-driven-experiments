@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "11cc39f5-c079-49d1-b525-06af7ebe2b5f",
+  "created": 1792440854,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 534,
+    "completion_tokens": 7762,
+    "total_tokens": 8296,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7514
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 150
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    total = sum(a)\n\n    if total <= 1:\n        print(-1)\n        return\n\n    # Find distinct prime factors of total.\n    x = total\n    primes = []\n    d = 2\n    while d * d <= x:\n        if x % d == 0:\n            primes.append(d)\n            while x % d == 0:\n                x //= d\n        d += 1 if d == 2 else 2\n    if x > 1:\n        primes.append(x)\n\n    answer = 10**30\n\n    for p in primes:\n        carry = 0\n        cost = 0\n\n        for value in a:\n            carry = (carry + value) % p\n            if carry != 0:\n                cost += min(carry, p - carry)\n\n        answer = min(answer, cost)\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 38.311,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThis is the easier version of the problem. In this version, 1 ≤ n ≤ 10^5 and 0 ≤ a_i ≤ 1. You can hack this problem only if you solve and lock both problems.\n\nChristmas is coming, and our protagonist, Bob, is preparing a spectacular present for his long-time best friend Alice. This year, he decides to prepare n boxes of chocolate, numbered from 1 to n. Initially, the i-th box contains a_i chocolate pieces.\n\nSince Bob is a typical nice guy, he will not send Alice n empty boxes. In other words, at least one of a_1, a_2, …, a_n is positive. Since Alice dislikes coprime sets, she will be happy only if there exists some integer k > 1 such that the number of pieces in each box is divisible by k. Note that Alice won't mind if there exists some empty boxes. \n\nCharlie, Alice's boyfriend, also is Bob's second best friend, so he decides to help Bob by rearranging the chocolate pieces. In one second, Charlie can pick up a piece in box i and put it into either box i-1 or box i+1 (if such boxes exist). Of course, he wants to help his friend as quickly as possible. Therefore, he asks you to calculate the minimum number of seconds he would need to make Alice happy.\n\nInput\n\nThe first line contains a single integer n (1 ≤ n ≤ 10^5) — the number of chocolate boxes.\n\nThe second line contains n integers a_1, a_2, …, a_n (0 ≤ a_i ≤ 1) — the number of chocolate pieces in the i-th box.\n\nIt is guaranteed that at least one of a_1, a_2, …, a_n is positive.\n\nOutput\n\nIf there is no way for Charlie to make Alice happy, print -1.\n\nOtherwise, print a single integer x — the minimum number of seconds for Charlie to help Bob make Alice happy.\n\nExamples\n\nInput\n\n\n3\n1 0 1\n\n\nOutput\n\n\n2\n\n\nInput\n\n\n1\n1\n\n\nOutput\n\n\n-1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

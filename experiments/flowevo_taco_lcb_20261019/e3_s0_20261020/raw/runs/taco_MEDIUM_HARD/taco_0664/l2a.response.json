@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f455efee-721b-481d-822b-754a66ec3498",
+  "created": 1792435595,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 606,
+    "completion_tokens": 11424,
+    "total_tokens": 12030,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10777
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 222
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\n\ndef solve_case(N, K, P, A, ops):\n    total = sum(A)\n\n    if K >= N:\n        return [str(total)] * ops.count(b'?')\n\n    a2 = A + A\n\n    # W[i] = sum of K consecutive elements starting at i in A+A\n    M = 2 * N - K\n    W = [0] * M\n\n    current = sum(a2[:K])\n    W[0] = current\n\n    for i in range(1, M):\n        current += a2[i + K - 1] - a2[i - 1]\n        W[i] = current\n\n    # ans[c] = answer when the rotated array starts at original index c\n    ans = [0] * N\n    window_len = N - K + 1\n\n    dq = deque()\n\n    for i in range(M):\n        while dq and W[dq[-1]] <= W[i]:\n            dq.pop()\n        dq.append(i)\n\n        c = i - window_len + 1\n\n        if c >= 0:\n            while dq and dq[0] < c:\n                dq.popleft()\n            ans[c] = W[dq[0]]\n\n    result = []\n    start = 0\n\n    for ch in ops:\n        if ch == ord('!'):\n            start -= 1\n            if start < 0:\n                start += N\n        elif ch == ord('?'):\n            result.append(str(ans[start]))\n\n    return result\n\n\ndef main():\n    inp = sys.stdin.buffer\n\n    first = inp.readline()\n    while first and not first.strip():\n        first = inp.readline()\n\n    if not first:\n        return\n\n    first_parts = first.split()\n    output = []\n\n    # Supports both the described single-test-case format and a possible T-based format.\n    if len(first_parts) == 3:\n        N, K, P = map(int, first_parts)\n        rest = inp.read().split()\n\n        A = list(map(int, rest[:N]))\n\n        if P > 0 and len(rest) > N:\n            ops = rest[N]\n        else:\n            ops = b''\n\n        output.extend(solve_case(N, K, P, A, ops))\n\n    else:\n        T = int(first_parts[0])\n        tokens = inp.read().split()\n        idx = 0\n\n        for _ in range(T):\n            N = int(tokens[idx])\n            K = int(tokens[idx + 1])\n            P = int(tokens[idx + 2])\n            idx += 3\n\n            A = list(map(int, tokens[idx:idx + N]))\n            idx += N\n\n            if P > 0:\n                ops = tokens[idx]\n                idx += 1\n            else:\n                ops = b''\n\n            output.extend(solve_case(N, K, P, A, ops))\n\n    sys.stdout.write('\\n'.join(output))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 50.197,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in mandarin chinese, russian and vietnamese as well. \n\nChef has a binary array A of length N. He also has a frame that can focus on at max K consecutive elements of the array. \n\nChef has a lovely dog which likes to do following two things.  \n\nShifting the array A to the right by one element (N-th element becomes 1_{st}, 1_{st} becomes 2_{nd} and so on) \nAsking Chef what is the maximal number of elements equal to 1, that can be captured by a frame (frame can capture not more than K consecutive elements of array).\n\nHelp Chef entertain his Dog!\n\n------ Input ------ \n\nThe first line of each test case contains three integers N, K and P denoting the number of elements in array A, size of a frame and the number of Dog's requests.\n\nThe second line contains N space-separated integers A_{1}, A_{2}, ..., A_{N} denoting the elements of array. \n\nThe third line contains string consisting of P characters, i-th character stands for dog's i-th question and equals '!' if  Dog shifts the array and '?' if dog asks what is the maximal number of ones captured by the frame. \n\n------ Output ------ \n\nFor each Dog's question output a single line containing an integer corresponding to the answer of the question. \n\n------ Constraints ------ \n\n$1 ≤ N, K, P ≤ 10^{5}$\n$0 ≤ A_{i} ≤ 1$\n\n------ Subtasks ------ \n\n$Subtask #1  (30 points) N, K, P ≤ 10^{3} $\n$Subtask #2 (70 points) Original constraints.$\n\n----- Sample Input 1 ------ \n5 3 4\n\n1 0 0 1 1\n\n?!!?\n----- Sample Output 1 ------ \n2\n\n3\n----- explanation 1 ------ \nExample case 1.\nFor the first question , Chef can pick last 3 elements (or last two, no matter) for his frame, \nand will have 2 elements equal 1.\nAfter first shift (exclamation mark) array will become: 1 1 0 0 1.\nAfter second shift (exclamation mark) array will become: 1 1 1 0 0.\nNow for the second question Chef can pick first 3 elements for his frame,\nand will have 3 elements equal 1.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

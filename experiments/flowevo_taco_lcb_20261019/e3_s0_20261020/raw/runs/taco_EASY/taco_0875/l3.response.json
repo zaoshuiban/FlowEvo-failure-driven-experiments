@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2bcc3581-9b47-4fef-8992-887338e46d57",
+  "created": 1792429454,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 864,
+    "completion_tokens": 2004,
+    "total_tokens": 2868,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1818
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 480
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    parents = data[1:n + 1]\n\n    children = [[] for _ in range(n)]\n    roots = []\n\n    for i, p in enumerate(parents):\n        if p == -1:\n            roots.append(i)\n        else:\n            children[p - 1].append(i)\n\n    max_groups = 0\n    stack = [(root, 1) for root in roots]\n\n    while stack:\n        employee, depth = stack.pop()\n        if depth > max_groups:\n            max_groups = depth\n\n        for child in children[employee]:\n            stack.append((child, depth + 1))\n\n    print(max_groups)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 9.903,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA company has n employees numbered from 1 to n. Each employee either has no immediate manager or exactly one immediate manager, who is another employee with a different number. An employee A is said to be the superior of another employee B if at least one of the following is true:\n\n  * Employee A is the immediate manager of employee B\n  * Employee B has an immediate manager employee C such that employee A is the superior of employee C. \n\n\n\nThe company will not have a managerial cycle. That is, there will not exist an employee who is the superior of his/her own immediate manager.\n\nToday the company is going to arrange a party. This involves dividing all n employees into several groups: every employee must belong to exactly one group. Furthermore, within any single group, there must not be two employees A and B such that A is the superior of B.\n\nWhat is the minimum number of groups that must be formed?\n\nInput\n\nThe first line contains integer n (1 ≤ n ≤ 2000) — the number of employees.\n\nThe next n lines contain the integers pi (1 ≤ pi ≤ n or pi = -1). Every pi denotes the immediate manager for the i-th employee. If pi is -1, that means that the i-th employee does not have an immediate manager. \n\nIt is guaranteed, that no employee will be the immediate manager of him/herself (pi ≠ i). Also, there will be no managerial cycles.\n\nOutput\n\nPrint a single integer denoting the minimum number of groups that will be formed in the party.\n\nExamples\n\nInput\n\n5\n-1\n1\n2\n1\n-1\n\n\nOutput\n\n3\n\nNote\n\nFor the first example, three groups are sufficient, for example: \n\n  * Employee 1 \n  * Employees 2 and 4 \n  * Employees 3 and 5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    parent = []\n\n    for x in data[1:n + 1]:\n        if x == -1:\n            parent.append(-1)\n        else:\n            parent.append(x - 1)\n\n    depth = [0] * n\n\n    for i in range(n):\n        if depth[i] != 0:\n            continue\n\n        stack = []\n        cur = i\n\n        while cur != -1 and depth[cur] == 0:\n            stack.append(cur)\n            cur = parent[cur]\n\n        current_depth = 0 if cur == -1 else depth[cur]\n\n        while stack:\n            node = stack.pop()\n            current_depth += 1\n            depth[node] = current_depth\n\n    print(max(depth))\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Time limit exceeded.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

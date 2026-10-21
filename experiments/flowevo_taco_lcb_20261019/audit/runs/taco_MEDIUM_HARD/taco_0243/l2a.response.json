@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5d68e4d3-887b-4961-8394-3224a8f03667",
+  "created": 1792447083,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 344,
+    "completion_tokens": 7471,
+    "total_tokens": 7815,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7219
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 216
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n\n    if a < b:\n        print(-1)\n        return\n\n    candidates = []\n\n    # Point lies on an ascending segment:\n    # x = (a - b) / (2n), n >= 1, and x >= b\n    if a > b:\n        num = a - b\n        n = num // (2 * b)\n        if n >= 1:\n            candidates.append((num, 2 * n))\n\n    # Point lies on a descending segment:\n    # x = (a + b) / (2n), n >= 1, and x >= b\n    num = a + b\n    n = num // (2 * b)\n    candidates.append((num, 2 * n))\n\n    best_num, best_den = candidates[0]\n\n    for num, den in candidates[1:]:\n        if num * best_den < best_num * den:\n            best_num, best_den = num, den\n\n    print(f\"{best_num / best_den:.15f}\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 32.725,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a polyline going through points (0, 0) – (x, x) – (2x, 0) – (3x, x) – (4x, 0) – ... - (2kx, 0) – (2kx + x, x) – .... \n\nWe know that the polyline passes through the point (a, b). Find minimum positive value x such that it is true or determine that there is no such x.\n\n\n-----Input-----\n\nOnly one line containing two positive integers a and b (1 ≤ a, b ≤ 10^9).\n\n\n-----Output-----\n\nOutput the only line containing the answer. Your answer will be considered correct if its relative or absolute error doesn't exceed 10^{ - 9}. If there is no such x then output  - 1 as the answer.\n\n\n-----Examples-----\nInput\n3 1\n\nOutput\n1.000000000000\n\nInput\n1 3\n\nOutput\n-1\n\nInput\n4 1\n\nOutput\n1.250000000000\n\n\n\n-----Note-----\n\nYou can see following graphs for sample 1 and sample 3.  [Image]  [Image]\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

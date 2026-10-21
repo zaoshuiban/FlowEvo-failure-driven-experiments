@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e7bc1e25-89e8-4502-bdb8-26f17cdf975e",
+  "created": 1792433472,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1147,
+    "completion_tokens": 32768,
+    "total_tokens": 33915,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 507
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 161.452,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTwo players are playing a game. They have a permutation of integers $1$, $2$, ..., $n$ (a permutation is an array where each element from $1$ to $n$ occurs exactly once). The permutation is not sorted in either ascending or descending order (i. e. the permutation does not have the form $[1, 2, \\dots, n]$ or $[n, n-1, \\dots, 1]$).\n\nInitially, all elements of the permutation are colored red. The players take turns. On their turn, the player can do one of three actions:\n\nrearrange the elements of the permutation in such a way that all red elements keep their positions (note that blue elements can be swapped with each other, but it's not obligatory);\n\nchange the color of one red element to blue;\n\nskip the turn.\n\nThe first player wins if the permutation is sorted in ascending order (i. e. it becomes $[1, 2, \\dots, n]$). The second player wins if the permutation is sorted in descending order (i. e. it becomes $[n, n-1, \\dots, 1]$). If the game lasts for $100^{500}$ turns and nobody wins, it ends in a draw.\n\nYour task is to determine the result of the game if both players play optimally.\n\n\n-----Input-----\n\nThe first line contains a single integer $t$ ($1 \\le t \\le 10^5$) — the number of test cases.\n\nThe first line of each test case contains a single integer $n$ ($3 \\le n \\le 5 \\cdot 10^5$) — the size of the permutation.\n\nThe second line contains $n$ integers $p_1, p_2, \\dots, p_n$ — the permutation itself. The permutation $p$ is not sorted in either ascending or descending order.\n\nThe sum of $n$ over all test cases does not exceed $5 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, print First if the first player wins, Second if the second player wins, and Tie if the result is a draw.\n\n\n-----Examples-----\n\nInput\n4\n4\n1 2 4 3\n3\n2 3 1\n5\n3 4 5 2 1\n6\n1 5 6 3 2 4\nOutput\nFirst\nTie\nSecond\nTie\n\n\n-----Note-----\n\nLet's show how the first player wins in the first example.\n\nThey should color the elements $3$ and $4$ blue during their first two turns, and then they can reorder the blue elements in such a way that the permutation becomes $[1, 2, 3, 4]$. The second player can neither interfere with this strategy nor win faster.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = iter(map(int, sys.stdin.buffer.read().split()))\n    t = next(data)\n    ans = []\n\n    for _ in range(t):\n        n = next(data)\n\n        both = 0       # needed by both players\n        first_only = 0 # needed only by First\n        second_only = 0# needed only by Second\n\n        for i in range(1, n + 1):\n            p = next(data)\n\n            good_asc = (p == i)\n            good_desc = (p == n + 1 - i)\n\n            if not good_asc and not good_desc:\n                both += 1\n            elif not good_asc:\n                first_only += 1\n            elif not good_desc:\n                second_only += 1\n\n        if both + first_only <= second_only:\n            ans.append(\"First\")\n        elif both + second_only < first_only:\n            ans.append(\"Second\")\n        else:\n            ans.append(\"Tie\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4fd76f0d-bc31-4dcc-9b99-46ac864bd7dc",
+  "created": 1792443967,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 693,
+    "completion_tokens": 3793,
+    "total_tokens": 4486,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3630
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 181
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    output = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        results = []\n        for i in range(n):\n            for j in range(i + 1, n):\n                distance = j - i\n\n                if 2 * distance < n:\n                    results.append(\"1\")\n                elif 2 * distance == n:\n                    results.append(\"0\")\n                else:\n                    results.append(\"-1\")\n\n        output.append(\" \".join(results))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 16.556,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA big football championship will occur soon! $n$ teams will compete in it, and each pair of teams will play exactly one game against each other.\n\nThere are two possible outcomes of a game:\n\nthe game may result in a tie, then both teams get $1$ point;\n\none team might win in a game, then the winning team gets $3$ points and the losing team gets $0$ points.\n\nThe score of a team is the number of points it gained during all games that it played.\n\nYou are interested in a hypothetical situation when all teams get the same score at the end of the championship. A simple example of that situation is when all games result in ties, but you want to minimize the number of ties as well.\n\nYour task is to describe a situation (choose the result of each game) so that all teams get the same score, and the number of ties is the minimum possible.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 100$) — the number of test cases.\n\nThen the test cases follow. Each test case is described by one line containing one integer $n$ ($2 \\le n \\le 100$) — the number of teams.\n\n\n-----Output-----\n\nFor each test case, print $\\frac{n(n - 1)}{2}$ integers describing the results of the games in the following order: the first integer should correspond to the match between team $1$ and team $2$, the second — between team $1$ and team $3$, then $1$ and $4$, ..., $1$ and $n$, $2$ and $3$, $2$ and $4$, ..., $2$ and $n$, and so on, until the game between the team $n - 1$ and the team $n$.\n\nThe integer corresponding to the game between the team $x$ and the team $y$ should be $1$ if $x$ wins, $-1$ if $y$ wins, or $0$ if the game results in a tie.\n\nAll teams should get the same score, and the number of ties should be the minimum possible. If there are multiple optimal answers, print any of them. It can be shown that there always exists a way to make all teams have the same score.\n\n\n-----Examples-----\n\nInput\n2\n2\n3\nOutput\n0 \n1 -1 1\n\n\n-----Note-----\n\nIn the first test case of the example, both teams get $1$ point since the game between them is a tie.\n\nIn the second test case of the example, team $1$ defeats team $2$ (team $1$ gets $3$ points), team $1$ loses to team $3$ (team $3$ gets $3$ points), and team $2$ wins against team $3$ (team $2$ gets $3$ points).\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

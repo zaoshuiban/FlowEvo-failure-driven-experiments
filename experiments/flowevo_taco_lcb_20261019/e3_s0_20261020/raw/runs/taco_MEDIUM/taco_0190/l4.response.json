@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c7c14857-da9d-43f5-ba59-fb44c9ec51f8",
+  "created": 1792436577,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 710,
+    "completion_tokens": 14744,
+    "total_tokens": 15454,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14405
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 326
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    D = data[1]\n\n    workers = []\n    idx = 2\n    for _ in range(n):\n        T = data[idx]\n        X = data[idx + 1]\n        Y = data[idx + 2]\n        idx += 3\n        workers.append((T, X, Y))\n\n    workers.sort()\n\n    remaining = D\n    cost = 0\n    current_speed = 0\n    current_time = 0\n\n    i = 0\n    while i < n:\n        t = workers[i][0]\n\n        if current_speed > 0:\n            painted = current_speed * (t - current_time)\n            if painted >= remaining:\n                print(cost)\n                return\n            remaining -= painted\n\n        max_speed = -1\n        min_cost = 10**18\n\n        j = i\n        while j < n and workers[j][0] == t:\n            _, x, y = workers[j]\n            if y > max_speed:\n                max_speed = y\n                min_cost = x\n            elif y == max_speed and x < min_cost:\n                min_cost = x\n            j += 1\n\n        if max_speed > current_speed:\n            cost += min_cost\n            current_speed = max_speed\n\n        current_time = t\n        i = j\n\n    print(cost)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 81.036,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou want to repaint your house entirely for an upcoming occasion. The total area of your house is D units. There are a total of N workers. The i^th worker has his available time Ti, hiring cost Xi and speed Yi. This means that he is available for hiring from time Ti  and remains available ever since. Once available, you can hire him with cost Xi, after which he will start painting the house immediately, covering exactly Yi units of house with paint per time unit. You may or may not hire a worker and can also hire or fire him at any later point of time. However, no more than 1 worker can be painting the house at a given time.\n\nSince you want the work to be done as fast as possible, figure out a way to hire the workers, such that your house gets painted at the earliest possible time, with minimum cost to spend for hiring workers.\n\nNote: You can hire a previously hired worker without paying him again.\n\nINPUT\n\nThe first line of input contains two integers \"N D\", the number of workers and the area of your house respectively. The i^th of the next N lines denotes the i^th worker, and contains three integers \"Ti Xi Yi\", described in the statement.\n\nOUTPUT\n\nOutput one integer, the minimum cost that you can spend in order to get your house painted at the earliest.\n\nCONSTRAINTS\n\n1 ≤ N, T, X, Y ≤ 10^5\n1 ≤ D ≤ 10^11\n\nSAMPLE INPUT\n3 3\n1 1 1\n2 2 2\n3 1 5\n\nSAMPLE OUTPUT\n3\n\nExplanation\n\nWe can hire the first worker at cost of 1 and second at cost of 2, to finish painting at the minimum time of exactly 2 time units.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Kefa decided to celebrate his first big salary by going to the restaurant. \n\nHe lives by an unusual park. The park is a rooted tree consisting of n vertices with the root at vertex 1. Vertex 1 also co\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    cats = [0] + [next(it) for _ in range(n)]\n\n    graph = [[] for _ in range(n + 1)]\n\n    for _ in range(n - 1):\n        x = next(it)\n        y = next(it)\n        graph[x].append(y)\n        graph[y].append(x)\n\n    answer = 0\n\n    stack = [(1, 0, cats[1])]\n\n    while stack:\n        node, parent, consecutive_cats = stack.pop()\n\n        if consecutive_cats > m:"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

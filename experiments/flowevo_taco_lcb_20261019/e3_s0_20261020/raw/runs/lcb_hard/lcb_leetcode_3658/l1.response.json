@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7a1bc595-ff6e-4d11-addf-bdf2a7380ec3",
+  "created": 1792434591,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 438,
+    "completion_tokens": 32768,
+    "total_tokens": 33206,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 438
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 160.674,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array of integers nums. Some values in nums are missing and are denoted by -1.\nYou can choose a pair of positive integers (x, y) exactly once and replace each missing element with either x or y.\nYou need to minimize the maximum absolute difference between adjacent elements of nums after replacements.\nReturn the minimum possible difference.\n \nExample 1:\n\nInput: nums = [1,2,-1,10,8]\nOutput: 4\nExplanation:\nBy choosing the pair as (6, 7), nums can be changed to [1, 2, 6, 10, 8].\nThe absolute differences between adjacent elements are:\n\n|1 - 2| == 1\n|2 - 6| == 4\n|6 - 10| == 4\n|10 - 8| == 2\n\n\nExample 2:\n\nInput: nums = [-1,-1,-1]\nOutput: 0\nExplanation:\nBy choosing the pair as (4, 4), nums can be changed to [4, 4, 4].\n\nExample 3:\n\nInput: nums = [-1,10,-1,8]\nOutput: 1\nExplanation:\nBy choosing the pair as (11, 9), nums can be changed to [11, 10, 9, 8].\n\n \nConstraints:\n\n2 <= nums.length <= 10^5\nnums[i] is either -1 or in the range [1, 10^9].\n\nStarter code / required signature:\nclass Solution:\n    def minDifference(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named minDifference. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

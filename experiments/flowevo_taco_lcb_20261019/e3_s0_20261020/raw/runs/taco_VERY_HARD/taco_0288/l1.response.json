@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "20b5852a-dfa8-4f2f-b988-97c2b1b26276",
+  "created": 1792458751,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 558,
+    "completion_tokens": 32768,
+    "total_tokens": 33326,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 558
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 156.704,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nYou are given a rooted tree consisting of N nodes. The nodes are numbered from 1 to N, and node 1 is the root. At each node of the tree, you can put zero or one coin such that the following property is satisfied for the tree:\n\nFor each node of the tree, starting from the original configuration, we should be able to get two coins on the node by applying at most two operations of the following kind:\nTake a coin from a node and move it to an adjacent node.\n  \nWhile trying to get to a particular node, if the same coin is moved in two operations, both those operations should either be towards the root, or both of them should be away from the root. That is, you cannot move a coin to its parent in one operation and then take it to another child of the parent in the second operation.\n\nFind the minimum total number of coins which can be used to get a valid configuration.\n\n------ Input ------ \n\nThe first line of the input contains an integer T.\nFor each test case, the first line contains an integer N.\nEach of the next N - 1 lines, contains two space separated integers u, v, denoting that there is an edge between node u and node v of the tree.\n\n------ Output ------ \n\nFor each test case, output a single integer corresponding to the minimum number of coins that can be used. If it's not possible to achieve this, output -1.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤  u, v ≤ N$\n\n------ Subtasks ------ \n\nSubtask #1 (40 points)\n\n$1 ≤ N ≤ 1000$\n\nSubtask #2 (60 points)\n\n$Original constraints$\n\n----- Sample Input 1 ------ \n2\n\n3\n\n1 2\n\n1 3\n\n5\n\n1 2\n\n1 3\n\n3 4\n\n3 5\n----- Sample Output 1 ------ \n3\n\n4\n----- explanation 1 ------ \nExample case 1. \n\nThe nodes which have a coin in them are shown by blue color. You can see that each node satisfies the desired property.\n\nExample case 2.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

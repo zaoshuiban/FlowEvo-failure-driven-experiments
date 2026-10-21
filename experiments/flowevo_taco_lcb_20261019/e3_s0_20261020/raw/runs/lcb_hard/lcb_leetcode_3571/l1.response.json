@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "11a206c6-559c-454c-ba2a-c8be5d481c2b",
+  "created": 1792446388,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 495,
+    "completion_tokens": 4334,
+    "total_tokens": 4829,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3730
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 495
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass FenwickMax:\n    def __init__(self, n: int):\n        self.n = n\n        self.tree = [0] * (n + 2)\n\n    def update(self, i: int, value: int) -> None:\n        while i <= self.n:\n            if value > self.tree[i]:\n                self.tree[i] = value\n            i += i & -i\n\n    def query(self, i: int) -> int:\n        result = 0\n        while i > 0:\n            if self.tree[i] > result:\n                result = self.tree[i]\n            i -= i & -i\n        return result\n\n\nclass Solution:\n    def maxPathLength(self, coordinates: List[List[int]], k: int) -> int:\n        n = len(coordinates)\n\n        ys = sorted({y for _, y in coordinates})\n        rank = {y: i + 1 for i, y in enumerate(ys)}\n        m = len(ys)\n\n        points = [(coordinates[i][0], coordinates[i][1], i) for i in range(n)]\n        points.sort(key=lambda p: (p[0], p[1]))\n\n        dp_end = [0] * n\n        bit = FenwickMax(m)\n\n        i = 0\n        while i < n:\n            j = i + 1\n            x = points[i][0]\n\n            while j < n and points[j][0] == x:\n                j += 1\n\n            for t in range(i, j):\n                _, y, idx = points[t]\n                r = rank[y]\n                dp_end[idx] = bit.query(r - 1) + 1\n\n            for t in range(i, j):\n                _, y, idx = points[t]\n                r = rank[y]\n                bit.update(r, dp_end[idx])\n\n            i = j\n\n        dp_start = [0] * n\n        bit = FenwickMax(m)\n\n        i = n - 1\n        while i >= 0:\n            x = points[i][0]\n            j = i - 1\n\n            while j >= 0 and points[j][0] == x:\n                j -= 1\n\n            for t in range(j + 1, i + 1):\n                _, y, idx = points[t]\n                r = rank[y]\n                reversed_r = m - r + 1\n                dp_start[idx] = bit.query(reversed_r - 1) + 1\n\n            for t in range(j + 1, i + 1):\n                _, y, idx = points[t]\n                r = rank[y]\n                reversed_r = m - r + 1\n                bit.update(reversed_r, dp_start[idx])\n\n            i = j\n\n        return dp_end[k] + dp_start[k] - 1\n```",
+  "latency_s": 18.397,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a 2D array of integers coordinates of length n and an integer k, where 0 <= k < n.\ncoordinates[i] = [x_i, y_i] indicates the point (x_i, y_i) in a 2D plane.\nAn increasing path of length m is defined as a list of points (x_1, y_1), (x_2, y_2), (x_3, y_3), ..., (x_m, y_m) such that:\n\nx_i < x_i + 1 and y_i < y_i + 1 for all i where 1 <= i < m.\n(x_i, y_i) is in the given coordinates for all i where 1 <= i <= m.\n\nReturn the maximum length of an increasing path that contains coordinates[k].\n \nExample 1:\n\nInput: coordinates = [[3,1],[2,2],[4,1],[0,0],[5,3]], k = 1\nOutput: 3\nExplanation:\n(0, 0), (2, 2), (5, 3) is the longest increasing path that contains (2, 2).\n\nExample 2:\n\nInput: coordinates = [[2,1],[7,0],[5,6]], k = 2\nOutput: 2\nExplanation:\n(2, 1), (5, 6) is the longest increasing path that contains (5, 6).\n\n \nConstraints:\n\n1 <= n == coordinates.length <= 10^5\ncoordinates[i].length == 2\n0 <= coordinates[i][0], coordinates[i][1] <= 10^9\nAll elements in coordinates are distinct.\n0 <= k <= n - 1\n\nStarter code / required signature:\nclass Solution:\n    def maxPathLength(self, coordinates: List[List[int]], k: int) -> int:\n        \n\nUse the required function/method named maxPathLength. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

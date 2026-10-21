@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b87f79a2-4a15-4a7b-a330-7a1117841c4a",
+  "created": 1792433503,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 572,
+    "completion_tokens": 17170,
+    "total_tokens": 17742,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15692
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 572
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\n\ndef ints():\n    data = sys.stdin.buffer.read()\n    i = 0\n    n = len(data)\n    while i < n:\n        while i < n and data[i] <= 32:\n            i += 1\n        if i >= n:\n            break\n\n        sign = 1\n        if data[i] == 45:  # '-'\n            sign = -1\n            i += 1\n\n        num = 0\n        while i < n and data[i] > 32:\n            num = num * 10 + (data[i] - 48)\n            i += 1\n\n        yield sign * num\n\n\ndef main():\n    it = ints()\n    n = next(it)\n    m = next(it)\n    k = next(it)\n\n    MOD = 998244353\n\n    max_nm = max(n, m)\n    pow2 = array('I', [1]) * (max_nm + 1)\n    for i in range(1, max_nm + 1):\n        pow2[i] = (pow2[i - 1] * 2) % MOD\n\n    SHIFT = 20\n    MASK = (1 << SHIFT) - 1\n\n    current = {}\n\n    # column -> packed (count_req_0, count_req_1)\n    col = {}\n    ccols = 0\n    badcols = 0\n\n    # row -> packed (count_req_0, count_req_1)\n    rowcnt = {}\n    crows = 0\n    badrows = 0\n\n    base0 = 0\n    base1 = 0\n\n    def add_col(y, r):\n        nonlocal ccols, badcols\n        p = col.get(y, 0)\n        if p == 0:\n            ccols += 1\n            col[y] = (1 << SHIFT) if r == 0 else 1\n        else:\n            c0 = p >> SHIFT\n            c1 = p & MASK\n            was_bad = 1 if (c0 > 0 and c1 > 0) else 0\n\n            if r == 0:\n                c0 += 1\n            else:\n                c1 += 1\n\n            now_bad = 1 if (c0 > 0 and c1 > 0) else 0\n            if now_bad != was_bad:\n                badcols += now_bad - was_bad\n\n            col[y] = (c0 << SHIFT) | c1\n\n    def remove_col(y, r):\n        nonlocal ccols, badcols\n        p = col[y]\n        c0 = p >> SHIFT\n        c1 = p & MASK\n        was_bad = 1 if (c0 > 0 and c1 > 0) else 0\n\n        if r == 0:\n            c0 -= 1\n        else:\n            c1 -= 1\n\n        now_bad = 1 if (c0 > 0 and c1 > 0) else 0\n        if now_bad != was_bad:\n            badcols += now_bad - was_bad\n\n        if c0 + c1 == 0:\n            del col[y]\n            ccols -= 1\n        else:\n            col[y] = (c0 << SHIFT) | c1\n\n    def add_row(x, r):\n        nonlocal crows, badrows\n        p = rowcnt.get(x, 0)\n        if p == 0:\n            crows += 1\n            rowcnt[x] = (1 << SHIFT) if r == 0 else 1\n        else:\n            c0 = p >> SHIFT\n            c1 = p & MASK\n            was_bad = 1 if (c0 > 0 and c1 > 0) else 0\n\n            if r == 0:\n                c0 += 1\n            else:\n                c1 += 1\n\n            now_bad = 1 if (c0 > 0 and c1 > 0) else 0\n            if now_bad != was_bad:\n                badrows += now_bad - was_bad\n\n            rowcnt[x] = (c0 << SHIFT) | c1\n\n    def remove_row(x, r):\n        nonlocal crows, badrows\n        p = rowcnt[x]\n        c0 = p >> SHIFT\n        c1 = p & MASK\n        was_bad = 1 if (c0 > 0 and c1 > 0) else 0\n\n        if r == 0:\n            c0 -= 1\n        else:\n            c1 -= 1\n\n        now_bad = 1 if (c0 > 0 and c1 > 0) else 0\n        if now_bad != was_bad:\n            badrows += now_bad - was_bad\n\n        if c0 + c1 == 0:\n            del rowcnt[x]\n            crows -= 1\n        else:\n            rowcnt[x] = (c0 << SHIFT) | c1\n\n    answers = []\n\n    for _ in range(k):\n        x = next(it)\n        y = next(it)\n        t = next(it)\n\n        key = (x << SHIFT) | y\n        prev = current.get(key, -1)\n\n        if prev != t:\n            px = (x - 1) & 1\n            py = (y - 1) & 1\n\n            if prev != -1:\n                remove_col(y, prev ^ px)\n                remove_row(x, prev ^ py)\n\n                b = prev ^ px ^ py\n                if b == 0:\n                    base0 -= 1\n                else:\n                    base1 -= 1\n\n            if t != -1:\n                add_col(y, t ^ px)\n                add_row(x, t ^ py)\n\n                b = t ^ px ^ py\n                if b == 0:\n                    base0 += 1\n                else:\n                    base1 += 1\n\n                current[key] = t\n            else:\n                if prev != -1:\n                    del current[key]\n\n        if badcols == 0:\n            type_a = pow2[m - ccols]\n        else:\n            type_a = 0\n\n        if badrows == 0:\n            type_b = pow2[n - crows]\n        else:\n            type_b = 0\n\n        if base0 > 0 and base1 > 0:\n            intersection = 0\n        elif base0 + base1 == 0:\n            intersection = 2\n        else:\n            intersection = 1\n\n        answers.append(str((type_a + type_b - intersection) % MOD))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 70.549,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA matrix of size n × m, such that each cell of it contains either 0 or 1, is considered beautiful if the sum in every contiguous submatrix of size 2 × 2 is exactly 2, i. e. every \"square\" of size 2 × 2 contains exactly two 1's and exactly two 0's.\n\nYou are given a matrix of size n × m. Initially each cell of this matrix is empty. Let's denote the cell on the intersection of the x-th row and the y-th column as (x, y). You have to process the queries of three types:\n\n  * x y -1 — clear the cell (x, y), if there was a number in it; \n  * x y 0 — write the number 0 in the cell (x, y), overwriting the number that was there previously (if any); \n  * x y 1 — write the number 1 in the cell (x, y), overwriting the number that was there previously (if any). \n\n\n\nAfter each query, print the number of ways to fill the empty cells of the matrix so that the resulting matrix is beautiful. Since the answers can be large, print them modulo 998244353.\n\nInput\n\nThe first line contains three integers n, m and k (2 ≤ n, m ≤ 10^6; 1 ≤ k ≤ 3 ⋅ 10^5) — the number of rows in the matrix, the number of columns, and the number of queries, respectively.\n\nThen k lines follow, the i-th of them contains three integers x_i, y_i, t_i (1 ≤ x_i ≤ n; 1 ≤ y_i ≤ m; -1 ≤ t_i ≤ 1) — the parameters for the i-th query.\n\nOutput\n\nFor each query, print one integer — the number of ways to fill the empty cells of the matrix after the respective query, taken modulo 998244353.\n\nExample\n\nInput\n\n\n2 2 7\n1 1 1\n1 2 1\n2 1 1\n1 1 0\n1 2 -1\n2 1 -1\n1 1 -1\n\n\nOutput\n\n\n3\n1\n0\n1\n2\n3\n6\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

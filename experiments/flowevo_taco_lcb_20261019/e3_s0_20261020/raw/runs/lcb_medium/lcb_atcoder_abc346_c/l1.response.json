@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b0060c50-6c32-46f8-bdcf-1825671dc577",
+  "created": 1792430946,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 397,
+    "completion_tokens": 271,
+    "total_tokens": 668,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 168
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 397
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N, K = data[0], data[1]\n    A = data[2:2 + N]\n\n    present = {x for x in A if x <= K}\n    total = K * (K + 1) // 2\n    answer = total - sum(present)\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 1.749,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a sequence of positive integers A=(A_1,A_2,\\dots,A_N) of length N and a positive integer K.\nFind the sum of the integers between 1 and K, inclusive, that do not appear in the sequence A.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN K\r\nA_1 A_2 \\dots A_N\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 1\\leq N \\leq 2\\times 10^5\n- 1\\leq K \\leq 2\\times 10^9\n- 1\\leq A_i \\leq 2\\times 10^9\n- All input values are integers.\n\nSample Input 1\n\n4 5\r\n1 6 3 1\n\nSample Output 1\n\n11\r\n\nAmong the integers between 1 and 5, three numbers, 2, 4, and 5, do not appear in A.\nThus, print their sum: 2+4+5=11.\n\nSample Input 2\n\n1 3\r\n346\n\nSample Output 2\n\n6\n\nSample Input 3\n\n10 158260522\r\n877914575 24979445 623690081 262703497 24979445 1822804784 1430302156 1161735902 923078537 1189330739\n\nSample Output 3\n\n12523196466007058\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

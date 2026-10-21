@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cc0af96d-fb4e-4f2f-b826-0c172279ff19",
+  "created": 1792455083,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 801,
+    "completion_tokens": 19200,
+    "total_tokens": 20001,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 18857
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 161
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1000000007\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read()\n    if not data:\n        return\n\n    newline = data.find(b'\\n')\n    if newline == -1:\n        parts = data.split()\n        n = int(parts[0])\n        m = sum(tok == b'1' for tok in parts[1:n + 1])\n    else:\n        n = int(data[:newline])\n        m = data[newline + 1:].count(b'1')\n\n    # I[m] = number of involutions on m elements:\n    # I[0] = I[1] = 1\n    # I[i] = I[i - 1] + (i - 1) * I[i - 2]\n    if m == 0:\n        involutions = 1\n    else:\n        prev2 = 1  # I[0]\n        prev1 = 1  # I[1]\n        for i in range(2, m + 1):\n            cur = (prev1 + (i - 1) * prev2) % MOD\n            prev2, prev1 = prev1, cur\n        involutions = prev1\n\n    # Answer = (n! / m!) * I[m] = product(m + 1 ... n) * I[m]\n    ans = involutions\n    for i in range(m + 1, n + 1):\n        ans = ans * i % MOD\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 87.755,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nSmart Beaver decided to be not only smart, but also a healthy beaver! And so he began to attend physical education classes at school X. In this school, physical education has a very creative teacher. One of his favorite warm-up exercises is throwing balls. Students line up. Each one gets a single ball in the beginning. The balls are numbered from 1 to n (by the demand of the inventory commission).\n\n<image> Figure 1. The initial position for n = 5. \n\nAfter receiving the balls the students perform the warm-up exercise. The exercise takes place in a few throws. For each throw the teacher chooses any two arbitrary different students who will participate in it. The selected students throw their balls to each other. Thus, after each throw the students remain in their positions, and the two balls are swapped.\n\n<image> Figure 2. The example of a throw. \n\nIn this case there was a throw between the students, who were holding the 2-nd and the 4-th balls. Since the warm-up has many exercises, each of them can only continue for little time. Therefore, for each student we know the maximum number of throws he can participate in. For this lessons maximum number of throws will be 1 or 2.\n\nNote that after all phases of the considered exercise any ball can end up with any student. Smart Beaver decided to formalize it and introduced the concept of the \"ball order\". The ball order is a sequence of n numbers that correspond to the order of balls in the line. The first number will match the number of the ball of the first from the left student in the line, the second number will match the ball of the second student, and so on. For example, in figure 2 the order of the balls was (1, 2, 3, 4, 5), and after the throw it was (1, 4, 3, 2, 5). Smart beaver knows the number of students and for each student he knows the maximum number of throws in which he can participate. And now he is wondering: what is the number of distinct ways of ball orders by the end of the exercise.\n\nInput\n\nThe first line contains a single number n — the number of students in the line and the number of balls. The next line contains exactly n space-separated integers. Each number corresponds to a student in the line (the i-th number corresponds to the i-th from the left student in the line) and shows the number of throws he can participate in.\n\nThe input limits for scoring 30 points are (subproblem D1): \n\n  * 1 ≤ n ≤ 10. \n\n\n\nThe input limits for scoring 70 points are (subproblems D1+D2): \n\n  * 1 ≤ n ≤ 500. \n\n\n\nThe input limits for scoring 100 points are (subproblems D1+D2+D3): \n\n  * 1 ≤ n ≤ 1000000. \n\nOutput\n\nThe output should contain a single integer — the number of variants of ball orders after the warm up exercise is complete. As the number can be rather large, print it modulo 1000000007 (109 + 7).\n\nExamples\n\nInput\n\n5\n1 2 2 1 2\n\n\nOutput\n\n120\n\n\nInput\n\n8\n1 2 2 1 2 1 1 2\n\n\nOutput\n\n16800\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

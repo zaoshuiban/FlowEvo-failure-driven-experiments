@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6ea7e84b-8a06-422d-b2b2-47b3a5706186",
+  "created": 1792446247,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 522,
+    "completion_tokens": 16803,
+    "total_tokens": 17325,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16172
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 522
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\nfrom collections import Counter, defaultdict\n\nclass Solution:\n    def subsequencesWithMiddleMode(self, nums: List[int]) -> int:\n        MOD = 1_000_000_007\n        n = len(nums)\n\n        total = Counter(nums)\n        right = Counter(nums)\n        left = defaultdict(int)\n\n        values = list(total.keys())\n\n        def c2(x: int) -> int:\n            return x * (x - 1) // 2 if x >= 2 else 0\n\n        left_same = 0\n        right_same = sum(c * (c - 1) // 2 for c in right.values())\n\n        ans = 0\n\n        for m, x in enumerate(nums):\n            old_rx = right[x]\n            right_same -= old_rx - 1\n            right[x] = old_rx - 1\n\n            lx = left.get(x, 0)\n            rx = right[x]\n\n            left_size = m\n            right_size = n - m - 1\n\n            non_left = left_size - lx\n            non_right = right_size - rx\n\n            total_pairs = c2(left_size) * c2(right_size)\n\n            left0 = c2(non_left)\n            right0 = c2(non_right)\n            left1 = lx * non_left\n            right1 = rx * non_right\n\n            ways0 = left0 * right0\n            ways1 = left1 * right0 + left0 * right1\n\n            # Cases where x already appears at least 3 times among the 5 chosen elements.\n            good_ge3 = total_pairs - ways0 - ways1\n\n            sum_a = 0\n            sum_b = 0\n\n            sum_c_right_excluding_x = right_same - c2(rx)\n            sum_c_left_excluding_x = left_same - c2(lx)\n\n            for v in values:\n                if v == x:\n                    continue\n\n                cl = left.get(v, 0)\n                cr = right.get(v, 0)\n\n                if cl:\n                    # Extra x is on the left, v is the non-x chosen from the left.\n                    f_right = c2(non_right - cr) - (sum_c_right_excluding_x - c2(cr))\n                    sum_a += cl * f_right\n\n                if cr:\n                    # Extra x is on the right, v is the non-x chosen from the right.\n                    f_left = c2(non_left - cl) - (sum_c_left_excluding_x - c2(cl))\n                    sum_b += cr * f_left\n\n            # x appears exactly twice and all other three values are distinct.\n            good_eq2 = lx * sum_a + rx * sum_b\n\n            ans = (ans + good_ge3 + good_eq2) % MOD\n\n            left_same += lx\n            left[x] = lx + 1\n\n        return ans % MOD\n```",
+  "latency_s": 74.552,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven an integer array nums, find the number of subsequences of size 5 of nums with a unique middle mode.\nSince the answer may be very large, return it modulo 10^9 + 7.\nA mode of a sequence of numbers is defined as the element that appears the maximum number of times in the sequence.\nA sequence of numbers contains a unique mode if it has only one mode.\nA sequence of numbers seq of size 5 contains a unique middle mode if the middle element (seq[2]) is a unique mode.\n \nExample 1:\n\nInput: nums = [1,1,1,1,1,1]\nOutput: 6\nExplanation:\n[1, 1, 1, 1, 1] is the only subsequence of size 5 that can be formed, and it has a unique middle mode of 1. This subsequence can be formed in 6 different ways, so the output is 6. \n\nExample 2:\n\nInput: nums = [1,2,2,3,3,4]\nOutput: 4\nExplanation:\n[1, 2, 2, 3, 4] and [1, 2, 3, 3, 4] each have a unique middle mode because the number at index 2 has the greatest frequency in the subsequence. [1, 2, 2, 3, 3] does not have a unique middle mode because 2 and 3 appear twice.\n\nExample 3:\n\nInput: nums = [0,1,2,3,4,5,6,7,8]\nOutput: 0\nExplanation:\nThere is no subsequence of length 5 with a unique middle mode.\n\n \nConstraints:\n\n5 <= nums.length <= 1000\n-10^9 <= nums[i] <= 10^9\n\nStarter code / required signature:\nclass Solution:\n    def subsequencesWithMiddleMode(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named subsequencesWithMiddleMode. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

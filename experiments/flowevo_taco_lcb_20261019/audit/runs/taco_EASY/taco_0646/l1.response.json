@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c890ac20-30d6-45d2-99da-3f79e858359e",
+  "created": 1792434757,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 314,
+    "completion_tokens": 4419,
+    "total_tokens": 4733,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3981
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 314
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    tests = []\n    max_n = 0\n    idx = 1\n\n    for _ in range(t):\n        m = data[idx]\n        n = data[idx + 1]\n        idx += 2\n        tests.append((m, n))\n        if n > max_n:\n            max_n = n\n\n    limit = math.isqrt(max_n)\n\n    sieve = bytearray(b'\\x01') * (limit + 1)\n    if limit >= 0:\n        sieve[0] = 0\n    if limit >= 1:\n        sieve[1] = 0\n\n    for i in range(2, math.isqrt(limit) + 1):\n        if sieve[i]:\n            start = i * i\n            sieve[start:limit + 1:i] = b'\\x00' * (((limit - start) // i) + 1)\n\n    primes = [i for i in range(2, limit + 1) if sieve[i]]\n\n    answers = []\n\n    for m, n in tests:\n        is_prime = bytearray(b'\\x01') * (n - m + 1)\n\n        if m == 1:\n            is_prime[0] = 0\n\n        for p in primes:\n            if p * p > n:\n                break\n\n            start = ((m + p - 1) // p) * p\n            if start < p * p:\n                start = p * p\n\n            if start <= n:\n                is_prime[start - m:n + 1 - m:p] = b'\\x00' * (((n - start) // p) + 1)\n\n        result = [str(m + i) for i, value in enumerate(is_prime) if value]\n        answers.append('\\n'.join(result))\n\n    sys.stdout.write('\\n\\n'.join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 18.451,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRam wants to generate some prime numbers for his cryptosystem. Help him please!\nYour task is to generate all prime numbers between two given numbers.\n\nWarning: large Input/Output data, be careful with certain languages (though most should be OK if the algorithm is well designed)\n\n------ Input Format ------ \n\nThe first line contains t, the number of test cases (less then or equal to 10). \n\nFollowed by t lines which contain two numbers m and n (1 ≤ m ≤ n ≤ 1000000000, n-m≤100000) separated by a space.\n\n------ Output Format ------ \n\nFor every test case print all prime numbers p such that m ≤ p ≤ n,\none number per line.  Separate the answers for each test case by an empty line.\n\n------ Constraints ------ \n\n(1 ≤ m ≤ n ≤ 1000000000, n-m≤100000)\n\n----- Sample Input 1 ------ \n2\n1 10\n3 5\n----- Sample Output 1 ------ \n2\n3\n5\n7\n\n3\n5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

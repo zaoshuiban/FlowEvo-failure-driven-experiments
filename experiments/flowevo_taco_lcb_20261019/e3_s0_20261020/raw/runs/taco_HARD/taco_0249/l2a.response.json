@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0d145edf-509a-427d-bb47-7350fb0eae87",
+  "created": 1792444637,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 426,
+    "completion_tokens": 15042,
+    "total_tokens": 15468,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14528
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 170
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    forbidden = [False] * m\n    for x in data[2:2 + n]:\n        forbidden[x] = True\n\n    by_gcd = {}\n\n    for r in range(m):\n        if forbidden[r]:\n            continue\n        g = math.gcd(r, m)  # gcd(0, m) = m\n        by_gcd.setdefault(g, []).append(r)\n\n    nodes = sorted(by_gcd.keys())\n\n    exact = {}\n    parent = {}\n    processed = []\n\n    best_end = -1\n    best_value = -1\n\n    for d in nodes:\n        weight = len(by_gcd[d])\n        best_prev_value = 0\n        best_prev_node = -1\n\n        for c in processed:\n            if d % c == 0 and exact[c] > best_prev_value:\n                best_prev_value = exact[c]\n                best_prev_node = c\n\n        exact[d] = weight + best_prev_value\n        parent[d] = best_prev_node\n\n        if exact[d] > best_value:\n            best_value = exact[d]\n            best_end = d\n\n        processed.append(d)\n\n    chain = []\n    cur = best_end\n    while cur != -1:\n        chain.append(cur)\n        cur = parent[cur]\n    chain.reverse()\n\n    prefix_products = []\n    for d in chain:\n        prefix_products.extend(by_gcd[d])\n\n    answer = []\n\n    for i, q in enumerate(prefix_products):\n        if i == 0:\n            answer.append(q % m)\n        else:\n            p = prefix_products[i - 1]\n            g = math.gcd(p, m)\n            mod = m // g\n\n            if mod == 1:\n                x = 0\n            else:\n                u = (p // g) % mod\n                v = q // g\n                inv = pow(u, -1, mod)\n                x = (v * inv) % mod\n\n            answer.append(x % m)\n\n    sys.stdout.write(str(len(answer)) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, answer)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 73.302,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer m, and a list of n distinct integers between 0 and m - 1.\n\nYou would like to construct a sequence satisfying the properties:  Each element is an integer between 0 and m - 1, inclusive.  All prefix products of the sequence modulo m are distinct.  No prefix product modulo m appears as an element of the input list.  The length of the sequence is maximized. \n\nConstruct any sequence satisfying the properties above.\n\n\n-----Input-----\n\nThe first line of input contains two integers n and m (0 ≤ n < m ≤ 200 000) — the number of forbidden prefix products and the modulus.\n\nIf n is non-zero, the next line of input contains n distinct integers between 0 and m - 1, the forbidden prefix products. If n is zero, this line doesn't exist.\n\n\n-----Output-----\n\nOn the first line, print the number k, denoting the length of your sequence.\n\nOn the second line, print k space separated integers, denoting your sequence.\n\n\n-----Examples-----\nInput\n0 5\n\nOutput\n5\n1 2 4 3 0\n\nInput\n3 10\n2 9 1\n\nOutput\n6\n3 9 2 9 8 0\n\n\n\n-----Note-----\n\nFor the first case, the prefix products of this sequence modulo m are [1, 2, 3, 4, 0].\n\nFor the second case, the prefix products of this sequence modulo m are [3, 7, 4, 6, 8, 0].\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

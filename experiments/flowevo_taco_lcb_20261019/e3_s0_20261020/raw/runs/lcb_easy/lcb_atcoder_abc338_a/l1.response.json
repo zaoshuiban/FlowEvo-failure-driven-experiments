@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7348fedf-4d55-4576-89e7-32c8d2541b24",
+  "created": 1792430207,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 333,
+    "completion_tokens": 239,
+    "total_tokens": 572,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 189
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 333
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nS = sys.stdin.readline().strip()\n\nif S[0].isupper() and all(c.islower() for c in S[1:]):\n    print(\"Yes\")\nelse:\n    print(\"No\")\n```",
+  "latency_s": 1.534,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a non-empty string S consisting of uppercase and lowercase English letters. Determine whether the following condition is satisfied:\n\n- The first character of S is uppercase, and all other characters are lowercase.\n\nInput\n\nThe input is given from Standard Input in the following format:\nS\n\nOutput\n\nIf the condition is satisfied, print Yes; otherwise, print No.\n\nConstraints\n\n\n- 1 \\leq |S| \\leq 100 (|S| is the length of the string S.)\n- Each character of S is an uppercase or lowercase English letter.\n\nSample Input 1\n\nCapitalized\n\nSample Output 1\n\nYes\r\n\nThe first character C of Capitalized is uppercase, and all other characters apitalized are lowercase, so you should print Yes.\n\nSample Input 2\n\nAtCoder\n\nSample Output 2\n\nNo\r\n\nAtCoder contains an uppercase letter C that is not at the beginning, so you should print No.\n\nSample Input 3\n\nyes\n\nSample Output 3\n\nNo\r\n\nThe first character y of yes is not uppercase, so you should print No.\n\nSample Input 4\n\nA\n\nSample Output 4\n\nYes\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

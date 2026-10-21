@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0cec0709-11c8-4f2f-80b8-35885b639fbc",
+  "created": 1792450723,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 900,
+    "completion_tokens": 7045,
+    "total_tokens": 7945,
+    "prompt_tokens_details": {
+      "cached_tokens": 766
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6833
+    },
+    "prompt_cache_hit_tokens": 766,
+    "prompt_cache_miss_tokens": 134
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        zeros = s.count(b'0')\n\n        if zeros == 0:\n            out.append(\"0\")\n            continue\n\n        ones_in_window = sum(1 for ch in s[:zeros] if ch == ord('1'))\n        ans = ones_in_window\n\n        for i in range(zeros, n):\n            if s[i] == ord('1'):\n                ones_in_window += 1\n            if s[i - zeros] == ord('1'):\n                ones_in_window -= 1\n            if ones_in_window < ans:\n                ans = ones_in_window\n\n        out.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 35.632,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef has a binary string S with him and he wants to modify it using the following two types of operations - \n\nType 1 : Choose any two indices i and j such that 1 ≤ i, j ≤ |S| and swap S_{i} and S_{j}. This operation costs 1 rupee and can be performed any number of times.\nType 2 :  Choose any prefix of length i, where 1 ≤ i ≤ |S|, and reverse this prefix of the binary string. This operation is free of cost and can be performed at most once.\n\nChef wants to obtain the lexicographically smallest string. Can you help him find the minimum cost to obtain the lexicographically smallest string?\n\nNote:\n|S| denotes the length of the string S.\nA string A is lexicographically smaller than string B, if A_{i} < B_{i}, where i is the first index where A and B differ.\n\n------ Input Format ------ \n\n- The first line of input will contain a single integer T, denoting the number of test cases.\n- Each test case consists of a single line of input denoting S, the original string.\n\n------ Output Format ------ \n\nFor each test case, output the minimum cost to obtain the lexicographically minimal string.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 5\\cdot 10^{4}$\n$1 ≤ |S| ≤ 10^{5}$\n- The sum of $|S|$ over all test cases won't exceed $5\\cdot 10^{5}$.\n\n------ subtasks ------ \n\nSubtask 1 (10 points): $1 ≤ M ≤ 10$\nSubtask 2 (20 points): The sum of $N$ across all test cases won't exceed $20$.\nSubtask 3 (70 points): No further constraints.\n\n----- Sample Input 1 ------ \n3\n1010\n101\n100100\n\n----- Sample Output 1 ------ \n1\n0\n1\n\n----- explanation 1 ------ \nTest case 1: You can perform an operation of Type 1 by choosing $i = 2$ and $j = 3$. So from $1\\textcolor{violet}{0}\\textcolor{olive}{1}0$, you get $1100$, and it has cost you $1$ rupee so far. Then, you perform an operation of Type 2, by choosing $i = 4$. So you reverse the entire string, and so from $\\textcolor{red}{1100}$, you get $0011$. This operation is free of cost. This is the lexicographically smallest string that you can achieve, and it cost us $1$ rupee to get there. So the answer is $1$.\n\nTest case 2: You can perform an operation of Type 2, by choosing $i = 2$. So you reverse the prefix of length 2, and so from $\\textcolor{red}{10}1$, you get $011$. This operation is free of cost. This is the lexicographically smallest string that you can achieve, and it cost us $0$ rupees to get there. So the answer is $0$.\n\nTest case 3: You can perform an operation of Type 1 by choosing $i = 4$ and $j = 6$. So from $100\\textcolor{violet}{1}0\\textcolor{olive}{0}$, you get $100001$, and it has cost you $1$ rupee so far. Then, you perform an operation of Type 2, by choosing $i = 5$. So you reverse the prefix of length 5, and so from $\\textcolor{red}{10000}1$, you get $000011$. This operation is free of cost. This is the lexicographically smallest string that you can achieve, and it cost us $1$ rupee to get there. So the answer is $1$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

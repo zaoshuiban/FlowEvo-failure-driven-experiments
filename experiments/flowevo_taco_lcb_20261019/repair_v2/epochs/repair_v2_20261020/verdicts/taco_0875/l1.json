@@ -1,0 +1,28 @@
+{
+  "task_id": "taco_0875",
+  "valid_tests": 246,
+  "total_tests": 246,
+  "invalid_tests": 0,
+  "reference_corrections": 0,
+  "input_coverage": "structural_and_signature_only",
+  "code_sha256": "789c2d4d13f3cc72dbd194586316657a7962adc751f37b9683723f50d5d9dc51",
+  "tests_passed": 35,
+  "executed": true,
+  "status": "RUNTIME_ERROR",
+  "failed_test_index": 35,
+  "diagnostic": {
+    "status": "RUNTIME_ERROR",
+    "output": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/worker.py\", line 60, in run\n    exec(program, ns)\n  File \"/candidate.py\", line 34, in <module>\n    main()\n  File \"/candidate.py\", line 29, in main\n    answer = max(answer, get_depth(i))\n  File \"/candidate.py\", line 23, in get_depth\n    depth[employee] = get_depth(parent[employee]) + 1\n  File \"/candidate.py\", line 23, in get_depth\n    depth[employee] = get_depth(parent[employee]) + 1\n  File \"/candidate.py\", line 23, in get_depth\n    depth[employee] = get_depth(parent[employee]) + 1\n  [Previous line repeated 991 more times]\n  File \"/candidate.py\", line 17, in get_depth\n    if depth[employee] != 0:\nRecursionError: maximum recursion depth exceeded in comparison\n",
+    "exit_code": 1,
+    "seconds": 0.007835443000658415
+  },
+  "seconds": 0.14361318900046172,
+  "stage": "l1",
+  "old_passed": false,
+  "old_feedback": "Runtime error.",
+  "solver_feedback": {
+    "status": "RUNTIME_ERROR",
+    "feedback": "Candidate runtime error."
+  }
+}

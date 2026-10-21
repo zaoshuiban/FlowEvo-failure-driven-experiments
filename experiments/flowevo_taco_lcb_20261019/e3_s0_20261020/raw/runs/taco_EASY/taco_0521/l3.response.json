@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9bbe38e3-e7e6-4205-9555-4b58e0c4dbf3",
+  "created": 1792435146,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 585,
+    "completion_tokens": 7168,
+    "total_tokens": 7753,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7024
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 329
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    degrees = data[1:1 + n]\n\n    if n == 1:\n        # A single-vertex tree has degree 0.\n        print(\"Yes\" if degrees and degrees[0] == 0 else \"No\")\n        return\n\n    if sum(degrees) == 2 * (n - 1) and all(d > 0 for d in degrees):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 35.018,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nOur Code Monk recently learnt about Graphs and is very excited!  \n\nHe went over to the Graph-making factory to watch some freshly prepared graphs. Incidentally, one of the workers at the factory was ill today, so Monk decided to step in and do her job.  \n\nThe Monk's Job is to Identify whether the incoming graph is a tree or not. He is given N, the number of vertices in the graph and the degree of each vertex.\n\nFind if the graph is a tree or not.  \n\nInput:\nFirst line contains an integer N, the number of vertices.\nSecond line contains N space-separated integers, the degrees of the N vertices.  \n\nOutput:\nPrint \"Yes\" (without the quotes) if the graph is a tree or \"No\" (without the quotes) otherwise.  \n\nConstraints:\n1 ≤ N ≤ 100\n1 ≤ Degreei ≤ 1000\n\nReferences:\nGraphs and Trees\n\nSAMPLE INPUT\n3\n1 2 1\n\nSAMPLE OUTPUT\nYes\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    degrees = data[1:1 + n]\n\n    if sum(degrees) == 2 * (n - 1):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

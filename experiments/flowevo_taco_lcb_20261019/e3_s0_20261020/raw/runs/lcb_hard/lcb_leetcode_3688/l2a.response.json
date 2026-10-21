@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c111a855-3549-42bc-9748-3d38ab0e4bdc",
+  "created": 1792436111,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 580,
+    "completion_tokens": 26465,
+    "total_tokens": 27045,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 25568
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 196
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\nfrom collections import defaultdict\n\n\nclass Solution:\n    def maxSubarraySum(self, nums: List[int]) -> int:\n        n = len(nums)\n\n        size = 1\n        while size < n:\n            size <<= 1\n\n        NEG = -10**18\n        m = size << 1\n\n        total = [0] * m\n        pref = [0] * m\n        suff = [0] * m\n\n        pref_act = [NEG] * m\n        suff_act = [NEG] * m\n        best_act = [NEG] * m\n\n        # Initialize leaves\n        for i, val in enumerate(nums):\n            idx = size + i\n            total[idx] = val\n            if val > 0:\n                pref[idx] = val\n                suff[idx] = val\n            else:\n                pref[idx] = 0\n                suff[idx] = 0\n\n            pref_act[idx] = val\n            suff_act[idx] = val\n            best_act[idx] = val\n\n        def pull(i: int) -> None:\n            left = i << 1\n            right = left | 1\n\n            sl = total[left]\n            sr = total[right]\n\n            total[i] = sl + sr\n\n            a = pref[left]\n            b = sl + pref[right]\n            pref[i] = a if a > b else b\n\n            a = suff[right]\n            b = sr + suff[left]\n            suff[i] = a if a > b else b\n\n            pla = pref_act[left]\n            pra = pref_act[right]\n\n            has_left_active = pla != NEG\n\n            a = pla\n            if has_left_active:\n                b = sl + pref[right]\n            else:\n                b = sl + pra\n            pref_act[i] = a if a > b else b\n\n            sla = suff_act[left]\n            sra = suff_act[right]\n\n            has_right_active = pra != NEG\n\n            a = sra\n            if has_right_active:\n                b = sr + suff[left]\n            else:\n                b = sr + sla\n            suff_act[i] = a if a > b else b\n\n            best = best_act[left]\n            if best_act[right] > best:\n                best = best_act[right]\n\n            crossing1 = sla + pref[right]\n            crossing2 = suff[left] + pra\n\n            if crossing1 > best:\n                best = crossing1\n            if crossing2 > best:\n                best = crossing2\n\n            best_act[i] = best\n\n        for i in range(size - 1, 0, -1):\n            pull(i)\n\n        def set_inactive(pos: int) -> None:\n            i = size + pos\n            total[i] = 0\n            pref[i] = 0\n            suff[i] = 0\n            pref_act[i] = NEG\n            suff_act[i] = NEG\n            best_act[i] = NEG\n\n            i >>= 1\n            while i:\n                pull(i)\n                i >>= 1\n\n        def set_active(pos: int, val: int) -> None:\n            i = size + pos\n            total[i] = val\n\n            if val > 0:\n                pref[i] = val\n                suff[i] = val\n            else:\n                pref[i] = 0\n                suff[i] = 0\n\n            pref_act[i] = val\n            suff_act[i] = val\n            best_act[i] = val\n\n            i >>= 1\n            while i:\n                pull(i)\n                i >>= 1\n\n        positions = defaultdict(list)\n        for i, val in enumerate(nums):\n            if val < 0:\n                positions[val].append(i)\n\n        answer = best_act[1]\n\n        for arr in positions.values():\n            if len(arr) == n:\n                continue\n\n            for idx in arr:\n                set_inactive(idx)\n\n            if best_act[1] > answer:\n                answer = best_act[1]\n\n            for idx in arr:\n                set_active(idx, nums[idx])\n\n        return answer\n```",
+  "latency_s": 129.315,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer array nums.\nYou can do the following operation on the array at most once:\n\nChoose any integer x such that nums remains non-empty on removing all occurrences of x.\nRemove all occurrences of x from the array.\n\nReturn the maximum subarray sum across all possible resulting arrays.\nA subarray is a contiguous non-empty sequence of elements within an array.\n \nExample 1:\n\nInput: nums = [-3,2,-2,-1,3,-2,3]\nOutput: 7\nExplanation:\nWe can have the following arrays after at most one operation:\n\nThe original array is nums = [-3, 2, -2, -1, 3, -2, 3]. The maximum subarray sum is 3 + (-2) + 3 = 4.\nDeleting all occurences of x = -3 results in nums = [2, -2, -1, 3, -2, 3]. The maximum subarray sum is 3 + (-2) + 3 = 4.\nDeleting all occurences of x = -2 results in nums = [-3, 2, -1, 3, 3]. The maximum subarray sum is 2 + (-1) + 3 + 3 = 7.\nDeleting all occurences of x = -1 results in nums = [-3, 2, -2, 3, -2, 3]. The maximum subarray sum is 3 + (-2) + 3 = 4.\nDeleting all occurences of x = 3 results in nums = [-3, 2, -2, -1, -2]. The maximum subarray sum is 2.\n\nThe output is max(4, 4, 7, 4, 2) = 7.\n\nExample 2:\n\nInput: nums = [1,2,3,4]\nOutput: 10\nExplanation:\nIt is optimal to not perform any operations.\n\n \nConstraints:\n\n1 <= nums.length <= 10^5\n-10^6 <= nums[i] <= 10^6\n\nStarter code / required signature:\nclass Solution:\n    def maxSubarraySum(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named maxSubarraySum. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

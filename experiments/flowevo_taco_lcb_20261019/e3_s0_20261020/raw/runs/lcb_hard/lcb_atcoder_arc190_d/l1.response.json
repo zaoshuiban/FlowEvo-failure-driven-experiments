@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cf026e13-8c96-47aa-97d1-66f504d4ac88",
+  "created": 1792433272,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 782,
+    "completion_tokens": 20385,
+    "total_tokens": 21167,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 19492
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 782
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef mat_mul(A, B, mod):\n    n = len(A)\n    C = [[0] * n for _ in range(n)]\n\n    for i in range(n):\n        Ci = C[i]\n        Ai = A[i]\n\n        for k in range(n):\n            aik = Ai[k]\n            if aik:\n                Bk = B[k]\n                for j in range(n):\n                    Ci[j] += aik * Bk[j]\n\n        for j in range(n):\n            Ci[j] %= mod\n\n    return C\n\n\ndef mat_pow(A, exp, mod):\n    n = len(A)\n    res = None\n    base = A\n    e = exp\n\n    while e:\n        if e & 1:\n            if res is None:\n                res = [row[:] for row in base]\n            else:\n                res = mat_mul(res, base, mod)\n\n        e >>= 1\n        if e:\n            base = mat_mul(base, base, mod)\n\n    if res is None:\n        res = [[0] * n for _ in range(n)]\n        for i in range(n):\n            res[i][i] = 1 % mod\n\n    return res\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    p = next(it)\n\n    A = [[next(it) for _ in range(n)] for _ in range(n)]\n\n    zeros = []\n    for i in range(n):\n        for j in range(n):\n            if A[i][j] == 0:\n                zeros.append((i, j))\n\n    K = len(zeros)\n\n    if p == 1:\n        line = \" \".join([\"0\"] * n)\n        sys.stdout.write(\"\\n\".join([line] * n))\n        return\n\n    # For p = 2, every zero is replaced by 1, so B is the all-one matrix.\n    if p == 2:\n        val = n & 1\n        line = \" \".join([str(val)] * n)\n        sys.stdout.write(\"\\n\".join([line] * n))\n        return\n\n    C = [[0] * n for _ in range(n)]\n    for i in range(n):\n        for j in range(n):\n            if A[i][j] != 0:\n                C[i][j] = A[i][j] % p\n\n    base = mat_pow(C, p, p)\n    ans = [row[:] for row in base]\n\n    for u, v in zeros:\n        if u == v:\n            # C * E_{u,u}\n            for i in range(n):\n                val = ans[i][u] + C[i][u]\n                if val >= p:\n                    val -= p\n                ans[i][u] = val\n\n            # E_{u,u} * C\n            for j in range(n):\n                val = ans[u][j] + C[u][j]\n                if val >= p:\n                    val -= p\n                ans[u][j] = val\n\n            # (p - 2) * C_{u,u} * E_{u,u}\n            coef = ((p - 2) % p) * C[u][u] % p\n            if coef:\n                val = ans[u][u] + coef\n                if val >= p:\n                    val -= p\n                ans[u][u] = val\n\n        else:\n            # Only p = 3 has an additional contribution for off-diagonal zero entries.\n            if p == 3:\n                add = C[v][u]\n                if add:\n                    val = ans[u][v] + add\n                    if val >= p:\n                        val -= p\n                    ans[u][v] = val\n\n    if K & 1:\n        for i in range(n):\n            row = ans[i]\n            for j in range(n):\n                if row[j]:\n                    row[j] = p - row[j]\n\n    out = [\" \".join(map(str, row)) for row in ans]\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 92.078,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a prime number p and an N \\times N matrix A = (A_{i,j}) (1\\leq i,j\\leq N). Each element of A is an integer between 0 and p-1, inclusive.\nConsider a matrix B obtained by replacing each zero in A with an integer between 1 and p-1, inclusive. There are (p-1)^K such matrices B, where K is the number of zeros in A.\nFind each element, modulo p, of the sum of B^p over all possible B.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN p\nA_{1,1} \\cdots A_{1,N}\n\\vdots\nA_{N,1} \\cdots A_{N,N}\n\nOutput\n\nPrint N lines.\nThe i-th line should contain, in the order j=1,\\ldots,N, the (i,j) element of the sum, modulo p, of B^p over all possible B, separated by spaces.\n\nConstraints\n\n\n- 1 \\leq N \\leq 100\n- p is a prime such that 1 \\leq p \\leq 10^9.\n- 0 \\leq A_{i,j} \\leq p-1\n- All input values are integers.\n\nSample Input 1\n\n2 3\n0 1\n0 2\n\nSample Output 1\n\n0 2\n1 2\n\nB^p for all possible B are as follows:\n\n- \\begin{pmatrix}1&1 \\\\ 1&2\\end{pmatrix}^3=\\begin{pmatrix}5&8 \\\\ 8&13\\end{pmatrix}\n- \\begin{pmatrix}1&1 \\\\ 2&2\\end{pmatrix}^3=\\begin{pmatrix}9&9 \\\\ 18&18\\end{pmatrix}\n- \\begin{pmatrix}2&1 \\\\ 1&2\\end{pmatrix}^3=\\begin{pmatrix}14&13 \\\\ 13&14\\end{pmatrix}\n- \\begin{pmatrix}2&1 \\\\ 2&2\\end{pmatrix}^3=\\begin{pmatrix}20&14 \\\\ 28&20\\end{pmatrix}\n\nPrint each element, modulo p=3, of their sum \\begin{pmatrix}48&44 \\\\ 67&65\\end{pmatrix}.\n\nSample Input 2\n\n3 2\n1 0 0\n0 1 0\n0 0 1\n\nSample Output 2\n\n1 1 1\n1 1 1\n1 1 1\n\nB^p for all possible B are as follows:\n\n- \\begin{pmatrix}1&1&1 \\\\ 1&1&1 \\\\ 1&1&1\\end{pmatrix}^2=\\begin{pmatrix}3&3&3\\\\3&3&3\\\\3&3&3\\end{pmatrix}\n\nPrint each element, modulo p=2, of their sum \\begin{pmatrix}3&3&3\\\\3&3&3\\\\3&3&3\\end{pmatrix}.\n\nSample Input 3\n\n4 13\n0 1 2 0\n3 4 0 5\n0 6 0 7\n8 9 0 0\n\nSample Output 3\n\n8 0 6 5\n11 1 8 5\n8 0 4 12\n8 0 1 9\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

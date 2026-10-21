@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6af087ba-7ce3-4f2f-b3e2-6a8aa4e421be",
+  "created": 1792433201,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 962,
+    "completion_tokens": 32767,
+    "total_tokens": 33729,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32767
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 962
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 154.594,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Mandarin], [Russian], and [Vietnamese] as well.\n\nYou have an n \\times n matrix a. You can rearrange the elements of the matrix in any way. Let m_{1}, m_{2}, \\dots, m_{n} be the medians of each row in a after the rearrangement. The goodness of the matrix a is defined as the minimum median among the medians of all rows i.e \\min(m_{1}, m_{2}, \\dots, m_{n}). Naturally, rearranging values also comes with a cost. The cost of rearrangement is defined as m_{1} + m_{2} + \\dots + m_{n}. \n\nFind the maximum goodness you can achieve after rearranging a matrix a such that the cost of rearrangement doesn't exceed k or -1 if the answer doesn't exist.\n\nThe median of an array a consisting of n elements is the \\lceil{\\frac{n+1}{2}}\\rceil^{th} smallest element of a. The median of [4, 8, 6, 1] is 6 and the median of [1, 6, 2, 4, 5] is 4.\n\n------ Input Format ------ \n\n- The first line of the input contains a single integer t denoting the number of test cases. The description of t test cases follows.\n- The first line of each test case consists of two space-separated integers n and k.\n- n lines follow, each consisting of n space-separated integers denoting the matrix a\n\n------ Output Format ------ \n\nFor each test case, print a single line containing one integer - the maximum goodness you can achieve such that the rearrangement cost does not exceed k or -1 if the answer doesn't exist.\n\n------ Constraints ------ \n\n$1 ≤ t ≤ 100$\n$1 ≤ n ≤ 1000$\n$1 ≤ k ≤ 10^{14}$\n$1 ≤ a_{i, j} ≤ 10^{9}$\n$1 ≤ \\sum n ≤ 1000$\n\n------ subtasks ------ \n\nSubtask 1 (20 points): $k = 10^{14}$\n\nSubtask 2 (40 points): $1 ≤ \\sum n ≤ 70$\n\nSubtask 3 (40 points): Original constraints\n\n----- Sample Input 1 ------ \n3\n4 100\n13 2 1 16\n15 24 3 3\n5 17 9 8\n9 6 11 32\n4 40\n13 2 1 16\n15 24 3 3\n5 17 9 8\n9 6 11 32\n3 1\n3 4 2\n5 7 9\n2 1 1\n\n----- Sample Output 1 ------ \n9\n6\n-1\n----- explanation 1 ------ \nTest case $1$:  We rearrange the matrix as follows:\n$\\begin{bmatrix}\n11 & 2 & 1 & 16\\\\\n17 & 3 & 13 & 3\\\\\n5 & 15 & 6 & 24\\\\\n32& 9 & 8 & 9\n\\end{bmatrix}$\n. The medians of each row are $11, 13, 15, 9$ respectively. The goodness is $9$ and the cost is $48$. There are other rearrangements that may yield the same goodness but $9$ is the maximum goodness we can get. \n\nTest case $2$:  The rearranged matrix is:\n$\\begin{bmatrix}\n17 & 3 & 8 & 3\\\\\n2 & 1 & 6 & 16\\\\\n11& 32 & 15 & 13\\\\\n5 & 24 & 9 & 9\n\\end{bmatrix}$\n. The medians of each row are $8, 6, 15, 9$ respectively. The goodness is $6$ and the cost is $38$. There are other rearrangements that may yield the same goodness but $6$ is the maximum goodness we can get. \n\nTest case $3$:  No matter how we rearrange the elements, the cost is always greater than $k$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

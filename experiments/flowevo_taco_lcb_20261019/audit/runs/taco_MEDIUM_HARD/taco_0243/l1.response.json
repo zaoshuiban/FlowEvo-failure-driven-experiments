@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3455a9fb-c798-44d5-96e5-9049caa4e64e",
+  "created": 1792447018,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 344,
+    "completion_tokens": 14838,
+    "total_tokens": 15182,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14726
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 344
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    a, b = map(int, data[:2])\n\n    if a < b:\n        print(-1)\n        return\n\n    q = a // b + 1\n    if q % 2 == 1:\n        q -= 1\n\n    ans = (a + b) / q\n    print(f\"{ans:.15f}\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 64.263,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a polyline going through points (0, 0) – (x, x) – (2x, 0) – (3x, x) – (4x, 0) – ... - (2kx, 0) – (2kx + x, x) – .... \n\nWe know that the polyline passes through the point (a, b). Find minimum positive value x such that it is true or determine that there is no such x.\n\n\n-----Input-----\n\nOnly one line containing two positive integers a and b (1 ≤ a, b ≤ 10^9).\n\n\n-----Output-----\n\nOutput the only line containing the answer. Your answer will be considered correct if its relative or absolute error doesn't exceed 10^{ - 9}. If there is no such x then output  - 1 as the answer.\n\n\n-----Examples-----\nInput\n3 1\n\nOutput\n1.000000000000\n\nInput\n1 3\n\nOutput\n-1\n\nInput\n4 1\n\nOutput\n1.250000000000\n\n\n\n-----Note-----\n\nYou can see following graphs for sample 1 and sample 3.  [Image]  [Image]\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

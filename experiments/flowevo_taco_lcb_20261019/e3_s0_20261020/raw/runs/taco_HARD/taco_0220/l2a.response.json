@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "dd188032-a98b-4c4e-8770-f867edb4cfc3",
+  "created": 1792437358,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 635,
+    "completion_tokens": 19689,
+    "total_tokens": 20324,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 18499
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 251
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    arr = data[1:1 + 2 * n]\n\n    positions = {}\n    for i, value in enumerate(arr):\n        positions.setdefault(value, []).append(i)\n\n    values = list(positions.keys())\n    freqs = [len(positions[v]) for v in values]\n    m = len(values)\n\n    # dp[used][d1] = maximum d2 after processing some values,\n    # where used cubes are in heap 1 and d1 distinct values are in heap 1.\n    # d2 is the number of distinct values in heap 2.\n    D = m + 1\n    N = n + 1\n\n    init = [[-1] * D for _ in range(N)]\n    init[0][0] = 0\n    layers = [init]\n\n    prefix = 0\n\n    for idx in range(m):\n        f = freqs[idx]\n        prev = layers[-1]\n        cur = [[-1] * D for _ in range(N)]\n        prefix += f\n\n        for used in range(N):\n            row = prev[used]\n            for d1 in range(m + 1):\n                d2 = row[d1]\n                if d2 < 0:\n                    continue\n\n                # Put all cubes of this value into heap 1.\n                nu = used + f\n                if nu <= n and d1 + 1 <= m and prefix - nu <= n:\n                    if d2 > cur[nu][d1 + 1]:\n                        cur[nu][d1 + 1] = d2\n\n                # Put all cubes of this value into heap 2.\n                if prefix - used <= n:\n                    nd2 = d2 + 1\n                    if nd2 <= m and nd2 > cur[used][d1]:\n                        cur[used][d1] = nd2\n\n                # Split this value between both heaps.\n                if f >= 2 and d1 + 1 <= m:\n                    nd2 = d2 + 1\n                    if nd2 <= m:\n                        low = max(1, prefix - n - used)\n                        high = min(f - 1, n - used)\n\n                        for x in range(low, high + 1):\n                            nu = used + x\n                            if nd2 > cur[nu][d1 + 1]:\n                                cur[nu][d1 + 1] = nd2\n\n        layers.append(cur)\n\n    final = layers[-1]\n\n    best = -1\n    best_d1 = 0\n    best_d2 = 0\n\n    for d1 in range(m + 1):\n        d2 = final[n][d1]\n        if d2 >= 0:\n            product = d1 * d2\n            if product > best:\n                best = product\n                best_d1 = d1\n                best_d2 = d2\n\n    actions = [None] * m\n    used = n\n    d1 = best_d1\n    d2 = best_d2\n\n    # Reconstruct one optimal partition.\n    for idx in range(m - 1, -1, -1):\n        f = freqs[idx]\n        prev = layers[idx]\n        found = False\n\n        # This value was entirely in heap 1.\n        if not found and d1 >= 1 and used >= f:\n            pu = used - f\n            pd1 = d1 - 1\n            if 0 <= pu <= n and 0 <= pd1 <= m and prev[pu][pd1] == d2:\n                actions[idx] = ('1', 0)\n                used = pu\n                d1 = pd1\n                found = True\n\n        # This value was entirely in heap 2.\n        if not found and d2 >= 1:\n            pu = used\n            pd1 = d1\n            pd2 = d2 - 1\n            if 0 <= pu <= n and 0 <= pd1 <= m and prev[pu][pd1] == pd2:\n                actions[idx] = ('2', 0)\n                d2 = pd2\n                found = True\n\n        # This value was split between the two heaps.\n        if not found and f >= 2 and d1 >= 1 and d2 >= 1:\n            pd1 = d1 - 1\n            pd2 = d2 - 1\n\n            for x in range(1, f):\n                pu = used - x\n                if 0 <= pu <= n and prev[pu][pd1] == pd2:\n                    actions[idx] = ('s', x)\n                    used = pu\n                    d1 = pd1\n                    d2 = pd2\n                    found = True\n                    break\n\n    answer = [0] * (2 * n)\n\n    for idx, value in enumerate(values):\n        indices = positions[value]\n        action, x = actions[idx]\n\n        if action == '1':\n            for p in indices:\n                answer[p] = 1\n        elif action == '2':\n            for p in indices:\n                answer[p] = 2\n        else:\n            for j, p in enumerate(indices):\n                answer[p] = 1 if j < x else 2\n\n    sys.stdout.write(str(best) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, answer)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 88.955,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nValera has 2·n cubes, each cube contains an integer from 10 to 99. He arbitrarily chooses n cubes and puts them in the first heap. The remaining cubes form the second heap. \n\nValera decided to play with cubes. During the game he takes a cube from the first heap and writes down the number it has. Then he takes a cube from the second heap and write out its two digits near two digits he had written (to the right of them). In the end he obtained a single fourdigit integer — the first two digits of it is written on the cube from the first heap, and the second two digits of it is written on the second cube from the second heap.\n\nValera knows arithmetic very well. So, he can easily count the number of distinct fourdigit numbers he can get in the game. The other question is: how to split cubes into two heaps so that this number (the number of distinct fourdigit integers Valera can get) will be as large as possible?\n\n\n-----Input-----\n\nThe first line contains integer n (1 ≤ n ≤ 100). The second line contains 2·n space-separated integers a_{i} (10 ≤ a_{i} ≤ 99), denoting the numbers on the cubes.\n\n\n-----Output-----\n\nIn the first line print a single number — the maximum possible number of distinct four-digit numbers Valera can obtain. In the second line print 2·n numbers b_{i} (1 ≤ b_{i} ≤ 2). The numbers mean: the i-th cube belongs to the b_{i}-th heap in your division.\n\nIf there are multiple optimal ways to split the cubes into the heaps, print any of them.\n\n\n-----Examples-----\nInput\n1\n10 99\n\nOutput\n1\n2 1 \n\nInput\n2\n13 24 13 45\n\nOutput\n4\n1 2 2 1 \n\n\n\n-----Note-----\n\nIn the first test case Valera can put the first cube in the first heap, and second cube — in second heap. In this case he obtain number 1099. If he put the second cube in the first heap, and the first cube in the second heap, then he can obtain number 9910. In both cases the maximum number of distinct integers is equal to one.\n\nIn the second test case Valera can obtain numbers 1313, 1345, 2413, 2445. Note, that if he put the first and the third cubes in the first heap, he can obtain only two numbers 1324 and 1345.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

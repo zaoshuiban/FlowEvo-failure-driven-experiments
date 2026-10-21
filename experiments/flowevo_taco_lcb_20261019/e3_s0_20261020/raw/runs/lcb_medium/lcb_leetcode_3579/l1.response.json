@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0eb891c6-19ad-4162-86b8-7135c1772bd8",
+  "created": 1792430524,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 321,
+    "completion_tokens": 243,
+    "total_tokens": 564,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 163
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 321
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\nfrom itertools import permutations\n\nclass Solution:\n    def maxGoodNumber(self, nums: List[int]) -> int:\n        binary = [bin(x)[2:] for x in nums]\n        ans = 0\n\n        for p in permutations(binary):\n            ans = max(ans, int(\"\".join(p), 2))\n\n        return ans\n```",
+  "latency_s": 2.155,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array of integers nums of size 3.\nReturn the maximum possible number whose binary representation can be formed by concatenating the binary representation of all elements in nums in some order.\nNote that the binary representation of any number does not contain leading zeros.\n \nExample 1:\n\nInput: nums = [1,2,3]\nOutput: 30\nExplanation:\nConcatenate the numbers in the order [3, 1, 2] to get the result \"11110\", which is the binary representation of 30.\n\nExample 2:\n\nInput: nums = [2,8,16]\nOutput: 1296\nExplanation:\nConcatenate the numbers in the order [2, 8, 16] to get the result \"10100010000\", which is the binary representation of 1296.\n\n \nConstraints:\n\nnums.length == 3\n1 <= nums[i] <= 127\n\nStarter code / required signature:\nclass Solution:\n    def maxGoodNumber(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named maxGoodNumber. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

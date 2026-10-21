@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "962d6857-5af6-462b-9231-1de735e4c357",
+  "created": 1792433030,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1294,
+    "completion_tokens": 32768,
+    "total_tokens": 34062,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 782
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 154.959,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nEvlampiy was gifted a rooted tree. The vertices of the tree are numbered from $1$ to $n$. Each of its vertices also has an integer $a_i$ written on it. For each vertex $i$, Evlampiy calculated $c_i$ — the number of vertices $j$ in the subtree of vertex $i$, such that $a_j < a_i$. [Image]Illustration for the second example, the first integer is $a_i$ and the integer in parentheses is $c_i$\n\nAfter the new year, Evlampiy could not remember what his gift was! He remembers the tree and the values of $c_i$, but he completely forgot which integers $a_i$ were written on the vertices.\n\nHelp him to restore initial integers!\n\n\n-----Input-----\n\nThe first line contains an integer $n$ $(1 \\leq n \\leq 2000)$ — the number of vertices in the tree.\n\nThe next $n$ lines contain descriptions of vertices: the $i$-th line contains two integers $p_i$ and $c_i$ ($0 \\leq p_i \\leq n$; $0 \\leq c_i \\leq n-1$), where $p_i$ is the parent of vertex $i$ or $0$ if vertex $i$ is root, and $c_i$ is the number of vertices $j$ in the subtree of vertex $i$, such that $a_j < a_i$.\n\nIt is guaranteed that the values of $p_i$ describe a rooted tree with $n$ vertices.\n\n\n-----Output-----\n\nIf a solution exists, in the first line print \"YES\", and in the second line output $n$ integers $a_i$ $(1 \\leq a_i \\leq {10}^{9})$. If there are several solutions, output any of them. One can prove that if there is a solution, then there is also a solution in which all $a_i$ are between $1$ and $10^9$.\n\nIf there are no solutions, print \"NO\".\n\n\n-----Examples-----\nInput\n3\n2 0\n0 2\n2 0\n\nOutput\nYES\n1 2 1 \nInput\n5\n0 1\n1 3\n2 1\n3 0\n2 0\n\nOutput\nYES\n2 3 2 1 2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    parent = [0] * (n + 1)\n    c = [0] * (n + 1)\n    children = [[] for _ in range(n + 1)]\n\n    idx = 1\n    root = -1\n\n    for v in range(1, n + 1):\n        p = data[idx]\n        ci = data[idx + 1]\n        idx += 2\n\n        parent[v] = p\n        c[v] = ci\n\n        if p == 0:\n            root = v\n        else:\n            children[p].append(v)\n\n    if root == -1:\n        print(\"NO\")\n        return\n\n    # Get an order where every child appears before its parent.\n    stack = [root]\n    preorder = []\n    while stack:\n        u = stack.pop()\n        preorder.append(u)\n        for v in children[u]:\n            stack.append(v)\n\n    rev_preorder = preorder[::-1]\n\n    # Compute subtree sizes.\n    size = [1] * (n + 1)\n    for u in rev_preorder:\n        for v in children[u]:\n            size[u] += size[v]\n\n    # Check whether all c_i are possible.\n    for u in range(1, n + 1):\n        if c[u] < 0 or c[u] >= size[u]:\n            print(\"NO\")\n            return\n\n    # Build the increasing-by-a order for every subtree.\n    order = [None] * (n + 1)\n\n    for u in rev_preorder:\n        lst = []\n        for v in children[u]:\n            lst.extend(order[v])\n        lst.insert(c[u], u)\n        order[u] = lst\n\n    final_order = order[root]\n\n    if len(final_order) != n:\n        print(\"NO\")\n        return\n\n    answer = [0] * (n + 1)\n    for value, vertex in enumerate(final_order, start=1):\n        answer[vertex] = value\n\n    print(\"YES\")\n    print(*answer[1:])\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

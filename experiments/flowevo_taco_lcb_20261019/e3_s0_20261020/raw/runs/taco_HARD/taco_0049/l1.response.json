@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5837b59e-b5de-4877-a67b-d2c21b8fa49b",
+  "created": 1792448167,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 362,
+    "completion_tokens": 14818,
+    "total_tokens": 15180,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13867
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 362
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\n\ndef main():\n    it = iter(map(int, sys.stdin.buffer.read().split()))\n    try:\n        n = next(it)\n    except StopIteration:\n        return\n    m = next(it)\n\n    edges = []\n    for i in range(m):\n        u = next(it) - 1\n        v = next(it) - 1\n        w = next(it)\n        edges.append((w, u, v, i))\n    del it\n\n    edges.sort()\n\n    parent = [-1] * n\n    in_mst = bytearray(m)\n    adj = [[] for _ in range(n)]\n\n    mst_weight = 0\n    cnt = 0\n\n    def find(x):\n        while parent[x] >= 0:\n            if parent[parent[x]] >= 0:\n                parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    for w, u, v, eid in edges:\n        ru = find(u)\n        rv = find(v)\n\n        if ru != rv:\n            if parent[ru] > parent[rv]:\n                ru, rv = rv, ru\n\n            parent[ru] += parent[rv]\n            parent[rv] = ru\n\n            in_mst[eid] = 1\n            mst_weight += w\n\n            adj[u].append((v, w))\n            adj[v].append((u, w))\n\n            cnt += 1\n            if cnt == n - 1:\n                break\n\n    del find, parent\n\n    LOG = max(1, n.bit_length())\n\n    up = [array('i', [0]) * n for _ in range(LOG)]\n    mx = [array('i', [0]) * n for _ in range(LOG)]\n    depth = array('i', [-1]) * n\n\n    depth[0] = 0\n    up0 = up[0]\n    mx0 = mx[0]\n\n    stack = [0]\n    while stack:\n        u = stack.pop()\n        next_depth = depth[u] + 1\n\n        for v, w in adj[u]:\n            if depth[v] == -1:\n                depth[v] = next_depth\n                up0[v] = u\n                mx0[v] = w\n                stack.append(v)\n\n    del adj, stack\n\n    for k in range(1, LOG):\n        prev = up[k - 1]\n        cur = up[k]\n        prev_mx = mx[k - 1]\n        cur_mx = mx[k]\n\n        for v in range(n):\n            p = prev[v]\n            cur[v] = prev[p]\n\n            a = prev_mx[v]\n            b = prev_mx[p]\n            cur_mx[v] = a if a > b else b\n\n    def max_on_path(a, b, depth=depth, up=up, mx=mx, LOG=LOG):\n        res = 0\n\n        if depth[a] < depth[b]:\n            a, b = b, a\n\n        diff = depth[a] - depth[b]\n        bit = 0\n\n        while diff:\n            if diff & 1:\n                val = mx[bit][a]\n                if val > res:\n                    res = val\n                a = up[bit][a]\n\n            diff >>= 1\n            bit += 1\n\n        if a == b:\n            return res\n\n        for k in range(LOG - 1, -1, -1):\n            upk = up[k]\n            if upk[a] != upk[b]:\n                mxk = mx[k]\n\n                val = mxk[a]\n                if val > res:\n                    res = val\n\n                val = mxk[b]\n                if val > res:\n                    res = val\n\n                a = upk[a]\n                b = upk[b]\n\n        val = mx[0][a]\n        if val > res:\n            res = val\n\n        val = mx[0][b]\n        if val > res:\n            res = val\n\n        return res\n\n    ans = [0] * m\n\n    for w, u, v, eid in edges:\n        if in_mst[eid]:\n            ans[eid] = mst_weight\n        else:\n            ans[eid] = mst_weight + w - max_on_path(u, v)\n\n    sys.stdout.write('\\n'.join(map(str, ans)))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 58.467,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nConnected undirected weighted graph without self-loops and multiple edges is given. Graph contains n vertices and m edges.\n\nFor each edge (u, v) find the minimal possible weight of the spanning tree that contains the edge (u, v).\n\nThe weight of the spanning tree is the sum of weights of all edges included in spanning tree.\n\nInput\n\nFirst line contains two integers n and m (1 ≤ n ≤ 2·105, n - 1 ≤ m ≤ 2·105) — the number of vertices and edges in graph.\n\nEach of the next m lines contains three integers ui, vi, wi (1 ≤ ui, vi ≤ n, ui ≠ vi, 1 ≤ wi ≤ 109) — the endpoints of the i-th edge and its weight.\n\nOutput\n\nPrint m lines. i-th line should contain the minimal possible weight of the spanning tree that contains i-th edge.\n\nThe edges are numbered from 1 to m in order of their appearing in input.\n\nExamples\n\nInput\n\n5 7\n1 2 3\n1 3 1\n1 4 5\n2 3 2\n2 5 3\n3 4 2\n4 5 4\n\n\nOutput\n\n9\n8\n11\n8\n8\n8\n9\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

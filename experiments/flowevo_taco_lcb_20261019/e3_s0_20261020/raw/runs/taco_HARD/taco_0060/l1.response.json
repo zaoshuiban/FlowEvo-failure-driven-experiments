@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "06beb26a-70f9-4545-b70c-bf27f413c4ab",
+  "created": 1792440940,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 927,
+    "completion_tokens": 13683,
+    "total_tokens": 14610,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13227
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 927
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n    t = data[idx]\n    idx += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        friends = data[idx:idx + k]\n        idx += k\n\n        adj = [[] for _ in range(n + 1)]\n\n        for _ in range(n - 1):\n            u = data[idx]\n            v = data[idx + 1]\n            idx += 2\n            adj[u].append(v)\n            adj[v].append(u)\n\n        # Multi-source BFS from all friends.\n        dist = [-1] * (n + 1)\n        q = deque()\n\n        for friend in friends:\n            dist[friend] = 0\n            q.append(friend)\n\n        while q:\n            v = q.popleft()\n            nd = dist[v] + 1\n\n            for to in adj[v]:\n                if dist[to] == -1:\n                    dist[to] = nd\n                    q.append(to)\n\n        ans = 0\n        can_escape = False\n\n        # Traverse only through vertices Vlad can reach before any friend.\n        stack = [(1, 0, 0)]  # vertex, parent, depth\n\n        while stack:\n            v, parent, depth = stack.pop()\n\n            # Friend can reach this vertex no later than Vlad.\n            if v != 1 and dist[v] <= depth:\n                ans += 1\n                continue\n\n            # Vlad safely reaches a leaf.\n            if v != 1 and len(adj[v]) == 1:\n                can_escape = True\n                break\n\n            for to in adj[v]:\n                if to != parent:\n                    stack.append((to, v, depth + 1))\n\n        if can_escape:\n            answers.append(\"-1\")\n        else:\n            answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 74.16,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe only difference with E1 is the question of the problem.\n\nVlad built a maze out of $n$ rooms and $n-1$ bidirectional corridors. From any room $u$ any other room $v$ can be reached through a sequence of corridors. Thus, the room system forms an undirected tree.\n\nVlad invited $k$ friends to play a game with them.\n\nVlad starts the game in the room $1$ and wins if he reaches a room other than $1$, into which exactly one corridor leads. Friends are placed in the maze: the friend with number $i$ is in the room $x_i$, and no two friends are in the same room (that is, $x_i \\neq x_j$ for all $i \\neq j$). Friends win if one of them meets Vlad in any room or corridor before he wins.\n\nFor one unit of time, each participant of the game can go through one corridor. All participants move at the same time. Participants may not move. Each room can fit all participants at the same time.\n\nFriends know the plan of a maze and intend to win. They don't want to waste too much energy. They ask you to determine if they can win and if they can, what minimum number of friends must remain in the maze so that they can always catch Vlad.\n\nIn other words, you need to determine the size of the minimum (by the number of elements) subset of friends who can catch Vlad or say that such a subset does not exist.\n\n\n-----Input-----\n\nThe first line of the input contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. The input contains an empty string before each test case.\n\nThe first line of the test case contains two numbers $n$ and $k$ ($1 \\le k < n \\le 2\\cdot 10^5$) — the number of rooms and friends, respectively.\n\nThe next line of the test case contains $k$ integers $x_1, x_2, \\dots, x_k$ ($2 \\le x_i \\le n$) — numbers of rooms with friends. All $x_i$ are different.\n\nThe next $n-1$ lines contain descriptions of the corridors, two numbers per line $v_j$ and $u_j$ ($1 \\le u_j, v_j \\le n$) — numbers of rooms that connect the $j$ corridor. All corridors are bidirectional. From any room, you can go to any other by moving along the corridors.\n\nIt is guaranteed that the sum of the values $n$ over all test cases in the test is not greater than $2\\cdot10^5$.\n\n\n-----Output-----\n\nPrint $t$ lines, each line containing the answer to the corresponding test case. The answer to a test case should be $-1$ if Vlad wins anyway and a minimal number of friends otherwise.\n\n\n-----Examples-----\n\nInput\n4\n\n8 2\n5 3\n4 7\n2 5\n1 6\n3 6\n7 2\n1 7\n6 8\n\n8 4\n6 5 7 3\n4 7\n2 5\n1 6\n3 6\n7 2\n1 7\n6 8\n\n3 1\n2\n1 2\n2 3\n\n3 2\n2 3\n3 1\n1 2\nOutput\n-1\n2\n1\n2\n\n\n-----Note-----\n\nIn the first set of inputs, even if all the friends stay in the maze, Vlad can still win. Therefore, the answer is \"-1\".\n\nIn the second set of inputs it is enough to leave friends from rooms $6$ and $7$. Then Vlad will not be able to win. The answer is \"2\".\n\nIn the third and fourth sets of inputs Vlad cannot win only if all his friends stay in the maze. Therefore the answers are \"1\" and \"2\".\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

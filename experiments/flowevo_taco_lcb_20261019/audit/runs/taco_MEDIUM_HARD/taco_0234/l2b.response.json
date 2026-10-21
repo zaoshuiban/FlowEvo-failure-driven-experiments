@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9f305b3e-2fff-40e5-82b0-74e9daf02fd0",
+  "created": 1792436893,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 752,
+    "completion_tokens": 17739,
+    "total_tokens": 18491,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16823
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 240
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport random\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    n = data[idx]\n    idx += 1\n    m = data[idx]\n    idx += 1\n\n    A = data[idx:idx + n]\n    idx += n\n\n    left = [0] * (n + 1)\n    right = [0] * (n + 1)\n    size = [0] * (n + 1)\n    val = [0] * (n + 1)\n    priority = [0] * (n + 1)\n\n    getrandbits = random.getrandbits\n    stack = []\n\n    for i in range(1, n + 1):\n        val[i] = A[i - 1]\n        pr = getrandbits(64)\n        priority[i] = pr\n\n        last = 0\n        while stack and priority[stack[-1]] < pr:\n            last = stack.pop()\n\n        left[i] = last\n        if stack:\n            right[stack[-1]] = i\n\n        stack.append(i)\n\n    root = stack[0] if stack else 0\n\n    order = []\n    st = [root]\n\n    while st:\n        u = st.pop()\n        order.append(u)\n        if left[u]:\n            st.append(left[u])\n        if right[u]:\n            st.append(right[u])\n\n    for u in reversed(order):\n        size[u] = size[left[u]] + size[right[u]] + 1\n\n    def split(u, k):\n        path = []\n        cur = u\n\n        while cur:\n            left_size = size[left[cur]]\n\n            if left_size >= k:\n                path.append(-cur)\n                cur = left[cur]\n            else:\n                path.append(cur)\n                k -= left_size + 1\n                cur = right[cur]\n\n        a = 0\n        b = 0\n\n        for x in reversed(path):\n            if x > 0:\n                node = x\n                right[node] = a\n                size[node] = size[left[node]] + size[right[node]] + 1\n                a = node\n            else:\n                node = -x\n                left[node] = b\n                size[node] = size[left[node]] + size[right[node]] + 1\n                b = node\n\n        return a, b\n\n    def merge(a, b):\n        path = []\n\n        while a and b:\n            if priority[a] > priority[b]:\n                path.append(a)\n                a = right[a]\n            else:\n                path.append(-b)\n                b = left[b]\n\n        res = a if a else b\n\n        for x in reversed(path):\n            if x > 0:\n                node = x\n                right[node] = res\n                size[node] = size[left[node]] + size[right[node]] + 1\n                res = node\n            else:\n                node = -x\n                left[node] = res\n                size[node] = size[left[node]] + size[right[node]] + 1\n                res = node\n\n        return res\n\n    for _ in range(m):\n        typ = data[idx]\n        i = data[idx + 1]\n        j = data[idx + 2]\n        idx += 3\n\n        if typ == 1:\n            if i == 1:\n                continue\n\n            a, rest = split(root, i - 1)\n            b, c = split(rest, j - i + 1)\n            root = merge(b, merge(a, c))\n        else:\n            if j == n:\n                continue\n\n            a, rest = split(root, i - 1)\n            b, c = split(rest, j - i + 1)\n            root = merge(merge(a, c), b)\n\n    result = []\n    st = []\n    u = root\n\n    while st or u:\n        while u:\n            st.append(u)\n            u = left[u]\n\n        u = st.pop()\n        result.append(val[u])\n        u = right[u]\n\n    answer = abs(result[0] - result[-1])\n\n    sys.stdout.write(str(answer) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, result)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 77.801,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven two numbers $N$ and $\\mbox{M}$. $N$ indicates the number of elements in the array $A[](1-indexed)$ and $\\mbox{M}$ indicates number of queries. You need to perform two types of queries on the array $\\boldsymbol{A\\left[\\right]}$.  \n\nYou are given $\\mbox{M}$ queries. Queries can be of two types, type 1 and type 2.  \n\nType 1 queries are represented as 1 i j : Modify the given array by removing elements from $\\boldsymbol{i}$ to $j$ and adding them to the front.  \n\nType 2 queries are represented as 2 i j : Modify the given array by removing elements from $\\boldsymbol{i}$ to $j$ and adding them to the back.  \n\nYour task is to simply print $\\left|A[1]-A[N]\\right|$ of the resulting array after the execution of $\\mbox{M}$ queries followed by the resulting array.  \n\nNote While adding at back or front the order of elements is preserved.  \n\nInput Format\n\nFirst line consists of two space-separated integers, $N$ and $\\mbox{M}$. \n\nSecond line contains $N$ integers, which represent the elements of the array. \n\n$\\mbox{M}$ queries follow. Each line contains a query of either type 1 or type 2 in the form $\\textbf{type i j}$  \n\nConstraints \n\n$1\\leq N,M\\leq10^5$ \n\n$1\\leq A[i]\\leq10^9$ \n\n$1\\leq i\\leq j\\leq N$\n\nOutput Format\n\nPrint the absolute value i.e. $abs(A[1]-A[N])$ in the first line. \n\nPrint elements of the resulting array in the second line. Each element should be seperated by a single space.\n\nSample Input\n8 4\n1 2 3 4 5 6 7 8\n1 2 4\n2 3 5\n1 4 7\n2 1 4\n\nSample Output\n1\n2 3 6 5 7 8 4 1\n\nExplanation\n\nGiven array is $\\{1,2,3,4,5,6,7,8\\}$. \n\nAfter execution of query $1\\:\\text{}2\\:\\text{}4$, the array becomes $\\{2,3,4,1,5,6,7,8\\}$. \n\nAfter execution of query$2\\:\\text{}3\\:\\text{}5$, the array becomes $\\{2,3,6,7,8,4,1,5\\}$. \n\nAfter execution of query $\\textbf{1}\\:4\\:7$, the array becomes $\\{7,8,4,1,2,3,6,5\\}$. \n\nAfter execution of query $2\\:\\text{}1\\:\\text{}4$, the array becomes $\\{2,3,6,5,7,8,4,1\\}$. \n\nNow $\\left|A[1]-A[N]\\right|$ is $|(2-1)|$ i.e. $1$ and the array is $23657841$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

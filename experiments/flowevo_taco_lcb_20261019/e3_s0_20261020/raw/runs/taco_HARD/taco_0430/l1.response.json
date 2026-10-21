@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "05c9d555-5fd1-4018-873f-2f420a8db11b",
+  "created": 1792432924,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 424,
+    "completion_tokens": 15509,
+    "total_tokens": 15933,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15122
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 424
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, K = data[0], data[1]\n    A = data[2:2 + n]\n\n    M = max(A)\n\n    if K == 0:\n        Dmax = M\n        start = 1\n    else:\n        Dmax = M - K\n        if Dmax < 0:\n            Dmax = 0\n        start = K + 1\n\n    divisors = [[] for _ in range(Dmax + 1)]\n    if start <= Dmax:\n        for d in range(start, Dmax + 1):\n            for multiple in range(d, Dmax + 1, d):\n                divisors[multiple].append(d)\n\n    best = [0] * (M + 1)\n    bad_left = 0\n    answer = 0\n\n    if K == 0:\n        for idx, x in enumerate(A, 1):\n            previous = best[x]\n            if previous > bad_left:\n                bad_left = previous\n\n            answer += idx - bad_left\n\n            for d in divisors[x]:\n                best[d] = idx\n    else:\n        last_k = 0\n\n        for idx, x in enumerate(A, 1):\n            if x > K:\n                candidate = last_k\n                if best[x] > candidate:\n                    candidate = best[x]\n                if candidate > bad_left:\n                    bad_left = candidate\n\n            answer += idx - bad_left\n\n            if x == K:\n                last_k = idx\n            elif x > K:\n                value = x - K\n                for d in divisors[value]:\n                    best[d] = idx\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 69.971,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \nChef sometimes suffers from insomnia. During sleepless nights, he often plays this game: He creates an array A of N integers and also decides one integer K. After that, he tries to count the number of non-empty contiguous subsequences (subsegments) of A, such that there are no bad pairs of integers in this subsegment. A pair (x, y) of integers is called bad if x is situated to the left of y in the array and x mod y = K. Finally, before going to sleep, Chef wrote down the answer on a sheet of paper. Sadly, he has forgotten it this morning and want your help regarding that.\n\n------ Input ------ \n\nThe first line contains two integers - N and K.\nSecond line contains N integers - A_{1}, A_{2} ... A_{N} - separated by spaces, denoting the array A.\n\n------ Output ------ \n\nA single line containing an integer - the answer to the problem.\n\n------ Constraints ------ \n\n$1 ≤ N, A_{i} ≤ 10^{5} $\n$0 ≤ K ≤ 10^{5} $\n\n------ Subtasks ------ \n\n$Subtask 1: N ≤ 100 (15 points) $\n$Subtask 2: N ≤ 1000 (15 points) $\n$Subtask 3: K = 0 (10 points) $\n$Subtask 4: Original constraints (60 points) $\n\n----- Sample Input 1 ------ \n3 2\n5 3 1\n----- Sample Output 1 ------ \n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

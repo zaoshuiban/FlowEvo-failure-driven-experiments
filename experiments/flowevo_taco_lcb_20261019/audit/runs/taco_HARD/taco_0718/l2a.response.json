@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "576b42c2-46b0-4a8c-944c-64bbcd0c9cff",
+  "created": 1792456827,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 884,
+    "completion_tokens": 7126,
+    "total_tokens": 8010,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6733
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 244
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m, a, b = data[0], data[1], data[2], data[3]\n    pos = 4\n\n    A = data[pos:pos + n]\n    pos += n\n\n    B = data[pos:pos + m]\n    pos += m\n\n    L = data[pos:pos + m]\n\n    d = b - a\n    d2 = d * d\n    a2 = a * a\n    sqrt = math.sqrt\n\n    first = [sqrt(a2 + y * y) for y in A]\n\n    best_value = float(\"inf\")\n    best_i = best_j = -1\n\n    for j, z in enumerate(B):\n        lo, hi = 0, n - 1\n\n        while lo < hi:\n            mid = (lo + hi) // 2\n\n            y1 = A[mid]\n            y2 = A[mid + 1]\n\n            dy1 = z - y1\n            dy2 = z - y2\n\n            cost1 = first[mid] + sqrt(d2 + dy1 * dy1)\n            cost2 = first[mid + 1] + sqrt(d2 + dy2 * dy2)\n\n            if cost1 <= cost2:\n                hi = mid\n            else:\n                lo = mid + 1\n\n        i = lo\n        dy = z - A[i]\n        total = first[i] + sqrt(d2 + dy * dy) + L[j]\n\n        if total < best_value:\n            best_value = total\n            best_i = i + 1\n            best_j = j + 1\n\n    print(best_i, best_j)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 33.649,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTwo villages are separated by a river that flows from the north to the south. The villagers want to build a bridge across the river to make it easier to move across the villages.\n\nThe river banks can be assumed to be vertical straight lines x = a and x = b (0 < a < b).\n\nThe west village lies in a steppe at point O = (0, 0). There are n pathways leading from the village to the river, they end at points A_{i} = (a, y_{i}). The villagers there are plain and simple, so their pathways are straight segments as well.\n\nThe east village has reserved and cunning people. Their village is in the forest on the east bank of the river, but its exact position is not clear. There are m twisted paths leading from this village to the river and ending at points B_{i} = (b, y'_{i}). The lengths of all these paths are known, the length of the path that leads from the eastern village to point B_{i}, equals l_{i}.\n\nThe villagers want to choose exactly one point on the left bank of river A_{i}, exactly one point on the right bank B_{j} and connect them by a straight-line bridge so as to make the total distance between the villages (the sum of |OA_{i}| + |A_{i}B_{j}| + l_{j}, where |XY| is the Euclidean distance between points X and Y) were minimum. The Euclidean distance between points (x_1, y_1) and (x_2, y_2) equals $\\sqrt{(x_{1} - x_{2})^{2} +(y_{1} - y_{2})^{2}}$.\n\nHelp them and find the required pair of points.\n\n\n-----Input-----\n\nThe first line contains integers n, m, a, b (1 ≤ n, m ≤ 10^5, 0 < a < b < 10^6). \n\nThe second line contains n integers in the ascending order: the i-th integer determines the coordinate of point A_{i} and equals y_{i} (|y_{i}| ≤ 10^6). \n\nThe third line contains m integers in the ascending order: the i-th integer determines the coordinate of point B_{i} and equals y'_{i} (|y'_{i}| ≤ 10^6). \n\nThe fourth line contains m more integers: the i-th of them determines the length of the path that connects the eastern village and point B_{i}, and equals l_{i} (1 ≤ l_{i} ≤ 10^6).\n\nIt is guaranteed, that there is such a point C with abscissa at least b, that |B_{i}C| ≤ l_{i} for all i (1 ≤ i ≤ m). It is guaranteed that no two points A_{i} coincide. It is guaranteed that no two points B_{i} coincide.\n\n\n-----Output-----\n\nPrint two integers — the numbers of points on the left (west) and right (east) banks, respectively, between which you need to build a bridge. You can assume that the points on the west bank are numbered from 1 to n, in the order in which they are given in the input. Similarly, the points on the east bank are numbered from 1 to m in the order in which they are given in the input.\n\nIf there are multiple solutions, print any of them. The solution will be accepted if the final length of the path will differ from the answer of the jury by no more than 10^{ - 6} in absolute or relative value.\n\n\n-----Examples-----\nInput\n3 2 3 5\n-2 -1 4\n-1 2\n7 3\n\nOutput\n2 2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

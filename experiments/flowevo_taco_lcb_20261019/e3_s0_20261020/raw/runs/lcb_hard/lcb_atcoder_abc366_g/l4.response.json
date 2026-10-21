@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "752a080e-6fc5-4199-864a-fd7240e864a0",
+  "created": 1792433662,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1502,
+    "completion_tokens": 11612,
+    "total_tokens": 13114,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11120
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 862
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    m = int(data[1])\n\n    adj = [0] * n\n    idx = 2\n    for _ in range(m):\n        u = int(data[idx]) - 1\n        v = int(data[idx + 1]) - 1\n        idx += 2\n        adj[u] |= 1 << v\n        adj[v] |= 1 << u\n\n    # Gaussian elimination over GF(2).\n    mat = adj[:]\n    pivots = []\n    row = 0\n\n    for col in range(n):\n        pivot = -1\n        for i in range(row, n):\n            if (mat[i] >> col) & 1:\n                pivot = i\n                break\n\n        if pivot == -1:\n            continue\n\n        mat[row], mat[pivot] = mat[pivot], mat[row]\n        pivot_row = mat[row]\n\n        for i in range(n):\n            if i != row and ((mat[i] >> col) & 1):\n                mat[i] ^= pivot_row\n\n        pivots.append(col)\n        row += 1\n\n    # Build a basis of the nullspace of the adjacency matrix.\n    is_pivot = [False] * n\n    for col in pivots:\n        is_pivot[col] = True\n\n    basis = []\n    for free_col in range(n):\n        if is_pivot[free_col]:\n            continue\n\n        vec = 1 << free_col\n\n        for i, pivot_col in enumerate(pivots):\n            if (mat[i] >> free_col) & 1:\n                vec |= 1 << pivot_col\n\n        basis.append(vec)\n\n    # Use each nullspace basis vector as one bit position.\n    ans = [0] * n\n    for bit_index, vec in enumerate(basis):\n        bit = 1 << bit_index\n        for v in range(n):\n            if (vec >> v) & 1:\n                ans[v] |= bit\n\n    if any(x == 0 for x in ans):\n        print(\"No\")\n    else:\n        print(\"Yes\")\n        print(*ans)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 56.184,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a simple undirected graph with N vertices and M edges. The i-th edge connects vertices u_i and v_i bidirectionally.\nDetermine if there exists a way to write an integer between 1 and 2^{60} - 1, inclusive, on each vertex of this graph so that the following condition is satisfied:\n\n- For every vertex v with a degree of at least 1, the total XOR of the numbers written on its adjacent vertices (excluding v itself) is 0.\n\n\nWhat is XOR?\n\nThe XOR of two non-negative integers A and B, denoted as A \\oplus B, is defined as follows:\n\n\n- In the binary representation of A \\oplus B, the bit at position 2^k \\, (k \\geq 0) is 1 if and only if exactly one of the bits at position 2^k in the binary representations of A and B is 1. Otherwise, it is 0.\n\n\nFor example, 3 \\oplus 5 = 6 (in binary: 011 \\oplus 101 = 110).\n\nIn general, the bitwise XOR of k integers p_1, \\dots, p_k is defined as (\\cdots ((p_1 \\oplus p_2) \\oplus p_3) \\oplus \\cdots \\oplus p_k).  It can be proved that this is independent of the order of p_1, \\dots, p_k.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M\nu_1 v_1\nu_2 v_2\n\\vdots\nu_M v_M\n\nOutput\n\nIf there is no way to write integers satisfying the condition, print No.\nOtherwise, let X_v be the integer written on vertex v, and print your solution in the following format. If multiple solutions exist, any of them will be accepted.\nYes\nX_1 X_2 \\dots X_N\n\nConstraints\n\n\n- 1 \\leq N \\leq 60\n- 0 \\leq M \\leq N(N-1)/2\n- 1 \\leq u_i < v_i \\leq N\n- (u_i, v_i) \\neq (u_j, v_j) for i \\neq j.\n- All input values are integers.\n\nSample Input 1\n\n3 3\n1 2\n1 3\n2 3\n\nSample Output 1\n\nYes\n4 4 4\n\nOther acceptable solutions include writing (2,2,2) or (3,3,3).\n\nSample Input 2\n\n2 1\n1 2\n\nSample Output 2\n\nNo\n\nSample Input 3\n\n1 0\n\nSample Output 3\n\nYes\n1\n\nAny integer between 1 and 2^{60} - 1 can be written.\n\nSample Input 4\n\n4 5\n1 2\n1 3\n2 3\n2 4\n3 4\n\nSample Output 4\n\nYes\n12 4 4 8\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    adj = [0] * N\n    idx = 2\n    for _ in range(M):\n        u = int(data[idx]) - 1\n        v = int(data[idx + 1]) - 1\n        idx += 2\n        adj[u] |= 1 << v\n        adj[v] |= 1 << u\n\n    # Gaussian elimination over GF(2) for the equations A * x = 0.\n    rows = adj[:]\n    pivot_cols = []\n    rank = 0\n\n    for col in range(N):\n        pivot = -1\n        for r in range(rank, N):\n            if (rows[r] >> col) & 1:\n                pivot = r\n                break\n\n        if pivot == -1:\n            continue\n\n        rows[rank], rows[pivot] = rows[pivot], rows[rank]\n        pivot_row = rows[rank]\n\n        for r in range(N):\n            if r != rank and ((rows[r] >> col) & 1):\n                rows[r] ^= pivot_row\n\n        pivot_cols.append(col)\n        rank += 1\n\n    is_pivot = [False] * N\n    for c in pivot_cols:\n        is_pivot[c] = True\n\n    # Build a basis of the nullspace of A.\n    basis = []\n    for free_col in range(N):\n        if is_pivot[free_col]:\n            continue\n\n        vec = 1 << free_col\n        for i, pivot_col in enumerate(pivot_cols):\n            if (rows[i] >> free_col) & 1:\n                vec |= 1 << pivot_col\n\n        basis.append(vec)\n\n    # For each vertex v, choose a nullspace vector whose v-th coordinate is 1.\n    witness = [0] * N\n    for v in range(N):\n        for vec in basis:\n            if (vec >> v) & 1:\n                witness[v] = vec\n                break\n\n        if witness[v] == 0:\n            print(\"No\")\n            return\n\n    ans = [0] * N\n\n    # Assign bit v according to witness[v].\n    for v in range(N):\n        bit = 1 << v\n        vec = witness[v]\n\n        for x in range(N):\n            if (vec >> x) & 1:\n                ans[x] |= bit\n\n    print(\"Yes\")\n    print(*ans)\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Runtime or compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: There is an N \\times N grid. Takahashi wants to color each cell black or white so that all of the following conditions are satisfied:\n\n- For every row, the following condition holds:\n\n- There exists a\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    bounds = {}\n    idx = 2\n\n    for _ in range(M):\n        x = int(data[idx])\n        y = int(data[idx + 1])\n        c = data[idx + 2]\n        idx += 3\n\n        if x in bounds:\n            low, high = bounds[x]\n        else:\n            low, high = 0, N\n\n        if c == b'B':\n            if y > low:\n                low = y\n        else:\n       "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

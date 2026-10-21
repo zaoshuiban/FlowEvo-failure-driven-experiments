@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "499e217a-2a41-4f92-99f7-fd29f8b18c85",
+  "created": 1792430343,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 357,
+    "completion_tokens": 301,
+    "total_tokens": 658,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 248
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 357
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def losingPlayer(self, x: int, y: int) -> str:\n        turns = min(x, y // 4)\n        return \"Alice\" if turns % 2 == 1 else \"Bob\"\n```",
+  "latency_s": 1.813,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two positive integers x and y, denoting the number of coins with values 75 and 10 respectively.\nAlice and Bob are playing a game. Each turn, starting with Alice, the player must pick up coins with a total value 115. If the player is unable to do so, they lose the game.\nReturn the name of the player who wins the game if both players play optimally.\n \nExample 1:\n\nInput: x = 2, y = 7\nOutput: \"Alice\"\nExplanation:\nThe game ends in a single turn:\n\nAlice picks 1 coin with a value of 75 and 4 coins with a value of 10.\n\n\nExample 2:\n\nInput: x = 4, y = 11\nOutput: \"Bob\"\nExplanation:\nThe game ends in 2 turns:\n\nAlice picks 1 coin with a value of 75 and 4 coins with a value of 10.\nBob picks 1 coin with a value of 75 and 4 coins with a value of 10.\n\n\n \nConstraints:\n\n1 <= x, y <= 100\n\nStarter code / required signature:\nclass Solution:\n    def losingPlayer(self, x: int, y: int) -> str:\n        \n\nUse the required function/method named losingPlayer. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

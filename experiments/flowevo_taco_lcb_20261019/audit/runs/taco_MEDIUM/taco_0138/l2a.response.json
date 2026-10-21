@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b159e58a-1be2-41bb-a758-f96ec86e9dca",
+  "created": 1792443624,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 469,
+    "completion_tokens": 1832,
+    "total_tokens": 2301,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1591
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 213
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\n\ndef ints_from_bytes(data):\n    num = 0\n    inside = False\n    for c in data:\n        if 48 <= c <= 57:\n            num = num * 10 + (c - 48)\n            inside = True\n        elif inside:\n            yield num\n            num = 0\n            inside = False\n    if inside:\n        yield num\n\n\ndef main():\n    data = sys.stdin.buffer.read()\n    it = ints_from_bytes(data)\n\n    try:\n        n = next(it)\n    except StopIteration:\n        return\n\n    piles = array('I')\n    xor_sum = 0\n\n    for _ in range(n):\n        value = next(it)\n        piles.append(value)\n        xor_sum ^= value\n\n    if xor_sum == 0:\n        sys.stdout.write(\"0\\n\")\n        return\n\n    ans = 0\n    for value in piles:\n        if (value ^ xor_sum) < value:\n            ans += 1\n\n    sys.stdout.write(str(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 7.983,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nDexter and Debra are playing a game. They have N containers each having one or more chocolates. Containers are numbered from 1 to N, where i^{th} container has A[i] number of chocolates.\n\nThe game goes like this. First player will choose a container and take one or more chocolates from it. Then, second player will choose a non-empty container and take one or more chocolates from it. And then they alternate turns. This process will continue, until one of the players is not able to take any chocolates (because no chocolates are left). One who is not able to take any chocolates loses the game. Note that player can choose only non-empty container.\n\nThe game between Dexter and Debra has just started, and Dexter has got the first Chance. He wants to know the number of ways to make a first move such that under optimal play, the first player always wins.\n\nInput Format\n\nThe first line contains an integer N, i.e., number of containers. \n\nThe second line contains N integers, i.e., number of chocolates in each of the containers separated by a single space.  \n\nConstraints\n\n$1 ≤ N ≤ 10^{6} $\n\n$1 ≤ A[i] ≤ 10^{9} $\n\nOutput Format\n\nPrint the number of ways to make the first move such that under optimal play, the first player always wins. If the first player cannot win under optimal play, print 0.  \n\nSample Input\n2\n2 3\n\nSample Output\n1\n\nExplanation\n\nOnly 1 set of moves helps player 1 win. \n\nPlayer:      1      2      1      2      1\nChocolates: 2 3 -> 2 2 -> 1 2 -> 1 1 -> 0 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

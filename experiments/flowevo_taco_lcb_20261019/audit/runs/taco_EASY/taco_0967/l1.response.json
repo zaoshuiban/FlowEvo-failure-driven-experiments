@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3c201050-4df5-45c1-bf67-1128dcd8851a",
+  "created": 1792431930,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 556,
+    "completion_tokens": 734,
+    "total_tokens": 1290,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 588
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 556
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        a = next(it)\n        b = next(it)\n\n        count = [0] * (n + 1)\n        for _ in range(n):\n            count[next(it)] += 1\n\n        probability = (count[a] * count[b]) / (n * n)\n        answers.append(f\"{probability:.10f}\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 3.654,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin chinese, Russian and Vietnamese as well. \n\nOnce, after a stressful day, Chef decided to relax and visit a casino near his house to gamble. He feels lucky and he's going to bet almost all of his money.\n\nThe game Chef is going to play in the casino consists of tossing a die with $N$ faces twice. There is a number written on each face of the die (these numbers are not necessarily distinct). In order to win, Chef must get the number $A$ on the first toss and the number $B$ on the second toss of the die.\n\nThe excited viewers want to know the probability that Chef will win the game. Can you help them find that number? Assume that Chef gets each face of the die with the same probability on each toss and that tosses are mutually independent.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains three space-separated integers $N$, $A$ and $B$.\nThe second line contains $N$ space-separated integers $x_{1}, x_{2}, \\dots, x_{N}$ denoting the numbers written on the faces of the die.\n\n------  Output ------\nFor each test case, print a single line containing one real number — the probability that Chef will win. Your answer will be considered correct if its absolute error does not exceed $10^{-6}$.\n\n------  Constraints ------\n$1 ≤ T ≤ 70$\n$1 ≤ N ≤ 10^{4}$\n$1 ≤ A ≤ N$\n$1 ≤ B ≤ N$\n$1 ≤ x_{i} ≤ N$ for each valid $i$\n\n------  Subtasks ------\nSubtask #1 (20 points):\n$T ≤ 10$\n$N ≤ 100$\n\nSubtask #2 (80 points): original constraints\n\n----- Sample Input 1 ------ \n2\n5 1 1\n1 1 1 1 1\n2 1 1\n1 2\n----- Sample Output 1 ------ \n1.0000000000\n0.2500000000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

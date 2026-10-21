@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6cebdca1-8360-469e-802a-00c39cadc7c7",
+  "created": 1792436648,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 300,
+    "completion_tokens": 1351,
+    "total_tokens": 1651,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1312
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 300
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ns = sys.stdin.readline().strip()\nt = s.rstrip('0')\n\nprint(\"YES\" if t == t[::-1] else \"NO\")\n```",
+  "latency_s": 6.378,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLet quasi-palindromic number be such number that adding some leading zeros (possible none) to it produces a palindromic string. \n\nString t is called a palindrome, if it reads the same from left to right and from right to left.\n\nFor example, numbers 131 and 2010200 are quasi-palindromic, they can be transformed to strings \"131\" and \"002010200\", respectively, which are palindromes.\n\nYou are given some integer number x. Check if it's a quasi-palindromic number.\n\n\n-----Input-----\n\nThe first line contains one integer number x (1 ≤ x ≤ 10^9). This number is given without any leading zeroes.\n\n\n-----Output-----\n\nPrint \"YES\" if number x is quasi-palindromic. Otherwise, print \"NO\" (without quotes).\n\n\n-----Examples-----\nInput\n131\n\nOutput\nYES\n\nInput\n320\n\nOutput\nNO\n\nInput\n2010200\n\nOutput\nYES\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

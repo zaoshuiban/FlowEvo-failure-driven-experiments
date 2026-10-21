@@ -1,0 +1,21 @@
+import sys
+
+def main():
+    data = sys.stdin.buffer.read().split()
+    if not data:
+        return
+
+    a = int(data[0])
+
+    if a % 2 == 1:
+        b = (a * a - 1) // 2
+        c = (a * a + 1) // 2
+    else:
+        k = a // 2
+        b = k * k - 1
+        c = k * k + 1
+
+    print(a, b, c)
+
+if __name__ == "__main__":
+    main()

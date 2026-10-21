@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4deec600-87a0-463d-acac-d113bde6ba84",
+  "created": 1792466181,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 606,
+    "completion_tokens": 32768,
+    "total_tokens": 33374,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 350
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 175.172,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a set of size $m$ with integer elements between $0$ and $2^{n}-1$ inclusive. Let's build an undirected graph on these integers in the following way: connect two integers $x$ and $y$ with an edge if and only if $x \\& y = 0$. Here $\\&$ is the bitwise AND operation. Count the number of connected components in that graph.\n\n\n-----Input-----\n\nIn the first line of input there are two integers $n$ and $m$ ($0 \\le n \\le 22$, $1 \\le m \\le 2^{n}$).\n\nIn the second line there are $m$ integers $a_1, a_2, \\ldots, a_m$ ($0 \\le a_{i} < 2^{n}$) — the elements of the set. All $a_{i}$ are distinct.\n\n\n-----Output-----\n\nPrint the number of connected components.\n\n\n-----Examples-----\nInput\n2 3\n1 2 3\n\nOutput\n2\n\nInput\n5 5\n5 19 10 20 12\n\nOutput\n2\n\n\n\n-----Note-----\n\nGraph from first sample:\n\n$0$\n\nGraph from second sample:\n\n[Image]\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

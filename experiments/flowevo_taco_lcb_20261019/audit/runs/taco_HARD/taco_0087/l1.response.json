@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1c33616e-f9da-4a31-920b-06f09442665b",
+  "created": 1792430879,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 608,
+    "completion_tokens": 11593,
+    "total_tokens": 12201,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11162
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 608
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_right\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    T = next(it)\n    answers = []\n\n    for _ in range(T):\n        N = next(it)\n        k = next(it)\n        b = next(it)\n\n        A = [next(it) for _ in range(N)]\n\n        if k == 0:\n            cnt_high = 0\n            has_low = 0\n\n            for x in A:\n                if x >= b:\n                    cnt_high += 1\n                else:\n                    has_low = 1\n\n            if cnt_high == 0:\n                answers.append(\"1\")\n            else:\n                answers.append(str(cnt_high + has_low))\n            continue\n\n        A.sort()\n\n        uniq = []\n        for x in A:\n            if not uniq or uniq[-1] != x:\n                uniq.append(x)\n\n        m = len(uniq)\n        pos = {v: i + 1 for i, v in enumerate(uniq)}\n\n        bit = [0] * (m + 1)\n        ans = 1\n\n        for v in A:\n            limit = (v - b) // k\n\n            if limit < 0:\n                idx = 0\n            else:\n                idx = bisect_right(uniq, limit)\n\n            best = 0\n            j = idx\n            while j > 0:\n                if bit[j] > best:\n                    best = bit[j]\n                j -= j & -j\n\n            dp = best + 1\n            if dp > ans:\n                ans = dp\n\n            j = pos[v]\n            while j <= m:\n                if dp > bit[j]:\n                    bit[j] = dp\n                j += j & -j\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 54.656,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin chinese, Russian and Vietnamese as well. \n\nChef has a sequence A with length N and a line given by the equation y(x) = k · x + b. Let us say that an element A_{j} is reachable from another element A_{i} if the point (A_{i}, A_{j}) is lying above or on the line y(x), i.e. if A_{j} ≥  k · A_{i} + b.\n\nConsider an arbitrary subsequence of A; let's denote it by B. Subsequence B is called good if its elements can be reordered in such a way that for each valid i, B_{i+1} is reachable from B_{i}.\n\nChef asked you to compute the maximum possible length of a good subsequence. Can you help him?\n\n------ Input ------ \n\nThe first line of the input contains a single integer T denoting the number of test cases. The description of T test cases follows.\nThe first line of each test case contains three space-separated integers N, k and b.\nThe second line contains N space-separated integers A_{1}, A_{2}, ..., A_{N}.\n\n------ Output ------ \n\nFor each test case, print a single line containing one integer — the length of the longest good subsequence of A.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 5000$\n$1 ≤ N ≤ 100000$\n$0 ≤ k, b ≤ 10^{9}$\n$0 ≤ A_{i} ≤ 10^{9} for each valid i$\n$1 ≤ sum of N over all test cases ≤ 200000$\n\n----- Sample Input 1 ------ \n1\n5 4 1\n100 2 4 17 8\n----- Sample Output 1 ------ \n3\n----- explanation 1 ------ \nExample case 1: We can choose the subsequence (100, 4, 17) and reorder it to get the sequence (4, 17, 100). In this sequence, 17 is reachable from 4 because 4 · 4 + 1 = 17 ? 17 and 100 is reachable from 17 because 4 · 17 + 1 = 69 ? 100. Hence, (100, 4, 17) is a good subsequence; there is no good subsequence of A with length 4 or more, so the answer is 3.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

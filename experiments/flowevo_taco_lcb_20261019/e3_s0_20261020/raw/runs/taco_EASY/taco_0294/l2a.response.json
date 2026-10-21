@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a529b46a-7235-4f2e-9e82-7d0104b5f9a0",
+  "created": 1792433846,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 622,
+    "completion_tokens": 943,
+    "total_tokens": 1565,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 720
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 238
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    if n % 2 == 0:\n        return n == 2\n\n    d = 3\n    while d * d <= n:\n        if n % d == 0:\n            return False\n        d += 2\n    return True\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = int(data[idx])\n        b = int(data[idx + 1])\n        idx += 2\n\n        # a^2 - b^2 = (a - b)(a + b)\n        if a - b != 1:\n            ans.append(\"NO\")\n        else:\n            ans.append(\"YES\" if is_prime(a + b) else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 4.232,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAlice has a lovely piece of cloth. It has the shape of a square with a side of length $a$ centimeters. Bob also wants such piece of cloth. He would prefer a square with a side of length $b$ centimeters (where $b < a$). Alice wanted to make Bob happy, so she cut the needed square out of the corner of her piece and gave it to Bob. Now she is left with an ugly L shaped cloth (see pictures below).\n\nAlice would like to know whether the area of her cloth expressed in square centimeters is prime. Could you help her to determine it?\n\n\n-----Input-----\n\nThe first line contains a number $t$ ($1 \\leq t \\leq 5$) — the number of test cases.\n\nEach of the next $t$ lines describes the $i$-th test case. It contains two integers $a$ and $b~(1 \\leq b < a \\leq 10^{11})$ — the side length of Alice's square and the side length of the square that Bob wants.\n\n\n-----Output-----\n\nPrint $t$ lines, where the $i$-th line is the answer to the $i$-th test case. Print \"YES\" (without quotes) if the area of the remaining piece of cloth is prime, otherwise print \"NO\".\n\nYou can print each letter in an arbitrary case (upper or lower).\n\n\n-----Example-----\nInput\n4\n6 5\n16 13\n61690850361 24777622630\n34 33\n\nOutput\nYES\nNO\nNO\nYES\n\n\n\n-----Note-----\n\nThe figure below depicts the first test case. The blue part corresponds to the piece which belongs to Bob, and the red part is the piece that Alice keeps for herself. The area of the red part is $6^2 - 5^2 = 36 - 25 = 11$, which is prime, so the answer is \"YES\". [Image] \n\nIn the second case, the area is $16^2 - 13^2 = 87$, which is divisible by $3$. [Image] \n\nIn the third case, the area of the remaining piece is $61690850361^2 - 24777622630^2 = 3191830435068605713421$. This number is not prime because $3191830435068605713421 = 36913227731 \\cdot 86468472991 $.\n\nIn the last case, the area is $34^2 - 33^2 = 67$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

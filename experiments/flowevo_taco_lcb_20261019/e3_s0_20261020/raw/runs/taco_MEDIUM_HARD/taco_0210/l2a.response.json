@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "aa99b98e-c16e-4809-af7d-804fd4d789a7",
+  "created": 1792438217,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 421,
+    "completion_tokens": 6898,
+    "total_tokens": 7319,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6428
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 165
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.readline().strip()\n    if not data:\n        return\n    k = int(data)\n\n    def c3(x: int) -> int:\n        return x * (x - 1) * (x - 2) // 6\n\n    # Largest clique size m such that C(m, 3) <= k\n    m = 3\n    while c3(m + 1) <= k:\n        m += 1\n\n    base = c3(m)\n    rem = k - base\n\n    def tri(x: int) -> int:\n        return x * (x + 1) // 2\n\n    # Any non-negative integer is a sum of three triangular numbers.\n    tri_index = {}\n    for a in range(m + 1):\n        tri_index[tri(a)] = a\n\n    extras = []\n    if rem > 0:\n        found = False\n        for a in range(m + 1):\n            for b in range(m + 1):\n                left = rem - tri(a) - tri(b)\n                if left >= 0 and left in tri_index:\n                    c = tri_index[left]\n                    extras = [x for x in (a, b, c) if x > 0]\n                    found = True\n                    break\n            if found:\n                break\n\n    n = m + len(extras)\n    adj = [['0'] * n for _ in range(n)]\n\n    # Build a clique on the first m vertices.\n    for i in range(m):\n        for j in range(i + 1, m):\n            adj[i][j] = adj[j][i] = '1'\n\n    # Each extra vertex connected to x + 1 clique vertices creates tri(x) triangles.\n    for idx, x in enumerate(extras):\n        v = m + idx\n        count = x + 1\n        for u in range(count):\n            adj[u][v] = adj[v][u] = '1'\n\n    output = [str(n)]\n    output.extend(''.join(row) for row in adj)\n    sys.stdout.write('\\n'.join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 30.483,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nJohn Doe started thinking about graphs. After some thought he decided that he wants to paint an undirected graph, containing exactly k cycles of length 3. \n\nA cycle of length 3 is an unordered group of three distinct graph vertices a, b and c, such that each pair of them is connected by a graph edge. \n\nJohn has been painting for long, but he has not been a success. Help him find such graph. Note that the number of vertices there shouldn't exceed 100, or else John will have problems painting it.\n\n\n-----Input-----\n\nA single line contains an integer k (1 ≤ k ≤ 10^5) — the number of cycles of length 3 in the required graph.\n\n\n-----Output-----\n\nIn the first line print integer n (3 ≤ n ≤ 100) — the number of vertices in the found graph. In each of next n lines print n characters \"0\" and \"1\": the i-th character of the j-th line should equal \"0\", if vertices i and j do not have an edge between them, otherwise it should equal \"1\". Note that as the required graph is undirected, the i-th character of the j-th line must equal the j-th character of the i-th line. The graph shouldn't contain self-loops, so the i-th character of the i-th line must equal \"0\" for all i.\n\n\n-----Examples-----\nInput\n1\n\nOutput\n3\n011\n101\n110\n\nInput\n10\n\nOutput\n5\n01111\n10111\n11011\n11101\n11110\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

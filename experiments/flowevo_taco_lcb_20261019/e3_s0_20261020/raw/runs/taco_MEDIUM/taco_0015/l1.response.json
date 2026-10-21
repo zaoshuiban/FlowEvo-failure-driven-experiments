@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b7e40c7d-2769-4c18-bc29-c06e1f4029db",
+  "created": 1792436012,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 527,
+    "completion_tokens": 3384,
+    "total_tokens": 3911,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3188
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 527
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    a, x, y = map(int, sys.stdin.readline().split())\n\n    if y % a == 0:\n        print(-1)\n        return\n\n    row = y // a\n\n    if row == 0:\n        if -a < 2 * x < a:\n            print(1)\n        else:\n            print(-1)\n    elif row % 2 == 1:\n        if -a < 2 * x < a:\n            print((row // 2) * 3 + 2)\n        else:\n            print(-1)\n    else:\n        if -a < x < 0:\n            print((row // 2) * 3)\n        elif 0 < x < a:\n            print((row // 2) * 3 + 1)\n        else:\n            print(-1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 14.656,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nSo nearly half of the winter is over and Maria is dreaming about summer. She's fed up with skates and sleds, she was dreaming about Hopscotch all night long. It's a very popular children's game. The game field, the court, looks as is shown in the figure (all blocks are square and are numbered from bottom to top, blocks in the same row are numbered from left to right). Let us describe the hopscotch with numbers that denote the number of squares in the row, staring from the lowest one: 1-1-2-1-2-1-2-(1-2)..., where then the period is repeated (1-2).\n\n<image>\n\nThe coordinate system is defined as shown in the figure. Side of all the squares are equal and have length a.\n\nMaria is a very smart and clever girl, and she is concerned with quite serious issues: if she throws a stone into a point with coordinates (x, y), then will she hit some square? If the answer is positive, you are also required to determine the number of the square.\n\nIt is believed that the stone has fallen into the square if it is located strictly inside it. In other words a stone that has fallen on the square border is not considered a to hit a square.\n\nInput\n\nThe only input line contains three integers: a, x, y, where a (1 ≤ a ≤ 100) is the side of the square, x and y ( - 106 ≤ x ≤ 106, 0 ≤ y ≤ 106) are coordinates of the stone.\n\nOutput\n\nPrint the number of the square, inside which the stone fell. If the stone is on a border of some stone or outside the court, print \"-1\" without the quotes.\n\nExamples\n\nInput\n\n1 0 0\n\n\nOutput\n\n-1\n\n\nInput\n\n3 1 1\n\n\nOutput\n\n1\n\n\nInput\n\n3 0 10\n\n\nOutput\n\n5\n\n\nInput\n\n3 0 7\n\n\nOutput\n\n-1\n\n\nInput\n\n3 4 0\n\n\nOutput\n\n-1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

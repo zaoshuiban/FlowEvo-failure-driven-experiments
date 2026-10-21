@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "64f4077b-7b11-4e85-a669-e1ffa8c45268",
+  "created": 1792433594,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 486,
+    "completion_tokens": 30591,
+    "total_tokens": 31077,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 28938
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 486
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\nMAXN = 100\n\n# Fibonacci string lengths: L[1] = L[2] = 1, L[i] = L[i-1] + L[i-2]\nfib_len = [0] * (MAXN + 1)\nfib_len[1] = 1\nfib_len[2] = 1\nfor i in range(3, MAXN + 1):\n    fib_len[i] = fib_len[i - 1] + fib_len[i - 2]\n\n\ndef build_fib(n: int) -> bytes:\n    if n == 1:\n        return b\"a\"\n    if n == 2:\n        return b\"b\"\n\n    prev2 = b\"a\"  # F1\n    prev1 = b\"b\"  # F2\n\n    for _ in range(3, n + 1):\n        cur = prev1 + prev2\n        prev2 = prev1\n        prev1 = cur\n\n    return prev1\n\n\ndef prefix_function(p: bytes):\n    n = len(p)\n    pi = [0] * n\n\n    for i in range(1, n):\n        j = pi[i - 1]\n        while j > 0 and p[i] != p[j]:\n            j = pi[j - 1]\n        if p[i] == p[j]:\n            j += 1\n        pi[i] = j\n\n    return pi\n\n\ndef kmp_count(text: bytes, p: bytes, pi) -> int:\n    n = len(p)\n    j = 0\n    cnt = 0\n\n    for ch in text:\n        while j > 0 and ch != p[j]:\n            j = pi[j - 1]\n        if ch == p[j]:\n            j += 1\n\n        if j == n:\n            cnt += 1\n            j = pi[j - 1]\n\n    return cnt % MOD\n\n\ndef count_on_prefixes(text: bytes, p: bytes, pi, indices, lengths):\n    n = len(p)\n    j = 0\n    cnt = 0\n    ptr = 0\n    result = {}\n\n    for pos, ch in enumerate(text, 1):\n        while j > 0 and ch != p[j]:\n            j = pi[j - 1]\n        if ch == p[j]:\n            j += 1\n\n        if j == n:\n            cnt += 1\n            j = pi[j - 1]\n\n        while ptr < len(lengths) and pos == lengths[ptr]:\n            result[indices[ptr]] = cnt % MOD\n            ptr += 1\n\n    return result\n\n\ndef apply_power(a, b, xA, xB, q, rem):\n    # One 2-step block:\n    # a' = a + b + xA\n    # b' = a + 2b + xA + xB\n    #\n    # Affine transform:\n    # (a, b) -> (A*a + B*b + C, D*a + E*b + F)\n\n    A, B, C = 1, 0, 0\n    D, E, F = 0, 1, 0\n\n    bA, bB, bC = 1, 1, xA % MOD\n    bD, bE, bF = 1, 2, (xA + xB) % MOD\n\n    while q:\n        if q & 1:\n            nA = (bA * A + bB * D) % MOD\n            nB = (bA * B + bB * E) % MOD\n            nC = (bA * C + bB * F + bC) % MOD\n\n            nD = (bD * A + bE * D) % MOD\n            nE = (bD * B + bE * E) % MOD\n            nF = (bD * C + bE * F + bF) % MOD\n\n            A, B, C, D, E, F = nA, nB, nC, nD, nE, nF\n\n        nA = (bA * bA + bB * bD) % MOD\n        nB = (bA * bB + bB * bE) % MOD\n        nC = (bA * bC + bB * bF + bC) % MOD\n\n        nD = (bD * bA + bE * bD) % MOD\n        nE = (bD * bB + bE * bE) % MOD\n        nF = (bD * bC + bE * bF + bF) % MOD\n\n        bA, bB, bC, bD, bE, bF = nA, nB, nC, nD, nE, nF\n        q >>= 1\n\n    na = (A * a + B * b + C) % MOD\n    nb = (D * a + E * b + F) % MOD\n\n    if rem:\n        return (na + nb + xA) % MOD\n    return nb\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    k = int(data[0])\n    m = int(data[1])\n    patterns = data[2:2 + m]\n\n    answers = []\n\n    for p in patterns:\n        L = len(p)\n\n        # Minimal r such that |F_r| >= L\n        r = 1\n        while fib_len[r] < L:\n            r += 1\n\n        # F_k is too short\n        if k < r:\n            answers.append(\"0\")\n            continue\n\n        B = r + 5\n\n        # For small k, just build the Fibonacci string directly.\n        if k <= B + 2:\n            text = build_fib(int(k))\n            pi = prefix_function(p)\n            answers.append(str(kmp_count(text, p, pi)))\n            continue\n\n        # Build F_{B+2}. It contains F_{B-1}, F_B, F_{B+1}, F_{B+2}\n        # as prefixes.\n        n = B + 2\n        text = build_fib(n)\n        pi = prefix_function(p)\n\n        indices = [B - 1, B, B + 1, B + 2]\n        lengths = [fib_len[i] for i in indices]\n\n        counts = count_on_prefixes(text, p, pi, indices, lengths)\n\n        c_prev = counts[B - 1]\n        c_cur = counts[B]\n        c_next = counts[B + 1]\n        c_next2 = counts[B + 2]\n\n        # X_n is the number of occurrences crossing the boundary in\n        # F_n = F_{n-1} F_{n-2}. For large n it is 2-periodic.\n        xA = (c_next - c_cur - c_prev) % MOD       # X_{B+1}\n        xB = (c_next2 - c_next - c_cur) % MOD      # X_{B+2}\n\n        # Current state is (C_{B+1}, C_{B+2})\n        a = c_next\n        b = c_next2\n\n        steps = k - (B + 2)\n        q = steps // 2\n        rem = steps & 1\n\n        ans = apply_power(a, b, xA, xB, q, rem)\n        answers.append(str(ans % MOD))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 132.419,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFibonacci strings are defined as follows: \n\n  * f1 = «a» \n  * f2 = «b» \n  * fn = fn - 1 fn - 2, n > 2\n\n\n\nThus, the first five Fibonacci strings are: \"a\", \"b\", \"ba\", \"bab\", \"babba\".\n\nYou are given a Fibonacci string and m strings si. For each string si, find the number of times it occurs in the given Fibonacci string as a substring.\n\nInput\n\nThe first line contains two space-separated integers k and m — the number of a Fibonacci string and the number of queries, correspondingly.\n\nNext m lines contain strings si that correspond to the queries. It is guaranteed that strings si aren't empty and consist only of characters \"a\" and \"b\".\n\nThe input limitations for getting 30 points are: \n\n  * 1 ≤ k ≤ 3000\n  * 1 ≤ m ≤ 3000\n  * The total length of strings si doesn't exceed 3000\n\n\n\nThe input limitations for getting 100 points are: \n\n  * 1 ≤ k ≤ 1018\n  * 1 ≤ m ≤ 104\n  * The total length of strings si doesn't exceed 105\n\n\n\nPlease do not use the %lld specifier to read or write 64-bit integers in С++. It is preferred to use cin, cout streams or the %I64d specifier.\n\nOutput\n\nFor each string si print the number of times it occurs in the given Fibonacci string as a substring. Since the numbers can be large enough, print them modulo 1000000007 (109 + 7). Print the answers for the strings in the order in which they are given in the input.\n\nExamples\n\nInput\n\n6 5\na\nb\nab\nba\naba\n\n\nOutput\n\n3\n5\n3\n3\n1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "196d73c9-afb6-4796-90a6-a63aef851a9c",
+  "created": 1792436745,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1134,
+    "completion_tokens": 1932,
+    "total_tokens": 3066,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1720
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 494
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    idx = 0\n    t = int(data[idx])\n    idx += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        q = int(data[idx + 1])\n        idx += 2\n\n        s = data[idx]\n        idx += 1\n\n        freq = [0] * 26\n        for ch in s:\n            freq[ch - 97] += 1\n\n        frequencies = [f for f in freq if f > 0]\n\n        for _ in range(q):\n            c = int(data[idx])\n            idx += 1\n\n            pending = 0\n            for f in frequencies:\n                if f > c:\n                    pending += f - c\n\n            answers.append(str(pending))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 8.905,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nAs a health expert, Vinay is keeping a close watch on the ongoing pandemic of coronavirus disease (COVID-19). He thought of a different situation where there are $26$ types of viruses, named \"aorona\", \"borona\", \"corona\", ..., \"zorona\".\n\nYou are given a string $S$ with length $N$. There are $N$ people (numbered $1$ through $N$) and for each valid $i$, the $i$-th person is infected by exactly one type of virus named $S_{i}$orona (i.e. \"corona\" with the first letter replaced by the $i$-th character of $S$).\n\nYou should answer $Q$ queries. In each query:\nYou are given an integer $C$ denoting the number of available *isolation centers*.\nEach isolation center has an infinite capacity, but with the restriction that two people infected with the same type of virus cannot stay in the same isolation center.\nThere is also a *pending queue* with an infinite capacity and there are no restrictions on which people can be in the pending queue.\nInitially, the isolation centers and pending queue are empty.\nEach of the $N$ people should be placed in either the pending queue or one of the isolation centers.\nSince Vinay is busy finding a vaccine, he asks Swapnil to find a way to place the people in the pending queue and isolation centers such that the number of people in the pending queue is the smallest possible.\nHelp Swapnil find the size of the pending queue in that case.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $Q$.\nThe second line contains a single string $S$.\nEach of the following $Q$ lines contains a single integer $C$ describing a query.\n\n------  Output ------\nFor each query, print a single line containing one integer ― the minimum size of the pending queue.\n\n------  Constraints ------\n$1 ≤ T, N, Q ≤ 10^{5}$\n$0 ≤ C ≤ 10^{9}$\n$|S| = N$\n$S$ contains only lowercase English letters\nthe sum of $N$ over all test cases does not exceed $10^{5}$\nthe sum of $Q$ over all test cases does not exceed $10^{5}$\n\n------  Subtasks ------\nSubtask #1 (20 points): $T, N, Q, C ≤ 10$\n\nSubtask #2 (80 points): original constraints\n\n----- Sample Input 1 ------ \n1\n\n20 2\n\nstayinghomesaveslife\n\n1\n\n3\n----- Sample Output 1 ------ \n6\n\n0\n----- explanation 1 ------ \nExample case 1: In the pending queue for the first query, there should be $2$ people with \"eorona\", $2$ with \"sorona\", $1$ with \"aorona\" and $1$ with \"iorona\".\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n\n    t = int(next(it))\n    answers = []\n\n    for _ in range(t):\n        n = int(next(it))\n        q = int(next(it))\n        s = next(it)\n\n        freq = [0] * 26\n        for ch in s:\n            freq[ch - ord('a')] += 1\n\n        frequencies = [f for f in freq if f > 0]\n\n        for _ in range(q):\n            c = int(next(it))\n            pending = 0\n\n            for f in frequencies:\n                if f > c:\n                    pending += f - c\n\n            answers.append(str(pending))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Runtime error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

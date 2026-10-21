@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1625af01-efbb-4d48-9024-1a7ada571d4c",
+  "created": 1792432966,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 533,
+    "completion_tokens": 1377,
+    "total_tokens": 1910,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1236
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 533
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def maxScore(self, n: int, k: int, stayScore: List[List[int]], travelScore: List[List[int]]) -> int:\n        dp = [0] * n\n\n        for day in range(k):\n            next_dp = [0] * n\n\n            for dest in range(n):\n                best = dp[dest] + stayScore[day][dest]\n\n                for curr in range(n):\n                    best = max(best, dp[curr] + travelScore[curr][dest])\n\n                next_dp[dest] = best\n\n            dp = next_dp\n\n        return max(dp)\n```",
+  "latency_s": 6.201,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two integers, n and k, along with two 2D integer arrays, stayScore and travelScore.\nA tourist is visiting a country with n cities, where each city is directly connected to every other city. The tourist's journey consists of exactly k 0-indexed days, and they can choose any city as their starting point.\nEach day, the tourist has two choices:\n\nStay in the current city: If the tourist stays in their current city curr during day i, they will earn stayScore[i][curr] points.\nMove to another city: If the tourist moves from their current city curr to city dest, they will earn travelScore[curr][dest] points.\n\nReturn the maximum possible points the tourist can earn.\n \nExample 1:\n\nInput: n = 2, k = 1, stayScore = [[2,3]], travelScore = [[0,2],[1,0]]\nOutput: 3\nExplanation:\nThe tourist earns the maximum number of points by starting in city 1 and staying in that city.\n\nExample 2:\n\nInput: n = 3, k = 2, stayScore = [[3,4,2],[2,1,2]], travelScore = [[0,2,1],[2,0,4],[3,2,0]]\nOutput: 8\nExplanation:\nThe tourist earns the maximum number of points by starting in city 1, staying in that city on day 0, and traveling to city 2 on day 1.\n\n \nConstraints:\n\n1 <= n <= 200\n1 <= k <= 200\nn == travelScore.length == travelScore[i].length == stayScore[i].length\nk == stayScore.length\n1 <= stayScore[i][j] <= 100\n0 <= travelScore[i][j] <= 100\ntravelScore[i][i] == 0\n\nStarter code / required signature:\nclass Solution:\n    def maxScore(self, n: int, k: int, stayScore: List[List[int]], travelScore: List[List[int]]) -> int:\n        \n\nUse the required function/method named maxScore. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

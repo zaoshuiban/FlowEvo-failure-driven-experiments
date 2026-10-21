@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5ada0e21-39a6-4e0a-9fbc-3170ac0da794",
+  "created": 1792441621,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1369,
+    "completion_tokens": 8346,
+    "total_tokens": 9715,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7922
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 729
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    idx = 0\n    length = len(data)\n\n    def next_int():\n        nonlocal idx\n        while idx < length and data[idx] <= 32:\n            idx += 1\n\n        sign = 1\n        if idx < length and data[idx] == 45:  # '-'\n            sign = -1\n            idx += 1\n\n        num = 0\n        while idx < length and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n\n        return num * sign\n\n    t = next_int()\n    answers = []\n\n    for _ in range(t):\n        n = next_int()\n        H = next_int()\n\n        # Difference array for the number of initial empty cells per row.\n        diff = array('i', [0]) * (n + 1)\n\n        for _ in range(n):\n            l = next_int()\n            r = next_int()\n            diff[l] += 1\n            diff[r + 1] -= 1\n\n        # Convert difference array to row coverage counts.\n        current = 0\n        for i in range(n):\n            current += diff[i]\n            diff[i] = current\n\n        # Maximum total existing empty cells in any H consecutive rows.\n        window_sum = 0\n        for i in range(H):\n            window_sum += diff[i]\n\n        max_overlap = window_sum\n        limit = n - H\n\n        for start in range(1, limit + 1):\n            window_sum += diff[start + H - 1] - diff[start - 1]\n            if window_sum > max_overlap:\n                max_overlap = window_sum\n\n        required_cells = n * H\n        answers.append(str(required_cells - max_overlap))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 36.74,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \n\nOh, no! Chef’s in trouble. He’s got himself stuck in a cave (we don’t know how) and is looking for a way out. The bigger problem is that he needs to get his tractor out of the cave (don't ask why Chef owns a tractor!). He currently faces a large block of height N cells and length N cells, and needs to get his tractor across this block. The block is made up of vertical columns of soil, each of which is one cell long. Each column has a continuous vertical gap, with the i^{th} column having its gap from the l_{i}^{th} cell to the h_{i}^{th} cell (starting from the bottom, 0-indexing). That is, in the i^{th} column, there is no soil from the l_{i}^{th} cell to the h_{i}^{th} cell (both inclusive). Chef can build additional gaps by clearing some cells of soil. His tractor has height H, and therefore, he needs to build a horizontal corridor of height H passing through all the columns. That is, some consecutive H rows must have no soil. Please see the figures in the example and explanation sections for more details.\nChef is able to clear one cell of soil by spending one unit of energy. Chef is smart, and will figure out a way to build the horizontal corridor while spending the minimum possible amount of energy. To estimate how many of his tasty dishes he will still be able to cook for you tonight, find out what is the minimum possible energy he needs to spend.\n\n------ Input ------ \n\nFirst line of input contains one integer T - number of test cases. T test cases follow.\nEach test case starts with two integers N and H – size of the cave and height of the tractor, respectively. In each of the next N lines are two integers l_{i} and h_{i}, respectively indicating lowest and highest number of cell for the gap in the i^{th} column.\n\n------ Output ------ \n\nOne integer – minimum energy required.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{3}$\n$1 ≤ N ≤ 10^{6}$\n$1 ≤ sum of N over all test cases ≤ 10^{6}$\n$1 ≤ H ≤ N$\n$0 ≤ l_{i} ≤ h_{i} < N$\n\n------ Subtasks ------ \n\nSubtask 1 (25 points): T ≤ 100, N ≤ 100\nSubtask 2 (75 points): No additional constraints\n\n----- Sample Input 1 ------ \n2\n\n4 3\n\n1 2\n\n1 2\n\n1 2\n\n1 2\n\n5 2\n\n2 3\n\n1 2\n\n2 3\n\n1 2\n\n2 3\n----- Sample Output 1 ------ \n4\n\n2\n----- explanation 1 ------ \nIn the second case, the figure describes the initial map, where white cells denote empty cells and brown cells denote soil cells.\n\nWhen we removed soil in two cells as the following figure, then we can make a corridor of height 2, adn this is the optimal way to make a corridor.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\nclass FastScanner:\n    __slots__ = (\"data\", \"idx\", \"length\")\n\n    def __init__(self):\n        self.data = sys.stdin.buffer.read()\n        self.idx = 0\n        self.length = len(self.data)\n\n    def next_int(self):\n        data = self.data\n        n = self.length\n        i = self.idx\n\n        while i < n and data[i] <= 32:\n            i += 1\n\n        num = 0\n        while i < n and data[i] > 32:\n            num = num * 10 + (data[i] - 48)\n            i += 1\n\n        self.idx = i\n        return num\n\n\ndef solve():\n    fs = FastScanner()\n    t = fs.next_int()\n    answers = []\n\n    for _ in range(t):\n        n = fs.next_int()\n        h = fs.next_int()\n\n        diff = [0] * (n + 1)\n\n        for _ in range(n):\n            l = fs.next_int()\n            r = fs.next_int()\n            diff[l] += 1\n            diff[r + 1] -= 1\n\n        current = 0\n        for i in range(n):\n            current += diff[i]\n            diff[i] = current\n\n        window_sum = 0\n        for i in range(h):\n            window_sum += diff[i]\n\n        max_empty = window_sum\n        limit = n - h\n\n        for start in range(1, limit + 1):\n            window_sum += diff[start + h - 1] - diff[start - 1]\n            if window_sum > max_empty:\n                max_empty = window_sum\n\n        answers.append(str(n * h - max_empty))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Runtime error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

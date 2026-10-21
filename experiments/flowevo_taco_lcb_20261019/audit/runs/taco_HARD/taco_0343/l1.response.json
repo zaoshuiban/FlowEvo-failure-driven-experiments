@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "66071fc1-a59a-417a-8c30-4568e8b71d39",
+  "created": 1792456213,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 846,
+    "completion_tokens": 23032,
+    "total_tokens": 23878,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 22458
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 846
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport heapq\n\n\ndef main():\n    data = sys.stdin.buffer.read()\n    pos = 0\n    length = len(data)\n\n    def next_int():\n        nonlocal pos\n        while pos < length and data[pos] <= 32:\n            pos += 1\n        num = 0\n        while pos < length and data[pos] > 32:\n            num = num * 10 + (data[pos] - 48)\n            pos += 1\n        return num\n\n    n = next_int()\n\n    c = [0] * n\n    a = [None] * n\n    mult = [1] * n\n\n    prod = 1\n    for i in range(n):\n        ci = next_int()\n        c[i] = ci\n\n        arr = [0] * ci\n        for j in range(ci):\n            arr[j] = next_int()\n        a[i] = arr\n\n        mult[i] = prod\n        prod *= ci\n\n    m = next_int()\n    banned = set()\n\n    for _ in range(m):\n        code = 0\n        for i in range(n):\n            code += (next_int() - 1) * mult[i]\n        banned.add(code)\n\n    start_code = 0\n    for i in range(n):\n        start_code += (c[i] - 1) * mult[i]\n\n    if start_code not in banned:\n        sys.stdout.write(\" \".join(map(str, c)) + \"\\n\")\n        return\n\n    bits = (prod - 1).bit_length()\n    mask = (1 << bits) - 1 if bits else 0\n\n    heap = [start_code]\n    heappop = heapq.heappop\n    heappush = heapq.heappush\n\n    while heap:\n        entry = heappop(heap)\n\n        key = entry >> bits\n        code = entry & mask\n\n        if code not in banned:\n            temp = code\n            answer = []\n\n            for i in range(n):\n                answer.append(str(temp % c[i] + 1))\n                temp //= c[i]\n\n            sys.stdout.write(\" \".join(answer) + \"\\n\")\n            return\n\n        temp = code\n\n        for i in range(n):\n            ci = c[i]\n            digit = temp % ci\n            temp //= ci\n\n            if digit > 0:\n                ncode = code - mult[i]\n                diff = a[i][digit] - a[i][digit - 1]\n                nkey = key + diff\n                heappush(heap, (nkey << bits) + ncode)\n\n            if digit != ci - 1:\n                break\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 121.558,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIvan is playing yet another roguelike computer game. He controls a single hero in the game. The hero has $n$ equipment slots. There is a list of $c_i$ items for the $i$-th slot, the $j$-th of them increases the hero strength by $a_{i,j}$. The items for each slot are pairwise distinct and are listed in the increasing order of their strength increase. So, $a_{i,1} < a_{i,2} < \\dots < a_{i,c_i}$.\n\nFor each slot Ivan chooses exactly one item. Let the chosen item for the $i$-th slot be the $b_i$-th item in the corresponding list. The sequence of choices $[b_1, b_2, \\dots, b_n]$ is called a build.\n\nThe strength of a build is the sum of the strength increases of the items in it. Some builds are banned from the game. There is a list of $m$ pairwise distinct banned builds. It's guaranteed that there's at least one build that's not banned.\n\nWhat is the build with the maximum strength that is not banned from the game? If there are multiple builds with maximum strength, print any of them.\n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($1 \\le n \\le 10$) — the number of equipment slots.\n\nThe $i$-th of the next $n$ lines contains the description of the items for the $i$-th slot. First, one integer $c_i$ ($1 \\le c_i \\le 2 \\cdot 10^5$) — the number of items for the $i$-th slot. Then $c_i$ integers $a_{i,1}, a_{i,2}, \\dots, a_{i,c_i}$ ($1 \\le a_{i,1} < a_{i,2} < \\dots < a_{i,c_i} \\le 10^8$).\n\nThe sum of $c_i$ doesn't exceed $2 \\cdot 10^5$.\n\nThe next line contains a single integer $m$ ($0 \\le m \\le 10^5$) — the number of banned builds.\n\nEach of the next $m$ lines contains a description of a banned build — a sequence of $n$ integers $b_1, b_2, \\dots, b_n$ ($1 \\le b_i \\le c_i$).\n\nThe builds are pairwise distinct, and there's at least one build that's not banned.\n\n\n-----Output-----\n\nPrint the build with the maximum strength that is not banned from the game. If there are multiple builds with maximum strength, print any of them.\n\n\n-----Examples-----\n\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n3 2 2\nOutput\n2 2 3\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n2 2 3\nOutput\n1 2 3\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n2 2 3\nOutput\n3 2 2\nInput\n4\n1 10\n1 4\n1 7\n1 3\n0\nOutput\n1 1 1 1\n\n\n-----Note-----\n\nNone\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

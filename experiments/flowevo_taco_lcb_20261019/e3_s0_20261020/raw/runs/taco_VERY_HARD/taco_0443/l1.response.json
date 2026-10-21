@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6d557fb2-e72f-44bd-85c7-c6f4940a3700",
+  "created": 1792438563,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 902,
+    "completion_tokens": 3266,
+    "total_tokens": 4168,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3031
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 902
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n\n    t = int(next(it))\n    answers = []\n\n    for _ in range(t):\n        n = int(next(it))\n\n        values = []\n        counts = []\n\n        current = 0\n        ans = 0\n\n        for idx in range(1, n + 1):\n            a = int(next(it))\n\n            removed_count = 0\n            removed_sum = 0\n\n            while values and values[-1] <= a:\n                v = values.pop()\n                c = counts.pop()\n\n                removed_count += c\n                removed_sum += v * c\n\n            current = current - removed_sum + a * (removed_count + 1)\n\n            values.append(a)\n            counts.append(removed_count + 1)\n\n            ans = (ans + current * (n - idx + 1)) % MOD\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 14.079,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef has a sequence of N integers A_{1}, A_{2},\\dots, A_{N}. He defines a function f(i, j) as follows:\n\nf(i, j) = A_{i} + max(A_{i}, A_{i + 1}) + max(A_{i}, A_{i + 1}, A_{i + 2}) + \\dots + max(A_{i}, A_{i + 1}, \\dots, A_{j})\n\nChef tries to find the sum of f(i, j) over all (i, j) such that 1 ≤ i ≤ j ≤ N (i.e \\sum\\limits_{i=1}^n \\sum\\limits_{j=i}^nf(i, j)), but fails. Can you help him find the sum? \n\nSince the sum can be very large, find it modulo (10^{9} + 7).\n\nNote: Since the size of the input and output is large, please use fast input-output methods.\n\n------ Input Format ------ \n\n- The first line of the input contains a single integer T denoting the number of test cases. The description of T test cases follows.\n- The first line of each test case contains an integer N.\n- The second line contains N space-separated integers A_{1}, A_{2}, \\dots, A_{N}.\n\n------ Output Format ------ \n\nFor each test case, print a single line containing one integer - the required sum i.e \\sum\\limits_{i=1}^n \\sum\\limits_{j=i}^nf(i, j) modulo (10^{9} + 7).\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 5\\cdot 10^{3}$\n$1 ≤ N ≤ 2\\cdot 10^{5}$\n$1 ≤ A_{i} ≤ 10^{9}$\n- Sum of $N$ over all test cases does not exceed $10^{6}$.\n\n----- Sample Input 1 ------ \n3\n2\n1 2\n3\n1 2 3\n4\n5 4 1 3\n\n----- Sample Output 1 ------ \n6\n20\n82\n\n----- explanation 1 ------ \nTest case $1$: \n\n- $f(1, 1) = A_{1} = 1$.\n- $f(1, 2) = A_{1} + max(A_{1}, A_{2}) = 1 + max(1, 2) = 1 + 2 = 3$.\n- $f(2, 2) = A_{2} = 2$. \n\nHence the required sum $= 1 + 3 + 2 = 6$.\n\nTest case $2$: \n\n- $f(1, 1) = A_{1} = 1$.\n- $f(1, 2) = A_{1} + max(A_{1}, A_{2}) = 1 + max(1, 2) = 1 + 2 = 3$.\n- $f(1, 3) = A_{1} + max(A_{1}, A_{2}) + max(A_{1}, A_{2}, A_{3}) = 1 + max(1, 2) + max(1, 2, 3) = 1 + 2 + 3 = 6$.\n- $f(2, 2) = A_{2} = 2$. \n- $f(2, 3) = A_{2} + max(A_{2}, A_{3}) = 2 + max(2, 3) = 2 + 3 = 5$.\n- $f(3, 3) = A_{3} = 3$. \n\nHence the required sum $= 1 + 3 + 6 + 2 + 5 + 3 = 20$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

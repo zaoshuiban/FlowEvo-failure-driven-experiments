@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "58be20dd-ddef-4cf7-99fa-059482ed7dd3",
+  "created": 1792434551,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 633,
+    "completion_tokens": 6453,
+    "total_tokens": 7086,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6116
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 633
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        q = data[idx:idx + m]\n        idx += m\n\n        first = [m] * (n + 1)\n        last = [-1] * (n + 1)\n\n        for i, x in enumerate(q):\n            if first[x] == m:\n                first[x] = i\n            last[x] = i\n\n        # arr[pos] = last occurrence of the number whose first occurrence is pos\n        arr = [m] * m\n        for value in range(1, n + 1):\n            arr[first[value]] = last[value]\n\n        # suff[i] = minimum last occurrence among values whose first occurrence >= i\n        suff = [m] * (m + 1)\n        for i in range(m - 1, -1, -1):\n            suff[i] = min(arr[i], suff[i + 1])\n\n        max_remaining = 0\n\n        for left in range(m):\n            remaining = suff[left] - left\n            if remaining > max_remaining:\n                max_remaining = remaining\n\n        answers.append(str(m - max_remaining))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 30.898,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a double-ended queue $Q$. Initially, it contains elements $Q_{1}, Q_{2}, \\ldots, Q_{M}$ in this order. Each of these elements is an integer between $1$ and $N$ (inclusive) and each integer between $1$ and $N$ (inclusive) occurs in the queue at least once.\n\nWe want to pop some (possibly zero) elements from the front of the queue and some (not necessarily the same number, possibly zero) elements from the back. Among all the popped elements, each integer between $1$ and $N$ (inclusive) should appear at least once. Find the smallest possible total number of elements we need to pop.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $M$.\nThe second line contains $M$ space-separated integers $Q_{1}, Q_{2}, \\ldots, Q_{M}$.\n\n------  Output ------\nFor each test case, print a single line containing one integer — the minimum number of elements we need to pop.\n\n------  Constraints ------\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$N ≤ M ≤ 2 \\cdot 10^{5}$\nfor each $i$ ($1 ≤ i ≤ N$), there is at least one element equal to $i$ in the queue\nthe sum of $N$ over all test cases does not exceed $10^{5}$\nthe sum of $M$ over all test cases does not exceed $2 \\cdot 10^{5}$\n\n----- Sample Input 1 ------ \n3\n\n2 2\n\n1 2\n\n2 3\n\n1 2 1\n\n3 6\n\n1 1 1 3 2 2\n----- Sample Output 1 ------ \n2\n\n2\n\n4\n----- explanation 1 ------ \nExample case 1: Since $N = M$ and all elements are pairwise distinct, we have to pop everything to get each value at least once.\n\nExample case 2: We can pop the first $2$ or the last $2$ elements.\n\nExample case 3: We can pop the first element and the last $3$ elements, so the answer is $1 + 3 = 4$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

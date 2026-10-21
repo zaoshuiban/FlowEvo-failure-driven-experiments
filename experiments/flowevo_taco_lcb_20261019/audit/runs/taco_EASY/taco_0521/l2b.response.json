@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cfd14597-f17f-4363-b3c3-10bd62882745",
+  "created": 1792435135,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 302,
+    "completion_tokens": 2058,
+    "total_tokens": 2360,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1966
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 174
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    degrees = data[1:1 + n]\n\n    if sum(degrees) == 2 * (n - 1):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 10.048,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nOur Code Monk recently learnt about Graphs and is very excited!  \n\nHe went over to the Graph-making factory to watch some freshly prepared graphs. Incidentally, one of the workers at the factory was ill today, so Monk decided to step in and do her job.  \n\nThe Monk's Job is to Identify whether the incoming graph is a tree or not. He is given N, the number of vertices in the graph and the degree of each vertex.\n\nFind if the graph is a tree or not.  \n\nInput:\nFirst line contains an integer N, the number of vertices.\nSecond line contains N space-separated integers, the degrees of the N vertices.  \n\nOutput:\nPrint \"Yes\" (without the quotes) if the graph is a tree or \"No\" (without the quotes) otherwise.  \n\nConstraints:\n1 ≤ N ≤ 100\n1 ≤ Degreei ≤ 1000\n\nReferences:\nGraphs and Trees\n\nSAMPLE INPUT\n3\n1 2 1\n\nSAMPLE OUTPUT\nYes\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "db02f5ae-eeab-4e3d-86ca-c4a67efa7e15",
+  "created": 1792435540,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 603,
+    "completion_tokens": 5802,
+    "total_tokens": 6405,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5632
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 219
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    output = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        start = n // 2 + 1\n        ans = [start]\n\n        low = 1\n        high = n\n\n        while len(ans) < n:\n            ans.append(low)\n            low += 1\n\n            if len(ans) < n:\n                ans.append(high)\n                high -= 1\n\n        output.append(\" \".join(map(str, ans)))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 24.432,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef is given an integer N. Chef wants to construct a [permutation] A = [A_{1}, A_{2}, \\ldots, A_{N}] of \\{1, 2, 3, \\ldots, N \\} that satisfies the following condition:\n\nLet P_{i} denote the prefix of A of length i, i.e, P_{i} = [A_{1}, A_{2}, \\ldots, A_{i}]. Then, for every 1 ≤ i < N, it must hold that \\text{median}(P_{i}) \\neq \\text{median}(P_{i+1})\n\nHelp Chef find such a permutation A. If multiple answers exist, you may print any of them.\n\nNote: The median of an array is defined as follows:\nLet A be an (1-indexed) array of length N. Let B be the array obtained by sorting A. Then \\text{median}(A) is defined to be B_{\\lceil \\frac{N}{2}\\right\\rceil}. For example, \\text{median}(\\{3, 1, 2\\}) = 2, and \\text{median}(\\{3, 4, 1, 2\\}) = 2\n\n------ Input Format ------ \n\n- The first line of input will contain a single integer T, denoting the number of test cases.\n- The first and only line of each test case contains a single integer N.\n\n------ Output Format ------ \n\nFor each test case, output the required permutation. If multiple answers are possible, you may print any of them.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 30$\n$2 ≤ N ≤ 1000$\n- The sum of $N$ over all test cases won't exceed $1000$.\n\n----- Sample Input 1 ------ \n2\n2\n3\n\n----- Sample Output 1 ------ \n2 1\n2 1 3\n\n----- explanation 1 ------ \nTest case $1$: The prefixes of the given permutation are $[2]$ and $[2, 1]$, with medians $2$ and $1$ respectively.\n\nTest case $2$: The prefixes of the given permutation are $[2]$ (with median $2$), $[2, 1]$ (with median $1$), and $[2, 1, 3]$ (with median $2$). No two adjacent medians are equal.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

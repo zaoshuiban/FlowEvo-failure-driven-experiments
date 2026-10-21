@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "36d2d190-088d-49be-8465-9c0dbb50823b",
+  "created": 1792431172,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1184,
+    "completion_tokens": 9888,
+    "total_tokens": 11072,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 9511
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 672
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    n = data[idx]\n    idx += 1\n\n    risk = [0] + data[idx:idx + n]\n    idx += n\n\n    k = data[idx] if idx < len(data) else 0\n    idx += 1\n\n    graph = [[] for _ in range(n + 1)]\n\n    for _ in range(k):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        graph[a].append(b)\n        graph[b].append(a)\n\n    visited = [False] * (n + 1)\n    answer = 1\n\n    for start in range(1, n + 1):\n        if visited[start]:\n            continue\n\n        stack = [start]\n        visited[start] = True\n\n        min_cost = 10**18\n        min_count = 0\n\n        while stack:\n            city = stack.pop()\n            cost = risk[city]\n\n            if cost < min_cost:\n                min_cost = cost\n                min_count = 1\n            elif cost == min_cost:\n                min_count += 1\n\n            for nxt in graph[city]:\n                if not visited[nxt]:\n                    visited[nxt] = True\n                    stack.append(nxt)\n\n        if min_cost == 0:\n            ways = (pow(2, min_count, MOD) - 1) % MOD\n        else:\n            ways = min_count % MOD\n\n        answer = (answer * ways) % MOD\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 50.083,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFatland is a town with N cities numbered 1, 2, ..., N, connected with 2-way roads. Vincent is a villian who wants to set the entire town ablaze. For each city, there is a certain risk factor E[i] for setting that city ablaze. But once a city c is set ablaze, all cities that can be reached from c will be set ablaze immediately.\n\nThe overall risk factor of setting some number of cities ablaze is the sum of the risk factors of setting each of the cities ablaze. Vincent's goal is to set the whole town ablaze with minimal risk by picking some set of cities to set ablaze. Let M be the minimum risk he takes when setting the entire city ablaze. Calculate the number of ways to pick a set of cities to obtain a risk of M. \n\nInput:\n\nThe first line contains an integer N, the number of cities in Fatland.\n\nThe second line contains N space-separated integers, the i-th integer representing E[i]. (1-based index)\n\nThe third line contains an integer K, denoting the number 2-way roads.\n\nEach of the next K lines contains 2 space-separated integers i, j, a road between cities i and j.\n\nOutput: Output one integer, W. The number of ways to pick a set of cities to obtain a risk of M, so that the entire town is set ablaze is U. W is the remainder when U is divided by 10^9+7=1000000007.\n\nConstraints:\n\n1 ≤ N ≤ 10^3\n\n1 ≤ K ≤ 10^3\n\n1 ≤ E[i] ≤ 10^3\n\nSAMPLE INPUT\n4\n3 3 3 3\n2\n1 2\n4 1\n\nSAMPLE OUTPUT\n3\n\nExplanation\n\nVincent can set cities 1 and 3 ablaze, 2 and 3 ablaze, or 4 and 3 ablaze for a risk of 6. Note that setting either 1, 2, 4 ablaze will set 1, 2, and 4 ablaze.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    n = data[idx]\n    idx += 1\n\n    e = [0] + data[idx:idx + n]\n    idx += n\n\n    k = data[idx]\n    idx += 1\n\n    parent = list(range(n + 1))\n    rank = [0] * (n + 1)\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a: int, b: int) -> None:\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n\n        if rank[ra] < rank[rb]:\n            ra, rb = rb, ra\n\n        parent[rb] = ra\n        if rank[ra] == rank[rb]:\n            rank[ra] += 1\n\n    for _ in range(k):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        union(a, b)\n\n    INF = 10**18\n    min_cost = [INF] * (n + 1)\n    count = [0] * (n + 1)\n\n    for city in range(1, n + 1):\n        root = find(city)\n        cost = e[city]\n\n        if cost < min_cost[root]:\n            min_cost[root] = cost\n            count[root] = 1\n        elif cost == min_cost[root]:\n            count[root] += 1\n\n    answer = 1\n\n    for root in range(1, n + 1):\n        if min_cost[root] != INF:\n            answer = (answer * count[root]) % MOD\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: A company has n employees numbered from 1 to n. Each employee either has no immediate manager or exactly one immediate manager, who is another employee with a different number. An employee A is said t\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    parents = data[1:n + 1]\n\n    children = [[] for _ in range(n)]\n    roots = []\n\n    for i, p in enumerate(parents):\n        if p == -1:\n            roots.append(i)\n        else:\n            children[p - 1].append(i)\n\n    max_groups = 0\n    stack = [(root, 1) for root in roots]\n\n    while stack:\n        employee, depth = stack.pop()\n        if depth > max_groups:\n"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

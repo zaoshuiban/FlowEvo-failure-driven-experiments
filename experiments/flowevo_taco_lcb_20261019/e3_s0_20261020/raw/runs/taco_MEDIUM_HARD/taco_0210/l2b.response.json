@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "84a6f564-57b2-4ca3-817d-fa844e520ed7",
+  "created": 1792438248,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 421,
+    "completion_tokens": 7960,
+    "total_tokens": 8381,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7436
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 165
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.readline().strip()\n    if not data:\n        return\n\n    k = int(data)\n\n    def c2(x: int) -> int:\n        return x * (x - 1) // 2\n\n    def c3(x: int) -> int:\n        return x * (x - 1) * (x - 2) // 6\n\n    # Take the largest clique whose number of triangles does not exceed k.\n    a = 3\n    while c3(a + 1) <= k:\n        a += 1\n\n    remaining = k - c3(a)\n\n    # Values c2(t) for possible numbers t of clique neighbours.\n    value_to_t = {}\n    for t in range(a + 1):\n        value_to_t.setdefault(c2(t), t)\n\n    # By Gauss's theorem, remaining is a sum of at most three triangular numbers.\n    found = None\n    for t1 in range(a + 1):\n        v1 = c2(t1)\n        if v1 > remaining:\n            break\n\n        for t2 in range(a + 1):\n            v2 = c2(t2)\n            rem = remaining - v1 - v2\n\n            if rem < 0:\n                break\n\n            if rem in value_to_t:\n                found = (t1, t2, value_to_t[rem])\n                break\n\n        if found is not None:\n            break\n\n    # t = 0 and t = 1 both add zero triangles, so such vertices can be omitted.\n    extra_neighbours = [t for t in found if t >= 2]\n\n    n = a + len(extra_neighbours)\n    graph = [['0'] * n for _ in range(n)]\n\n    # Build the clique.\n    for i in range(a):\n        for j in range(a):\n            if i != j:\n                graph[i][j] = '1'\n\n    # Add extra vertices, each connected to some vertices of the clique.\n    for idx, t in enumerate(extra_neighbours):\n        v = a + idx\n        for u in range(t):\n            graph[v][u] = '1'\n            graph[u][v] = '1'\n\n    result = [str(n)]\n    for row in graph:\n        result.append(''.join(row))\n\n    sys.stdout.write('\\n'.join(result))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 34.706,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nJohn Doe started thinking about graphs. After some thought he decided that he wants to paint an undirected graph, containing exactly k cycles of length 3. \n\nA cycle of length 3 is an unordered group of three distinct graph vertices a, b and c, such that each pair of them is connected by a graph edge. \n\nJohn has been painting for long, but he has not been a success. Help him find such graph. Note that the number of vertices there shouldn't exceed 100, or else John will have problems painting it.\n\n\n-----Input-----\n\nA single line contains an integer k (1 ≤ k ≤ 10^5) — the number of cycles of length 3 in the required graph.\n\n\n-----Output-----\n\nIn the first line print integer n (3 ≤ n ≤ 100) — the number of vertices in the found graph. In each of next n lines print n characters \"0\" and \"1\": the i-th character of the j-th line should equal \"0\", if vertices i and j do not have an edge between them, otherwise it should equal \"1\". Note that as the required graph is undirected, the i-th character of the j-th line must equal the j-th character of the i-th line. The graph shouldn't contain self-loops, so the i-th character of the i-th line must equal \"0\" for all i.\n\n\n-----Examples-----\nInput\n1\n\nOutput\n3\n011\n101\n110\n\nInput\n10\n\nOutput\n5\n01111\n10111\n11011\n11101\n11110\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4dac4f50-1c0c-49a3-a512-c4980475189f",
+  "created": 1792447165,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1270,
+    "completion_tokens": 21157,
+    "total_tokens": 22427,
+    "prompt_tokens_details": {
+      "cached_tokens": 896
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 20702
+    },
+    "prompt_cache_hit_tokens": 896,
+    "prompt_cache_miss_tokens": 374
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndata = sys.stdin.buffer.read()\nptr = 0\ndata_len = len(data)\n\n\ndef next_int():\n    global ptr\n    while ptr < data_len and data[ptr] <= 32:\n        ptr += 1\n    num = 0\n    while ptr < data_len and data[ptr] > 32:\n        num = num * 10 + (data[ptr] - 48)\n        ptr += 1\n    return num\n\n\ndef solve():\n    t = next_int()\n    answers = []\n\n    for _ in range(t):\n        n = next_int()\n        m = next_int()\n\n        adj = [[] for _ in range(n)]\n\n        for _ in range(m):\n            u = next_int() - 1\n            v = next_int() - 1\n            adj[u].append(v)\n            adj[v].append(u)\n\n        labels = [0] * n\n        used = bytearray(n)\n\n        buckets = [[] for _ in range(n + 1)]\n        for i in range(n):\n            buckets[0].append(i)\n\n        max_label = 0\n        answer = 1\n        selected = 0\n\n        while selected < n:\n            while max_label >= 0:\n                bucket = buckets[max_label]\n\n                while bucket:\n                    v = bucket[-1]\n                    if used[v] or labels[v] != max_label:\n                        bucket.pop()\n                    else:\n                        break\n\n                if bucket:\n                    v = bucket.pop()\n                    break\n\n                max_label -= 1\n\n            used[v] = 1\n            current_label = max_label\n\n            if current_label + 1 > answer:\n                answer = current_label + 1\n\n            for u in adj[v]:\n                if not used[u]:\n                    old_label = labels[u]\n                    new_label = old_label + 1\n                    labels[u] = new_label\n                    buckets[new_label].append(u)\n\n                    if new_label > max_label:\n                        max_label = new_label\n\n            selected += 1\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 111.315,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin chinese, Russian and Vietnamese as well. \n\nAs usual, Tom is trying to catch Jerry. To accomplish this task, Tom hired $K$ other cats (Tom does not take part in the chase). Formally, they are in a graph $G$ with $N$ vertices and $M$ edges. Let's denote the set of vertices of $G$ by $V$. The graph has a special property: for each simple cycle containing at least four vertices, there is an edge which is not part of this cycle, but connects two distinct vertices on the cycle.\n\nJerry can only move along the edges of the graph, but arbitrarily fast. The cats don't have to follow the edges — they can use a helicopter to go to any vertices they want.\n\nThe process of catching Jerry happens in several rounds as follows:\nIn round $0$, the cats choose a set of vertices $X_{0} \\subseteq V$ with $|X_{0}| ≤ K$; Jerry chooses a vertex $v_{0} \\in V \\setminus X_{0}$.\nFor each $i ≥ 0$, let's denote the set of vertices containing cats in round $i$ by $X_{i}$ and the vertex containing Jerry by $v_{i}$. In round $i+1$, the cats choose a subset $X_{i+1} \\subseteq V$ with $|X_{i+1}| ≤ K$.\nAfterwards in round $i+1$, Jerry must choose a vertex $v_{i+1} \\in V \\setminus X_{i+1}$ such that there is a path from $v_{i}$ to $v_{i+1}$ which doesn't pass through any vertex in $X_{i} \\cap X_{i+1}$. If Jerry cannot choose such a vertex, the cats win.\n\nIf this process can last forever ($K$ cats are not enough to catch Jerry), then Jerry wins.\n\nYour task is to calculate the minimum number of cats $K$ which Tom has to call in order to guarantee that Jerry will be caught (there is no winning strategy for Jerry).\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $M$.\n$M$ lines follow. Each of these lines contains two space-separated integers $u$ and $v$ denoting an edge between vertices $u$ and $v$.\n\n------  Output ------\nFor each test case, print a single line containing one integer — the minimum number of cats needed to catch Jerry.\n\n------  Constraints ------\n$1 ≤ T ≤ 10$\n$3 ≤ N ≤ 10^{5}$\n$1 ≤ M ≤ 2\\cdot 10^{5}$\n$1 ≤ u, v ≤ N$\n$u \\neq v$\nthere is at most one edge between each pair of vertices\n\n------  Subtasks ------\nSubtask #1 (10 points): $3 ≤ N ≤ 30$\n\nSubtask #2 (30 points): $3 ≤ N ≤ 100$\n\nSubtask #3 (60 points): $T ≤ 5$\n\n----- Sample Input 1 ------ \n2\n7 6\n1 2\n1 3\n2 4\n2 5\n3 6\n3 7\n4 6\n1 2\n1 3\n1 4\n2 3\n2 4\n3 4\n----- Sample Output 1 ------ \n2\n4\n----- explanation 1 ------ \nExample case 2: Since $G$ is a complete graph, you need enough cats to cover all vertices, so the answer is $K=4$.\n\n### Invalid Example\n\n### Input\n\n1\n4 4\n1 2\n2 3\n3 4\n4 1\n\n### Output\n\n3\n\n### Explanation\nNote that this example is not valid, since the graph is a cycle with length $4$ and no additional edge. It was added just for further clarification of the chase.\n\nExample case 1: The answer is $K=3$, since three cats can easily corner a mouse by confining it to one vertex, while 2 cats are not enough, because when one cat moves, the mouse can go anywhere without coming into contact with the only stationary cat.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Read problems statements in mandarin chinese, russian and vietnamese as well. \n\nA tree is an undirected graph in which each pair of vertices is connected to each other by exactly one path. Weasel has \nSolution:\nimport sys\n\ndata = sys.stdin.buffer.read()\npos = 0\n\ndef next_int():\n    global pos\n    n = len(data)\n    while pos < n and data[pos] <= 32:\n        pos += 1\n    num = 0\n    while pos < n and data[pos] > 32:\n        num = num * 10 + (data[pos] - 48)\n        pos += 1\n    return num\n\nN = next_int()\nQ = next_int()\n\nadj = [[] for _ in range(N)]\nfor _ in range(N - 1):\n    u = next_int()\n    v = next_int()\n    adj[u].append(v)\n    adj[v].append(u)\n\nvalues = [next_int() for _ in range(N)]\n\ndepth_xor = ["
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

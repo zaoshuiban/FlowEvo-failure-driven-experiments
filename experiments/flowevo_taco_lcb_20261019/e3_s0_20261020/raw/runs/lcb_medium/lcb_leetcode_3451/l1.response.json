@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7e5c293e-8ea8-4a29-ac31-2a9b6d9f2ae9",
+  "created": 1792430836,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 416,
+    "completion_tokens": 377,
+    "total_tokens": 793,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 253
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 416
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def compressedString(self, word: str) -> str:\n        comp = []\n        i = 0\n        n = len(word)\n\n        while i < n:\n            c = word[i]\n            j = i\n\n            while j < n and word[j] == c:\n                j += 1\n\n            count = j - i\n\n            while count > 0:\n                take = min(9, count)\n                comp.append(str(take))\n                comp.append(c)\n                count -= take\n\n            i = j\n\n        return ''.join(comp)\n```",
+  "latency_s": 1.989,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven a string word, compress it using the following algorithm:\n\nBegin with an empty string comp. While word is not empty, use the following operation:\n\n\t\nRemove a maximum length prefix of word made of a single character c repeating at most 9 times.\nAppend the length of the prefix followed by c to comp.\n\n\n\nReturn the string comp.\n \nExample 1:\n\nInput: word = \"abcde\"\nOutput: \"1a1b1c1d1e\"\nExplanation:\nInitially, comp = \"\". Apply the operation 5 times, choosing \"a\", \"b\", \"c\", \"d\", and \"e\" as the prefix in each operation.\nFor each prefix, append \"1\" followed by the character to comp.\n\nExample 2:\n\nInput: word = \"aaaaaaaaaaaaaabb\"\nOutput: \"9a5a2b\"\nExplanation:\nInitially, comp = \"\". Apply the operation 3 times, choosing \"aaaaaaaaa\", \"aaaaa\", and \"bb\" as the prefix in each operation.\n\nFor prefix \"aaaaaaaaa\", append \"9\" followed by \"a\" to comp.\nFor prefix \"aaaaa\", append \"5\" followed by \"a\" to comp.\nFor prefix \"bb\", append \"2\" followed by \"b\" to comp.\n\n\n \nConstraints:\n\n1 <= word.length <= 2 * 10^5\nword consists only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def compressedString(self, word: str) -> str:\n        \n\nUse the required function/method named compressedString. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

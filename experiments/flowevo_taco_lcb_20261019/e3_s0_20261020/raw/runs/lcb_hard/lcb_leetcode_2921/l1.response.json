@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "786d1fe9-9d49-4e6f-8eca-8284933c7bfc",
+  "created": 1792436550,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 434,
+    "completion_tokens": 3420,
+    "total_tokens": 3854,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2845
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 434
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def countSteppingNumbers(self, low: str, high: str) -> int:\n        MOD = 10**9 + 7\n        max_len = max(len(low), len(high))\n\n        # ways[rem][d] = number of ways to append rem digits\n        # when the previous digit is d.\n        ways = [[0] * 10 for _ in range(max_len + 1)]\n        for d in range(10):\n            ways[0][d] = 1\n\n        for rem in range(1, max_len + 1):\n            for d in range(10):\n                total = 0\n                if d > 0:\n                    total += ways[rem - 1][d - 1]\n                if d < 9:\n                    total += ways[rem - 1][d + 1]\n                ways[rem][d] = total % MOD\n\n        def count_leq(s: str) -> int:\n            if s == \"0\":\n                return 0\n\n            n = len(s)\n            ans = 0\n\n            # Count all valid stepping numbers with fewer digits.\n            for length in range(1, n):\n                for first in range(1, 10):\n                    ans += ways[length - 1][first]\n                ans %= MOD\n\n            # Count valid stepping numbers with the same length and <= s.\n            prev = -1\n            valid = True\n\n            for i, ch in enumerate(s):\n                digit = ord(ch) - ord('0')\n                start = 1 if i == 0 else 0\n\n                for d in range(start, digit):\n                    if i == 0 or abs(d - prev) == 1:\n                        ans += ways[n - i - 1][d]\n                        ans %= MOD\n\n                if i == 0:\n                    if digit < 1:\n                        valid = False\n                        break\n                    prev = digit\n                else:\n                    if abs(digit - prev) != 1:\n                        valid = False\n                        break\n                    prev = digit\n\n            if valid:\n                ans = (ans + 1) % MOD\n\n            return ans\n\n        def decrement(s: str) -> str:\n            arr = list(s)\n            i = len(arr) - 1\n\n            while i >= 0 and arr[i] == '0':\n                arr[i] = '9'\n                i -= 1\n\n            arr[i] = chr(ord(arr[i]) - 1)\n\n            result = ''.join(arr).lstrip('0')\n            return result if result else \"0\"\n\n        return (count_leq(high) - count_leq(decrement(low))) % MOD\n```",
+  "latency_s": 14.685,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven two positive integers low and high represented as strings, find the count of stepping numbers in the inclusive range [low, high].\nA stepping number is an integer such that all of its adjacent digits have an absolute difference of exactly 1.\nReturn an integer denoting the count of stepping numbers in the inclusive range [low, high]. \nSince the answer may be very large, return it modulo 10^9 + 7.\nNote: A stepping number should not have a leading zero.\n \nExample 1:\n\nInput: low = \"1\", high = \"11\"\nOutput: 10\nExplanation: The stepping numbers in the range [1,11] are 1, 2, 3, 4, 5, 6, 7, 8, 9 and 10. There are a total of 10 stepping numbers in the range. Hence, the output is 10.\nExample 2:\n\nInput: low = \"90\", high = \"101\"\nOutput: 2\nExplanation: The stepping numbers in the range [90,101] are 98 and 101. There are a total of 2 stepping numbers in the range. Hence, the output is 2. \n \nConstraints:\n\n1 <= int(low) <= int(high) < 10^100\n1 <= low.length, high.length <= 100\nlow and high consist of only digits.\nlow and high don't have any leading zeros.\n\nStarter code / required signature:\nclass Solution:\n    def countSteppingNumbers(self, low: str, high: str) -> int:\n        \n\nUse the required function/method named countSteppingNumbers. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

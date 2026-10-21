@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e7f7751c-b03a-4d5e-8ec1-b66d252acc60",
+  "created": 1792445803,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1121,
+    "completion_tokens": 17066,
+    "total_tokens": 18187,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16822
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 737
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(n):\n        l = data[idx]\n        r = data[idx + 1]\n        idx += 2\n\n        best_num = r\n        best_pop = r.bit_count()\n\n        # Try making each set bit of r equal to 0 and setting all lower bits to 1.\n        for bit in range(r.bit_length()):\n            if (r >> bit) & 1:\n                candidate = ((r >> (bit + 1)) << (bit + 1)) | ((1 << bit) - 1)\n\n                if candidate >= l:\n                    pop = candidate.bit_count()\n                    if pop > best_pop or (pop == best_pop and candidate < best_num):\n                        best_pop = pop\n                        best_num = candidate\n\n        answers.append(str(best_num))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 79.883,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLet's denote as $\\text{popcount}(x)$ the number of bits set ('1' bits) in the binary representation of the non-negative integer x.\n\nYou are given multiple queries consisting of pairs of integers l and r. For each query, find the x, such that l ≤ x ≤ r, and $\\text{popcount}(x)$ is maximum possible. If there are multiple such numbers find the smallest of them.\n\n\n-----Input-----\n\nThe first line contains integer n — the number of queries (1 ≤ n ≤ 10000).\n\nEach of the following n lines contain two integers l_{i}, r_{i} — the arguments for the corresponding query (0 ≤ l_{i} ≤ r_{i} ≤ 10^18).\n\n\n-----Output-----\n\nFor each query print the answer in a separate line.\n\n\n-----Examples-----\nInput\n3\n1 2\n2 4\n1 10\n\nOutput\n1\n3\n7\n\n\n\n-----Note-----\n\nThe binary representations of numbers from 1 to 10 are listed below:\n\n1_10 = 1_2\n\n2_10 = 10_2\n\n3_10 = 11_2\n\n4_10 = 100_2\n\n5_10 = 101_2\n\n6_10 = 110_2\n\n7_10 = 111_2\n\n8_10 = 1000_2\n\n9_10 = 1001_2\n\n10_10 = 1010_2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom functools import lru_cache\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    idx = 1\n    out = []\n    BITS = 61\n\n    for _ in range(n):\n        L = data[idx]\n        R = data[idx + 1]\n        idx += 2\n\n        @lru_cache(maxsize=None)\n        def dp(pos, tight_l, tight_r):\n            if pos < 0:\n                return 0\n\n            lbit = (L >> pos) & 1\n            rbit = (R >> pos) & 1\n\n            lo = lbit if tight_l else 0\n            hi = rbit if tight_r else 1\n\n            best = -1\n            for bit in range(lo, hi + 1):\n                ntight_l = tight_l and (bit == lbit)\n                ntight_r = tight_r and (bit == rbit)\n                best = max(best, bit + dp(pos - 1, ntight_l, ntight_r))\n\n            return best\n\n        max_ones = dp(BITS - 1, True, True)\n\n        ans = 0\n        rem = max_ones\n        tight_l = tight_r = True\n\n        for pos in range(BITS - 1, -1, -1):\n            lbit = (L >> pos) & 1\n            rbit = (R >> pos) & 1\n\n            lo = lbit if tight_l else 0\n            hi = rbit if tight_r else 1\n\n            for bit in (0, 1):\n                if bit < lo or bit > hi:\n                    continue\n\n                ntight_l = tight_l and (bit == lbit)\n                ntight_r = tight_r and (bit == rbit)\n\n                value = bit + dp(pos - 1, ntight_l, ntight_r)\n\n                if value == rem:\n                    ans |= bit << pos\n                    rem -= bit\n                    tight_l, tight_r = ntight_l, ntight_r\n                    break\n\n        out.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

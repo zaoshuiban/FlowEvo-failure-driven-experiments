@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d8cf97f2-2bdb-40fc-997b-6a1a065466cf",
+  "created": 1792444947,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 491,
+    "completion_tokens": 5210,
+    "total_tokens": 5701,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4928
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 491
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    adj = [[] for _ in range(n)]\n\n    idx = 2\n    for _ in range(m):\n        a = data[idx] - 1\n        b = data[idx + 1] - 1\n        idx += 2\n        adj[a].append(b)\n        adj[b].append(a)\n\n    color = [-1] * n\n    odd_cycles = 0\n\n    for start in range(n):\n        if color[start] != -1:\n            continue\n\n        color[start] = 0\n        stack = [start]\n        bad = False\n\n        while stack:\n            v = stack.pop()\n\n            for to in adj[v]:\n                if color[to] == -1:\n                    color[to] = color[v] ^ 1\n                    stack.append(to)\n                elif color[to] == color[v]:\n                    bad = True\n\n        if bad:\n            odd_cycles += 1\n\n    answer = odd_cycles\n    if (n - answer) % 2 == 1:\n        answer += 1\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 27.847,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nOne day n students come to the stadium. They want to play football, and for that they need to split into teams, the teams must have an equal number of people.\n\nWe know that this group of people has archenemies. Each student has at most two archenemies. Besides, if student A is an archenemy to student B, then student B is an archenemy to student A.\n\nThe students want to split so as no two archenemies were in one team. If splitting in the required manner is impossible, some students will have to sit on the bench.\n\nDetermine the minimum number of students you will have to send to the bench in order to form the two teams in the described manner and begin the game at last.\n\nInput\n\nThe first line contains two integers n and m (2 ≤ n ≤ 100, 1 ≤ m ≤ 100) — the number of students and the number of pairs of archenemies correspondingly.\n\nNext m lines describe enmity between students. Each enmity is described as two numbers ai and bi (1 ≤ ai, bi ≤ n, ai ≠ bi) — the indexes of the students who are enemies to each other. Each enmity occurs in the list exactly once. It is guaranteed that each student has no more than two archenemies.\n\nYou can consider the students indexed in some manner with distinct integers from 1 to n.\n\nOutput\n\nPrint a single integer — the minimum number of students you will have to send to the bench in order to start the game.\n\nExamples\n\nInput\n\n5 4\n1 2\n2 4\n5 3\n1 4\n\n\nOutput\n\n1\n\nInput\n\n6 2\n1 4\n3 4\n\n\nOutput\n\n0\n\nInput\n\n6 6\n1 2\n2 3\n3 1\n4 5\n5 6\n6 4\n\n\nOutput\n\n2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "94d389ba-7ed6-40ab-8817-77ecd0fa219c",
+  "created": 1792446747,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 732,
+    "completion_tokens": 3573,
+    "total_tokens": 4305,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3249
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 732
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef classify(word):\n    endings = {\n        \"lios\": ('a', 1),\n        \"liala\": ('a', 2),\n        \"etr\": ('n', 1),\n        \"etra\": ('n', 2),\n        \"initis\": ('v', 1),\n        \"inites\": ('v', 2)\n    }\n    \n    for ending, info in endings.items():\n        if word.endswith(ending):\n            return info\n    return None\n\n\nwords = sys.stdin.read().split()\n\nif not words:\n    print(\"NO\")\n    sys.exit()\n\nif len(words) == 1:\n    print(\"YES\" if classify(words[0]) is not None else \"NO\")\n    sys.exit()\n\ngender = None\nseen_noun = False\nvalid = True\n\nfor word in words:\n    info = classify(word)\n    if info is None:\n        valid = False\n        break\n\n    part, g = info\n\n    if gender is None:\n        gender = g\n    elif gender != g:\n        valid = False\n        break\n\n    if part == 'a':\n        if seen_noun:\n            valid = False\n            break\n    elif part == 'n':\n        if seen_noun:\n            valid = False\n            break\n        seen_noun = True\n    else:  # verb\n        if not seen_noun:\n            valid = False\n            break\n\nif valid and not seen_noun:\n    valid = False\n\nprint(\"YES\" if valid else \"NO\")\n```",
+  "latency_s": 16.926,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nPetya got interested in grammar on his third year in school. He invented his own language called Petya's. Petya wanted to create a maximally simple language that would be enough to chat with friends, that's why all the language's grammar can be described with the following set of rules:\n\n  * There are three parts of speech: the adjective, the noun, the verb. Each word in his language is an adjective, noun or verb. \n  * There are two genders: masculine and feminine. Each word in his language has gender either masculine or feminine. \n  * Masculine adjectives end with -lios, and feminine adjectives end with -liala. \n  * Masculine nouns end with -etr, and feminime nouns end with -etra. \n  * Masculine verbs end with -initis, and feminime verbs end with -inites. \n  * Thus, each word in the Petya's language has one of the six endings, given above. There are no other endings in Petya's language. \n  * It is accepted that the whole word consists of an ending. That is, words \"lios\", \"liala\", \"etr\" and so on belong to the Petya's language. \n  * There aren't any punctuation marks, grammatical tenses, singular/plural forms or other language complications. \n  * A sentence is either exactly one valid language word or exactly one statement. \n\n\n\nStatement is any sequence of the Petya's language, that satisfy both conditions:\n\n  * Words in statement follow in the following order (from the left to the right): zero or more adjectives followed by exactly one noun followed by zero or more verbs. \n  * All words in the statement should have the same gender.\n\n\n\nAfter Petya's friend Vasya wrote instant messenger (an instant messaging program) that supported the Petya's language, Petya wanted to add spelling and grammar checking to the program. As Vasya was in the country and Petya didn't feel like waiting, he asked you to help him with this problem. Your task is to define by a given sequence of words, whether it is true that the given text represents exactly one sentence in Petya's language.\n\nInput\n\nThe first line contains one or more words consisting of lowercase Latin letters. The overall number of characters (including letters and spaces) does not exceed 105.\n\nIt is guaranteed that any two consecutive words are separated by exactly one space and the input data do not contain any other spaces. It is possible that given words do not belong to the Petya's language.\n\nOutput\n\nIf some word of the given text does not belong to the Petya's language or if the text contains more that one sentence, print \"NO\" (without the quotes). Otherwise, print \"YES\" (without the quotes).\n\nExamples\n\nInput\n\npetr\n\n\nOutput\n\nYES\n\n\nInput\n\netis atis animatis etis atis amatis\n\n\nOutput\n\nNO\n\n\nInput\n\nnataliala kataliala vetra feinites\n\n\nOutput\n\nYES\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

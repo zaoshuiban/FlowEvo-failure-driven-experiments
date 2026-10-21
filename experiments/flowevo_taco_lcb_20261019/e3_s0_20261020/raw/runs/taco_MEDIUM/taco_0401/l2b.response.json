@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a64e3da6-340e-4b3f-8c1e-d15b5e5f1fd4",
+  "created": 1792439403,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 738,
+    "completion_tokens": 7411,
+    "total_tokens": 8149,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7235
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 226
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        positive = []\n        ans = 0\n\n        for _ in range(n):\n            x = next(it)\n            if x == 0:\n                ans += 1\n            else:\n                positive.append(x)\n\n        capacity = n - 1\n        positive.sort()\n\n        total = 0\n        for x in positive:\n            if total + x <= capacity:\n                total += x\n                ans += 1\n            else:\n                break\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 37.771,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA certain parallel universe has exactly N people living in it.\n\nThe i-th of these N people claims that they are the parent of exactly A_{i} of these N people.\n\nHowever, some of these people might be lying — the i-th person may be either telling the truth (in which case they have exactly A_{i} children) or lying (in which case they can have any number of children).\n\nIt is known that each person has at most one parent. Further, as one would expect, it is not allowed for a person's child to also be their ancestor.\n\nWhat is the maximum possible number of truth-tellers in this universe?\n\n------ Input Format ------ \n\n- The first line of input will contain a single integer T, denoting the number of test cases.\n- Each test case consists of two lines of input.\n- The first line of each test case contains a single integer N, the number of people.\n- The second line of each test case contains N space-separated integers A_{1}, A_{2}, \\ldots, A_{N}. \n\n------ Output Format ------ \n\nFor each test case, output on a new line the maximum number of people that can be telling the truth.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 4 \\cdot 10^{4}$\n$1 ≤ N ≤ 3\\cdot 10^{5}$\n$0 ≤ A_{i} < N$\n- The sum of $N$ across all test cases won't exceed $3 \\cdot 10^{5}$.\n\n------ subtasks ------ \n\nSubtask 1 (20 points):\n$1 ≤ T ≤ 5$\n$1 ≤ N ≤ 20$\nSubtask 2 (80 points):\nNo further constraints.\n\n----- Sample Input 1 ------ \n4\n2\n1 0\n2\n1 1\n3\n2 0 1\n5\n2 3 1 2 3\n\n----- Sample Output 1 ------ \n2\n1\n2\n2\n\n----- explanation 1 ------ \nTest case $1$: Both people can be telling the truth, with the first person being the parent of the second.\n\nTest case $2$: If both people were telling the truth, they would be each others' parents — and that is not allowed. Hence, at most one of them can be telling the truth.\n\nTest case $3$: The first and third people cannot be telling the truth at the same time. However, it is possible for the first and second people to be truthful — person $1$ can be the parent of person $2$ and person $3$. Hence, the answer is $2$.\n\nTest case $4$: There are several ways to pick $2$ people to be telling the truth — for example,\n- The parent of person $2$ and person $3$ is person $1$\n- The parent of person $1$ and person $5$ is person $4$\n\nin which case persons number $1$ and $4$ would be telling the truth.\n\nHowever, it can be shown that it is impossible for any three of them to be simultaneously telling the truth.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

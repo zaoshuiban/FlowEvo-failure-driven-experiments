@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "398b1e63-3cb8-419e-8b90-3a6d5449cddb",
+  "created": 1792430374,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 423,
+    "completion_tokens": 1128,
+    "total_tokens": 1551,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1026
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 423
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nW, B = map(int, sys.stdin.readline().split())\n\nS = \"wbwbwwbwbwbw\"\nlength = W + B\n\nfor start in range(12):\n    white_count = 0\n    for i in range(length):\n        if S[(start + i) % 12] == 'w':\n            white_count += 1\n\n    if white_count == W:\n        print(\"Yes\")\n        sys.exit()\n\nprint(\"No\")\n```",
+  "latency_s": 6.036,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is an infinitely long piano keyboard.\nIs there a continuous segment within this keyboard that consists of W white keys and B black keys?\n\nLet S be the string formed by infinitely repeating the string wbwbwwbwbwbw.\nIs there a substring of S that consists of W occurrences of w and B occurrences of b?\n\nWhat is a substring of S?\nA substring of S is a string that can be formed by concatenating the l-th, (l+1)-th, \\dots, r-th characters of S in this order for some two positive integers l and r (l\\leq r).\n\nInput\n\nThe input is given from Standard Input in the following format:\nW B\n\nOutput\n\nIf there is a substring of S that consists of W occurrences of w and B occurrences of b, print Yes; otherwise, print No.\n\nConstraints\n\n\n- W and B are integers.\n- 0\\leq W,B \\leq 100\n- W+B \\geq 1\n\nSample Input 1\n\n3 2\n\nSample Output 1\n\nYes\n\nThe first 15 characters of S are wbwbwwbwbwbwwbw. You can take the 11-th through 15-th characters to form the string bwwbw, which is a substring consisting of three occurrences of w and two occurrences of b.\n\nSample Input 2\n\n3 0\n\nSample Output 2\n\nNo\n\nThe only string consisting of three occurrences of w and zero occurrences of b is www, which is not a substring of S.\n\nSample Input 3\n\n92 66\n\nSample Output 3\n\nYes\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

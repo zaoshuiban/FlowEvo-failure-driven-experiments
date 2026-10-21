@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "44cab7c3-d1bf-41b7-82bc-0e8fe0bb81be",
+  "created": 1792437921,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1115,
+    "completion_tokens": 18212,
+    "total_tokens": 19327,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 17833
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1115
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport heapq\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n    INF = 10**30\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        k = data[idx + 2]\n        idx += 3\n\n        target = n + m\n        batteries = []\n\n        for _ in range(k):\n            x = data[idx]\n            y = data[idx + 1]\n            cost = data[idx + 2]\n            energy = data[idx + 3]\n            idx += 4\n\n            pos = x + y\n            reach = pos + energy\n            batteries.append((pos, cost, reach))\n\n        batteries.sort(key=lambda b: b[0])\n\n        # Heap entries: (minimum cost to get this state, maximum reachable x+y)\n        # Initially at (0, 0) with energy 0.\n        heap = [(0, 0)]\n        answer = INF\n\n        for pos, cost, reach in batteries:\n            # Remove states that cannot reach this battery's position.\n            while heap and heap[0][1] < pos:\n                heapq.heappop(heap)\n\n            if not heap:\n                break\n\n            best_cost_to_reach_here = heap[0][0]\n            new_cost = best_cost_to_reach_here + cost\n\n            if reach >= target:\n                answer = min(answer, new_cost)\n\n            heapq.heappush(heap, (new_cost, reach))\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 98.614,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef's robot starts from the coordinate (0, 0) and wishes to reach to the coordinate (N, M).  \n\nThe initial energy of the robot is 0. There are K batteries kept at some of the coordinates such that picking up the i^{th} battery costs C_{i} units, and, on picking the i^{th} battery, the current energy of the robot becomes E_{i}.\n\nNote that one coordinate can have multiple batteries but the robot can pick at most one battery out of those.\n\nFor example, if the robot reaches a certain coordinate with energy A and there are two batteries with energy B_{1} and B_{2} on that coordinate, the robot may choose at most one battery out of these. On choosing the first battery, the energy of the robot becomes B_{1} (not A+B_{1}).\n\nThe robot can walk in all the four directions as follows:\nMove up:  Moving from coordinate (X, Y) to (X, Y+1), the robot loses 1 unit of energy.\nMove down: Moving from coordinate (X, Y) to (X, Y-1), the robot gains 1 unit of energy.\nMove right: Moving from coordinate (X, Y) to (X+1, Y), the robot loses 1 unit of energy.\nMove left: Moving from coordinate (X, Y) to (X-1, Y), the robot gains 1 unit of energy.\n\nFind the minimum cost to reach (N, M) if the robot maintains a non-negative energy throughout the journey (including the destination). \n\n------ Input Format ------ \n\n- The first line of input contains a single integer T, the number of test cases. The description of the test cases follows.\n- Each test cases consists of two lines of input.\n- The first line contains three positive integers N, M, and K, the coordinates of the destination and the number of batteries.\n- Next K lines have four space-separated integers each: X_{i}, Y_{i}, C_{i}, E_{i}. The i^{th} line indicates that the coordinate (X_{i}, Y_{i}) has a battery with cost C_{i} and energy E_{i}.\n- The input data guarantees that the robot can reach the destination.\n\n------ Output Format ------ \n\nFor each test case, output a single integer, the minimum cost from (0,0) to (N, M).\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$1 ≤ K ≤ 10^{5}$\n$0 ≤ X_{i},Y_{i} ≤ 2*10^{9}$\n$1 ≤ N,M,C_{i},E_{i} ≤ 2*10^{9}$\n- The sum of $K$ over all test cases won't exceed $10^{5}$.\n\n----- Sample Input 1 ------ \n2\n5 5 3\n0 0 10 10\n0 0 2 4\n2 2 1 1\n5 5 4\n0 0 10 10\n0 0 2 4\n2 2 1 1\n4 1 3 5\n\n----- Sample Output 1 ------ \n10\n6\n----- explanation 1 ------ \nTest case $1$: Use the first battery with cost $10$. Thus, at coordinate $(0, 0)$, the energy of the robot becomes $10$ units. The robot can traverse the path :$(0,0) - (0, 1) - \\ldots - (0, 5) - (1, 5) - \\ldots - (5,5)$. It can be shown that the robot cannot reach the destination in less than $10$ units cost.\n\nTest case $2$: \n- Use the $2^{nd}$ battery: At coordinate $(0, 0)$, robot picks the $2^{nd}$ battery and the energy of the robot becomes $4$ units. The robot can move to coordinate $(2, 2)$ using this energy. On reaching $(2, 2)$, robot's energy is $0$.\n- Use the $3^{rd}$ battery: At coordinate $(2, 2)$, robot picks the $3^{rd}$ battery and the energy of the robot becomes $1$ unit. The robot can move from $(2, 2)$ to $(2, 1)$ and gain $1$ unit of energy. Thus, it has $2$ units of energy now. It can now move from $(2, 1)$ to $(4, 1)$ using this energy.\n- Use the $4^{th}$ battery: At coordinate $(4, 1)$, robot picks the $4^{th}$ battery and the energy of the robot becomes $5$ units. The robot can now move from $(4, 1)$ to $(5, 5)$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

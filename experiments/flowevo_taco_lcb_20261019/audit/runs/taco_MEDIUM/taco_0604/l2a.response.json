@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "16dadb9f-cc8d-4125-b858-2d0cce650dc9",
+  "created": 1792435795,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 483,
+    "completion_tokens": 2323,
+    "total_tokens": 2806,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2199
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 227
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    m = int(data[0])\n    bubbly_count = 0\n\n    for word in data[1:m + 1]:\n        stack = bytearray()\n\n        for ch in word:\n            if stack and stack[-1] == ch:\n                stack.pop()\n            else:\n                stack.append(ch)\n\n        if not stack:\n            bubbly_count += 1\n\n    print(bubbly_count)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 11.854,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNikki's latest work is writing an story of letters. However, she finds writing story so boring that, after working for three hours, she realized that all she has written are M long words consisting entirely of letters A and B. Having accepted that she will never finish the story in time, poor Nikki has decided to at least have some fun with it by counting bubbly words.\n\nNow Nikki is connecting pairs of identical letters (A with A, B with B) by drawing arches above the word. A given word is bubbly if each letter can be connected to exactly one other letter in such a way that no two arches intersect. So here is your task. Help Nikki count how many words are bubbly.\n\nInput :\n\nThe first line of input contains the positive integer M , the number of words written down by Nikki. Each of the following M lines contains a single word consisting of letters A and B, with length between 2 and 10^5, inclusive. The sum of lengths of all words doesn't exceed 10^6.\n\nOutput :\n\nThe first and only line of output must contain the number of bubbly words.\n\nConstraints:\n\n1 ≤ M ≤ 100\n\nSAMPLE INPUT\n3\nABAB\nAABB\nABBA\n\nSAMPLE OUTPUT\n2\n\nExplanation\n\nABAB - It is not bubbly as A(indexed 1) will connect to A(indexed 3) by an arch and when we try to connect B(indexed 2) with B(indexed 4) by an arch then it will intersect with the arch b/w A and A.\nAABB - It is bubbly as arch b/w A and A will not intersect with the arch b/w B and B.\nABBA - It is also bubbly as  arches will not intersect. we can draw arches b/w A and A above the arch b/w B and B.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

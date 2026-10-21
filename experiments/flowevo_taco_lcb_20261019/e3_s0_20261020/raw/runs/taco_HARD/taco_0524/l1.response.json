@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "03e4bd27-7480-4b27-a19f-2e985bec2604",
+  "created": 1792430111,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 916,
+    "completion_tokens": 15887,
+    "total_tokens": 16803,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15105
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 916
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\nMAXV = 5000\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    m = data[0]\n    A = data[1:1 + m]\n    B = data[1 + m:1 + m + (m - 1)]\n\n    # Factorials and inverse factorials\n    fact = [1] * (MAXV + 1)\n    for i in range(1, MAXV + 1):\n        fact[i] = fact[i - 1] * i % MOD\n\n    invfact = [1] * (MAXV + 1)\n    invfact[MAXV] = pow(fact[MAXV], MOD - 2, MOD)\n    for i in range(MAXV, 0, -1):\n        invfact[i - 1] = invfact[i] * i % MOD\n\n    # Harmonic numbers H[a] = 1 + 1/2 + ... + 1/a\n    max_a = max(A)\n    H = [0] * (max_a + 1)\n\n    if max_a >= 1:\n        inv = [0] * (max_a + 1)\n        inv[1] = 1\n        H[1] = 1\n\n        for i in range(2, max_a + 1):\n            inv[i] = MOD - (MOD // i) * inv[MOD % i] % MOD\n            H[i] = (H[i - 1] + inv[i]) % MOD\n\n    present = bytearray(MAXV + 1)\n    for a in A:\n        present[a] = 1\n\n    complement_size = MAXV + 1 - m\n    direct = (m - 1 <= complement_size)\n\n    if not direct:\n        C = [i for i in range(MAXV + 1) if present[i] == 0]\n    else:\n        C = None\n\n    rev_b = B[::-1]\n\n    ans = 0\n\n    for a in A:\n        # Compute P(-a)\n        if a == 0:\n            p_value = B[0] % MOD\n        else:\n            p_value = 0\n            for coeff in rev_b:\n                p_value = (coeff - a * p_value) % MOD\n\n        # Compute denominator:\n        # D_i = product_{j != i} (a_j - a_i)\n        if direct:\n            d = 1\n            for s in A:\n                if s != a:\n                    d = d * (s - a) % MOD\n\n            inv_d = pow(d, MOD - 2, MOD)\n        else:\n            cp = 1\n            for c in C:\n                cp = cp * (c - a) % MOD\n\n            # all_product = product_{s=0, s != a}^{5000} (s - a)\n            # 1 / all_product = (-1)^a / (a! * (5000-a)!)\n            inv_all = invfact[a] * invfact[MAXV - a] % MOD\n            if a & 1:\n                inv_all = (-inv_all) % MOD\n\n            # D = all_product / cp, so 1 / D = cp / all_product\n            inv_d = cp * inv_all % MOD\n\n        term = p_value * inv_d % MOD\n        term = term * H[a] % MOD\n\n        ans = (ans - term) % MOD\n\n    print(ans % MOD)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 70.674,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nToday Konstantin learned about convergence of series. For instance, series \n\n$\\sum_{n=1}^{\\infty}\\dfrac{1}{n(n+1)}=\\dfrac{1}{2}+\\dfrac{1}{6}+\\dfrac{1}{12}+\\cdots=1\\text{,}$ \n$\\sum_{n=1}^{\\infty}\\dfrac{1}{n^2}=1+\\dfrac{1}{4}+\\dfrac{1}{9}+\\dfrac{1}{16}+\\cdots=\\dfrac{\\pi^2}{6}\\text{,}$ converge, while \n$\\sum_{n=1}^{\\infty}\\dfrac{1}{n}=1+\\dfrac{1}{2}+\\dfrac{1}{3}+\\dfrac{1}{4}+\\cdots=+\\infty$ diverges. See more at https://en.wikipedia.org/wiki/Convergent_series .\n\nAs you may note, some simple looking series can converge to quite complicated numbers, like $\\frac{\\pi^{2}}{6}$, $\\boldsymbol{\\mathrm{~e~}}$, etc. Konstantin noted this and decided to study only special case of rational functions sums, that is  \n\n$\\sum_{n=1}^{\\infty}\\frac{P(n)}{Q(n)},$ where $\\mbox{P}$ and $\\mbox{Q}$ are polynomials and $Q(n)\\neq0$ for positive integer $n$. It can be proven that if $\\text{deg}\\:P\\leq\\text{deg}\\:Q-2$ the series converges. But, as example $\\sum\\limits_{n=1}^{\\infty}\\frac{1}{n^2}$ shows, sum of rational functions can be irrational. \n\nAfter some time, Konstantin decided to consider some very special case of rational functions when $Q(x)=(x+a_1)(x+a_2).....(x+a_m)$ and $P(x)=b_0+b_1x+\\cdots+b_{n-2}x^{m-2},$ with constraint that $a_1,a_2,\\ldots,a_m$ are distinct non-negative integers. Fortunately, it can be proven that in this case sum of the series above is rational number. Now Konstantin want you to calculate it.\n\nInput Format\n\nThe first line of input contains single integer, $m$. The next line contains $m$ integers $a_1,a_2,\\ldots,a_m$, separated by space. The next line contains $m-1$ integers $b_0,b_1,\\ldots,b_{m-2}$.\n\nConstraints\n\n$2\\leq m\\leq5000,$  \n$0\\leq a_i\\leq5000,$  \n$0\\leq b_i\\leq10^9$.  \n$a_1,\\ldots,a_m$ are distinct. \n\nSubtasks  \n\nSolutions that works correctly for $m\\leq100$ will score at least $50\\%$ of points.  \n\nOutput Format\n\nIf answer is irreducible fraction $\\frac{a}{b}$, print $ab^{-1}\\:\\text{mod}\\:(10^9+7)$, where $b^{-1}$ is multiplicative inverse of $\\boldsymbol{b}$ modulo $10^9+7$. It is guaranteed that $b\\mod10^9+7\\neq0$.   \n\nSample Input 0\n2\n0 1\n1\n\nSample Output 0\n1\n\nExplanation 0\n\nthe sum is  $\\sum_{n=1}^{+\\infty}\\dfrac{1}{n(n+1)}=\\dfrac{1}{2}+\\dfrac{1}{6}+\\dfrac{1}{12}+\\dfrac{1}{20}+\\cdots=1.$  \n\nSample Input 1\n3\n0 1 2\n1 3\n\nSample Output 1\n750000007\n\nExplanation 1\n\nthe sum is $\\sum_{n=1}^{+\\infty}\\dfrac{1+3n}{n(n+1)(n+2)}=\\dfrac{4}{6}+\\dfrac{7}{24}+\\dfrac{10}{60}+\\dfrac{13}{120}+\\cdots=\\dfrac{7}{4}\\text{.}$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

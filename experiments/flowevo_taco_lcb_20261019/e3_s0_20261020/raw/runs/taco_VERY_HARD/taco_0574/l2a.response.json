@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "219ecfae-6709-4216-9347-7c4f988e9e66",
+  "created": 1792444306,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 306,
+    "completion_tokens": 4821,
+    "total_tokens": 5127,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4630
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 178
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef build_sequence(k: int):\n    if k == 1:\n        return [1]\n    if k == 2:\n        return [3, 4]\n\n    d = k - 2\n\n    if d % 2 == 0:\n        b = 1\n        a = d // 2\n    else:\n        b = 2\n        a = (d + 3) // 2\n\n    return [a, b] + [1] * d\n\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n\n    rows = build_sequence(n)\n    cols = build_sequence(m)\n\n    answer = []\n    for x in rows:\n        answer.append(\" \".join(str(x * y) for y in cols))\n\n    sys.stdout.write(\"\\n\".join(answer))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 22.475,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWhile resting on the ship after the \"Russian Code Cup\" a boy named Misha invented an interesting game. He promised to give his quadrocopter to whoever will be the first one to make a rectangular table of size n × m, consisting of positive integers such that the sum of the squares of numbers for each row and each column was also a square.\n\nSince checking the correctness of the table manually is difficult, Misha asks you to make each number in the table to not exceed 10^8.\n\n\n-----Input-----\n\nThe first line contains two integers n and m (1 ≤ n, m ≤ 100)  — the size of the table. \n\n\n-----Output-----\n\nPrint the table that meets the condition: n lines containing m integers, separated by spaces. If there are multiple possible answers, you are allowed to print anyone. It is guaranteed that there exists at least one correct answer.\n\n\n-----Examples-----\nInput\n1 1\n\nOutput\n1\nInput\n1 2\n\nOutput\n3 4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

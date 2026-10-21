@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "042a1d6e-1d5f-4182-8603-fc48690561a8",
+  "created": 1792429386,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 619,
+    "completion_tokens": 335,
+    "total_tokens": 954,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 177
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 619
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        x = data[idx + 1]\n        s = data[idx + 2]\n        idx += 3\n\n        for _ in range(s):\n            a = data[idx]\n            b = data[idx + 1]\n            idx += 2\n\n            if x == a:\n                x = b\n            elif x == b:\n                x = a\n\n        answers.append(str(x))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 1.676,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements [Hindi] ,[Bengali] , [Mandarin chinese] , [Russian] and [Vietnamese] as well.\n\nWhen Chef was visiting a fair in Byteland, he met a magician. The magician had $N$ boxes (numbered $1$ through $N$) and a gold coin. He challenged Chef to play a game with him; if Chef won the game, he could have the coin, but if he lost, the magician would kidnap Chef.\n\nAt the beginning of the game, the magician places the gold coin into the $X$-th box. Then, he performs $S$ swaps. To win, Chef needs to correctly identify the position of the coin after all swaps.\n\nIn each swap, the magician chooses two boxes $A$ and $B$, moves the contents of box $A$ (before the swap) to box $B$ and the contents of box $B$ (before the swap) to box $A$.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains three space-separated integers $N$, $X$ and $S$.\n$S$ lines follow. Each of these lines contains two space-separated integers $A$ and $B$ denoting a pair of swapped boxes.\n\n------  Output ------\nFor each test case, print a single line containing one integer — the number of the box containing the gold coin after all swaps are performed.\n\n------  Constraints  ------\n$1 ≤ T ≤ 100$\n$2 ≤ N ≤ 10^{5}$\n$1 ≤ S ≤ 10^{4}$\n$1 ≤ X, A, B ≤ N$\n$A \\neq B$\nthe sum of $S$ for all test cases does not exceed $2*10^{5}$\n\n------  Subtasks ------\nSubtask #1 (100 points): original constraints\n\n----- Sample Input 1 ------ \n1\n\n5 2 4\n\n4 2\n\n3 4\n\n3 2\n\n1 2\n----- Sample Output 1 ------ \n1\n----- explanation 1 ------ \nExample case 1:\n- after the first swap, the coin is in box $4$\n- after the second swap, the coin is in box $3$\n- after the third swap, the coin is in box $2$\n- after the fourth swap, the coin is in box $1$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

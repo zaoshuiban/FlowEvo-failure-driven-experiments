@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c1dfea5a-744c-418f-b22b-88957e6ba644",
+  "created": 1792461964,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 633,
+    "completion_tokens": 32767,
+    "total_tokens": 33400,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32767
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 249
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 175.994,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n// We decided to drop the legend about the power sockets but feel free to come up with your own :^)\n\nDefine a chain:\n\na chain of length $1$ is a single vertex;\n\na chain of length $x$ is a chain of length $x-1$ with a new vertex connected to the end of it with a single edge.\n\nYou are given $n$ chains of lengths $l_1, l_2, \\dots, l_n$. You plan to build a tree using some of them.\n\nEach vertex of the tree is either white or black.\n\nThe tree initially only has a white root vertex.\n\nAll chains initially consist only of white vertices.\n\nYou can take one of the chains and connect any of its vertices to any white vertex of the tree with an edge. The chain becomes part of the tree. Both endpoints of this edge become black.\n\nEach chain can be used no more than once.\n\nSome chains can be left unused.\n\nThe distance between two vertices of the tree is the number of edges on the shortest path between them.\n\nIf there is at least $k$ white vertices in the resulting tree, then the value of the tree is the distance between the root and the $k$-th closest white vertex.\n\nWhat's the minimum value of the tree you can obtain? If there is no way to build a tree with at least $k$ white vertices, then print -1.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $k$ ($1 \\le n \\le 2 \\cdot 10^5$, $2 \\le k \\le 10^9$) — the number of chains and the minimum number of white vertices a tree should have to have a value.\n\nThe second line contains $n$ integers $l_1, l_2, \\dots, l_n$ ($3 \\le l_i \\le 2 \\cdot 10^5$) — the lengths of the chains.\n\n\n-----Output-----\n\nPrint a single integer. If there is no way to build a tree with at least $k$ white vertices, then print -1. Otherwise, print the minimum value the tree can have.\n\n\n-----Examples-----\n\nInput\n1 2\n3\nOutput\n2\nInput\n3 3\n4 3 3\nOutput\n3\nInput\n3 5\n4 3 4\nOutput\n4\nInput\n2 10\n5 7\nOutput\n-1\n\n\n-----Note-----\n\nYou are allowed to not use all the chains, so it's optimal to only use chain of length $4$ in the second example.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

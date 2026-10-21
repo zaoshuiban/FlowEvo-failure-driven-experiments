@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f8a1d9cd-6b2b-4c4d-8870-61caedea11a7",
+  "created": 1792447991,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 464,
+    "completion_tokens": 24976,
+    "total_tokens": 25440,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24467
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 464
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    queries = data[1:1 + t]\n    max_n = max(queries) if queries else 0\n\n    # Kahan summation for harmonic numbers\n    h = [0.0] * (max_n + 1)\n    s = 0.0\n    c = 0.0\n\n    for i in range(1, max_n + 1):\n        y = 1.0 / i - c\n        t_val = s + y\n        c = (t_val - s) - y\n        s = t_val\n        h[i] = s - c\n\n    out = []\n\n    for n in queries:\n        if n == 1:\n            out.append(\"0.00000000000\")\n            continue\n\n        # Binary search for the optimal lambda in:\n        # p_i = max(0, (i - lambda) / (2i))\n        lo = 0.0\n        hi = float(n)\n\n        for _ in range(75):\n            mid = (lo + hi) * 0.5\n            k = int(mid)\n            if k > n:\n                k = n\n\n            inv_sum = h[n] - h[k]\n            total_prob = 0.5 * ((n - k) - mid * inv_sum)\n\n            if total_prob > 1.0:\n                lo = mid\n            else:\n                hi = mid\n\n        lam = (lo + hi) * 0.5\n        k = int(lam)\n        if k < 0:\n            k = 0\n        elif k > n:\n            k = n\n\n        inv_sum = h[n] - h[k]\n        cnt = n - k\n\n        # Sum of indices from k+1 to n\n        index_sum = (k + 1 + n) * cnt * 0.5\n\n        expected_score = 0.5 * (index_sum - lam * lam * inv_sum)\n        max_score = 2.0 * n - 1.0\n        ratio = expected_score / max_score\n\n        out.append(f\"{ratio:.11f}\")\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 116.019,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nSabya is writing code to output a random number between $1$ and $N$ inclusive. The code can output different integers in the interval with different probabilities so that the sum of the probabilities is equal to $1$.\n\nFor evaluation, the code is run twice. If the output in both cases are different, his score is equal to the sum of the outputs. Otherwise, his score is equal to $0$.\n\nSabya is very intelligent, and he writes code that maximizes his expected score. Find the expected score. Output the ratio of the expected score to the maximum possible score. The maximum possible score is $2\\times N-1$.\n\nInput Format\n\nThe first line contains $\\mathbf{T}$: the number of test cases. \n\nThe next $\\mathbf{T}$ lines each contain a single integer, $N$.\n\nOutput Format\n\nOutput $\\mathbf{T}$ lines: the ratio $\\frac{\\text{expected score}}{\\text{maximum score}}$ in each case. \n\nThe answer is considered correct if the absolute error is less than $\\mathbf{10^{-8}}$.  \n\nConstraints \n\n$1\\leq T\\leq10^5$ \n\n$1\\leq N\\leq10^6$\n\nSample Input\n3\n1\n2\n3\n\nSample Output\n0.00000000000\n0.50000000000\n0.54545454545\n\nExplanation\n\nIn the first case, the output is always $1$ both times.\n\nIn the second case, $1$ and $2$ are generated with the probability of $\\frac{1}{2}$ and $\\frac{1}{2}$\n\nIn the third case, $1$, $2$ and $3$ are generated with the probability of $\\frac{5}{22}$, $\\frac{4}{11}$ and $\\frac{9}{22}$, respectively.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

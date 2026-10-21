@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "607d9012-8ba0-4765-a937-3e47c6d6a4cf",
+  "created": 1792438638,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 915,
+    "completion_tokens": 3456,
+    "total_tokens": 4371,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3261
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 915
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef bowling_score(frames):\n    rolls = []\n\n    for ch in frames:\n        if ch == ' ':\n            continue\n        elif ch == 'X':\n            rolls.append(10)\n        elif ch == '/':\n            rolls.append(10 - rolls[-1])\n        elif ch == '-':\n            rolls.append(0)\n        else:\n            rolls.append(int(ch))\n\n    score = 0\n    i = 0\n\n    for _ in range(10):\n        if rolls[i] == 10:\n            score += 10 + rolls[i + 1] + rolls[i + 2]\n            i += 1\n        elif rolls[i] + rolls[i + 1] == 10:\n            score += 10 + rolls[i + 2]\n            i += 2\n        else:\n            score += rolls[i] + rolls[i + 1]\n            i += 2\n\n    return score\n```",
+  "latency_s": 16.287,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n# Ten-Pin Bowling\n\nIn the game of ten-pin bowling, a player rolls a bowling ball down a lane to knock over pins. There are ten pins set at the end of the bowling lane. Each player has 10 frames to roll a bowling ball down a lane and knock over as many pins as possible. The first nine frames are ended after two rolls or when the player knocks down all the pins. The last frame a player will receive an extra roll every time they knock down all ten pins; up to a maximum of three total rolls. \n\n## The Challenge\n\nIn this challenge you will be given a string representing a player's ten frames. It will look something like this: `'X X 9/ 80 X X 90 8/ 7/ 44'` (in Java: `\"X X 9/ 80 X X 90 8/ 7/ 44\"`), where each frame is space-delimited, `'X'` represents strikes, and `'/'` represents spares. Your goal is take in this string of frames into a function called `bowlingScore` and return the players total score.\n\n## Scoring\n\nThe scoring for ten-pin bowling can be difficult to understand, and if you're like most people, easily forgotten if you don't play often. Here is a quick breakdown:\n\n### Frames\n\nIn Ten-Pin Bowling there are ten frames per game. Frames are the players turn to bowl, which can be multiple rolls. The first 9 frames you get 2 rolls maximum to try to get all 10 pins down. **On the 10th or last frame a player will receive an extra roll each time they get all ten pins down to a maximum of three total rolls. Also on the last frame bonuses are not awarded for strikes and spares moving forward.**\n\nIn this challenge, three frames might be represented like this: `54 72 44`. In this case, the player has had three frames. On their first frame they scored 9 points (5 + 4), on their second frame they scored 9 points (7 + 2) and on their third frame they scored 8 points (4 + 4). This is a very simple example of bowling scoring. It gets more complicated when we introduce strikes and spares.\n\n### Strikes \nRepresented in this challenge as `'X'`\n\nA strike is scored when a player knocks all ten pins down in one roll. In the first 9 frames this will conclude the players turn and it will be scored as 10 points plus the points received from the next two rolls. So if a player were to have two frames `X 54`, the total score of those two frames would be 28. The first frame would be worth 19 (10 + 5 + 4) and the second frame would be worth 9 (5 + 4).\n\nA perfect game in bowling is 12 strikes in a row and would be represented like this `'X X X X X X X X X XXX'` (in Java: `\"X X X X X X X X X XXX\"`). This adds up to a total score of 300.\n\n### Spares\nRepresented in this challenge as `'/'`\n\nA spare is scored when a player knocks down all ten pins in two rolls. In the first 9 frames this will be scored as 10 points plus the next roll. So if a player were to have two frames `9/ 54`, the total score of the two frames would be 24. The first frame would be worth 15 (10 + 5) and the second frame would be worth 9 (5 + 4).\n\nFor a more detailed explanation see Wikipedia: \n\nhttp://en.wikipedia.org/wiki/Ten-pin_bowling#Scoring\n\nStarter code / required signature:\ndef bowling_score(frames):\n\t\n\nUse the required function/method named bowling_score. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "59f64356-9b2f-4dfc-ae05-1db10a7b8295",
+  "created": 1792466877,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 767,
+    "completion_tokens": 9421,
+    "total_tokens": 10188,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8939
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 767
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        q = next(it)\n\n        adj = [[] for _ in range(n)]\n        for _ in range(n - 1):\n            u = next(it) - 1\n            v = next(it) - 1\n            adj[u].append(v)\n            adj[v].append(u)\n\n        parent = [-1] * n\n        parity = [0] * n\n        child_count = [0] * n\n\n        parent[0] = -2\n        order = [0]\n\n        for u in order:\n            for v in adj[u]:\n                if v == parent[u]:\n                    continue\n                parent[v] = u\n                parity[v] = parity[u] ^ 1\n                child_count[u] += 1\n                order.append(v)\n\n        if q == 1:\n            total = 0\n            for u in range(n):\n                if parity[u] == 0:\n                    total += abs(1 - child_count[u])\n            answers.append(str(total))\n\n        else:\n            total = 0\n            freq = {}\n\n            for u in range(n):\n                if parity[u] == 0:\n                    b = abs(1 - child_count[u])\n                    total += b\n                    if b > 0:\n                        freq[b] = freq.get(b, 0) + 1\n\n            if total == 0:\n                answers.append(\"0\")\n                continue\n\n            reachable = 1\n\n            for value, count in freq.items():\n                take = 1\n                while count > 0:\n                    use = min(take, count)\n                    reachable |= reachable << (value * use)\n                    count -= use\n                    take <<= 1\n\n            half = total // 2\n            mask = (1 << (half + 1)) - 1\n            best = (reachable & mask).bit_length() - 1\n\n            answers.append(str(total - 2 * best))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 44.844,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Mandarin], [Russian], and [Vietnamese] as well.\n\nYou are given a tree with N nodes rooted at node 1, and your task is to color each node of the tree either white or black. For each i (1 ≤ i ≤ N), let w_{i} be the number of white nodes that occurs in a simple path from the root node to i^{th} node and b_{i} be the number of black nodes that occurs in a simple path from the root node to i^{th} node. The cost of a node i is defined as the absolute difference between w_{i} and b_{i}. \n\nThe cost of the tree is defined as the summation of the cost of all the nodes in the tree. The value of the tree is defined as the absolute difference between the total number of white nodes and the total number of black nodes in the tree. You have to color the tree in such a way that the cost of the tree is minimized.\n\nYour task is to answer a single query Q, such that:\n\nIf Q = 1, Determine the maximum value the tree can have after minimizing the cost of the tree.\nIf Q = 2, Determine the minimum value the tree can have after minimizing the cost of the tree.\n\n------ Input Format ------ \n\n- The first line contains an integer T, denoting the number of test cases. The T test cases then follow:\n- The first line of each test case contains two integers N and Q, denoting the number of nodes in the tree and the query to answer respectively.\n- The next N - 1 lines contain two space-separated integers u and v, denoting that there is an edge between the node u and the node v.\n\n------ Output Format ------ \n\nFor each test case, print a single line containing one integer - the answer to the query. \n\n------ Constraints ------ \n\n$1 ≤ T ≤ 1000$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ Q ≤ 2$\n$1 ≤ u,v ≤ n, u \\neq v$\n$\\sum{N}$ over all test cases does not exceed $10^{5}$.\n- It is guaranteed that the given nodes and edges form a tree.\n\n------ subtasks ------ \n\nSubtask #1 (20 points):\n$Q = 1$\n\nSubtask #2 (80 points):\nOriginal constraints\n\n----- Sample Input 1 ------ \n2\n5 1\n1 2\n1 3\n2 4\n2 5\n5 2\n1 2\n1 3\n2 4\n2 5\n\n----- Sample Output 1 ------ \n3\n1\n\n----- explanation 1 ------ \nTest case 1: Color the node $1$ with black color and color the nodes $2, 3, 4, 5$ with white color to get the minimum cost of the tree, that is $3$, and the maximum value of the tree, that is $3$.\n\nTest case 2: Color the nodes $1, 4$ with black color and color the nodes $2, 3, 5$ with white color to get the minimum cost of the tree, that is $3$, and the minimum value of the tree, that is $1$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

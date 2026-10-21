@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c7956a6f-6a07-4b32-b605-d822fa4e749a",
+  "created": 1792445170,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 654,
+    "completion_tokens": 27307,
+    "total_tokens": 27961,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 25994
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 142
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n    m = int(next(it))\n    k = int(next(it))\n\n    rows = [next(it) for _ in range(n)]\n\n    x1 = int(next(it)) - 1\n    y1 = int(next(it)) - 1\n    x2 = int(next(it)) - 1\n    y2 = int(next(it)) - 1\n\n    start_idx = x1 * m + y1\n    target_idx = x2 * m + y2\n\n    if start_idx == target_idx:\n        print(0)\n        return\n\n    total = n * m\n\n    row_l = array('H', [0]) * total\n    row_r = array('H', [0]) * total\n\n    for r in range(n):\n        row = rows[r]\n        base = r * m\n        c = 0\n        while c < m:\n            if row[c] == 46:  # '.'\n                start = c\n                c += 1\n                while c < m and row[c] == 46:\n                    c += 1\n                end = c - 1\n                for j in range(start, end + 1):\n                    row_l[base + j] = start\n                    row_r[base + j] = end\n            else:\n                c += 1\n\n    col_u = array('H', [0]) * total\n    col_d = array('H', [0]) * total\n\n    for c in range(m):\n        r = 0\n        while r < n:\n            if rows[r][c] == 46:\n                start = r\n                r += 1\n                while r < n and rows[r][c] == 46:\n                    r += 1\n                end = r - 1\n                for i in range(start, end + 1):\n                    idx = i * m + c\n                    col_u[idx] = start\n                    col_d[idx] = end\n            else:\n                r += 1\n\n    row_stride = m + 1\n    nxt_row = array('H', [0]) * (n * row_stride)\n\n    for r in range(n):\n        base = r * row_stride\n        nxt_row[base + m] = m\n        nxt_val = m\n        row = rows[r]\n        for c in range(m - 1, -1, -1):\n            if row[c] == 46:\n                nxt_val = c\n            nxt_row[base + c] = nxt_val\n\n    col_stride = n + 1\n    nxt_col = array('H', [0]) * (m * col_stride)\n\n    for c in range(m):\n        base = c * col_stride\n        nxt_col[base + n] = n\n        nxt_val = n\n        for r in range(n - 1, -1, -1):\n            if rows[r][c] == 46:\n                nxt_val = r\n            nxt_col[base + r] = nxt_val\n\n    def find_row(r, c, nr=nxt_row, stride=row_stride):\n        base = r * stride\n        x = c\n        while nr[base + x] != x:\n            nr[base + x] = nr[base + nr[base + x]]\n            x = nr[base + x]\n        return x\n\n    def find_col(c, r, nc=nxt_col, stride=col_stride):\n        base = c * stride\n        x = r\n        while nc[base + x] != x:\n            nc[base + x] = nc[base + nc[base + x]]\n            x = nc[base + x]\n        return x\n\n    base = x1 * row_stride\n    nxt_row[base + y1] = find_row(x1, y1 + 1)\n\n    base = y1 * col_stride\n    nxt_col[base + x1] = find_col(y1, x1 + 1)\n\n    queue = [start_idx]\n    distance = 0\n\n    while queue:\n        next_queue = []\n        next_distance = distance + 1\n\n        for idx in queue:\n            r = idx // m\n            c = idx - r * m\n\n            left = c - k\n            if left < row_l[idx]:\n                left = row_l[idx]\n\n            right = c + k\n            if right > row_r[idx]:\n                right = row_r[idx]\n\n            base_r = r * row_stride\n            col = find_row(r, left)\n\n            while col <= right:\n                if r * m + col == target_idx:\n                    print(next_distance)\n                    return\n\n                nxt = find_row(r, col + 1)\n                nxt_row[base_r + col] = nxt\n\n                base_c = col * col_stride\n                nxt_col[base_c + r] = find_col(col, r + 1)\n\n                next_queue.append(r * m + col)\n                col = nxt\n\n            top = r - k\n            if top < col_u[idx]:\n                top = col_u[idx]\n\n            bottom = r + k\n            if bottom > col_d[idx]:\n                bottom = col_d[idx]\n\n            base_c = c * col_stride\n            rr = find_col(c, top)\n\n            while rr <= bottom:\n                if rr * m + c == target_idx:\n                    print(next_distance)\n                    return\n\n                base_r = rr * row_stride\n                nxt_row[base_r + c] = find_row(rr, c + 1)\n\n                nxt = find_col(c, rr + 1)\n                nxt_col[base_c + rr] = nxt\n\n                next_queue.append(rr * m + c)\n                rr = nxt\n\n        distance = next_distance\n        queue = next_queue\n\n    print(-1)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 123.088,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nOlya loves energy drinks. She loves them so much that her room is full of empty cans from energy drinks.\n\nFormally, her room can be represented as a field of n × m cells, each cell of which is empty or littered with cans.\n\nOlya drank a lot of energy drink, so now she can run k meters per second. Each second she chooses one of the four directions (up, down, left or right) and runs from 1 to k meters in this direction. Of course, she can only run through empty cells.\n\nNow Olya needs to get from cell (x_1, y_1) to cell (x_2, y_2). How many seconds will it take her if she moves optimally?\n\nIt's guaranteed that cells (x_1, y_1) and (x_2, y_2) are empty. These cells can coincide.\n\n\n-----Input-----\n\nThe first line contains three integers n, m and k (1 ≤ n, m, k ≤ 1000) — the sizes of the room and Olya's speed.\n\nThen n lines follow containing m characters each, the i-th of them contains on j-th position \"#\", if the cell (i, j) is littered with cans, and \".\" otherwise.\n\nThe last line contains four integers x_1, y_1, x_2, y_2 (1 ≤ x_1, x_2 ≤ n, 1 ≤ y_1, y_2 ≤ m) — the coordinates of the first and the last cells.\n\n\n-----Output-----\n\nPrint a single integer — the minimum time it will take Olya to get from (x_1, y_1) to (x_2, y_2).\n\nIf it's impossible to get from (x_1, y_1) to (x_2, y_2), print -1.\n\n\n-----Examples-----\nInput\n3 4 4\n....\n###.\n....\n1 1 3 1\n\nOutput\n3\nInput\n3 4 1\n....\n###.\n....\n1 1 3 1\n\nOutput\n8\nInput\n2 2 1\n.#\n#.\n1 1 2 2\n\nOutput\n-1\n\n\n-----Note-----\n\nIn the first sample Olya should run 3 meters to the right in the first second, 2 meters down in the second second and 3 meters to the left in the third second.\n\nIn second sample Olya should run to the right for 3 seconds, then down for 2 seconds and then to the left for 3 seconds.\n\nOlya does not recommend drinking energy drinks and generally believes that this is bad.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

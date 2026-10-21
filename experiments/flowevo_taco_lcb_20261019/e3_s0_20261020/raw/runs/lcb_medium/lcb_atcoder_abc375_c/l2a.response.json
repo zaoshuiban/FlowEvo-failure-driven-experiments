@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c69cbbfe-c1d4-434d-b605-828521a9f882",
+  "created": 1792430205,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 962,
+    "completion_tokens": 26129,
+    "total_tokens": 27091,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 25629
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 194
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    A = data[1:1 + n]\n    nm1 = n - 1\n\n    result = []\n\n    for r in range(n):\n        row = bytearray(n)\n\n        dr = min(r + 1, n - r)\n\n        # Left edge: c = 0 ... dr - 1\n        for c in range(dr):\n            k = (c + 1) & 3\n            if k == 0:\n                row[c] = A[r][c]\n            elif k == 1:\n                row[c] = A[nm1 - c][r]\n            elif k == 2:\n                row[c] = A[nm1 - r][nm1 - c]\n            else:\n                row[c] = A[c][nm1 - r]\n\n        lo = dr\n        hi = n - dr\n\n        # Middle part: layer = dr, so k is constant\n        if lo < hi:\n            k = dr & 3\n            if k == 0:\n                row[lo:hi] = A[r][lo:hi]\n            elif k == 1:\n                for c in range(lo, hi):\n                    row[c] = A[nm1 - c][r]\n            elif k == 2:\n                row[lo:hi] = A[nm1 - r][lo:hi][::-1]\n            else:\n                for c in range(lo, hi):\n                    row[c] = A[c][nm1 - r]\n\n        # Right edge: c = hi ... n - 1\n        for j in range(dr):\n            c = hi + j\n            k = (dr - j) & 3\n\n            if k == 0:\n                row[c] = A[r][c]\n            elif k == 1:\n                row[c] = A[nm1 - c][r]\n            elif k == 2:\n                row[c] = A[nm1 - r][nm1 - c]\n            else:\n                row[c] = A[c][nm1 - r]\n\n        result.append(bytes(row))\n\n    sys.stdout.buffer.write(b\"\\n\".join(result))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 118.714,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a grid with N rows and N columns, where N is an even number. Let (i, j) denote the cell at the i-th row from the top and j-th column from the left.\nEach cell is painted black or white. If A_{i, j} = #, cell (i, j) is black; if A_{i, j} = ., it is white.\nFind the color of each cell after performing the following operation for i = 1, 2, \\ldots, \\frac{N}{2} in this order.\n\n- For all pairs of integers x, y between i and N + 1 - i, inclusive, replace the color of cell (y, N + 1 - x) with the color of cell (x, y). Perform these replacements simultaneously for all such pairs x, y.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nA_{1,1}A_{1,2}\\ldots A_{1,N}\r\nA_{2,1}A_{2,2}\\ldots A_{2,N}\r\n\\vdots\r\nA_{N,1}A_{N,2}\\ldots A_{N,N}\n\nOutput\n\nAfter all operations, let B_{i, j} = # if cell (i, j) is black, and B_{i, j} = . if it is white. Print the grid in the following format:\nB_{1,1}B_{1,2}\\ldots B_{1,N}\r\nB_{2,1}B_{2,2}\\ldots B_{2,N}\r\n\\vdots\r\nB_{N,1}B_{N,2}\\ldots B_{N,N}\n\nConstraints\n\n\n- N is an even number between 2 and 3000, inclusive.\n- Each A_{i, j} is # or ..\n\nSample Input 1\n\n8\r\n.......#\r\n.......#\r\n.####..#\r\n.####..#\r\n.##....#\r\n.##....#\r\n.#######\r\n.#######\n\nSample Output 1\n\n........\r\n#######.\r\n#.....#.\r\n#.###.#.\r\n#.#...#.\r\n#.#####.\r\n#.......\r\n########\r\n\nThe operations change the colors of the grid cells as follows:\n.......#   ........   ........   ........   ........\r\n.......#   ######..   #######.   #######.   #######.\r\n.####..#   ######..   #....##.   #.....#.   #.....#.\r\n.####..# → ##..##.. → #....##. → #.##..#. → #.###.#.\r\n.##....#   ##..##..   #..####.   #.##..#.   #.#...#.\r\n.##....#   ##......   #..####.   #.#####.   #.#####.\r\n.#######   ##......   #.......   #.......   #.......\r\n.#######   ########   ########   ########   ########\n\nSample Input 2\n\n6\r\n.#.#.#\r\n##.#..\r\n...###\r\n###...\r\n..#.##\r\n#.#.#.\n\nSample Output 2\n\n#.#.#.\r\n.#.#.#\r\n#.#.#.\r\n.#.#.#\r\n#.#.#.\r\n.#.#.#\n\nSample Input 3\n\n12\r\n.......#.###\r\n#...#...#..#\r\n###.#..#####\r\n..#.#.#.#...\r\n.#.....#.###\r\n.......#.#..\r\n#...#..#....\r\n#####.......\r\n...#...#.#.#\r\n..###..#..##\r\n#..#.#.#.#.#\r\n.####.......\n\nSample Output 3\n\n.#..##...##.\r\n#.#.#.#.#...\r\n###.##..#...\r\n#.#.#.#.#...\r\n#.#.##...##.\r\n............\r\n............\r\n.###.###.###\r\n...#...#.#..\r\n.###...#.###\r\n...#...#...#\r\n.###...#.###\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "598e9633-7ab4-4f33-9ee0-8d788357d38b",
+  "created": 1792430869,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 343,
+    "completion_tokens": 162,
+    "total_tokens": 505,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 81
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 343
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def reportSpam(self, message: List[str], bannedWords: List[str]) -> bool:\n        banned = set(bannedWords)\n        count = 0\n\n        for word in message:\n            if word in banned:\n                count += 1\n                if count >= 2:\n                    return True\n\n        return False\n```",
+  "latency_s": 1.288,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array of strings message and an array of strings bannedWords.\nAn array of words is considered spam if there are at least two words in it that exactly match any word in bannedWords.\nReturn true if the array message is spam, and false otherwise.\n \nExample 1:\n\nInput: message = [\"hello\",\"world\",\"leetcode\"], bannedWords = [\"world\",\"hello\"]\nOutput: true\nExplanation:\nThe words \"hello\" and \"world\" from the message array both appear in the bannedWords array.\n\nExample 2:\n\nInput: message = [\"hello\",\"programming\",\"fun\"], bannedWords = [\"world\",\"programming\",\"leetcode\"]\nOutput: false\nExplanation:\nOnly one word from the message array (\"programming\") appears in the bannedWords array.\n\n \nConstraints:\n\n1 <= message.length, bannedWords.length <= 10^5\n1 <= message[i].length, bannedWords[i].length <= 15\nmessage[i] and bannedWords[i] consist only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def reportSpam(self, message: List[str], bannedWords: List[str]) -> bool:\n        \n\nUse the required function/method named reportSpam. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

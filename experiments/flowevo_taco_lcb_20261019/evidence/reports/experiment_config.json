@@ -1,0 +1,30 @@
+{
+  "method": "FlowEvo official code_math ours adapter",
+  "flowevo_commit": "36e81efd4d1fdbabca7366200b15808ebef157fa",
+  "taco_evaluator_commit": "245eba3beb2d23a07082307de303de2589e4321a",
+  "lcb_evaluator_commit": "28fef95ea8c9f7a547c8329f2cd3d32b92c1fa24",
+  "requested_model": "deepseek-reasoner",
+  "thinking": "enabled",
+  "reasoning_effort": "high",
+  "max_tokens_per_call": 32768,
+  "max_attempts": 5,
+  "seed": 20261019,
+  "skill_scope": "independent online library per dataset and difficulty",
+  "verifier_feedback": "all benchmark tests; only pass/fail or error category disclosed",
+  "protocol": "adaptive success within 5 attempts; first attempt reported separately; final metric is not hidden-test-blind pass@1",
+  "python": "3.10.12",
+  "timeouts_per_case_seconds": {
+    "taco": 4,
+    "lcb": 6
+  },
+  "sandbox": "bubblewrap unshare-all, uid 65534, no network, no credentials, read-only mounts",
+  "adapter_changes": [
+    "TACO/LCB prompts and official evaluators",
+    "full task and code in repair prompts instead of original 500/800-character truncation",
+    "32768-token reasoning budget instead of 2048",
+    "independent online stream per difficulty",
+    "first-failure test short circuit, same all-tests-pass predicate",
+    "API usage and actual returned model logging"
+  ],
+  "started_utc": "2026-10-19T16:47:20.318432+00:00"
+}

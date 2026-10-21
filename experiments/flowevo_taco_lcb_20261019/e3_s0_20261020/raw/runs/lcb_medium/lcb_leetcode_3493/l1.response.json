@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4e0056cf-f98e-4511-adaf-e5bfed42af66",
+  "created": 1792431186,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 392,
+    "completion_tokens": 4300,
+    "total_tokens": 4692,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4222
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 392
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def maxOperations(self, s: str) -> int:\n        ans = 0\n        ones = 0\n        prev = ''\n\n        for ch in s:\n            if ch == '1':\n                ones += 1\n            elif prev == '1':\n                ans += ones\n            prev = ch\n\n        return ans\n```",
+  "latency_s": 20.587,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a binary string s.\nYou can perform the following operation on the string any number of times:\n\nChoose any index i from the string where i + 1 < s.length such that s[i] == '1' and s[i + 1] == '0'.\nMove the character s[i] to the right until it reaches the end of the string or another '1'. For example, for s = \"010010\", if we choose i = 1, the resulting string will be s = \"000110\".\n\nReturn the maximum number of operations that you can perform.\n \nExample 1:\n\nInput: s = \"1001101\"\nOutput: 4\nExplanation:\nWe can perform the following operations:\n\nChoose index i = 0. The resulting string is s = \"0011101\".\nChoose index i = 4. The resulting string is s = \"0011011\".\nChoose index i = 3. The resulting string is s = \"0010111\".\nChoose index i = 2. The resulting string is s = \"0001111\".\n\n\nExample 2:\n\nInput: s = \"00111\"\nOutput: 0\n\n \nConstraints:\n\n1 <= s.length <= 10^5\ns[i] is either '0' or '1'.\n\nStarter code / required signature:\nclass Solution:\n    def maxOperations(self, s: str) -> int:\n        \n\nUse the required function/method named maxOperations. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

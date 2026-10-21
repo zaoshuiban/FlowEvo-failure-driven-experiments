@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a63c874e-1110-4c08-9abf-bdf362620d0e",
+  "created": 1792439652,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 587,
+    "completion_tokens": 32768,
+    "total_tokens": 33355,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32495
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 203
+  },
+  "finish_reason": "length",
+  "text": "```python\nimport sys\n\nMOD = 1000000007\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    k = int(data[1])\n    s = data[2]\n\n    # d[r]: no B^k has appeared yet, current suffix has r consecutive B's\n    # e[r]: B^k has appeared, no W^k after it yet, current suffix has r consecutive W's\n    d = [0] * k\n    e = [0] * k\n\n    d[0] = 1\n\n    offD = 0\n    lenD = 1\n    totD = 1\n\n    offE = 0\n    lenE = 1\n    totE = 0\n\n    succ = 0\n\n    mod = MOD\n    kk = k\n    km1 = k - 1\n\n    for ch in s:\n        if ch == 66:  # 'B'\n            Sd = totD\n\n            if lenD == kk:\n                idx = offD + km1\n                if idx >= kk:\n                    idx -= kk\n                tailD = d[idx]\n            else:\n                tailD = 0\n\n           ",
+  "latency_s": 156.624,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe Little Elephant has found a ragged old black-and-white string s on the attic.\n\nThe characters of string s are numbered from the left to the right from 1 to |s|, where |s| is the length of the string. Let's denote the i-th character of string s as si. As the string is black-and-white, each character of the string is either letter \"B\", or letter \"W\". Unfortunately, the string is very old and some characters are damaged. The damaged positions are denoted as \"X\".\n\nThe Little Elephant in determined to restore the string and hang it on the wall. For that he needs to replace each character \"X\" by a \"B\" or a \"W\". The string must look good on the wall, so it must be beautiful. The Little Elephant considers a string beautiful if it has two non-intersecting substrings of a given length k, such that the left one fully consists of characters \"B\", and the right one fully consists of characters \"W\". More formally, there are four integers a, b, c, d (1 ≤ a ≤ b < c ≤ d ≤ |s|; b - a + 1 = d - c + 1 = k) such that si = \"B\" (a ≤ i ≤ b) and sj = \"W\" (c ≤ j ≤ d). \n\nHelp the Little Elephant find the number of different beautiful strings he can obtain from string s. Two strings are considered different if there is such position, where the character in the first string differs from the corresponding character in the second string. If this string doesn't contain characters «X» and it is already beautiful — the answer is 1.\n\nAs the answer can be rather large, print it modulo 1000000007 (109 + 7).\n\nInput\n\nThe first line contains two space-separated integers n and k (1 ≤ k ≤ n ≤ 106). The second line contains string s. String s has length n and only consists of characters \"W\", \"B\" and \"X\".\n\nOutput\n\nOn a single line print an integer — the answer to the problem modulo 1000000007 (109 + 7).\n\nExamples\n\nInput\n\n3 2\nXXX\n\n\nOutput\n\n0\n\n\nInput\n\n4 2\nXXXX\n\n\nOutput\n\n1\n\n\nInput\n\n10 2\nXXBXXWXXXX\n\n\nOutput\n\n166\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

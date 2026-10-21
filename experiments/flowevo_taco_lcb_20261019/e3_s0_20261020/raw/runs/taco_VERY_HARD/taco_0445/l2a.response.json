@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "464ef2b8-63e6-405c-9d23-8062255044e4",
+  "created": 1792444533,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 988,
+    "completion_tokens": 17633,
+    "total_tokens": 18621,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 17001
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 220
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.buffer.readline\n\n    line = input()\n    while line and line.strip() == b'':\n        line = input()\n    if not line:\n        return\n\n    T = int(line)\n    answers = []\n\n    for _ in range(T):\n        line = input()\n        while line and line.strip() == b'':\n            line = input()\n        N = int(line)\n\n        A = []\n        while len(A) < N:\n            A.extend(map(int, input().split()))\n\n        S = input().strip()\n        while S == b'':\n            S = input().strip()\n\n        fixed = [-1]\n        rel = bytearray()\n        comp = 0\n        ok = True\n\n        for i, value in enumerate(A):\n            if value >= 0:\n                if fixed[comp] == -1:\n                    fixed[comp] = value\n                elif fixed[comp] != value:\n                    ok = False\n\n            if i < N - 1:\n                ch = S[i]\n                if ch != ord('='):\n                    rel.append(ch)\n                    comp += 1\n                    fixed.append(-1)\n\n        if not ok:\n            answers.append(\"NO\")\n            continue\n\n        M = len(fixed)\n        indegree = [0] * M\n\n        for i, ch in enumerate(rel):\n            if ch == ord('<'):\n                indegree[i + 1] += 1\n            else:  # '>'\n                indegree[i] += 1\n\n        lower = fixed[:]\n        for i in range(M):\n            if lower[i] == -1:\n                lower[i] = 0\n\n        queue = []\n        for i in range(M):\n            if indegree[i] == 0:\n                queue.append(i)\n\n        ptr = 0\n        while ptr < len(queue):\n            u = queue[ptr]\n            ptr += 1\n\n            next_value = lower[u] + 1\n\n            if u > 0 and rel[u - 1] == ord('>'):\n                v = u - 1\n                if lower[v] < next_value:\n                    lower[v] = next_value\n\n                indegree[v] -= 1\n                if indegree[v] == 0:\n                    queue.append(v)\n\n            if u < M - 1 and rel[u] == ord('<'):\n                v = u + 1\n                if lower[v] < next_value:\n                    lower[v] = next_value\n\n                indegree[v] -= 1\n                if indegree[v] == 0:\n                    queue.append(v)\n\n        if len(queue) != M:\n            answers.append(\"NO\")\n            continue\n\n        for i, value in enumerate(fixed):\n            if value != -1 and lower[i] != value:\n                ok = False\n                break\n\n        answers.append(\"YES\" if ok else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 81.495,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRecently, Chef has noticed that he is becoming fatter than ever. It is not surprising, as Chef is eating a lot of the food he is cooking. Therefore, he has been doing exercises for the last $N$ days (numbered $1$ through $N$). For some of these days, Chef remembers for how many minutes he exercised. You are given a sequence $A_{1}, A_{2}, \\ldots, A_{N}$. For each valid $i$, if $A_{i} ≥ 0$, then Chef exercised for $A_{i}$ minutes on the $i$-th day; otherwise, Chef forgot how long he exercised on the $i$-th day and $A_{i} = -1$. Note that Chef could only have exercised for an integer non-negative number of minutes on each day, including the days he does not remember.\n\nChef can also compare how long he exercised on each two consecutive days. You are given a string $S$ with length $N-1$. For each valid $i$, the $i$-th character of $S$ is one of the following:\n'>' if Chef exercised for strictly more minutes on the $i$-th day than on the $(i+1)$-th day\n'=' if Chef exercised for an equally long time on the $i$-th day and on the $(i+1)$-th day\n'<' if Chef exercised for strictly more minutes on the $(i+1)$-th day than on the $i$-th day\n\nChef is doubting his memory, so he wants you to check if the information is consistent, i.e. if there is a way to determine for how many minutes Chef exercised on each day he does not remember such that the string $S$ describes the correct comparison operators.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nThe second line contains $N$ space-separated integers $A_{1}, A_{2}, \\ldots, A_{N}$.\nThe third line contains a single string $S$.\n\n------  Output ------\nFor each test case, if the information on the input is inconsistent, print a single line containing the string \"NO\", otherwise output  \"YES\"\n\n------  Constraints  ------\n$1 ≤ T ≤ 1,000$\n$2 ≤ N ≤ 10^{5}$\n$-1 ≤ A_{i} ≤ 10^{6}$ for each valid $i$\n$|S| = N-1$\n$S$ contains only characters '' and '='\nfor each valid $i$, if $A_{i} \\neq -1$ and $A_{i+1} \\neq -1$, then the $i$-th character of $S$ is consistent with $A_{i}$ and $A_{i+1}$\nthe sum of $N$ over all test cases does not exceed $10^{6}$\n\n----- Sample Input 1 ------ \n5\n\n6\n\n7 5 -1 -1 -1 10\n\n>≥>>\n\n6\n\n7 5 -1 -1 -1 10\n\n>≥\n\n2\n\n0 -1\n\n>\n\n5\n\n5 -1 -1 -1 10\n\n<<<<\n\n5\n\n5 -1 -1 -1 8\n\n<<<<\n----- Sample Output 1 ------ \nNO\n\nYES\n\nNO\n\nYES\n\nNO\n----- explanation 1 ------ \nExample case 1: The number of minutes Chef spent exercising on day $5$ must be bigger than $10$ and smaller than $5$, which is impossible.\n\nExample case 3: Chef must have exercised for a negative number of minutes on day $2$, which is not allowed.\n\nExample case 5: The information is inconsistent because Chef only exercises for an integer number of minutes on each day. Since the number of minutes he spent exercising on each day must be increasing, he must have spent at least $6$ minutes on day $2$, at least $7$ minutes on day $3$, at least $8$ on day $4$ and at least $9$ on day $5$, but $A_{5} = 8$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

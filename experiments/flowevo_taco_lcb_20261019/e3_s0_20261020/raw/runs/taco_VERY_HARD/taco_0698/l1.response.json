@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "762e72d1-3870-40fa-9302-c4904bc9a1a6",
+  "created": 1792439345,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 587,
+    "completion_tokens": 29399,
+    "total_tokens": 29986,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 28550
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 587
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\nMOD = 1_000_000_007\nB = ord('B')\nW = ord('W')\n\n\ndef count_no_b_runs(s, k):\n    \"\"\"\n    f[i] = number of assignments for s[0:i] avoiding k consecutive B's.\n    \"\"\"\n    n = len(s)\n    f = [0] * (n + 1)\n    f[0] = 1\n\n    dq = deque([1])  # w[0] = 1, boundary before the first character\n    total = 1\n    cur_left = 0\n    last_fixed_w = 0\n\n    for i in range(1, n + 1):\n        ch = s[i - 1]\n\n        # w[i] = assignments where position i is W (as the last W/boundary)\n        if ch != B:\n            wi = f[i - 1]\n        else:\n            wi = 0\n\n        dq.append(wi)\n        total += wi\n        if total >= MOD:\n            total -= MOD\n\n        if ch == W:\n            last_fixed_w = i\n\n        left = last_fixed_w\n        tmp = i - k + 1\n        if tmp > left:\n            left = tmp\n\n        while cur_left < left:\n            total -= dq.popleft()\n            if total < 0:\n                total += MOD\n            cur_left += 1\n\n        f[i] = total\n\n    return f\n\n\ndef main():\n    input_data = sys.stdin.buffer\n    n, k = map(int, input_data.readline().split())\n    s = input_data.readline().strip()\n\n    # Count strings avoiding k consecutive B's in all prefixes.\n    pref_no_b = count_no_b_runs(s, k)\n\n    # Build reversed string with B and W swapped, to count suffixes\n    # avoiding k consecutive W's in the original string.\n    rev_swapped = bytearray(n)\n    for i in range(n):\n        ch = s[n - 1 - i]\n        if ch == B:\n            rev_swapped[i] = W\n        elif ch == W:\n            rev_swapped[i] = B\n        else:\n            rev_swapped[i] = ord('X')\n\n    pref_rev_no_b = count_no_b_runs(rev_swapped, k)\n\n    # Bad strings:\n    # 1) no k consecutive B's\n    # 2) have a first occurrence of k consecutive B's, but no k consecutive W's after it\n    bad = pref_no_b[n]\n\n    limit = n - k + 1\n\n    # Fixed W count in the first possible B-block.\n    fixed_w_count = 0\n    for i in range(k):\n        if s[i] == W:\n            fixed_w_count += 1\n\n    for a in range(1, limit + 1):\n        if fixed_w_count == 0:\n            if a == 1:\n                suffix_len = n - a - k + 1\n                bad += pref_rev_no_b[suffix_len]\n                if bad >= MOD:\n                    bad -= MOD\n            else:\n                # Position a - 1 must be W, so it cannot be a fixed B.\n                if s[a - 2] != B:\n                    prefix_ways = pref_no_b[a - 2]\n                    suffix_len = n - a - k + 1\n                    bad = (bad + prefix_ways * pref_rev_no_b[suffix_len]) % MOD\n\n        # Slide the B-block window.\n        if a != limit:\n            if s[a - 1] == W:\n                fixed_w_count -= 1\n            if s[a + k - 1] == W:\n                fixed_w_count += 1\n\n    total = pow(2, s.count(b'X'), MOD)\n    answer = (total - bad) % MOD\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 141.772,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe Little Elephant has found a ragged old black-and-white string s on the attic.\n\nThe characters of string s are numbered from the left to the right from 1 to |s|, where |s| is the length of the string. Let's denote the i-th character of string s as si. As the string is black-and-white, each character of the string is either letter \"B\", or letter \"W\". Unfortunately, the string is very old and some characters are damaged. The damaged positions are denoted as \"X\".\n\nThe Little Elephant in determined to restore the string and hang it on the wall. For that he needs to replace each character \"X\" by a \"B\" or a \"W\". The string must look good on the wall, so it must be beautiful. The Little Elephant considers a string beautiful if it has two non-intersecting substrings of a given length k, such that the left one fully consists of characters \"B\", and the right one fully consists of characters \"W\". More formally, there are four integers a, b, c, d (1 ≤ a ≤ b < c ≤ d ≤ |s|; b - a + 1 = d - c + 1 = k) such that si = \"B\" (a ≤ i ≤ b) and sj = \"W\" (c ≤ j ≤ d). \n\nHelp the Little Elephant find the number of different beautiful strings he can obtain from string s. Two strings are considered different if there is such position, where the character in the first string differs from the corresponding character in the second string. If this string doesn't contain characters «X» and it is already beautiful — the answer is 1.\n\nAs the answer can be rather large, print it modulo 1000000007 (109 + 7).\n\nInput\n\nThe first line contains two space-separated integers n and k (1 ≤ k ≤ n ≤ 106). The second line contains string s. String s has length n and only consists of characters \"W\", \"B\" and \"X\".\n\nOutput\n\nOn a single line print an integer — the answer to the problem modulo 1000000007 (109 + 7).\n\nExamples\n\nInput\n\n3 2\nXXX\n\n\nOutput\n\n0\n\n\nInput\n\n4 2\nXXXX\n\n\nOutput\n\n1\n\n\nInput\n\n10 2\nXXBXXWXXXX\n\n\nOutput\n\n166\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

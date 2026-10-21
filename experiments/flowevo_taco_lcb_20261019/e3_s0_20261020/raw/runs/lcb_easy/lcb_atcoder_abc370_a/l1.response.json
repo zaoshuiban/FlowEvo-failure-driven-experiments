@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "430d1435-f070-4edc-9759-9b64cea7e367",
+  "created": 1792430270,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 382,
+    "completion_tokens": 139,
+    "total_tokens": 521,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 79
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 382
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nL, R = map(int, sys.stdin.readline().split())\n\nif L == 1 and R == 0:\n    print(\"Yes\")\nelif L == 0 and R == 1:\n    print(\"No\")\nelse:\n    print(\"Invalid\")\n```",
+  "latency_s": 1.436,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTakahashi decided to make takoyaki (octopus balls) and serve it to Snuke. Takahashi instructed Snuke to raise only his left hand if he wants to eat takoyaki, and only his right hand otherwise.\nYou are given the information about which hand Snuke is raising as two integers L and R.\r\nHe is raising his left hand if and only if L = 1, and raising his right hand if and only if R = 1. He might not follow the instructions and could raise both hands or not raise any hand at all.\nIf Snuke is raising only one hand, print Yes if he wants to eat takoyaki, and No if he does not. If he is raising both hands or not raising any hand, print Invalid.\nAssume that if Snuke is raising only one hand, he is always following the instructions.\n\nInput\n\nThe input is given from Standard Input in the following format:\nL R\n\nOutput\n\nPrint Yes, No, or Invalid according to the instructions in the problem statement.\n\nConstraints\n\n\n- Each of L and R is 0 or 1.\n\nSample Input 1\n\n1 0\n\nSample Output 1\n\nYes\r\n\nSnuke wants to eat takoyaki, so he is raising only his left hand.\n\nSample Input 2\n\n1 1\n\nSample Output 2\n\nInvalid\r\n\nSnuke is raising both hands.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

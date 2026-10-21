@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "41095635-8bda-43a8-a403-a940dffcc44f",
+  "created": 1792435113,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 635,
+    "completion_tokens": 13818,
+    "total_tokens": 14453,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13490
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 635
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    T = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(T):\n        n = int(data[idx])\n        idx += 1\n        t = data[idx]\n        idx += 1\n\n        mapping = [-1] * 26\n        used_image = [False] * 26\n        assigned_count = 0\n\n        result = bytearray()\n\n        for b in t:\n            c = b - ord('a')\n            y = mapping[c]\n\n            if y == -1:\n                if assigned_count == 25:\n                    for candidate in range(26):\n                        if not used_image[candidate]:\n                            y = candidate\n                            break\n                else:\n                    for candidate in range(26):\n                        if used_image[candidate]:\n                            continue\n\n                        cur = candidate\n                        creates_cycle = False\n\n                        while True:\n                            if cur == c:\n                                creates_cycle = True\n                                break\n\n                            nxt = mapping[cur]\n                            if nxt == -1:\n                                break\n\n                            cur = nxt\n\n                        if not creates_cycle:\n                            y = candidate\n                            break\n\n                mapping[c] = y\n                used_image[y] = True\n                assigned_count += 1\n\n            result.append(y + ord('a'))\n\n        answers.append(result.decode())\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 71.126,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere was a string $s$ which was supposed to be encrypted. For this reason, all $26$ lowercase English letters were arranged in a circle in some order, afterwards, each letter in $s$ was replaced with the one that follows in clockwise order, in that way the string $t$ was obtained.\n\nYou are given a string $t$. Determine the lexicographically smallest string $s$ that could be a prototype of the given string $t$.\n\nA string $a$ is lexicographically smaller than a string $b$ of the same length if and only if:\n\nin the first position where $a$ and $b$ differ, the string $a$ has a letter, that appears earlier in the alphabet than the corresponding letter in $b$.\n\n\n-----Input-----\n\nThe first line of the input contains a single integer $t$ ($1 \\le t \\le 3 \\cdot 10^4$) — the number of test cases. The description of test cases follows.\n\nThe first line of each test case contains one integer $n$ ($1 \\le n \\le 10^5$) — the length of the string $t$.\n\nThe next line contains the string $t$ of the length $n$, containing lowercase English letters.\n\nIt is guaranteed that the sum of $n$ over all test cases doesn't exceed $2 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, output a single line containing the lexicographically smallest string $s$ which could be a prototype of $t$.\n\n\n-----Examples-----\n\nInput\n5\n1\na\n2\nba\n10\ncodeforces\n26\nabcdefghijklmnopqrstuvwxyz\n26\nabcdefghijklmnopqrstuvwxzy\nOutput\nb\nac\nabcdebfadg\nbcdefghijklmnopqrstuvwxyza\nbcdefghijklmnopqrstuvwxyaz\n\n\n-----Note-----\n\nIn the first test case, we couldn't have the string \"a\", since the letter a would transit to itself. Lexicographically the second string \"b\" is suitable as an answer.\n\nIn the second test case, the string \"aa\" is not suitable, since a would transit to itself. \"ab\" is not suitable, since the circle would be closed with $2$ letters, but it must contain all $26$. The next string \"ac\" is suitable.\n\nBelow you can see the schemes for the first three test cases. The non-involved letters are skipped, they can be arbitrary placed in the gaps.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

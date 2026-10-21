@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "708bd78a-9f3f-4b12-8d5f-620662b6e6c4",
+  "created": 1792430564,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 609,
+    "completion_tokens": 14025,
+    "total_tokens": 14634,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13810
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 609
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def maxRemovals(self, source: str, pattern: str, targetIndices: List[int]) -> int:\n        n, m = len(source), len(pattern)\n\n        is_target = [False] * n\n        for idx in targetIndices:\n            is_target[idx] = True\n\n        INF = 10**9\n        # dp[j] = minimum number of target positions used to match\n        # the first j characters of pattern.\n        dp = [INF] * (m + 1)\n        dp[0] = 0\n\n        for i, ch in enumerate(source):\n            cost = 1 if is_target[i] else 0\n\n            for j in range(m, 0, -1):\n                if ch == pattern[j - 1] and dp[j - 1] != INF:\n                    dp[j] = min(dp[j], dp[j - 1] + cost)\n\n        return len(targetIndices) - dp[m]\n```",
+  "latency_s": 67.26,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string source of size n, a string pattern that is a subsequence of source, and a sorted integer array targetIndices that contains distinct numbers in the range [0, n - 1].\nWe define an operation as removing a character at an index idx from source such that:\n\nidx is an element of targetIndices.\npattern remains a subsequence of source after removing the character.\n\nPerforming an operation does not change the indices of the other characters in source. For example, if you remove 'c' from \"acb\", the character at index 2 would still be 'b'.\nReturn the maximum number of operations that can be performed.\n \nExample 1:\n\nInput: source = \"abbaa\", pattern = \"aba\", targetIndices = [0,1,2]\nOutput: 1\nExplanation:\nWe can't remove source[0] but we can do either of these two operations:\n\nRemove source[1], so that source becomes \"a_baa\".\nRemove source[2], so that source becomes \"ab_aa\".\n\n\nExample 2:\n\nInput: source = \"bcda\", pattern = \"d\", targetIndices = [0,3]\nOutput: 2\nExplanation:\nWe can remove source[0] and source[3] in two operations.\n\nExample 3:\n\nInput: source = \"dda\", pattern = \"dda\", targetIndices = [0,1,2]\nOutput: 0\nExplanation:\nWe can't remove any character from source.\n\nExample 4:\n\nInput: source = \"yeyeykyded\", pattern = \"yeyyd\", targetIndices = [0,2,3,4]\nOutput: 2\nExplanation:\nWe can remove source[2] and source[3] in two operations.\n\n \nConstraints:\n\n1 <= n == source.length <= 3 * 10^3\n1 <= pattern.length <= n\n1 <= targetIndices.length <= n\ntargetIndices is sorted in ascending order.\nThe input is generated such that targetIndices contains distinct elements in the range [0, n - 1].\nsource and pattern consist only of lowercase English letters.\nThe input is generated such that pattern appears as a subsequence in source.\n\nStarter code / required signature:\nclass Solution:\n    def maxRemovals(self, source: str, pattern: str, targetIndices: List[int]) -> int:\n        \n\nUse the required function/method named maxRemovals. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

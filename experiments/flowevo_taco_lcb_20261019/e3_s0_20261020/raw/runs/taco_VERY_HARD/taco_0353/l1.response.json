@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0f0cfdc1-51ce-4e10-8737-c4024c9ef803",
+  "created": 1792455732,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 696,
+    "completion_tokens": 18448,
+    "total_tokens": 19144,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 17653
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 696
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef int_stream():\n    data = sys.stdin.buffer.read()\n    num = 0\n    in_num = False\n    for c in data:\n        if c >= 48:  # digit\n            num = num * 10 + (c - 48)\n            in_num = True\n        else:\n            if in_num:\n                yield num\n                num = 0\n                in_num = False\n    if in_num:\n        yield num\n\n\ndef solve():\n    it = int_stream()\n    try:\n        t = next(it)\n    except StopIteration:\n        return\n\n    out = []\n    INF = 10**18\n    NEG = -10**18\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n\n        rows = []\n        for _ in range(n):\n            rows.append([next(it) for _ in range(m)])\n\n        order = list(range(n))\n        order.sort(key=lambda i: rows[i][0])\n\n        sorted_rows = [rows[i] for i in order]\n\n        size = n * m\n        suff_min = [0] * size\n        suff_max = [0] * size\n\n        for i, row in enumerate(sorted_rows):\n            base = i * m\n            cur_min = INF\n            cur_max = NEG\n\n            for j in range(m - 1, -1, -1):\n                v = row[j]\n                if v < cur_min:\n                    cur_min = v\n                if v > cur_max:\n                    cur_max = v\n\n                suff_min[base + j] = cur_min\n                suff_max[base + j] = cur_max\n\n        left_min = [INF] * n\n        left_max = [NEG] * n\n\n        suf_l = [0] * (n + 1)\n        suf_r = [0] * (n + 1)\n\n        found = False\n        found_p = -1\n        found_k = -1\n\n        for k in range(1, m):\n            col = k - 1\n\n            for i in range(n):\n                v = sorted_rows[i][col]\n                if v < left_min[i]:\n                    left_min[i] = v\n                if v > left_max[i]:\n                    left_max[i] = v\n\n            min_l = INF\n            max_r = NEG\n\n            for i in range(n - 1, -1, -1):\n                v = left_min[i]\n                if v < min_l:\n                    min_l = v\n                suf_l[i] = min_l\n\n                v = suff_max[i * m + k]\n                if v > max_r:\n                    max_r = v\n                suf_r[i] = max_r\n\n            pref_max_l = NEG\n            pref_min_r = INF\n\n            for p in range(1, n):\n                i = p - 1\n\n                v = left_max[i]\n                if v > pref_max_l:\n                    pref_max_l = v\n\n                v = suff_min[i * m + k]\n                if v < pref_min_r:\n                    pref_min_r = v\n\n                if pref_max_l < suf_l[p] and pref_min_r > suf_r[p]:\n                    found = True\n                    found_p = p\n                    found_k = k\n                    break\n\n            if found:\n                break\n\n        if not found:\n            out.append(\"NO\")\n        else:\n            colors = ['R'] * n\n            for pos in range(found_p):\n                colors[order[pos]] = 'B'\n\n            out.append(\"YES\")\n            out.append(''.join(colors) + ' ' + str(found_k))\n\n    sys.stdout.write('\\n'.join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 80.945,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a matrix, consisting of n rows and m columns. The j-th cell of the i-th row contains an integer a_{ij}.\n\nFirst, you have to color each row of the matrix either red or blue in such a way that at least one row is colored red and at least one row is colored blue.\n\nThen, you have to choose an integer k (1 ≤ k < m) and cut the colored matrix in such a way that the first k columns become a separate matrix (the left matrix) and the last m-k columns become a separate matrix (the right matrix).\n\nThe coloring and the cut are called perfect if two properties hold: \n\n  * every red cell in the left matrix contains an integer greater than every blue cell in the left matrix; \n  * every blue cell in the right matrix contains an integer greater than every red cell in the right matrix. \n\n\n\nFind any perfect coloring and cut, or report that there are none.\n\nInput\n\nThe first line contains a single integer t (1 ≤ t ≤ 1000) — the number of testcases.\n\nThen the descriptions of t testcases follow.\n\nThe first line of each testcase contains two integers n and m (2 ≤ n, m ≤ 5 ⋅ 10^5; n ⋅ m ≤ 10^6) — the number of rows and the number of columns in the matrix, respectively.\n\nThe i-th of the next n lines contains m integers a_{i1}, a_{i2}, ..., a_{im} (1 ≤ a_{ij} ≤ 10^6).\n\nThe sum of n ⋅ m over all testcases doesn't exceed 10^6.\n\nOutput\n\nFor each testcase print an answer. If there are no perfect colorings and cuts in the matrix, then print \"NO\".\n\nOtherwise, first, print \"YES\". Then a string, consisting of n characters: the i-th character should be 'R' if the i-th row is colored red and 'B' if it's colored blue. The string should contain at least one 'R' and at least one 'B'. Finally, print an integer k (1 ≤ k < m) — the number of columns from the left that are cut.\n\nExample\n\nInput\n\n\n3\n5 5\n1 5 8 8 7\n5 2 1 4 3\n1 6 9 7 5\n9 3 3 3 2\n1 7 9 9 8\n3 3\n8 9 8\n1 5 3\n7 5 7\n2 6\n3 3 3 2 2 2\n1 1 1 4 4 4\n\n\nOutput\n\n\nYES\nBRBRB 1\nNO\nYES\nRB 3\n\nNote\n\nThe coloring and the cut for the first testcase:\n\n<image>\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

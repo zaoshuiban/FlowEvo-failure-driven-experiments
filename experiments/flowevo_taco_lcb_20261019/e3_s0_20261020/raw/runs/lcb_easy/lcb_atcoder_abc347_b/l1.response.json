@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a62d5eb8-ed7f-4b16-bf77-12ad688b7784",
+  "created": 1792430418,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 268,
+    "completion_tokens": 187,
+    "total_tokens": 455,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 128
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 268
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nS = sys.stdin.readline().strip()\nsubstrings = set()\n\nfor i in range(len(S)):\n    for j in range(i + 1, len(S) + 1):\n        substrings.add(S[i:j])\n\nprint(len(substrings))\n```",
+  "latency_s": 1.617,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string S consisting of lowercase English letters. How many different non-empty substrings does S have?\nA substring is a contiguous subsequence. For example, xxx is a substring of yxxxy but not of xxyxx.\n\nInput\n\nThe input is given from Standard Input in the following format:\nS\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- S is a string of length between 1 and 100, inclusive, consisting of lowercase English letters.\n\nSample Input 1\n\nyay\n\nSample Output 1\n\n5\r\n\nS has the following five different non-empty substrings:\n\n- a\n- y\n- ay\n- ya\n- yay\n\nSample Input 2\n\naababc\n\nSample Output 2\n\n17\n\nSample Input 3\n\nabracadabra\n\nSample Output 3\n\n54\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

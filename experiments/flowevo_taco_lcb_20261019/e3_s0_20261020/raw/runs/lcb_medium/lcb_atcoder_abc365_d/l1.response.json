@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b873b66c-475a-482f-8986-f3b121a847d8",
+  "created": 1792430653,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 512,
+    "completion_tokens": 1169,
+    "total_tokens": 1681,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 862
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 512
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    N = int(input())\n    S = input().strip()\n\n    moves = \"RPS\"\n    NEG = -10**9\n\n    def result(t, a):\n        # 1 if Takahashi wins, 0 if draw, -1 if loses\n        if t == a:\n            return 0\n        if (t == \"R\" and a == \"S\") or \\\n           (t == \"P\" and a == \"R\") or \\\n           (t == \"S\" and a == \"P\"):\n            return 1\n        return -1\n\n    dp = [NEG] * 3\n\n    for i, t in enumerate(moves):\n        res = result(t, S[0])\n        if res >= 0:\n            dp[i] = res\n\n    for i in range(1, N):\n        ndp = [NEG] * 3\n        a = S[i]\n\n        for j, t in enumerate(moves):\n            res = result(t, a)\n            if res < 0:\n                continue\n\n            best = NEG\n            for k in range(3):\n                if k != j:\n                    best = max(best, dp[k])\n\n            if best != NEG:\n                ndp[j] = best + res\n\n        dp = ndp\n\n    print(max(dp))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 5.565,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTakahashi and Aoki played rock-paper-scissors N times. [Note: In this game, Rock beats Scissors, Scissors beats Paper, and Paper beats Rock.]\nAoki's moves are represented by a string S of length N consisting of the characters R, P, and S.\r\nThe i-th character of S indicates Aoki's move in the i-th game: R for Rock, P for Paper, and S for Scissors.\nTakahashi's moves satisfy the following conditions:\n\n- Takahashi never lost to Aoki.\n- For i=1,2,\\ldots,N-1, Takahashi's move in the i-th game is different from his move in the (i+1)-th game.\n\nDetermine the maximum number of games Takahashi could have won.\nIt is guaranteed that there exists a sequence of moves for Takahashi that satisfies these conditions.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\n\nOutput\n\nPrint the maximum number of games Takahashi could have won.\n\nConstraints\n\n\n- 1\\leq N\\leq2\\times10 ^ 5\n- S is a string of length N consisting of R, P, and S.\n- N is an integer.\n\nSample Input 1\n\n6\r\nPRSSRS\n\nSample Output 1\n\n5\r\n\nIn the six games of rock-paper-scissors, Aoki played Paper, Rock, Scissors, Scissors, Rock, and Scissors.\nTakahashi can play Scissors, Paper, Rock, Scissors, Paper, and Rock to win the 1st, 2nd, 3rd, 5th, and 6th games.\nThere is no sequence of moves for Takahashi that satisfies the conditions and wins all six games, so print 5.\n\nSample Input 2\n\n10\r\nSSSSSSSSSS\n\nSample Output 2\n\n5\n\nSample Input 3\n\n24\r\nSPRPSRRRRRPPRPRPSSRSPRSS\n\nSample Output 3\n\n18\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

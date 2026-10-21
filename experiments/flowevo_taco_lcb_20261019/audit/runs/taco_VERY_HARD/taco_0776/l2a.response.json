@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4b67deee-0205-46f3-a65e-185a69400307",
+  "created": 1792447448,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 559,
+    "completion_tokens": 27828,
+    "total_tokens": 28387,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 27090
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 175
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import gcd\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    n = data[idx]\n    idx += 1\n\n    a = [0] * (n + 1)\n    max_a = 0\n\n    for i in range(1, n + 1):\n        x = data[idx]\n        idx += 1\n        a[i] = x\n        if x > max_a:\n            max_a = x\n\n    edges_by_gcd = [[] for _ in range(max_a + 1)]\n\n    for _ in range(n - 1):\n        u = data[idx]\n        v = data[idx + 1]\n        idx += 2\n        g = gcd(a[u], a[v])\n        edges_by_gcd[g].append((u, v))\n\n    pos = [[] for _ in range(max_a + 1)]\n    for i in range(1, n + 1):\n        pos[a[i]].append(i)\n\n    del data\n\n    # F[d] will first store the number of pairs whose path gcd is divisible by d.\n    F = [0] * (max_a + 1)\n\n    # All pairs have path gcd divisible by 1.\n    F[1] = n * (n + 1) // 2\n\n    parent = [0] * (n + 1)\n    size = [0] * (n + 1)\n\n    limit = max_a + 1\n\n    for d in range(2, limit):\n        total = 0\n\n        # Activate all vertices whose value is divisible by d.\n        for val in range(d, limit, d):\n            for v in pos[val]:\n                parent[v] = v\n                size[v] = 1\n                total += 1\n\n        if total == 0:\n            continue\n\n        # Process all active edges: d divides gcd(a[u], a[v]).\n        for g in range(d, limit, d):\n            for u, v in edges_by_gcd[g]:\n                ru = u\n                while parent[ru] != ru:\n                    parent[ru] = parent[parent[ru]]\n                    ru = parent[ru]\n\n                rv = v\n                while parent[rv] != rv:\n                    parent[rv] = parent[parent[rv]]\n                    rv = parent[rv]\n\n                # Active edges form a forest, so ru != rv.\n                if size[ru] < size[rv]:\n                    ru, rv = rv, ru\n\n                total += size[ru] * size[rv]\n                parent[rv] = ru\n                size[ru] += size[rv]\n\n        F[d] = total\n\n    # Mobius-like inversion over multiples:\n    # exact[d] = F[d] - sum(exact[multiple of d]).\n    for d in range(max_a, 0, -1):\n        value = F[d]\n        if value == 0:\n            continue\n\n        for multiple in range(d + d, limit, d):\n            value -= F[multiple]\n\n        F[d] = value\n\n    out = []\n    for i in range(1, limit):\n        if F[i] > 0:\n            out.append(f\"{i} {F[i]}\")\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 131.515,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a tree consisting of n vertices. A number is written on each vertex; the number on vertex i is equal to a_i.\n\nLet's denote the function g(x, y) as the greatest common divisor of the numbers written on the vertices belonging to the simple path from vertex x to vertex y (including these two vertices).\n\nFor every integer from 1 to 2 ⋅ 10^5 you have to count the number of pairs (x, y) (1 ≤ x ≤ y ≤ n) such that g(x, y) is equal to this number.\n\nInput\n\nThe first line contains one integer n — the number of vertices (1 ≤ n ≤ 2 ⋅ 10^5).\n\nThe second line contains n integers a_1, a_2, ..., a_n (1 ≤ a_i ≤ 2 ⋅ 10^5) — the numbers written on vertices.\n\nThen n - 1 lines follow, each containing two integers x and y (1 ≤ x, y ≤ n, x ≠ y) denoting an edge connecting vertex x with vertex y. It is guaranteed that these edges form a tree.\n\nOutput\n\nFor every integer i from 1 to 2 ⋅ 10^5 do the following: if there is no pair (x, y) such that x ≤ y and g(x, y) = i, don't output anything. Otherwise output two integers: i and the number of aforementioned pairs. You have to consider the values of i in ascending order.\n\nSee the examples for better understanding.\n\nExamples\n\nInput\n\n3\n1 2 3\n1 2\n2 3\n\n\nOutput\n\n1 4\n2 1\n3 1\n\n\nInput\n\n6\n1 2 4 8 16 32\n1 6\n6 3\n3 4\n4 2\n6 5\n\n\nOutput\n\n1 6\n2 5\n4 6\n8 1\n16 2\n32 1\n\n\nInput\n\n4\n9 16 144 6\n1 3\n2 3\n4 3\n\n\nOutput\n\n1 1\n2 1\n3 1\n6 2\n9 2\n16 2\n144 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

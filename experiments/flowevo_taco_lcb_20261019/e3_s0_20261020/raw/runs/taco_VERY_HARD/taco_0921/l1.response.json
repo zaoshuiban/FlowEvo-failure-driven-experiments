@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c4d87ee0-fe9d-4e81-8abb-cb313099f1aa",
+  "created": 1792429195,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 939,
+    "completion_tokens": 2753,
+    "total_tokens": 3692,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2513
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 939
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\nMAXN = 500000\n\ninv = [0] * (MAXN + 1)\ninv[1] = 1\nfor i in range(2, MAXN + 1):\n    inv[i] = MOD - (MOD // i) * inv[MOD % i] % MOD\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        freq = {}\n        for _ in range(n):\n            x = next(it)\n            freq[x] = freq.get(x, 0) + 1\n\n        ans = 0\n        suffix_count = 0\n\n        for value in sorted(freq.keys(), reverse=True):\n            count = freq[value]\n            suffix_count += count\n            ans = (ans + count * inv[suffix_count]) % MOD\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 12.632,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAlice and Bob are given an array of length of N. They decide to play a game with it.\n\nInitially, Alice randomly shuffles the array, and then Bob takes N turns. In each turn, Bob chooses an index which he has not already chosen and then Alice reveals the number on that index to Bob. If this number is either the first number to be chosen or strictly larger than previously chosen numbers by Bob then he takes it and adds to his array else he throws it.\n\nYou only know the initial unshuffled array and want to know the expected length of Bob's array at the end of the game.\n\nThe final expected length can be represented as a fraction of the form \\frac{P}{Q}. You are required to print P \\cdot Q^{-1} \\bmod 998244353.\n\n------ Input Format ------ \n\n- First line will contain T, number of testcases. Then the testcases follow.\n- Each testcase contains two lines of input.\n- The first line contains N the length of the array.\n- The second line contains N space-separated integers A_{1}, A_{2},..., A_{N} representing the initial array.\n\n------ Output Format ------ \n\nFor each testcase, output in a single line the expected length of Bob's array at the end of the game modulo 998244353.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 2 \\cdot 10^{4}$\n$1 ≤ N ≤ 5 \\cdot 10^{5}$\n$1 ≤ A_{i} ≤ 5 \\cdot 10^{5}$\n- Sum of $N$ does not exceeds $5 \\cdot 10^{5}$ over all testcases.\n\n----- Sample Input 1 ------ \n4\n2\n1 2\n3\n1 2 3\n3\n1 1 1\n3\n2 3 2\n----- Sample Output 1 ------ \n499122178\n831870296\n1\n665496237\n----- explanation 1 ------ \nTest case $1$: The possible final arrays will be $[2, 1]$ or $[1, 2]$. If Bob chooses indexes in the order $[2, 1]$ then he will end up with $2$ elements in the first case and $1$ element in the second case, if he chooses indexes in the order $[1, 2]$ then he will end up with $1$ element in the first case and $2$ elements in the case. Hence his probability ending up with $2$ elements is $\\frac{1}{2}$ and with $1$ element is also $\\frac{1}{2}$. Hence the final answer will be calculated as $2 \\cdot \\frac{1}{2} + 1 \\cdot \\frac{1}{2}$ which is equal to $\\frac{3}{2}$.\n\nTest case $2$: The probability of Bob ending up with all three elements is $\\frac{1}{6}$, the probability that he ends up with any two elements is $\\frac{1}{2}$ and the probability that he ends with only a single element is $\\frac{1}{3}$. Hence the final answer is calculated as $3 \\cdot \\frac{1}{6} + 2 \\cdot \\frac{1}{2} + 1 \\cdot \\frac{1}{3}$ which is equal to $\\frac{11}{6}$.\n\nTest case $3$: No matter what index Bob chooses initially he will only end up with $1$ element in his final array. Hence the final expected value is equal to $1$.\n\nTest case $4$: The probability of Bob ending up with all three elements is $0$, the probability that he ends up with any two elements is $\\frac{2}{3}$ and the probability that he ends with only a single element is $\\frac{1}{3}$. Hence the final answer is calculated as $2 \\cdot \\frac{2}{3} + 1 \\cdot \\frac{1}{3}$ which is equal to $\\frac{5}{3}$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

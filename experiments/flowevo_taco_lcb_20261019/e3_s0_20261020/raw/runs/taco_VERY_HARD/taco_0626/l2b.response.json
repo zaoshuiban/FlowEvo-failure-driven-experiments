@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "adba8b3d-586b-4acf-9e06-15c78b7be8ea",
+  "created": 1792460721,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 951,
+    "completion_tokens": 12306,
+    "total_tokens": 13257,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11550
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 183
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    idx = 0\n    L = len(data)\n\n    def next_int():\n        nonlocal idx\n        while idx < L and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < L and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    t = next_int()\n    answers = []\n    INF = 10**18\n\n    for _ in range(t):\n        n = next_int()\n\n        head = array('i', [-1]) * (n + 1)\n        m = 2 * (n - 1)\n        to = array('i', [0]) * m\n        nxt = array('i', [0]) * m\n\n        edge_idx = 0\n        for _ in range(n - 1):\n            u = next_int()\n            v = next_int()\n\n            to[edge_idx] = v\n            nxt[edge_idx] = head[u]\n            head[u] = edge_idx\n            edge_idx += 1\n\n            to[edge_idx] = u\n            nxt[edge_idx] = head[v]\n            head[v] = edge_idx\n            edge_idx += 1\n\n        A = array('i', [0]) * (n + 1)\n        for i in range(1, n + 1):\n            A[i] = next_int()\n\n        parent = array('i', [0]) * (n + 1)\n        parent[1] = -1\n\n        order = array('i', [0]) * n\n        order[0] = 1\n\n        tail = 1\n        pos = 0\n\n        while pos < tail:\n            u = order[pos]\n            pos += 1\n\n            e = head[u]\n            p = parent[u]\n\n            while e != -1:\n                v = to[e]\n                if v != p:\n                    parent[v] = u\n                    order[tail] = v\n                    tail += 1\n                e = nxt[e]\n\n        leaf_count = array('i', [0]) * (n + 1)\n        dp = array('q', [0]) * (n + 1)\n\n        for pos in range(n - 1, -1, -1):\n            u = order[pos]\n            e = head[u]\n\n            leaves = 0\n            children_sum = 0\n            has_child = False\n\n            while e != -1:\n                v = to[e]\n                if parent[v] == u:\n                    has_child = True\n                    leaves += leaf_count[v]\n                    children_sum += dp[v]\n                    if children_sum > INF:\n                        children_sum = INF\n                e = nxt[e]\n\n            if not has_child:\n                leaf_count[u] = 1\n                if A[u] > 0:\n                    dp[u] = A[u]\n                else:\n                    dp[u] = INF\n            else:\n                leaf_count[u] = leaves\n\n                if A[u] > 0:\n                    take_u = A[u] * leaves\n                else:\n                    take_u = INF\n\n                not_take_u = children_sum\n                dp[u] = take_u if take_u < not_take_u else not_take_u\n\n        answers.append(str(dp[1]))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 56.105,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n*“Animal instinct. When faced with danger, seek refuge in the herd.”*\n\nJun-Ho has come to know about the escape passage route that VIPs use in case of emergency. Jun-Ho is in the leader's office and he is planning his escape from the building.\n\nThe building has a tree-like structure, with the leader's office as the root. Jun-Ho has obtained information on this structure, in the form of a tree on N nodes rooted at 1. The building has some security, which can be calculated as follows:\n\nEach node of the tree has a value assigned to it — say, A_{i} for node i.\nLet u be a leaf node of the tree. The security of u is defined to be the bitwise OR of all values on the (unique) path from the root to u. Let this value be denoted L_{u}.\nThe security of the tree is then defined to be the sum of the security of all its leaf nodes, i.e, the sum of L_{u} across all leaf nodes u of the tree.\n\nThe tree is considered to be *secure* when L_{u} > 0 for every leaf node u of the tree; otherwise it is said to be *insecure*.\n\nJun-Ho would like the security of the tree to be as low as possible when making his escape. To this end, he can perform the following operation zero or more times:\nPick a node 1 ≤ u ≤ N of the tree, and set A_{u} = 0.\n\nHowever, if the tree ever becomes insecure as a result of an operation, the leader is immediately alerted and will foil Jun-Ho's plan. Thus, Jun-Ho cannot perform an operation that would make the tree insecure.\n\nHelp Jun-Ho find the minimum possible security the tree can have, such that the tree remains secure after every operation.\n\nNote: \nA leaf is a node of the tree without any child nodes.\nFor N = 1, the root is also considered to be a leaf.\nGiven input tree will be secured tree.\n\n------ Input Format ------ \n\n- The first line of input contains a single integer T, denoting the number of test cases. The description of T test cases follows.\n- The first line of each test case contains a single integer N, denoting the number of nodes of the tree.\n- The next N-1 lines each contain two space-separated integers u and v, denoting an edge between nodes u and v in the tree.\n- The next line contains N space-separated integers A_{1}, A_{2}, \\ldots, A_{N} — the values of the nodes.\n\n------ Output Format ------ \n\nFor each test case, output a single integer denoting the minimum security of the tree.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{3}$\n$1 ≤ N ≤ 10^{6}$\n$0 ≤ A_{i} ≤ 10^{9}$\n$1 ≤ u,v ≤ N$\n- The graph given in the input will always be a secured tree\n- Sum of $N$ over all test cases does not exceed $10^{6}$.\n\n----- Sample Input 1 ------ \n3\n1\n5\n5\n1 2\n1 3\n3 4\n3 5\n5 2 3 1 4\n4\n1 2\n1 3\n1 4\n2 2 2 2\n----- Sample Output 1 ------ \n5\n7\n6\n----- explanation 1 ------ \nTest Case 1: No operation can be done, and the minimum security of the tree is thus $5$.\n\nTest Case 2: Set $A_{1}$ and $A_{3}$ to $0$. It can be seen that $L_{2} = 2$, $L_{4} = 1$ and $L_{5} = 4$; so every leaf  has positive security. The security of the tree is $2 + 1 + 4 = 7$, and this is the minimum attainable.\n\nTest Case 3: The given tree already has minimum security, that being $6$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

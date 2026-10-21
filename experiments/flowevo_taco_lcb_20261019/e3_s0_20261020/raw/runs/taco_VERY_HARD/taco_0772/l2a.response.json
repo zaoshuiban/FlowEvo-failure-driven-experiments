@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "788977b1-4afb-4fbb-acd4-7de5d9271f30",
+  "created": 1792445504,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 602,
+    "completion_tokens": 27726,
+    "total_tokens": 28328,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 26769
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 218
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    n, m = map(int, sys.stdin.readline().split())\n    N = n\n\n    if m > N + 1:\n        print(0)\n        return\n\n    CMAX = N + 1\n\n    # A[size][cut] = number of ordered-edge-rooted worlds\n    # with 'size' added vertices and min cut 'cut'.\n    A = [[0] * (CMAX + 1) for _ in range(N + 1)]\n    A[0][1] = 1\n\n    # G[size][sum] = coefficient after multiplying multiset factors,\n    # where sum = cut - 1 for the root world.\n    G = [[0] * (N + 1) for _ in range(N + 1)]\n    G[0][0] = 1\n\n    inv = [0] * (N + 2)\n    if N + 1 >= 1:\n        inv[1] = 1\n        for i in range(2, N + 2):\n            inv[i] = MOD - (MOD // i) * inv[MOD % i] % MOD\n\n    for step in range(1, N + 1):\n        # E[d] = number of possible ears of size 'step'\n        # whose contribution to the cut is d.\n        E = [0] * (N + 2)\n\n        total_child_size = step - 1\n\n        for n1 in range(step):\n            n2 = total_child_size - n1\n            if n2 < 0:\n                continue\n\n            row1 = A[n1]\n            row2 = A[n2]\n\n            maxc1 = min(n1 + 1, CMAX)\n            maxc2 = min(n2 + 1, CMAX)\n\n            for c1 in range(1, maxc1 + 1):\n                v1 = row1[c1]\n                if v1 == 0:\n                    continue\n\n                for c2 in range(1, maxc2 + 1):\n                    v2 = row2[c2]\n                    if v2 == 0:\n                        continue\n\n                    d = c1 if c1 < c2 else c2\n                    E[d] = (E[d] + v1 * v2) % MOD\n\n        # Multiply G by product over d:\n        # (1 - x^step * y^d)^(-E[d])\n        for d in range(1, N + 1):\n            T = E[d]\n            if T == 0:\n                continue\n\n            qmax = min(N // step, N // d)\n            if qmax == 0:\n                continue\n\n            coeff = [0] * (qmax + 1)\n            coeff[0] = 1\n            cur = 1\n\n            for q in range(1, qmax + 1):\n                cur = cur * ((T + q - 1) % MOD) % MOD\n                cur = cur * inv[q] % MOD\n                coeff[q] = cur\n\n            old = G\n            new = [row[:] for row in old]\n\n            for sz in range(N + 1):\n                max_sz_q = (N - sz) // step\n                if max_sz_q <= 0:\n                    continue\n\n                row = old[sz]\n\n                for sd in range(N + 1):\n                    val = row[sd]\n                    if val == 0:\n                        continue\n\n                    max_q = max_sz_q\n                    max_q = min(max_q, (N - sd) // d)\n                    max_q = min(max_q, qmax)\n\n                    for q in range(1, max_q + 1):\n                        nsz = sz + q * step\n                        nsd = sd + q * d\n                        new[nsz][nsd] = (new[nsz][nsd] + val * coeff[q]) % MOD\n\n            G = new\n\n        rowA = A[step]\n        grow = G[step]\n\n        upto = min(step + 1, CMAX)\n        for c in range(1, upto + 1):\n            if c - 1 <= N:\n                rowA[c] = grow[c - 1]\n\n    if m <= CMAX:\n        print(A[N][m] % MOD)\n    else:\n        print(0)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 137.584,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA never-ending, fast-changing and dream-like world unfolds, as the secret door opens.\n\nA world is an unordered graph G, in whose vertex set V(G) there are two special vertices s(G) and t(G). An initial world has vertex set {s(G), t(G)} and an edge between them.\n\nA total of n changes took place in an initial world. In each change, a new vertex w is added into V(G), an existing edge (u, v) is chosen, and two edges (u, w) and (v, w) are added into E(G). Note that it's possible that some edges are chosen in more than one change.\n\nIt's known that the capacity of the minimum s-t cut of the resulting graph is m, that is, at least m edges need to be removed in order to make s(G) and t(G) disconnected.\n\nCount the number of non-similar worlds that can be built under the constraints, modulo 10^9 + 7. We define two worlds similar, if they are isomorphic and there is isomorphism in which the s and t vertices are not relabelled. Formally, two worlds G and H are considered similar, if there is a bijection between their vertex sets $f : V(G) \\rightarrow V(H)$, such that:   f(s(G)) = s(H);  f(t(G)) = t(H);  Two vertices u and v of G are adjacent in G if and only if f(u) and f(v) are adjacent in H. \n\n\n-----Input-----\n\nThe first and only line of input contains two space-separated integers n, m (1 ≤ n, m ≤ 50) — the number of operations performed and the minimum cut, respectively.\n\n\n-----Output-----\n\nOutput one integer — the number of non-similar worlds that can be built, modulo 10^9 + 7.\n\n\n-----Examples-----\nInput\n3 2\n\nOutput\n6\n\nInput\n4 4\n\nOutput\n3\n\nInput\n7 3\n\nOutput\n1196\n\nInput\n31 8\n\nOutput\n64921457\n\n\n\n-----Note-----\n\nIn the first example, the following 6 worlds are pairwise non-similar and satisfy the constraints, with s(G) marked in green, t(G) marked in blue, and one of their minimum cuts in light blue.\n\n [Image] \n\nIn the second example, the following 3 worlds satisfy the constraints.\n\n [Image]\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

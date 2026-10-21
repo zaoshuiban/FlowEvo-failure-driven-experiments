@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "34199d1d-a368-4cda-b80c-2c56a4d4223f",
+  "created": 1792434730,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1312,
+    "completion_tokens": 13394,
+    "total_tokens": 14706,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13103
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 800
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        q = [0] * m\n        first = [0] * (n + 1)\n        last = [0] * (n + 1)\n\n        for i in range(m):\n            v = data[idx]\n            idx += 1\n            q[i] = v\n\n            if first[v] == 0:\n                first[v] = i + 1\n            last[v] = i + 1\n\n        max_first = 0\n        max_keep = 0\n\n        for r in range(1, m + 1):\n            v = q[r - 1]\n\n            if last[v] == r:\n                if first[v] > max_first:\n                    max_first = first[v]\n\n            keep_len = r - max_first\n            if keep_len > max_keep:\n                max_keep = keep_len\n\n        answers.append(str(m - max_keep))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 63.18,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a double-ended queue $Q$. Initially, it contains elements $Q_{1}, Q_{2}, \\ldots, Q_{M}$ in this order. Each of these elements is an integer between $1$ and $N$ (inclusive) and each integer between $1$ and $N$ (inclusive) occurs in the queue at least once.\n\nWe want to pop some (possibly zero) elements from the front of the queue and some (not necessarily the same number, possibly zero) elements from the back. Among all the popped elements, each integer between $1$ and $N$ (inclusive) should appear at least once. Find the smallest possible total number of elements we need to pop.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $M$.\nThe second line contains $M$ space-separated integers $Q_{1}, Q_{2}, \\ldots, Q_{M}$.\n\n------  Output ------\nFor each test case, print a single line containing one integer — the minimum number of elements we need to pop.\n\n------  Constraints ------\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$N ≤ M ≤ 2 \\cdot 10^{5}$\nfor each $i$ ($1 ≤ i ≤ N$), there is at least one element equal to $i$ in the queue\nthe sum of $N$ over all test cases does not exceed $10^{5}$\nthe sum of $M$ over all test cases does not exceed $2 \\cdot 10^{5}$\n\n----- Sample Input 1 ------ \n3\n\n2 2\n\n1 2\n\n2 3\n\n1 2 1\n\n3 6\n\n1 1 1 3 2 2\n----- Sample Output 1 ------ \n2\n\n2\n\n4\n----- explanation 1 ------ \nExample case 1: Since $N = M$ and all elements are pairwise distinct, we have to pop everything to get each value at least once.\n\nExample case 2: We can pop the first $2$ or the last $2$ elements.\n\nExample case 3: We can pop the first element and the last $3$ elements, so the answer is $1 + 3 = 4$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        first = [m + 1] * (n + 1)\n        last = [0] * (n + 1)\n\n        for pos in range(1, m + 1):\n            value = data[idx]\n            idx += 1\n\n            if first[value] == m + 1:\n                first[value] = pos\n            last[value] = pos\n\n        INF = m + 1\n\n        # min_last[p] = minimum last occurrence among values whose first occurrence is p\n        min_last = [INF] * (m + 2)\n\n        for value in range(1, n + 1):\n            p = first[value]\n            if last[value] < min_last[p]:\n                min_last[p] = last[value]\n\n        # suffix_min[l] = minimum last occurrence among values whose first occurrence >= l\n        suffix_min = [INF] * (m + 3)\n\n        for i in range(m, 0, -1):\n            suffix_min[i] = min(min_last[i], suffix_min[i + 1])\n\n        max_kept = 0\n\n        # Choose the left endpoint l of the kept contiguous segment.\n        # The maximum possible right endpoint is suffix_min[l] - 1.\n        for l in range(1, m + 1):\n            r = suffix_min[l] - 1\n            if r >= l:\n                kept_len = r - l + 1\n                if kept_len > max_kept:\n                    max_kept = kept_len\n\n        answers.append(str(m - max_kept))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

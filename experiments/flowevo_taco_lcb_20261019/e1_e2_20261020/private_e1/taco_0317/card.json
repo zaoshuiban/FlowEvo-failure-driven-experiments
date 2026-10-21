@@ -1,0 +1,56 @@
+{
+  "task_id": "taco_0317",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "old_first_pass": true,
+  "old_final_pass": true,
+  "new_first_status": "WRONG_ANSWER",
+  "new_original_final_status": "WRONG_ANSWER",
+  "any_saved_candidate_pass": false,
+  "first_passing_saved_stage": null,
+  "attempts": 1,
+  "invalid_cases": 0,
+  "reference_corrections": 0,
+  "input_coverage": "structural_and_signature_only",
+  "preflight_status": "READY",
+  "evaluation_epoch": "repair_v2_20261020",
+  "timing_unstable": false,
+  "reported_final_status": "WRONG_ANSWER",
+  "family": "graph_tree",
+  "sampling_group": "regressed_wa",
+  "label": "VERIFIED_EVALUATION_PROBLEM",
+  "root_subtype": "wrong_reference",
+  "finding": "逐步沿父节点相遇，三个距离为 2、3、1；参考为 1、2、3。",
+  "static_syntax": "OK",
+  "independent_evidence": {
+    "kind": "independent_oracle",
+    "oracle_result": [
+      "2",
+      "3",
+      "1"
+    ],
+    "matches_candidate": true,
+    "reference_result": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  "review_scope": "task statement, original final code, test/expected contract, replay actual output/exception, old feedback and full candidate history; unknown retained where evidence insufficient",
+  "candidate_universally_correct": null,
+  "program_defect_excluded": false,
+  "new_status_observed": "WRONG_ANSWER",
+  "source_code_sha256": "fe4e04794439434a375af74a0257eb0e0bb58352c60e805e12392dec831c63e1",
+  "task_sha256": "249f00663714c01abd5ead75294c16a50f7b9903db0acf964befa147d40759fc",
+  "evidence_file_hashes": {
+    "private_failure_case.json": "bb8d038c3e39b042933773e55f7f4a9ec41055217d14e748bd21f3b4a78e19cb",
+    "isolated_failure_execution.json": "ada70c1291da721b8bc70d0a15e1de35be3c7217858735ed3efc2138b0b7a06d",
+    "history.json": "a3b326800fb8dd59afa77f3a2c162132ca8d1b9aa1b679355c6d4ef688147487",
+    "replay.json": "517a0d71ea8c84ed52478e95f4ec636fd6c970d569b8b7c4832975802cef83a6",
+    "original.py": "fe4e04794439434a375af74a0257eb0e0bb58352c60e805e12392dec831c63e1",
+    "preflight.json": "953cda27f861947b01f95e5b4f7d802eb6a8196651b0fa714b9c87a587c45686",
+    "statement.txt": "b27d72e6de6a37f96a3147598e62b1e91339caa8a717550a578387f178117ace"
+  },
+  "reproduction": "cd /opt/flowevo-benchmark-20261019 && venv/bin/python repair_v2d_20261020/code/adapter.py --task data/tasks/taco_0317.json --candidate e1_e2_20261020/private_e1/taco_0317/original.py --policies repair_v2d_20261020/policies.json --out /tmp/e1_taco_0317.json",
+  "root_cause_certainty": "confirmed specific defect"
+}

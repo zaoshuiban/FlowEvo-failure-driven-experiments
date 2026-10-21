@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ab50154f-00fe-424b-812b-6abb38a1ddb1",
+  "created": 1792447077,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 980,
+    "completion_tokens": 5298,
+    "total_tokens": 6278,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5140
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 468
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import Counter\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        arr = data[idx:idx + n]\n        idx += n\n\n        x = data[idx]\n        idx += 1\n\n        freq = Counter(a & x for a in arr)\n        ans = sum(count * count for count in freq.values())\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 24.967,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array A of size N and an integer X. \n\nFind the count of all the pairs (i,j) such that ((A_{i}  \\oplus  A_{j}) \\& X) = 0. Here \\oplus and \\& denote [bitwise XOR] and [bitwise AND] operations respectively..\n\n------ Input Format ------ \n\n- The first line of the input contains a single integer T denoting the number of test cases. The description of T test cases follows.\n- The first line of each test case contains a single integer N - the size of the array.\n- The second line contains N space-separated integers A_{1}, A_{2}, \\ldots, A_{N} - the elements of the array.\n- The third line of each test case contains a single integer X.\n\n------ Output Format ------ \n\nFor each test case, print a single line containing one integer ― the total number of pairs satisfying the condition.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$0 ≤ A_{i}, X ≤ 10^{9}$\n\n----- Sample Input 1 ------ \n2\n4\n1 2 3 1\n1\n3\n0 0 0\n21\n----- Sample Output 1 ------ \n10\n9\n----- explanation 1 ------ \nTest case $1$: There are $10$ pairs of $(i,j)$ $(1≤ i,j ≤ N)$ satisfying the condition. These pairs are: $(1,1),(1,3),(1,4),(2,2),(3,1),(3,3),(3,4),(4,1),(4,3),$ and $(4,4)$.\n\nTest case $2$: There are $9$ pairs of $(i,j)$ $(1≤ i,j ≤ N)$ satisfying the condition. These pairs are: $(1,1),(1,2),(1,3),(2,1),(2,2),(2,3),(3,1),(3,2),$ and $(3,3)$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n    t = data[idx]\n    idx += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        arr = data[idx:idx + n]\n        idx += n\n\n        x = data[idx]\n        idx += 1\n\n        freq = {}\n        for value in arr:\n            key = value & x\n            freq[key] = freq.get(key, 0) + 1\n\n        ans = sum(count * count for count in freq.values())\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

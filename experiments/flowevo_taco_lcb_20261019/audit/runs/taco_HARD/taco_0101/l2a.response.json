@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ae961931-682b-4941-bbbc-98ac4d667464",
+  "created": 1792457665,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 748,
+    "completion_tokens": 5334,
+    "total_tokens": 6082,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4869
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 236
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    idx = 0\n    length = len(data)\n\n    def next_int():\n        nonlocal idx\n        while idx < length and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < length and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    t = next_int()\n    output = []\n    gcd = math.gcd\n\n    for _ in range(t):\n        n = next_int()\n\n        adj = [[] for _ in range(n)]\n        for _ in range(n - 1):\n            x = next_int() - 1\n            y = next_int() - 1\n            adj[x].append(y)\n            adj[y].append(x)\n\n        values = [0] * n\n        for i in range(n):\n            values[i] = next_int()\n\n        mods = [0] * n\n        for i in range(n):\n            mods[i] = next_int()\n\n        parent = [-1] * n\n        path_gcd = [0] * n\n        is_leaf = bytearray(n)\n\n        path_gcd[0] = values[0]\n        stack = [0]\n\n        while stack:\n            u = stack.pop()\n            child_count = 0\n            current_gcd = path_gcd[u]\n            parent_u = parent[u]\n\n            for v in adj[u]:\n                if v == parent_u:\n                    continue\n\n                parent[v] = u\n                path_gcd[v] = gcd(current_gcd, values[v])\n                stack.append(v)\n                child_count += 1\n\n            if child_count == 0:\n                is_leaf[u] = 1\n\n        answers = []\n        for i in range(n):\n            if is_leaf[i]:\n                d = gcd(path_gcd[i], mods[i])\n                answers.append(str(mods[i] - d))\n\n        output.append(\" \".join(answers))\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 23.687,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a rooted tree with $N$ nodes (numbered $1$ through $N$); node $1$ is the root. For each valid $i$, the $i$-th node has a value $v_{i}$ and another parameter $m_{i}$.\n\nA leaf is a node without sons. Let's denote the number of leaf nodes in the tree by $L$ and their numbers by $l_{1}, l_{2}, \\ldots, l_{L}$, in increasing order. Then, for each valid $i$, let's define the *answer* for the leaf $l_{i}$ in the following way:\nConsider the path from the root to $l_{i}$. For each node on this path (including the root and this leaf), choose a non-negative integer and multiply the value of this node by it.\nSum up the resulting values of all nodes on this path.\nThe answer $a_{i}$ for this leaf is defined as the maximum possible remainder of this sum modulo $m_{l_{i}}$.\n\nFind the answers for all leaves.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nEach of the following $N-1$ lines contains two space-separated integers $x$ and $y$ denoting that nodes $x$ and $y$ are connected by an edge.\nThe next line contains $N$ space-separated integers $v_{1}, v_{2}, \\ldots, v_{N}$.\nThe last line contains $N$ space-separated integers $m_{1}, m_{2}, \\ldots, m_{N}$.\n\n------  Output ------\nFor each test case, print a single line containing $L$ space-separated integers $a_{1}, a_{2}, \\ldots, a_{L}$.\n\n------  Constraints  ------\n$1 ≤ T ≤ 8$\n$2 ≤ N ≤ 10^{5}$\n$1 ≤ x, y ≤ N$\n$1 ≤ v_{i} ≤ 10^{18}$ for each valid $i$\n$1 ≤ m_{i} ≤ 10^{18}$ for each valid $i$\nthe graph described on the input is a tree\n\n------  Subtasks ------\nSubtask #1 (100 points): original constraints\n\n----- Sample Input 1 ------ \n1\n5\n1 2\n2 5\n1 3\n3 4\n2 3 4 6 7\n1 2 3 2 10\n----- Sample Output 1 ------ \n0 9\n----- explanation 1 ------ \nExample case 1: There are only two leaves, $l_{1} = 4$ and $l_{2} = 5$. The answers for them are $a_{1} = 0$ and $a_{2} = 9$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

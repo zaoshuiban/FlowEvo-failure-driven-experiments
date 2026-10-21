@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1ec2483c-beb0-4729-b73b-205e36285da0",
+  "created": 1792465272,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1214,
+    "completion_tokens": 31487,
+    "total_tokens": 32701,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 31131
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 190
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    out = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n        c = data[idx]\n        idx += 1\n\n        left_count = 0\n        right_count = 0\n        max_left = None\n        min_right = None\n\n        for _ in range(n):\n            p = data[idx]\n            idx += 1\n\n            if p < c:\n                left_count += 1\n                if max_left is None or p > max_left:\n                    max_left = p\n            else:  # p > c is guaranteed\n                right_count += 1\n                if min_right is None or p < min_right:\n                    min_right = p\n\n        left_odd = left_count > 0 and ((c - max_left) & 1) == 1\n        right_odd = right_count > 0 and ((min_right - c) & 1) == 1\n\n        eliminated = 0\n        if left_odd:\n            eliminated += left_count\n        if right_odd:\n            eliminated += right_count\n\n        all_sides_odd = (left_count == 0 or left_odd) and (right_count == 0 or right_odd)\n        escaped = 1 if all_sides_odd else -1\n\n        out.append(f\"{eliminated} {escaped}\")\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 174.283,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Mandarin], [Bengali], and [Russian] as well.\n\nChef is a wanted criminal, and N police officers are up for catching him. The officers want to catch Chef no matter the cost, and Chef also wants to eliminate as many officers as possible (preferably everyone) before getting caught (or before running away after eliminating everyone). Neither the officers nor Chef will run away before accomplishing their goals.\n\nChef and the officers are on a one-dimensional grid with coordinates ranging from -10^{10} to 10^{10}. Chef is initially standing at coordinate C, and the i-th officer is initially at coordinate P_{i}. The officers and Chef then take turns to move, with the officer team moving first. \n\nDuring their turn, officers will have to move to an adjacent unoccupied cell one by one, in any order they want. Every officer will have to move. At every moment of time, no two officers can be in the same cell, and also no officer can be in the same cell as Chef. If the officer is unable to move to an adjacent unoccupied cell, he is eliminated (and the cell he was in becomes unoccupied). Note that the officer team will try to move to eliminate as few officers as possible. For example, with P = [2, 3, 4] and C = 6, then the next positions of the officers can be [1, 2, 3], [1, 2, 5], [1, 4, 5], or [3, 4, 5]. However, with P = [2, 3, 4] and C = 5, the only possible set of the next positions of the officers is [1, 2, 3].\n\nAfter the officer team's turn, Chef also moves to an adjacent unoccupied cell, or gets caught if he cannot find any adjacent unoccupied cell. The process then repeats until either Chef is caught, or all officers are eliminated and Chef runs away.\n\nYou need to find out the maximum number of officers that can be eliminated by Chef, and if Chef can run away or not.\n\nAs a reminder, two cells with coordinates X and Y are *adjacent* if and only if |X - Y| = 1.\n\n------ Input Format ------ \n\n- The first line contains T - the number of test cases. Then the test cases follow.\n- The first line of each test case contains a single integer N - the number of officers.\n- The second line of each test case contains a single integer C - the initial coordinate of Chef.\n- The third line of each test case contains N integers P_{1}, P_{2}, \\dots, P_{N} - the initial coordinates of the officers.\n\n------ Output Format ------ \n\nFor each test case, output on a single line two space-separated integers: the first integer is the maximum number of officers that can be eliminated by Chef, and the second integer is 1 if Chef runs away or -1 if Chef will be caught.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ C ≤ 10^{9}$\n$1 ≤ P_{i} ≤ 10^{9}$\n- All the coordinates are unique. That means $P_{i} \\ne C$ for all $1 ≤i ≤N$, and $P_{i} \\ne P_{j}$ for all $1 ≤i < j ≤N$\n\n----- Sample Input 1 ------ \n2\n2\n2\n1 4\n1\n2\n1\n\n----- Sample Output 1 ------ \n1 -1\n1 1\n\n----- explanation 1 ------ \n- Test case $1$: Chef chooses to always move to the left (i.e. to the smaller coordinate); this forces the officer at coordinate $1$ to always move to the left, and eventually being cornered and eliminated. However, the officer at coordinate $4$ cannot be eliminated, and hence Chef will be caught at the end.\n- Test case $2$: Similarly, Chef chooses to always move to the left, and eventually eliminating the only officer, thus running away at the end.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

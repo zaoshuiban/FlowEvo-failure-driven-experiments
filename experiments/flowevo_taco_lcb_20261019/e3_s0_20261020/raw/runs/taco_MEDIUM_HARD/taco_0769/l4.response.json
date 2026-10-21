@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ea7dec09-2cc1-4c12-abf6-2fdd0b36e023",
+  "created": 1792445317,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 976,
+    "completion_tokens": 14747,
+    "total_tokens": 15723,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14424
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 336
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        a = data[idx:idx + n]\n        idx += n\n\n        total = 0\n        last = a[-1]\n\n        for left in range(n - 2):\n            minimum = a[left]\n\n            if minimum == last:\n                break\n\n            p = left + 1\n\n            for right in range(left + 2, n):\n                maximum = a[right]\n                target_sum = minimum + maximum\n\n                while p < right and (a[p] << 1) < target_sum:\n                    p += 1\n\n                best = 0\n\n                if p < right:\n                    x = a[p]\n                    if x < maximum:\n                        value = (x - minimum) * (maximum - x)\n                        if value > best:\n                            best = value\n\n                q = p - 1\n                if q > left and q < right:\n                    x = a[q]\n                    if minimum < x < maximum:\n                        value = (x - minimum) * (maximum - x)\n                        if value > best:\n                            best = value\n\n                total += best\n\n        answers.append(str(total))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 71.065,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Mandarin], [Vietnamese], and [Russian] as well.\n\nFor a given array B_{1}, B_{2}, \\ldots, B_{M} of length at least 3, let's define its weight as the largest value of (B_{i}-B_{j})\\cdot(B_{j}-B_{k}) over all possible triples (i, j, k) with 1 ≤ i, j, k ≤ M and i \\neq j, j \\neq k, k \\neq i. \n\nYou are given a sorted array A_{1}, A_{2}, \\ldots, A_{N} (that is, A_{1} ≤ A_{2} ≤ \\ldots ≤ A_{N}). \n\nCalculate the sum of weights of all contiguous subarrays of A of length at least 3. That is, count the sum of weights of arrays [A_{i}, A_{i+1}, \\ldots, A_{j}] over all 1 ≤ i < j ≤ N with j-i≥ 2.\n\n------ Input Format ------ \n\n- The first line of input contains a single integer T denoting the number of test cases. The description of T test cases follows.\n- The first line of each test case contains an integer N.\n- The second line of each test case contains N space-separated integers A_{1}, A_{2}, \\dots, A_{N}.\n\n------ Output Format ------ \n\nFor each test case, print a single line containing the sum of weights of all subarrays of A of length at least 3.\n\n------ Constraints ------ \n\n$1 ≤T ≤1000$\n$3 ≤N ≤3000$\n$1 ≤A_{1} ≤A_{2} \\ldots ≤A_{N} ≤10^{6}$.\n- Sum of $N$ over all test cases won't exceed $6000$.\n\n----- Sample Input 1 ------ \n2\n4\n1 2 3 4\n5\n1 42 69 228 2021 \n----- Sample Output 1 ------ \n4\n1041808\n\n----- explanation 1 ------ \nExplanation of the first test case of the sample: \n\nGiven array has $3$ subarrays of length at least $3$.\n\n$[1, 2, 3]$ has weight $1$, with $i = 1, j = 2, k = 3$: $(1-2)\\cdot(2-3) = 1$ \n$[2, 3, 4]$ has weight $1$, with $i = 3, j = 2, k = 1$: $(4-3)\\cdot(3-2) = 1$ \n$[1, 2, 3, 4]$ has weight $2$, with $i = 1, j = 2, k = 4$: $(1-2)\\cdot(2-4) = 2$, or with $i = 1, j = 3, k = 4$: $(1-3)\\cdot(3-4) = 2$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

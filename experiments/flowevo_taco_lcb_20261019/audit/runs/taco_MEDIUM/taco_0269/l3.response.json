@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6865bf63-2d56-4648-a376-5a303daa0d31",
+  "created": 1792428535,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 986,
+    "completion_tokens": 21896,
+    "total_tokens": 22882,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 21714
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 474
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    ans = []\n\n    for i in range(1, t + 1):\n        n = int(data[i])\n\n        equal_pieces = 'y' if 360 % n == 0 else 'n'\n        any_pieces = 'y' if n <= 360 else 'n'\n        distinct_pieces = 'y' if n * (n + 1) // 2 <= 360 else 'n'\n\n        ans.append(f\"{equal_pieces} {any_pieces} {distinct_pieces}\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n    if ans:\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 107.477,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese and Russian as well. \n\n------ Problem description ------ \n\nChef loves circular cakes. He divides them into smaller pieces and sells them. You are to help him in this work.\n\nToday Chef has cooked the brand new circular cake. To split the cake Chef can make several (possibly, zero) cuts. Each cut should be a straight line going from the center of the cake to its border. Also, the angle between any two cuts should have positive integer value (Chef measure all the angles in degrees). Chef consider two pieces of cake equal if the appropriate angles are equal.\n\nThe picture contains two distinct pieces, and two cuts. Red part on the image shows one piece. The appropriate angle is AOB.\n\nChef gives to you an integer N, denoting the number of pieces Chef wants to make. You need to answer the following questions:\n\nIs it possible to make exactly N equal pieces from the whole cake?\nIs it possible to make exactly N pieces from the whole cake?\nIs it possible to make exactly N pieces from the whole cake, in such a way that no two of them are equal?\n\n------ Input ------ \n\nFirst line contains a single integer T denoting the number of test cases. Each of the following T lines contain a single integer N denoting the number of pieces Chef wants to make.\n\n------ Output ------ \n\nFor each test case, output one line containing 3 space separated characters.\nAbove, we defined the 3 questions that Chef will ask. Output 'y' for yes or 'n' for no (quotes for clarity) for each of those questions.\nAnswers for 3 questions (in the order above) must be space separated on the same line.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10000$\n$1 ≤ N ≤ 10000$\n\n----- Sample Input 1 ------ \n2\n4\n7\n----- Sample Output 1 ------ \ny y y\nn y y\n----- explanation 1 ------ \nExample case 1.\nIs it possible to make N equal pieces?\nYes, you can cut 4 pieces each with 90 degrees angle.\nIs it possible to make N pieces?\nYes, you can cut 4 pieces each with 90 degrees angle.\nIs it possible to make N pieces, such that no two of them are equal?\nYes, you can cut 4 pieces with angles 88, 89, 91, 92.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    ans = []\n\n    for i in range(1, t + 1):\n        n = int(data[i])\n\n        equal_pieces = 'y' if 360 % n == 0 else 'n'\n        any_pieces = 'y' if n <= 360 else 'n'\n        distinct_pieces = 'y' if n * (n + 1) // 2 <= 360 else 'n'\n\n        ans.append(f\"{equal_pieces} {any_pieces} {distinct_pieces}\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Kefa decided to celebrate his first big salary by going to the restaurant. \n\nHe lives by an unusual park. The park is a rooted tree consisting of n vertices with the root at vertex 1. Vertex 1 also co\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    cats = [0] + [next(it) for _ in range(n)]\n\n    graph = [[] for _ in range(n + 1)]\n\n    for _ in range(n - 1):\n        x = next(it)\n        y = next(it)\n        graph[x].append(y)\n        graph[y].append(x)\n\n    answer = 0\n\n    stack = [(1, 0, cats[1])]\n\n    while stack:\n        node, parent, consecutive_cats = stack.pop()\n\n        if consecutive_cats > m:"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

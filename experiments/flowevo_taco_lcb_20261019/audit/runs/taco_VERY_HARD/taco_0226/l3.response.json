@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8996b86c-f8eb-40aa-b358-d29282cd050b",
+  "created": 1792436096,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 880,
+    "completion_tokens": 32768,
+    "total_tokens": 33648,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 368
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 169.116,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a rooted tree with $N$ nodes (numbered $1$ through $N$; node $1$ is the root). For each $i$ ($1 ≤ i ≤ N-1$), the parent of the node $i+1$ is $p_{i}$.\n\nYou need to answer $Q$ queries. (Sounds quite familiar!) For each query, first, $W$ tasks are given to node $V$. These tasks are processed in the tree in the following way:\nWhen a node receives $a$ tasks and it has no children, all $a$ tasks are executed by this node.\nOtherwise, i.e. if the node has $K > 0$ children, where $K$ is a divisor of $a$, then this node gives $a/K$ of these tasks to each of its children. This process is performed recursively by each child on the tasks it receives.\nOtherwise, i.e. if the node has $K > 0$ children, but $K$ is not a divisor of $a$, all $a$ tasks are ignored and none of this node's children receive any tasks.\n\nFor each query, find the number of tasks that are not executed, i.e. end up ignored, possibly after passing down the tree.\n\n------  Input ------\nThe first line of the input contains a single integer $N$.\nThe second line contains $N-1$ space-separated integers $p_{1}, p_{2}, \\ldots, p_{N-1}$.\nThe third line contains a single integer $Q$.\n$Q$ lines follow. Each of these lines contains two space-separated integers $V$ and $W$ describing a query.\n\n------  Output ------\nFor each query, print a single line containing one integer ― the number of tasks that are not executed.\n\n------  Constraints ------\n$1 ≤ N, Q ≤ 10^{5}$\n$1 ≤ p_{i} ≤ N$ for each valid $i$\nthe graph described on the input is a tree\n$1 ≤ V ≤ N$\n$1 ≤ W ≤ 10^{6}$\n\n------  Subtasks ------\nSubtask #1 (20 points): $N ≤ 100$\n\nSubtask #2 (80 points): original constraints\n\n----- Sample Input 1 ------ \n5\n\n1 1 2 2\n\n2\n\n1 10\n\n1 20\n----- Sample Output 1 ------ \n5\n\n0\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

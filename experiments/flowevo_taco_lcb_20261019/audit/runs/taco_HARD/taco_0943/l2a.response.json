@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "80a90040-de36-42b0-8e61-523c1c6afe23",
+  "created": 1792432528,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 587,
+    "completion_tokens": 13186,
+    "total_tokens": 13773,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12692
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 203
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n\n    n = data[idx]\n    idx += 1\n\n    a = [0] + data[idx:idx + n]\n    idx += n\n\n    parent = [0] * (n + 1)\n    weight = [0] * (n + 1)\n    children = [[] for _ in range(n + 1)]\n\n    for v in range(2, n + 1):\n        p = data[idx]\n        w = data[idx + 1]\n        idx += 2\n\n        parent[v] = p\n        weight[v] = w\n        children[p].append(v)\n\n    del data\n\n    pref = [0] * (n + 1)\n    order = [1]\n    pos = 0\n\n    while pos < len(order):\n        v = order[pos]\n        pos += 1\n\n        for to in children[v]:\n            pref[to] = pref[v] + weight[to]\n            order.append(to)\n\n    LOG = (n + 1).bit_length()\n    up = [parent]\n\n    for _ in range(1, LOG):\n        prev = up[-1]\n        cur = [0] * (n + 1)\n\n        for v in range(1, n + 1):\n            cur[v] = prev[prev[v]]\n\n        up.append(cur)\n\n    diff = [0] * (n + 1)\n\n    for u in range(1, n + 1):\n        target = pref[u] - a[u]\n        cur = u\n\n        for k in range(LOG - 1, -1, -1):\n            anc = up[k][cur]\n            if anc and pref[anc] >= target:\n                cur = anc\n\n        x = cur\n\n        if x != u:\n            p = parent[u]\n            diff[p] += 1\n\n            px = parent[x]\n            if px:\n                diff[px] -= 1\n\n    for v in reversed(order):\n        p = parent[v]\n        if p:\n            diff[p] += diff[v]\n\n    sys.stdout.write(\" \".join(str(diff[i]) for i in range(1, n + 1)))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 59.456,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAlyona has a tree with n vertices. The root of the tree is the vertex 1. In each vertex Alyona wrote an positive integer, in the vertex i she wrote a_{i}. Moreover, the girl wrote a positive integer to every edge of the tree (possibly, different integers on different edges).\n\nLet's define dist(v, u) as the sum of the integers written on the edges of the simple path from v to u.\n\nThe vertex v controls the vertex u (v ≠ u) if and only if u is in the subtree of v and dist(v, u) ≤ a_{u}.\n\nAlyona wants to settle in some vertex. In order to do this, she wants to know for each vertex v what is the number of vertices u such that v controls u.\n\n\n-----Input-----\n\nThe first line contains single integer n (1 ≤ n ≤ 2·10^5).\n\nThe second line contains n integers a_1, a_2, ..., a_{n} (1 ≤ a_{i} ≤ 10^9) — the integers written in the vertices.\n\nThe next (n - 1) lines contain two integers each. The i-th of these lines contains integers p_{i} and w_{i} (1 ≤ p_{i} ≤ n, 1 ≤ w_{i} ≤ 10^9) — the parent of the (i + 1)-th vertex in the tree and the number written on the edge between p_{i} and (i + 1).\n\nIt is guaranteed that the given graph is a tree.\n\n\n-----Output-----\n\nPrint n integers — the i-th of these numbers should be equal to the number of vertices that the i-th vertex controls.\n\n\n-----Examples-----\nInput\n5\n2 5 1 4 6\n1 7\n1 1\n3 5\n3 6\n\nOutput\n1 0 1 0 0\n\nInput\n5\n9 7 8 6 5\n1 1\n2 1\n3 1\n4 1\n\nOutput\n4 3 2 1 0\n\n\n\n-----Note-----\n\nIn the example test case the vertex 1 controls the vertex 3, the vertex 3 controls the vertex 5 (note that is doesn't mean the vertex 1 controls the vertex 5).\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

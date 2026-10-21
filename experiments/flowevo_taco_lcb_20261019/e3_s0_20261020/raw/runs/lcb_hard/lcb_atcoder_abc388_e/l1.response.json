@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bf8dd636-d3b9-42c6-a68b-6a61fc2e48e9",
+  "created": 1792436614,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 554,
+    "completion_tokens": 9884,
+    "total_tokens": 10438,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 9728
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 554
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    a = data[1:1 + n]\n\n    def can_make(k):\n        for i in range(k):\n            if 2 * a[i] > a[n - k + i]:\n                return False\n        return True\n\n    low, high = 0, n // 2\n\n    while low < high:\n        mid = (low + high + 1) // 2\n        if can_make(mid):\n            low = mid\n        else:\n            high = mid - 1\n\n    print(low)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 48.248,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are N mochi (rice cakes), arranged in ascending order of size.\r\nThe size of the i-th mochi (1\\leq i\\leq N) is A_i.\nGiven two mochi A and B, with sizes a and b respectively, you can make one kagamimochi (a stacked rice cake) by placing mochi A on top of mochi B if and only if a is at most half of b.\nFind how many kagamimochi can be made simultaneously.\nMore precisely, find the maximum non-negative integer K for which the following is possible:\n\n- From the N mochi, choose 2K of them to form K pairs. For each pair, place one mochi on top of the other, to make K kagamimochi.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nA_1 A_2 \\dotsc A_N\n\nOutput\n\nPrint the maximum K such that K kagamimochi can be made simultaneously.\n\nConstraints\n\n\n- 2 \\leq N \\leq 5 \\times 10^5\n- 1 \\leq A_i \\leq 10^9 \\ (1 \\leq i \\leq N)\n- A_i \\leq A_{i+1} \\ (1 \\leq i < N)\n- All input values are integers.\n\nSample Input 1\n\n6\r\n2 3 4 4 7 10\n\nSample Output 1\n\n3\r\n\nThe sizes of the given mochi are as follows:\n\nIn this case, you can make the following three kagamimochi simultaneously:\n\nIt is not possible to make four or more kagamimochi from six mochi, so print 3.\n\nSample Input 2\n\n3\r\n387 388 389\n\nSample Output 2\n\n0\r\n\nIt is possible that you cannot make any kagamimochi.\n\nSample Input 3\n\n24\r\n307 321 330 339 349 392 422 430 477 481 488 537 541 571 575 602 614 660 669 678 712 723 785 792\n\nSample Output 3\n\n6\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

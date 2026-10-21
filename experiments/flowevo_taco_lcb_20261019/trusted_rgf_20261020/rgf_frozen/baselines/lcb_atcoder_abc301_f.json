@@ -1,0 +1,35 @@
+{
+  "original": {
+    "status": "RUNTIME_ERROR",
+    "passed": false,
+    "tested": 1,
+    "failed_case_index": 0,
+    "case": {
+      "input": "AAAA\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "provenance": "statement-domain independent generator seed 20261023",
+      "index": 0
+    },
+    "actual": {
+      "status": "RUNTIME_ERROR",
+      "output": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/worker.py\", line 60, in run\n    exec(program, ns)\n  File \"/candidate.py\", line 105, in <module>\n    main()\n  File \"/candidate.py\", line 86, in main\n    base = fact[question_count] * fact[available] % MOD\nIndexError: list index out of range\n",
+      "exit_code": 1,
+      "seconds": 0.0025971220020437613
+    },
+    "seconds": 0.028187046002130955
+  },
+  "counterfactual": {
+    "status": "PASS",
+    "passed": true,
+    "tested": 45,
+    "seconds": 0.11504963800689438
+  },
+  "public": {
+    "input": "AaAA\n",
+    "expected": "1",
+    "exception_class": "IndexError",
+    "source": "independent public statement-domain generator, no benchmark hidden input"
+  }
+}

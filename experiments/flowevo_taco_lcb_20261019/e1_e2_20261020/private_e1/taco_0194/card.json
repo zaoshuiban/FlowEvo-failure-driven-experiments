@@ -1,0 +1,54 @@
+{
+  "task_id": "taco_0194",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "old_first_pass": true,
+  "old_final_pass": true,
+  "new_first_status": "WRONG_ANSWER",
+  "new_original_final_status": "WRONG_ANSWER",
+  "any_saved_candidate_pass": false,
+  "first_passing_saved_stage": null,
+  "attempts": 1,
+  "invalid_cases": 0,
+  "reference_corrections": 0,
+  "input_coverage": "structural_and_signature_only",
+  "preflight_status": "READY",
+  "evaluation_epoch": "repair_v2_20261020",
+  "timing_unstable": false,
+  "reported_final_status": "WRONG_ANSWER",
+  "family": "sequence_query",
+  "sampling_group": "regressed_wa",
+  "label": "VERIFIED_EVALUATION_PROBLEM",
+  "root_subtype": "wrong_reference",
+  "finding": "独立三维动态规划求得两个实例结果 5、3；参考是 3、5。",
+  "static_syntax": "OK",
+  "independent_evidence": {
+    "kind": "independent_oracle",
+    "oracle_result": [
+      "5",
+      "3"
+    ],
+    "matches_candidate": true,
+    "reference_result": [
+      "3",
+      "5"
+    ]
+  },
+  "review_scope": "task statement, original final code, test/expected contract, replay actual output/exception, old feedback and full candidate history; unknown retained where evidence insufficient",
+  "candidate_universally_correct": null,
+  "program_defect_excluded": false,
+  "new_status_observed": "WRONG_ANSWER",
+  "source_code_sha256": "d9fa2a4e9833323a86ddbcf17ca1787a179f0f7ab2f096903b42d45b1927fcf9",
+  "task_sha256": "8300146fe058d0b858468521db2291bb4382763c728037164af41ca65e1ab990",
+  "evidence_file_hashes": {
+    "private_failure_case.json": "d2bb55e0cf900ef902260f86ac3bc66450dc2def6effd310242c21db9adc9625",
+    "isolated_failure_execution.json": "6274308698bc0ce5a80024c49426b7f59b67a9f9057cc89d676dbbb3769d0a19",
+    "history.json": "d0bde0411a3de2386d630e873d05a96fa0451b745cd242c77270994c8ef6759a",
+    "replay.json": "b338851d84c29f2d816bc7f8e9c3c6a88a3ad48121648eb783e0404db1714e08",
+    "original.py": "d9fa2a4e9833323a86ddbcf17ca1787a179f0f7ab2f096903b42d45b1927fcf9",
+    "preflight.json": "af1e7689a38c32f3ffdcd436a296e57c489ea85ed4336ccf977c45bcaf20bf62",
+    "statement.txt": "c973ef1dfe01fafeb0da58325aa18350dc231a334cbec3904eccaadf6f5d0fab"
+  },
+  "reproduction": "cd /opt/flowevo-benchmark-20261019 && venv/bin/python repair_v2d_20261020/code/adapter.py --task data/tasks/taco_0194.json --candidate e1_e2_20261020/private_e1/taco_0194/original.py --policies repair_v2d_20261020/policies.json --out /tmp/e1_taco_0194.json",
+  "root_cause_certainty": "confirmed specific defect"
+}

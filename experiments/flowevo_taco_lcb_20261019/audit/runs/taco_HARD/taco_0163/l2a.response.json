@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2db61ad0-ea43-4cb1-bc4e-87813ca09c60",
+  "created": 1792446098,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 711,
+    "completion_tokens": 13729,
+    "total_tokens": 14440,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12700
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 199
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\nclass Fenwick:\n    __slots__ = (\"n\", \"bit\")\n\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 2)\n\n    def add(self, i, delta):\n        bit = self.bit\n        n = self.n\n        while i <= n:\n            bit[i] += delta\n            i += i & -i\n\n    def prefix_sum(self, i):\n        bit = self.bit\n        result = 0\n        while i > 0:\n            result += bit[i]\n            i -= i & -i\n        return result\n\n    def range_sum(self, left, right):\n        if right < left:\n            return 0\n        return self.prefix_sum(right) - self.prefix_sum(left - 1)\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    counts = [0] * n\n\n    horizontals = []  # (id, y, x_left, x_right)\n    verticals = []    # (id, x, y_bottom, y_top)\n\n    max_x = 0\n    max_y = 0\n\n    p = 1\n    for idx in range(n):\n        x1, y1, x2, y2 = data[p], data[p + 1], data[p + 2], data[p + 3]\n        p += 4\n\n        max_x = max(max_x, x1, x2)\n        max_y = max(max_y, y1, y2)\n\n        if y1 == y2:\n            x_left = min(x1, x2)\n            x_right = max(x1, x2)\n            horizontals.append((idx, y1, x_left, x_right))\n        else:\n            y_bottom = min(y1, y2)\n            y_top = max(y1, y2)\n            verticals.append((idx, x1, y_bottom, y_top))\n\n    # Count intersections for each vertical road.\n    if verticals:\n        updates = []\n        for _, y, x_left, x_right in horizontals:\n            updates.append((x_left, y, 1))\n            updates.append((x_right + 1, y, -1))\n\n        updates.sort(key=lambda event: event[0])\n\n        bit = Fenwick(max_y + 2)\n        ui = 0\n        update_count = len(updates)\n\n        for vid, x, y_bottom, y_top in sorted(verticals, key=lambda item: item[1]):\n            while ui < update_count and updates[ui][0] <= x:\n                _, y, delta = updates[ui]\n                bit.add(y, delta)\n                ui += 1\n\n            counts[vid] = bit.range_sum(y_bottom, y_top)\n\n    # Count intersections for each horizontal road.\n    if horizontals:\n        updates = []\n        for _, x, y_bottom, y_top in verticals:\n            updates.append((y_bottom, x, 1))\n            updates.append((y_top + 1, x, -1))\n\n        updates.sort(key=lambda event: event[0])\n\n        bit = Fenwick(max_x + 2)\n        ui = 0\n        update_count = len(updates)\n\n        for hid, y, x_left, x_right in sorted(horizontals, key=lambda item: item[1]):\n            while ui < update_count and updates[ui][0] <= y:\n                _, x, delta = updates[ui]\n                bit.add(x, delta)\n                ui += 1\n\n            counts[hid] = bit.range_sum(x_left, x_right)\n\n    # Remove intersections where the point is an endpoint of both roads.\n    horizontal_endpoints = {}\n    for hid, y, x_left, x_right in horizontals:\n        horizontal_endpoints[(x_left, y)] = hid\n        horizontal_endpoints[(x_right, y)] = hid\n\n    for vid, x, y_bottom, y_top in verticals:\n        hid = horizontal_endpoints.get((x, y_bottom))\n        if hid is not None:\n            counts[hid] -= 1\n            counts[vid] -= 1\n\n        hid = horizontal_endpoints.get((x, y_top))\n        if hid is not None:\n            counts[hid] -= 1\n            counts[vid] -= 1\n\n    total_lights = 0\n    for hid, _, _, _ in horizontals:\n        total_lights += counts[hid]\n\n    output = [\n        str(total_lights),\n        \" \".join(map(str, counts))\n    ]\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 63.732,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nChef is working with the development of a new city Krewsko. He and other city planners are designing the transportation system of Krewsko. They are using Cartesian coordinates and Krewsko will only have roads that are parallel to either the x-axis or the y-axis.\n\nIt is clear that we need to add one set of traffic lights at every intersection of roads where a person has at least two other directions to continue their trip when arriving at the intersection. Your task is to count how many traffic light sets should be deployed. In particular, for each road you want to know how many traffic light sets will appear on that road.\n\nLet's formalize how a road in the city is defined. A road is a segment on the plane with endpoints in X_{i,1}, Y_{i,1} and X_{i,2}, Y_{i,2} for i^{th} line. You are guaranteed that each line segment is either a vertical line or a horizontal line. An intersection is a point that belongs to two line segments: one horizontal and another vertical. We guarantee that no two vertical lines will share a point and no two horizontal lines share a point.\n\nYou must put a set of lights at each intersection of a horizontal and a vertical line segment where the point of intersection is not an endpoint of both segments.\n\n------ Input ------ \n\nThe first line of the input contains an integer N indicating number of roads.\nThe next N lines contain 4 integers each. The ^{i}th line contain X_{i,1}, Y_{i,1} and X_{i,2}, Y_{i,2}.\n\n------ Output ------ \n\nThe output consists of two lines. The first line contains a single\ninteger indicating the number of sets of lights that will be used\nthroughout all of Krewsko. The second line consists of N\nintegers. The i'th such integer indicates the number of traffic light\nsets that will be deployed to the i'th road. There should be a single space between consecutive integers on this line.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ X_{i,1} ≤ 10^{5}$\n$1 ≤ Y_{i,1} ≤ 10^{5}$\n$1 ≤ X_{i,2} ≤ 10^{5}$\n$1 ≤ Y_{i,2} ≤ 10^{5}$\n$The length of each road is positive and each road will either be a horizontal line segment or a vertical line segment.$\n\n------ Subtasks ------ \n\n$Subtask #1 [40 points]: N ≤ 10000$\n$Subtask #2 [60 points]: No additional constraints$\n\n------ Example ------ \n\nInput:\n4\n2 1 2 6\n1 3 5 3\n4 1 4 4\n1 5 5 5\nOutput:\n3\n2 2 1 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

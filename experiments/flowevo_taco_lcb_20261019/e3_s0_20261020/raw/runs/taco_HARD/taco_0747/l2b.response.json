@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0d594d14-61f8-40f7-ad68-fcd204ee86e2",
+  "created": 1792447192,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 602,
+    "completion_tokens": 2614,
+    "total_tokens": 3216,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2304
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 218
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    n, h = map(int, sys.stdin.readline().split())\n\n    # Total number of BSTs with n nodes: Catalan number C_n\n    catalan = [0] * (n + 1)\n    catalan[0] = 1\n    for size in range(1, n + 1):\n        total = 0\n        for left in range(size):\n            total += catalan[left] * catalan[size - 1 - left]\n        catalan[size] = total\n\n    # cur[size] = number of BSTs with 'size' nodes and height <= current_limit\n    # Initially current_limit = 0: only the empty tree has height <= 0.\n    cur = [0] * (n + 1)\n    cur[0] = 1\n\n    # Count trees with height <= h - 1\n    for _ in range(h - 1):\n        nxt = [0] * (n + 1)\n        nxt[0] = 1\n        for size in range(1, n + 1):\n            total = 0\n            for left in range(size):\n                right = size - 1 - left\n                total += cur[left] * cur[right]\n            nxt[size] = total\n        cur = nxt\n\n    answer = catalan[n] - cur[n]\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 11.607,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIn one very old text file there was written Great Wisdom. This Wisdom was so Great that nobody could decipher it, even Phong — the oldest among the inhabitants of Mainframe. But still he managed to get some information from there. For example, he managed to learn that User launches games for pleasure — and then terrible Game Cubes fall down on the city, bringing death to those modules, who cannot win the game...\n\nFor sure, as guard Bob appeared in Mainframe many modules stopped fearing Game Cubes. Because Bob (as he is alive yet) has never been defeated by User, and he always meddles with Game Cubes, because he is programmed to this.\n\nHowever, unpleasant situations can happen, when a Game Cube falls down on Lost Angles. Because there lives a nasty virus — Hexadecimal, who is... mmm... very strange. And she likes to play very much. So, willy-nilly, Bob has to play with her first, and then with User.\n\nThis time Hexadecimal invented the following entertainment: Bob has to leap over binary search trees with n nodes. We should remind you that a binary search tree is a binary tree, each node has a distinct key, for each node the following is true: the left sub-tree of a node contains only nodes with keys less than the node's key, the right sub-tree of a node contains only nodes with keys greater than the node's key. All the keys are different positive integer numbers from 1 to n. Each node of such a tree can have up to two children, or have no children at all (in the case when a node is a leaf).\n\nIn Hexadecimal's game all the trees are different, but the height of each is not lower than h. In this problem «height» stands for the maximum amount of nodes on the way from the root to the remotest leaf, the root node and the leaf itself included. When Bob leaps over a tree, it disappears. Bob gets the access to a Cube, when there are no trees left. He knows how many trees he will have to leap over in the worst case. And you?\n\nInput\n\nThe input data contains two space-separated positive integer numbers n and h (n ≤ 35, h ≤ n).\n\nOutput\n\nOutput one number — the answer to the problem. It is guaranteed that it does not exceed 9·1018.\n\nExamples\n\nInput\n\n3 2\n\n\nOutput\n\n5\n\nInput\n\n3 3\n\n\nOutput\n\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

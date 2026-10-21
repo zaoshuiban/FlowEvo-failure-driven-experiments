@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "51d2c33d-04ba-4642-b788-c6f5216e21ca",
+  "created": 1792443292,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 887,
+    "completion_tokens": 2794,
+    "total_tokens": 3681,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2647
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 887
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    L, R = map(int, sys.stdin.readline().split())\n\n    ans = []\n    x = L\n\n    while x < R:\n        remain = R - x\n        p = 1 << (remain.bit_length() - 1)\n\n        if x == 0:\n            size = p\n        else:\n            lowbit = x & -x\n            size = min(p, lowbit)\n\n        ans.append((x, x + size))\n        x += size\n\n    print(len(ans))\n    print(\"\\n\".join(f\"{l} {r}\" for l, r in ans))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 13.687,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFor non-negative integers l and r (l < r), let S(l, r) denote the sequence (l, l+1, \\ldots, r-2, r-1) formed by arranging integers from l through r-1 in order. Furthermore, a sequence is called a good sequence if and only if it can be represented as S(2^i j, 2^i (j+1)) using non-negative integers i and j.\nYou are given non-negative integers L and R (L < R). Divide the sequence S(L, R) into the fewest number of good sequences, and print that number of sequences and the division. More formally, find the minimum positive integer M for which there is a sequence of pairs of non-negative integers (l_1, r_1), (l_2, r_2), \\ldots, (l_M, r_M) that satisfies the following, and print such (l_1, r_1), (l_2, r_2), \\ldots, (l_M, r_M).\n\n- L = l_1 < r_1 = l_2 < r_2 = \\cdots = l_M < r_M = R\n- S(l_1, r_1), S(l_2, r_2), \\ldots, S(l_M, r_M) are good sequences.\n\nIt can be shown that there is only one division that minimizes M.\n\nInput\n\nThe input is given from Standard Input in the following format:\nL R\n\nOutput\n\nPrint the answer in the following format:\nM\nl_1 r_1\n\\vdots\nl_M r_M\n\nNote that the pairs (l_1, r_1), \\dots, (l_M, r_M) should be printed in ascending order.\n\nConstraints\n\n\n- 0 \\leq L < R \\leq 2^{60}\n- All input values are integers.\n\nSample Input 1\n\n3 19\n\nSample Output 1\n\n5\n3 4\n4 8\n8 16\n16 18\n18 19\n\nS(3,19)=(3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18) can be divided into the following five good sequences, which is the minimum possible number:\n\n- S(3,4)=S(2^0\\cdot 3,2^0\\cdot4)=(3)\n- S(4,8)=S(2^2\\cdot 1,2^2\\cdot 2)=(4,5,6,7)\n- S(8,16)=S(2^3\\cdot 1,2^3\\cdot 2)=(8,9,10,11,12,13,14,15)\n- S(16,18)=S(2^1\\cdot 8,2^1\\cdot 9)=(16,17)\n- S(18,19)=S(2^0\\cdot 18,2^0\\cdot 19)=(18)\n\nSample Input 2\n\n0 1024\n\nSample Output 2\n\n1\n0 1024\n\nSample Input 3\n\n3940649673945088 11549545024454656\n\nSample Output 3\n\n8\n3940649673945088 3940649673949184\n3940649673949184 4503599627370496\n4503599627370496 9007199254740992\n9007199254740992 11258999068426240\n11258999068426240 11540474045136896\n11540474045136896 11549270138159104\n11549270138159104 11549545016066048\n11549545016066048 11549545024454656\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

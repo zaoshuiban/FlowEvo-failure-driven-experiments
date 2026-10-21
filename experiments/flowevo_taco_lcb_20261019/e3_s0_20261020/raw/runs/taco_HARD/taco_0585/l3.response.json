@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a709f3f9-4abb-44ab-b498-e534eae1a36c",
+  "created": 1792451870,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1380,
+    "completion_tokens": 16866,
+    "total_tokens": 18246,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16426
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 740
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n\n    # Find maximum N to precompute powers of 2.\n    idx = 1\n    max_n = 0\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n        max_n = max(max_n, n)\n        idx += n\n\n    pow2 = [1] * (max_n + 2)\n    for i in range(1, max_n + 2):\n        pow2[i] = (pow2[i - 1] * 2) % MOD\n\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        freq = [0] * (n + 2)\n        limit = n + 1\n\n        for _ in range(n):\n            a = data[idx]\n            idx += 1\n            if a <= limit:\n                freq[a] += 1\n\n        # Smallest positive integer missing from the whole array.\n        mex = 1\n        while mex <= limit and freq[mex] > 0:\n            mex += 1\n\n        # Sum of f(S) = sum over k >= 1 of number of S with f(S) >= k.\n        ans = pow2[n]  # k = 1: every subsequence contributes 1\n\n        product = 1\n        prefix_count = 0\n\n        for value in range(1, mex):\n            c = freq[value]\n            prefix_count += c\n\n            product = product * (pow2[c] - 1) % MOD\n            ways = product * pow2[n - prefix_count] % MOD\n\n            ans += ways\n            if ans >= MOD:\n                ans -= MOD\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 76.386,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nChef recently read about the mex function and came up with a function similar to that. For a (possibly empty) sequence of positive integers $S$, Chef defines $f(S)$ as the smallest positive integer that does not appear in $S$. For example, $f([])=1$, $f([3,4,3,5])=1$, $f([2,5,1,1,2,3])=4$.\n\nChef's friend heard about Chef's idea and found it really cool. Therefore, he sent a sequence $a_{1}, a_{2}, \\ldots, a_{N}$ to Chef and asked him to find the sum of $f(S)$ over all $2^{N}$ possible subsequences $S$ of this sequence. Since Chef is busy, he entrusted you with solving the problem.\n\nSince the resulting sum can be very big, compute it modulo $998,244,353$.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nThe second line contains $N$ space-separated integers $a_{1}, a_{2}, \\ldots, a_{N}$.\n\n------  Output ------\nFor each test case, print a single line containing one integer ― the sum of $f(S)$ over all subsequences modulo $998,244,353$.\n\n------  Constraints ------\n$1 ≤ T ≤ 50$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ a_{i} ≤ 10^{9}$ for each valid $i$\nthe sum of $N$ over all test cases does not exceed $5 \\cdot 10^{5}$\n\n------  Subtasks ------\nSubtask #1 (50 points): the sum of $N$ over all test cases does not exceed $1,000$\n\nSubtask #2 (50 points): original constraints\n\n----- Sample Input 1 ------ \n2\n\n2\n\n1 1\n\n3\n\n1 2 1\n----- Sample Output 1 ------ \n7\n\n17\n----- explanation 1 ------ \nExample case 1: The values for all possible subsequences are $f([])=1$, $f([1])=2$, $f([1])=2$, $f([1,1])=2$.\n\nExample case 2: The values for all possible subsequences are $f([])=1$, $f([1])=2$, $f([2])=1$, $f([1])=2$, $f([1,2])=3$, $f([2,1])=3$, $f([1,1])=2$, $f([1,2,1])=3$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\nMOD = 998244353\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n\n    # Find maximum N to precompute powers of 2.\n    idx = 1\n    max_n = 0\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n        max_n = max(max_n, n)\n        idx += n\n\n    pow2 = [1] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        pow2[i] = (pow2[i - 1] * 2) % MOD\n\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        freq = [0] * (n + 2)\n        limit = n + 1\n\n        for _ in range(n):\n            a = data[idx]\n            idx += 1\n            if a <= limit:\n                freq[a] += 1\n\n        # Find the smallest positive integer missing from the original sequence.\n        mex = 1\n        while mex <= limit and freq[mex] > 0:\n            mex += 1\n\n        ans = pow2[n]  # contribution of f(S) >= 1 for all subsequences\n\n        product = 1\n        prefix_count = 0\n\n        for value in range(1, mex):\n            c = freq[value]\n            prefix_count += c\n\n            product = product * (pow2[c] - 1) % MOD\n            ways = product * pow2[n - prefix_count] % MOD\n\n            ans += ways\n            if ans >= MOD:\n                ans -= MOD\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Read problems statements in Mandarin chinese, Russian and Vietnamese as well. \n\nChef always likes to play with arrays. He came up with a new term \"magical subarray\". A subarray is called magical if it\nSolution:\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    ptr = 0\n    n = data[ptr]\n    q = data[ptr + 1]\n    ptr += 2\n\n    a = data[ptr:ptr + n]\n    ptr += n\n\n    # prefix[p] = A[0] xor A[1] xor ... xor A[p]\n    base = [0] * n\n    cur = 0\n    for i in range(n):\n        cur ^= a[i]\n        base[i] = cur\n\n    block_size = int(n ** 0.5) + 1\n    block_count = (n + block_size - 1) // block_size\n\n    lazy = [0] * block_count\n    f"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

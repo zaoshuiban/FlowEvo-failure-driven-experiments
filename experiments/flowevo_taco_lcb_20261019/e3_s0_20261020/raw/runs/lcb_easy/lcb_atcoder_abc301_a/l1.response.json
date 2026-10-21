@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0ca22936-39fe-4d4c-b7ee-93738cb16fb1",
+  "created": 1792430317,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 415,
+    "completion_tokens": 633,
+    "total_tokens": 1048,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 466
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 415
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    N = int(data[0])\n    S = data[1]\n\n    t_count = S.count('T')\n    a_count = N - t_count\n\n    if t_count > a_count:\n        print('T')\n    elif a_count > t_count:\n        print('A')\n    else:\n        target = t_count\n        t = 0\n        a = 0\n\n        for ch in S:\n            if ch == 'T':\n                t += 1\n                if t == target:\n                    print('T')\n                    return\n            else:\n                a += 1\n                if a == target:\n                    print('A')\n                    return\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 2.889,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTakahashi and Aoki played N games.\r\nYou are given a string S of length N, representing the results of these games.\r\nTakahashi won the i-th game if the i-th character of S is T, and Aoki won that game if it is A.\nThe overall winner between Takahashi and Aoki is the one who won more games than the other.\r\nIf they had the same number of wins, the overall winner is the one who reached that number of wins first.\r\nFind the overall winner: Takahashi or Aoki.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\n\nOutput\n\nIf the overall winner is Takahashi, print T; if it is Aoki, print A.\n\nConstraints\n\n\n- 1\\leq N \\leq 100\n- N is an integer.\n- S is a string of length N consisting of T and A.\n\nSample Input 1\n\n5\r\nTTAAT\n\nSample Output 1\n\nT\r\n\nTakahashi won three games, and Aoki won two.\r\nThus, the overall winner is Takahashi, who won more games.\n\nSample Input 2\n\n6\r\nATTATA\n\nSample Output 2\n\nT\r\n\nBoth Takahashi and Aoki won three games.\r\nTakahashi reached three wins in the fifth game, and Aoki in the sixth game.\r\nThus, the overall winner is Takahashi, who reached three wins first.\n\nSample Input 3\n\n1\r\nA\n\nSample Output 3\n\nA\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

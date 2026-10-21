@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0cdf840e-fa4a-498a-b4d4-7302940bedbd",
+  "created": 1792430232,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 269,
+    "completion_tokens": 310,
+    "total_tokens": 579,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 271
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 269
+  },
+  "finish_reason": "stop",
+  "text": "```python\nS = input().strip()\n\nfor i, ch in enumerate(S):\n    if S.count(ch) == 1:\n        print(i + 1)\n        break\n```",
+  "latency_s": 2.277,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string S consisting of lowercase English letters. The length of S is between 3 and 100, inclusive.\nAll characters but one of S are the same.\nFind x such that the x-th character of S differs from all other characters.\n\nInput\n\nThe input is given from Standard Input in the following format:\nS\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- S is a string of length between 3 and 100, inclusive, consisting of two different lowercase English letters.\n- All characters but one of S are the same.\n\nSample Input 1\n\nyay\n\nSample Output 1\n\n2\r\n\nThe second character of yay differs from the first and third characters.\n\nSample Input 2\n\negg\n\nSample Output 2\n\n1\n\nSample Input 3\n\nzzzzzwz\n\nSample Output 3\n\n6\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

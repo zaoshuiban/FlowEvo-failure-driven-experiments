@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c4b2ac07-f27f-46c2-87c3-26291335c5c6",
+  "created": 1792448134,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 721,
+    "completion_tokens": 5808,
+    "total_tokens": 6529,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5261
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 721
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport heapq\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    n = data[idx]\n    idx += 1\n    m = data[idx]\n    idx += 1\n\n    x = data[idx] - 1\n    idx += 1\n    y = data[idx] - 1\n    idx += 1\n\n    graph = [[] for _ in range(n)]\n\n    for _ in range(m):\n        u = data[idx] - 1\n        v = data[idx + 1] - 1\n        w = data[idx + 2]\n        idx += 3\n        graph[u].append((v, w))\n        graph[v].append((u, w))\n\n    taxi_dist = [0] * n\n    taxi_cost = [0] * n\n\n    for i in range(n):\n        taxi_dist[i] = data[idx]\n        taxi_cost[i] = data[idx + 1]\n        idx += 2\n\n    if x == y:\n        print(0)\n        return\n\n    INF = 10**30\n    min_cost = [INF] * n\n    min_cost[x] = 0\n\n    pq = [(0, x)]\n    heappop = heapq.heappop\n    heappush = heapq.heappush\n\n    while pq:\n        current_cost, u = heappop(pq)\n\n        if current_cost != min_cost[u]:\n            continue\n\n        if u == y:\n            print(current_cost)\n            return\n\n        limit = taxi_dist[u]\n\n        road_dist = [INF] * n\n        road_dist[u] = 0\n        road_pq = [(0, u)]\n\n        reachable = []\n\n        while road_pq:\n            dist, v = heappop(road_pq)\n\n            if dist != road_dist[v]:\n                continue\n\n            reachable.append(v)\n\n            for to, weight in graph[v]:\n                new_dist = dist + weight\n                if new_dist <= limit and new_dist < road_dist[to]:\n                    road_dist[to] = new_dist\n                    heappush(road_pq, (new_dist, to))\n\n        next_cost = current_cost + taxi_cost[u]\n\n        for v in reachable:\n            if v == u:\n                continue\n\n            if next_cost < min_cost[v]:\n                min_cost[v] = next_cost\n                heappush(pq, (next_cost, v))\n\n    print(-1)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 26.409,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nPetya loves volleyball very much. One day he was running late for a volleyball match. Petya hasn't bought his own car yet, that's why he had to take a taxi. The city has n junctions, some of which are connected by two-way roads. The length of each road is defined by some positive integer number of meters; the roads can have different lengths.\n\nInitially each junction has exactly one taxi standing there. The taxi driver from the i-th junction agrees to drive Petya (perhaps through several intermediate junctions) to some other junction if the travel distance is not more than ti meters. Also, the cost of the ride doesn't depend on the distance and is equal to ci bourles. Taxis can't stop in the middle of a road. Each taxi can be used no more than once. Petya can catch taxi only in the junction, where it stands initially.\n\nAt the moment Petya is located on the junction x and the volleyball stadium is on the junction y. Determine the minimum amount of money Petya will need to drive to the stadium.\n\nInput\n\nThe first line contains two integers n and m (1 ≤ n ≤ 1000, 0 ≤ m ≤ 1000). They are the number of junctions and roads in the city correspondingly. The junctions are numbered from 1 to n, inclusive. The next line contains two integers x and y (1 ≤ x, y ≤ n). They are the numbers of the initial and final junctions correspondingly. Next m lines contain the roads' description. Each road is described by a group of three integers ui, vi, wi (1 ≤ ui, vi ≤ n, 1 ≤ wi ≤ 109) — they are the numbers of the junctions connected by the road and the length of the road, correspondingly. The next n lines contain n pairs of integers ti and ci (1 ≤ ti, ci ≤ 109), which describe the taxi driver that waits at the i-th junction — the maximum distance he can drive and the drive's cost. The road can't connect the junction with itself, but between a pair of junctions there can be more than one road. All consecutive numbers in each line are separated by exactly one space character.\n\nOutput\n\nIf taxis can't drive Petya to the destination point, print \"-1\" (without the quotes). Otherwise, print the drive's minimum cost.\n\nPlease do not use the %lld specificator to read or write 64-bit integers in С++. It is preferred to use cin, cout streams or the %I64d specificator.\n\nExamples\n\nInput\n\n4 4\n1 3\n1 2 3\n1 4 1\n2 4 1\n2 3 5\n2 7\n7 2\n1 2\n7 7\n\n\nOutput\n\n9\n\nNote\n\nAn optimal way — ride from the junction 1 to 2 (via junction 4), then from 2 to 3. It costs 7+2=9 bourles.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

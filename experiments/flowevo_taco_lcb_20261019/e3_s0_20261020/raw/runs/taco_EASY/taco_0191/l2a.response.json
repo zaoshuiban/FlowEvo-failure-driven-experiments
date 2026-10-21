@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f5a205c6-da6d-4ded-b38e-a6bdd3cc5b60",
+  "created": 1792438426,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 195,
+    "completion_tokens": 167,
+    "total_tokens": 362,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 118
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 195
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport math\n\ndef vector_length(vector):\n    (x1, y1), (x2, y2) = vector\n    return math.hypot(x2 - x1, y2 - y1)\n```",
+  "latency_s": 1.353,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFor a given 2D vector described by cartesian coordinates of its initial point and terminal point in the following format:\n\n```python\n[[x1, y1], [x2, y2]]\n```\n\nYour function must return this vector's length represented as a floating point number.\n\nError must be within 1e-7.\n\nCoordinates can be integers or floating point numbers.\n\nStarter code / required signature:\ndef vector_length(vector):\n\t\n\nUse the required function/method named vector_length. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

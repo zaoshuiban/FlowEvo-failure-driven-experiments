@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2a463bec-758e-44b5-9eab-a283a043f230",
+  "created": 1792453849,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1870,
+    "completion_tokens": 32768,
+    "total_tokens": 34638,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 1102
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 163.598,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNiwel is a little golden bear. As everyone knows, bears live in forests, but Niwel got tired of seeing all the trees so he decided to move to the city.\n\nIn the city, Niwel took on a job managing bears to deliver goods. The city that he lives in can be represented as a directed graph with n nodes and m edges. Each edge has a weight capacity. A delivery consists of a bear carrying weights with their bear hands on a simple path from node 1 to node n. The total weight that travels across a particular edge must not exceed the weight capacity of that edge.\n\nNiwel has exactly x bears. In the interest of fairness, no bear can rest, and the weight that each bear carries must be exactly the same. However, each bear may take different paths if they like.\n\nNiwel would like to determine, what is the maximum amount of weight he can deliver (it's the sum of weights carried by bears). Find the maximum weight.\n\n\n-----Input-----\n\nThe first line contains three integers n, m and x (2 ≤ n ≤ 50, 1 ≤ m ≤ 500, 1 ≤ x ≤ 100 000) — the number of nodes, the number of directed edges and the number of bears, respectively.\n\nEach of the following m lines contains three integers a_{i}, b_{i} and c_{i} (1 ≤ a_{i}, b_{i} ≤ n, a_{i} ≠ b_{i}, 1 ≤ c_{i} ≤ 1 000 000). This represents a directed edge from node a_{i} to b_{i} with weight capacity c_{i}. There are no self loops and no multiple edges from one city to the other city. More formally, for each i and j that i ≠ j it's guaranteed that a_{i} ≠ a_{j} or b_{i} ≠ b_{j}. It is also guaranteed that there is at least one path from node 1 to node n.\n\n\n-----Output-----\n\nPrint one real value on a single line — the maximum amount of weight Niwel can deliver if he uses exactly x bears. Your answer will be considered correct if its absolute or relative error does not exceed 10^{ - 6}.\n\nNamely: let's assume that your answer is a, and the answer of the jury is b. The checker program will consider your answer correct if $\\frac{|a - b|}{\\operatorname{max}(1, b)} \\leq 10^{-6}$.\n\n\n-----Examples-----\nInput\n4 4 3\n1 2 2\n2 4 1\n1 3 1\n3 4 2\n\nOutput\n1.5000000000\n\nInput\n5 11 23\n1 2 3\n2 3 4\n3 4 5\n4 5 6\n1 3 4\n2 4 5\n3 5 6\n1 4 2\n2 5 3\n1 5 2\n3 2 30\n\nOutput\n10.2222222222\n\n\n\n-----Note-----\n\nIn the first sample, Niwel has three bears. Two bears can choose the path $1 \\rightarrow 3 \\rightarrow 4$, while one bear can choose the path $1 \\rightarrow 2 \\rightarrow 4$. Even though the bear that goes on the path $1 \\rightarrow 2 \\rightarrow 4$ can carry one unit of weight, in the interest of fairness, he is restricted to carry 0.5 units of weight. Thus, the total weight is 1.5 units overall. Note that even though Niwel can deliver more weight with just 2 bears, he must use exactly 3 bears on this day.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom collections import deque\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m, x = data[0], data[1], data[2]\n    edges = []\n    max_c = 0\n\n    idx = 3\n    for _ in range(m):\n        a = data[idx] - 1\n        b = data[idx + 1] - 1\n        c = data[idx + 2]\n        idx += 3\n        edges.append((a, b, c))\n        max_c = max(max_c, c)\n\n    SCALE = 10 ** 9\n    factors = [(a, b, c * x * SCALE) for a, b, c in edges]\n\n    def feasible(S):\n        # S = total_weight * SCALE\n        g = [[] for _ in range(n)]\n        to = []\n        cap = []\n\n        for u, v, factor in factors:\n            val = factor // S  # floor(edge_capacity / (total_weight / x))\n            if val <= 0:\n                continue\n            if val > x:\n                val = x\n\n            eid = len(to)\n            g[u].append(eid)\n            to.append(v)\n            cap.append(val)\n\n            g[v].append(eid + 1)\n            to.append(u)\n            cap.append(0)\n\n        source = 0\n        sink = n - 1\n        flow = 0\n\n        while flow < x:\n            level = [-1] * n\n            level[source] = 0\n            q = deque([source])\n\n            while q:\n                v = q.popleft()\n                next_level = level[v] + 1\n                for eid in g[v]:\n                    if cap[eid] > 0:\n                        w = to[eid]\n                        if level[w] == -1:\n                            level[w] = next_level\n                            q.append(w)\n\n            if level[sink] == -1:\n                break\n\n            it = [0] * n\n\n            def dfs(v, pushed):\n                if v == sink:\n                    return pushed\n\n                gv = g[v]\n                i = it[v]\n                next_level = level[v] + 1\n\n                while i < len(gv):\n                    eid = gv[i]\n                    w = to[eid]\n\n                    if cap[eid] > 0 and level[w] == next_level:\n                        sent = dfs(w, min(pushed, cap[eid]))\n                        if sent:\n                            cap[eid] -= sent\n                            cap[eid ^ 1] += sent\n                            it[v] = i\n                            return sent\n\n                    i += 1\n                    it[v] = i\n\n                return 0\n\n            while flow < x:\n                pushed = dfs(source, x - flow)\n                if pushed == 0:\n                    break\n                flow += pushed\n                if flow >= x:\n                    return True\n\n        return flow >= x\n\n    lo = 0\n    hi = x * max_c * SCALE + 1\n\n    while hi - lo > 1:\n        mid = (lo + hi) // 2\n        if feasible(mid):\n            lo = mid\n        else:\n            hi = mid\n\n    answer = lo / SCALE\n    print(f\"{answer:.10f}\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: As you know, an undirected connected graph with n nodes and n - 1 edges is called a tree. You are given an integer d and a tree consisting of n nodes. Each node i has a value a_{i} associated with it.\nSolution:\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    d, n = data[0], data[1]\n    a = [0] + data[2:2 + n]\n\n    adj = [[] for _ in range(n + 1)]\n    pos = 2 + n\n\n    for _ in range(n - 1):\n        u, v = data[pos], data[pos + 1]\n        pos += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    sys.setrecursionlimit(1_000_000)\n\n    answer = 0\n\n    for root in range(1, n + 1):\n        base = a[root]\n        li"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

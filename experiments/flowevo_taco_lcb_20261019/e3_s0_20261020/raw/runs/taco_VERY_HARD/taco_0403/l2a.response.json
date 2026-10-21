@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "433fe31d-5059-4f9f-8086-7a9e13632e03",
+  "created": 1792451421,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 649,
+    "completion_tokens": 28227,
+    "total_tokens": 28876,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 27244
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 137
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\nG = 3\nG_INV = 332748118\n\n\ndef ntt(a, invert):\n    n = len(a)\n\n    j = 0\n    for i in range(1, n):\n        bit = n >> 1\n        while j & bit:\n            j ^= bit\n            bit >>= 1\n        j ^= bit\n        if i < j:\n            a[i], a[j] = a[j], a[i]\n\n    length = 2\n    mod = MOD\n    root = G_INV if invert else G\n\n    while length <= n:\n        wlen = pow(root, (mod - 1) // length, mod)\n        half = length >> 1\n\n        for start in range(0, n, length):\n            w = 1\n            end = start + half\n            for p in range(start, end):\n                u = a[p]\n                v = a[p + half] * w % mod\n\n                s = u + v\n                if s >= mod:\n                    s -= mod\n\n                t = u - v\n                if t < 0:\n                    t += mod\n\n                a[p] = s\n                a[p + half] = t\n                w = w * wlen % mod\n\n        length <<= 1\n\n    if invert:\n        inv_n = pow(n, mod - 2, mod)\n        for i in range(n):\n            a[i] = a[i] * inv_n % mod\n\n\ndef solve_case(n, arr):\n    mn = min(arr)\n    mx = max(arr)\n    rng = mx - mn\n\n    # n distinct integers need at least n residues modulo d,\n    # so any valid d must be >= n.\n    if n > rng:\n        return n\n\n    # Check d = n directly first.\n    seen = bytearray(n)\n    valid_n = True\n    for x in arr:\n        rem = x % n\n        if seen[rem]:\n            valid_n = False\n            break\n        seen[rem] = 1\n\n    if valid_n:\n        return n\n\n    start_d = n + 1\n    if start_d > rng:\n        return start_d\n\n    shifted = [x - mn for x in arr]\n\n    pair_ops = n * (n - 1) // 2\n\n    size = 1\n    while size <= 2 * rng:\n        size <<= 1\n\n    use_pair = (\n        pair_ops <= 100000\n        or (pair_ops <= size * size.bit_length() and pair_ops <= 5_000_000)\n    )\n\n    diff = bytearray(rng + 1)\n\n    if use_pair:\n        shifted.sort()\n        for i in range(n):\n            ai = shifted[i]\n            for j in range(i):\n                diff[ai - shifted[j]] = 1\n    else:\n        a = [0] * size\n        for x in shifted:\n            a[x] = 1\n\n        ntt(a, False)\n\n        a0 = a[0]\n        a[0] = a0 * a0 % MOD\n\n        half_plus = (size + 1) // 2\n        for k in range(1, half_plus):\n            val = a[k] * a[size - k] % MOD\n            a[k] = val\n            a[size - k] = val\n\n        if size % 2 == 0:\n            mid = size // 2\n            a[mid] = a[mid] * a[mid] % MOD\n\n        ntt(a, True)\n\n        for d in range(1, rng + 1):\n            if a[d]:\n                diff[d] = 1\n\n    d = start_d\n    upper = rng + 1\n\n    while d <= upper:\n        if d > rng:\n            return d\n\n        bad = False\n        for multiple in range(d, rng + 1, d):\n            if diff[multiple]:\n                bad = True\n                break\n\n        if not bad:\n            return d\n\n        d += 1\n\n    return upper\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        arr = [next(it) for _ in range(n)]\n        answers.append(str(solve_case(n, arr)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 130.739,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array A consisting of N distinct positive integers.\n\nFind the smallest positive integer d such that there exists no pair of integers (i, j) (1≤ i< j ≤ N) where abs(A_{i} - A_{j}) is divisible by d. \n\nIn other words, d \\nmid abs(A_{i} - A_{j}) for all (1≤ i < j≤ N). \n\n------ Input Format ------ \n\n- The first line of input will contain a single integer T, denoting the number of test cases.\n- Each test case consists of multiple lines of input.\n- The first line of each test case contains an integers N — the number of the array A.\n- The second line of each test case contains N space-separated distinct integers A_{1}, A_{2}, \\ldots , A_{N} denoting the array A.\n\n------ Output Format ------ \n\nFor each test case, output the smallest positive integer d such that d \\nmid (A_{i} - A_{j}) for all (1≤ i < j≤ N). \n\n------ Constraints ------ \n\n$1 ≤ T ≤ 1000$ \n$2 ≤ N ≤ 2 \\cdot 10^{5}$\n$1 ≤ A_{i} ≤ 2 \\cdot 10^{5}$\n- The sums of $N$ and $max(A)$ over all test cases does not exceed $3 \\cdot 10 ^ 5$.\n\n----- Sample Input 1 ------ \n3\n3\n1 2 3\n3\n1 2 10\n3\n1 3 10\n----- Sample Output 1 ------ \n3\n5\n4\n----- explanation 1 ------ \nTest case $1$: The possible differences are $abs(A_{1} - A_{2}) = 1, abs(A_{1} - A_{3}) = 2, abs(A_{2} - A_{3}) = 1$. The smallest positive integer not dividing any of these differences is $3$.\n\nTest case $2$: The possible differences are $abs(A_{1} - A_{2}) = 1, abs(A_{1} - A_{3}) = 9, abs(A_{2} - A_{3}) = 8$. The smallest positive integer not dividing any of these differences is $5$.\n\nTest case $3$: The possible differences are $abs(A_{1} - A_{2}) = 2, abs(A_{1} - A_{3}) = 9, abs(A_{2} - A_{3}) = 7$. The smallest positive integer not dividing any of these differences is $4$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

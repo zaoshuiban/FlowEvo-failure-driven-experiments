@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "545e8c57-d7e0-4d19-b827-eb70924ac600",
+  "created": 1792445240,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 499,
+    "completion_tokens": 12331,
+    "total_tokens": 12830,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11928
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 499
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def sumOfPowers(self, nums: List[int], k: int) -> int:\n        MOD = 10**9 + 7\n        nums.sort()\n        n = len(nums)\n\n        diffs = set()\n        for i in range(n):\n            for j in range(i + 1, n):\n                d = nums[j] - nums[i]\n                if d > 0:\n                    diffs.add(d)\n\n        if not diffs:\n            return 0\n\n        sorted_diffs = sorted(diffs)\n\n        def count_ways(min_gap: int) -> int:\n            # dp[i] = number of valid subsequences of current length ending at i\n            dp = [1] * n\n\n            if k == 1:\n                return n % MOD\n\n            for _ in range(2, k + 1):\n                prefix = [0] * (n + 1)\n                total = 0\n                for i in range(n):\n                    total += dp[i]\n                    if total >= MOD:\n                        total -= MOD\n                    prefix[i + 1] = total\n\n                cur = [0] * n\n                r = 0\n\n                for i in range(n):\n                    limit = nums[i] - min_gap\n                    while r < n and nums[r] <= limit:\n                        r += 1\n                    cur[i] = prefix[r]\n\n                dp = cur\n\n            result = 0\n            for value in dp:\n                result += value\n                if result >= MOD:\n                    result -= MOD\n            return result\n\n        answer = 0\n        previous = 0\n\n        for current in sorted_diffs:\n            length = current - previous\n            ways = count_ways(previous + 1)\n            answer = (answer + (length % MOD) * ways) % MOD\n            previous = current\n\n        return answer\n```",
+  "latency_s": 58.247,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer array nums of length n, and a positive integer k.\nThe power of a subsequence is defined as the minimum absolute difference between any two elements in the subsequence.\nReturn the sum of powers of all subsequences of nums which have length equal to k.\nSince the answer may be large, return it modulo 10^9 + 7.\n \nExample 1:\n\nInput: nums = [1,2,3,4], k = 3\nOutput: 4\nExplanation:\nThere are 4 subsequences in nums which have length 3: [1,2,3], [1,3,4], [1,2,4], and [2,3,4]. The sum of powers is |2 - 3| + |3 - 4| + |2 - 1| + |3 - 4| = 4.\n\nExample 2:\n\nInput: nums = [2,2], k = 2\nOutput: 0\nExplanation:\nThe only subsequence in nums which has length 2 is [2,2]. The sum of powers is |2 - 2| = 0.\n\nExample 3:\n\nInput: nums = [4,3,-1], k = 2\nOutput: 10\nExplanation:\nThere are 3 subsequences in nums which have length 2: [4,3], [4,-1], and [3,-1]. The sum of powers is |4 - 3| + |4 - (-1)| + |3 - (-1)| = 10.\n\n \nConstraints:\n\n2 <= n == nums.length <= 50\n-10^8 <= nums[i] <= 10^8 \n2 <= k <= n\n\nStarter code / required signature:\nclass Solution:\n    def sumOfPowers(self, nums: List[int], k: int) -> int:\n        \n\nUse the required function/method named sumOfPowers. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

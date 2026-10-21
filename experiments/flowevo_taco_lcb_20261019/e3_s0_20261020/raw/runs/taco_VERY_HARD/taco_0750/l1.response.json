@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "13487085-8e24-4113-9354-a18e7b97179b",
+  "created": 1792465610,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 610,
+    "completion_tokens": 7649,
+    "total_tokens": 8259,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7047
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 610
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 10**9 + 7\n\n\ndef mat_mul(A, B):\n    n = len(A)\n    C = [[0] * n for _ in range(n)]\n\n    for i in range(n):\n        Ci = C[i]\n        Ai = A[i]\n\n        for k in range(n):\n            a = Ai[k]\n            if a:\n                Bk = B[k]\n                for j in range(n):\n                    Ci[j] += a * Bk[j]\n\n        for j in range(n):\n            Ci[j] %= MOD\n\n    return C\n\n\ndef mat_pow(mat, exp):\n    n = len(mat)\n    res = [[0] * n for _ in range(n)]\n\n    for i in range(n):\n        res[i][i] = 1\n\n    base = mat\n\n    while exp > 0:\n        if exp & 1:\n            res = mat_mul(res, base)\n\n        base = mat_mul(base, base)\n        exp >>= 1\n\n    return res\n\n\ndef vec_mul(v, mat):\n    n = len(v)\n    res = [0] * n\n\n    for i in range(n):\n        a = v[i]\n        if a:\n            Mi = mat[i]\n            for j in range(n):\n                res[j] += a * Mi[j]\n\n    for j in range(n):\n        res[j] %= MOD\n\n    return res\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        N = data[idx]\n        M = data[idx + 1]\n        idx += 2\n\n        A = [[0] * M for _ in range(M)]\n        B = [[0] * M for _ in range(M)]\n\n        for i in range(M):\n            left = max(0, i - 1)\n            right = min(M, i + 2)\n\n            for j in range(left, right):\n                B[i][j] = 1\n\n            if i > 0:\n                A[i][i - 1] = 1\n            if i + 1 < M:\n                A[i][i + 1] = 1\n\n        transitions = N - 1\n        pairs = transitions // 2\n\n        v = [1] * M\n\n        if pairs > 0:\n            C = mat_mul(A, B)\n            P = mat_pow(C, pairs)\n            v = vec_mul(v, P)\n\n        if transitions & 1:\n            v = vec_mul(v, A)\n\n        answers.append(str(sum(v) % MOD))\n\n    print(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 32.348,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in English, Mandarin Chinese and Russian as well. \n\nRichard Winters: We're not lost, Private... we're in Normandy.\n\nIn WW2, allies have placed their mines on the ground  which can be considered as a gird of size N*M. Rows are numbered by integers from 1 to N and columns are numbered by integers from 1 to M. Each cell (i,j)  has a mine in it if (i+j) is divisible by 2. All the other cells are empty.\n\nTwo cells are neighbors if they share a boundary or a corner. Your aim is to move from the first row to the last row using some special rules that the automatic mine placing system follows. The mines won't blow if the following rules are followed:\n\nIf your current row number is odd, from a 'mined' cell(ie. cell having a mine in it) you can move only to a neighboring 'mined' cells in the next row, and similarly, from a 'not mined'(ie. an empty cell) cell you can only move to a neighboring 'not mined' cell in the next row.\n\nIf your current row number is even, you can move to any neighboring cell in the next row, irrespective of the mining.\n\nYou have to find the number of ways to reach row number N starting from row number 1, modulo 10^{9}+7. Two ways are different, if there is at least one different cell on the paths.\n\n------ Input ------ \n\nFirst line contains T, the number of testcases. Each testcase consists of N and M in one line.\n\n------ Output ------ \n\nFor each testcase, print the required answer in one line.\n\n------ Constraints ------ \n\n1 ≤ T ≤ 10\n1 ≤ N ≤ 10^{9}\n1 ≤ M ≤ 30\n\n------ Example ------ \n\nInput:\n2\n1 5\n2 5\n\nOutput:\n5\n8\n\n------ Explanation ------ \n\nExample case 1.You can start at any of the 5 cells available.\n\nExample case 2.\n\n8 ways are:\n\n(1,1) to (2,2)\n\n(1,2) to (2,1)\n\n(1,2) to (2,3)\n\n(1,3) to (2,2)\n\n(1,3) to (2,4)\n\n(1,4) to (2,3)\n\n(1,4) to (2,5)\n\n(1,5) to (2,4)\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

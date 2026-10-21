@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9c178829-c2b0-4df9-a5ee-6f12b3290d36",
+  "created": 1792435403,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1255,
+    "completion_tokens": 6769,
+    "total_tokens": 8024,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6571
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 487
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        freq = {}\n        end = idx + n\n\n        while idx < end:\n            x = data[idx]\n            idx += 1\n            freq[x] = freq.get(x, 0) + 1\n\n        single = 0\n        repeated = 0\n\n        for count in freq.values():\n            if count == 1:\n                single += 1\n            else:\n                repeated += 1\n\n        answers.append(str(repeated + (single + 1) // 2))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 30.517,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array $a$ of $n$ positive integers.\n\nLet $\\text{LIS}(a)$ denote the length of longest strictly increasing subsequence of $a$. For example,\n\n$\\text{LIS}([2, \\underline{1}, 1, \\underline{3}])$ = $2$.\n\n$\\text{LIS}([\\underline{3}, \\underline{5}, \\underline{10}, \\underline{20}])$ = $4$.\n\n$\\text{LIS}([3, \\underline{1}, \\underline{2}, \\underline{4}])$ = $3$.\n\nWe define array $a'$ as the array obtained after reversing the array $a$ i.e. $a' = [a_n, a_{n-1}, \\ldots , a_1]$.\n\nThe beauty of array $a$ is defined as $min(\\text{LIS}(a),\\text{LIS}(a'))$.\n\nYour task is to determine the maximum possible beauty of the array $a$ if you can rearrange the array $a$ arbitrarily.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains a single integer $t$ $(1 \\leq t \\leq 10^4)$  — the number of test cases. Description of the test cases follows.\n\nThe first line of each test case contains a single integer $n$ $(1 \\leq n \\leq 2\\cdot 10^5)$  — the length of array $a$.\n\nThe second line of each test case contains $n$ integers $a_1,a_2, \\ldots ,a_n$ $(1 \\leq a_i \\leq 10^9)$  — the elements of the array $a$.\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $2\\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, output a single integer  — the maximum possible beauty of $a$ after rearranging its elements arbitrarily.\n\n\n-----Examples-----\n\nInput\n3\n3\n6 6 6\n6\n2 5 4 5 2 4\n4\n1 3 2 2\nOutput\n1\n3\n2\n\n\n-----Note-----\n\nIn the first test case, $a$ = $[6, 6, 6]$ and $a'$ = $[6, 6, 6]$. $\\text{LIS}(a) = \\text{LIS}(a')$ = $1$. Hence the beauty is $min(1, 1) = 1$.\n\nIn the second test case, $a$ can be rearranged to $[2, 5, 4, 5, 4, 2]$. Then $a'$ = $[2, 4, 5, 4, 5, 2]$. $\\text{LIS}(a) = \\text{LIS}(a') = 3$. Hence the beauty is $3$ and it can be shown that this is the maximum possible beauty.\n\nIn the third test case, $a$ can be rearranged to $[1, 2, 3, 2]$. Then $a'$ = $[2, 3, 2, 1]$. $\\text{LIS}(a) = 3$, $\\text{LIS}(a') = 2$. Hence the beauty is $min(3, 2) = 2$ and it can be shown that $2$ is the maximum possible beauty.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        freq = {}\n        for _ in range(n):\n            x = data[idx]\n            idx += 1\n            freq[x] = freq.get(x, 0) + 1\n\n        distinct = len(freq)\n        repeated = sum(1 for count in freq.values() if count >= 2)\n\n        answers.append(str((distinct + repeated + 1) // 2))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Runtime error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given arrays A and B of length N each. Determine the number of *good* pairs.\n\nA pair (i,j) (1≤ i,j ≤ N) is said to be *good* if all of the following conditions are satisfied:\ni < j;\nA_{i} = B_\nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        A = [next(it) for _ in range(n)]\n        B = [next(it) for _ in range(n)]\n\n        freq = {}\n        ans = 0\n\n        for a, b in zip(A, B):\n            # Need previous i such that:\n            # A[i] = B[j] = b\n            # B[i] = A[j] = a\n            ans += freq.get((b, a), 0)\n\n            # Insert curre"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

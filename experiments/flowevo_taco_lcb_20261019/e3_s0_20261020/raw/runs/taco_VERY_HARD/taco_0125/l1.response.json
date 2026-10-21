@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6787ed46-ebc1-4fdd-bfcf-2deae4a148b9",
+  "created": 1792452006,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 633,
+    "completion_tokens": 11806,
+    "total_tokens": 12439,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11326
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 633
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\nfrom bisect import bisect_left\n\nMOD = 1_000_000_007\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    max_r = 0\n    idx = 1\n\n    for _ in range(t):\n        r = data[idx + 1]\n        if r > max_r:\n            max_r = r\n        idx += 2\n\n    # g[i] = G_i\n    # prefA[v] = sum_{i=1}^v G_i, the last position where value v occurs\n    # prefP[v] = sum_{i=1}^v i^2 * G_i\n    g = array('I', [0, 1])\n    prefA = array('Q', [0, 1])\n    prefP = array('I', [0, 1])\n\n    while prefA[-1] < max_r:\n        cur = len(g) - 1\n        nxt = cur + 1\n\n        gg = g[g[cur]]\n        val = 1 + g[nxt - gg]\n\n        g.append(val)\n        prefA.append(prefA[-1] + val)\n\n        add = (nxt * nxt % MOD) * val % MOD\n        prefP.append((prefP[-1] + add) % MOD)\n\n    def prefix_sum_squares(n):\n        if n <= 0:\n            return 0\n\n        v = bisect_left(prefA, n)\n        remaining = n - prefA[v - 1]\n\n        add = (remaining % MOD) * (v * v % MOD) % MOD\n        return (prefP[v - 1] + add) % MOD\n\n    answers = []\n    idx = 1\n\n    for _ in range(t):\n        left = data[idx]\n        right = data[idx + 1]\n        idx += 2\n\n        ans = (prefix_sum_squares(right) - prefix_sum_squares(left - 1)) % MOD\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 50.61,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe Golomb sequence $G_1, G_2, \\ldots$ is a non-decreasing integer sequence such that for each positive integer $n$, $G_n$ is the number of occurrences of $n$ in this sequence. The first few elements of $G$ are $[1, 2, 2, 3, 3, 4, 4, 4, 5, \\ldots]$. Do you know the recurrence relation for the Golomb sequence? It is $G_1 = 1$ and $G_{n+1} = 1+G_{n+1-G_{G_n}}$ for each $n \\ge 1$. A self-describing sequence, isn't it?\nMr. Strange wants to learn CP, so he asked Chef, who is one of the best competitive programmers in the world, to teach him. Chef decided to test his ability by giving him the following task.\nFind the sum of squares of the $L$-th through $R$-th term of the Golomb sequence, i.e. $S = \\sum_{i=L}^R G_i^2$. Since the sum can be quite large, compute it modulo $10^9+7$.\nCan you help Mr. Strange carry out this task given to him by his teacher?\n\n-----Input-----\n- The first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\n- The first and only line of each test case contains two space-separated integers $L$ and $R$.\n\n-----Output-----\nFor each test case, print a single line containing one integer $S$ modulo $10^9+7$.\n\n-----Constraints-----\n- $1 \\le T \\le 10^5$\n- $1 \\le L \\le R \\le 10^{10}$\n\n-----Subtasks-----\nSubtask #1 (50 points):\n- $T \\le 10^2$\n- $R \\le 10^9$\nSubtask #2 (50 points): original constraints\n\n-----Example Input-----\n3\n1 5\n2 4\n100 100\n\n-----Example Output-----\n27\n17\n441\n\n-----Explanation-----\nExample case 1: $1^2 + 2^2 + 2^2 + 3^2 + 3^2 = 27$\nExample case 2: $2^2 + 2^2 + 3^2 = 17$\nExample case 3: $21^2 = 441$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

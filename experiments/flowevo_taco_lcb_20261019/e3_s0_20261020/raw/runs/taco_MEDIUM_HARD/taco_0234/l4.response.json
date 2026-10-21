@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5a52bcf2-00c6-44ba-87f4-8bbcb512dee0",
+  "created": 1792437124,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 984,
+    "completion_tokens": 4445,
+    "total_tokens": 5429,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3776
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 344
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport random\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    sys.setrecursionlimit(1_000_000)\n\n    n, m = data[0], data[1]\n\n    left = [0] * (n + 1)\n    right = [0] * (n + 1)\n    size = [0] * (n + 1)\n    value = [0] * (n + 1)\n    priority = [0] * (n + 1)\n\n    for idx in range(1, n + 1):\n        value[idx] = data[idx + 1]\n        size[idx] = 1\n        priority[idx] = random.getrandbits(64) + 1\n\n    def merge(a, b):\n        if not a or not b:\n            return a or b\n\n        if priority[a] > priority[b]:\n            right[a] = merge(right[a], b)\n            size[a] = size[left[a]] + size[right[a]] + 1\n            return a\n        else:\n            left[b] = merge(a, left[b])\n            size[b] = size[left[b]] + size[right[b]] + 1\n            return b\n\n    def split(t, k):\n        \"\"\"\n        Split tree t into two trees:\n        first contains first k elements, second contains the rest.\n        \"\"\"\n        if not t:\n            return 0, 0\n\n        if size[left[t]] >= k:\n            a, b = split(left[t], k)\n            left[t] = b\n            size[t] = size[left[t]] + size[right[t]] + 1\n            return a, t\n        else:\n            a, b = split(right[t], k - size[left[t]] - 1)\n            right[t] = a\n            size[t] = size[left[t]] + size[right[t]] + 1\n            return t, b\n\n    root = 0\n    for idx in range(1, n + 1):\n        root = merge(root, idx)\n\n    ptr = 2 + n\n\n    for _ in range(m):\n        typ = data[ptr]\n        i = data[ptr + 1]\n        j = data[ptr + 2]\n        ptr += 3\n\n        prefix, rest = split(root, i - 1)\n        middle, suffix = split(rest, j - i + 1)\n\n        if typ == 1:\n            root = merge(middle, merge(prefix, suffix))\n        else:\n            root = merge(merge(prefix, suffix), middle)\n\n    result = []\n    stack = []\n    cur = root\n\n    while stack or cur:\n        while cur:\n            stack.append(cur)\n            cur = left[cur]\n\n        cur = stack.pop()\n        result.append(value[cur])\n        cur = right[cur]\n\n    answer = abs(result[0] - result[-1])\n\n    out = [str(answer), \"\\n\", \" \".join(map(str, result)), \"\\n\"]\n    sys.stdout.write(\"\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 18.55,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven two numbers $N$ and $\\mbox{M}$. $N$ indicates the number of elements in the array $A[](1-indexed)$ and $\\mbox{M}$ indicates number of queries. You need to perform two types of queries on the array $\\boldsymbol{A\\left[\\right]}$.  \n\nYou are given $\\mbox{M}$ queries. Queries can be of two types, type 1 and type 2.  \n\nType 1 queries are represented as 1 i j : Modify the given array by removing elements from $\\boldsymbol{i}$ to $j$ and adding them to the front.  \n\nType 2 queries are represented as 2 i j : Modify the given array by removing elements from $\\boldsymbol{i}$ to $j$ and adding them to the back.  \n\nYour task is to simply print $\\left|A[1]-A[N]\\right|$ of the resulting array after the execution of $\\mbox{M}$ queries followed by the resulting array.  \n\nNote While adding at back or front the order of elements is preserved.  \n\nInput Format\n\nFirst line consists of two space-separated integers, $N$ and $\\mbox{M}$. \n\nSecond line contains $N$ integers, which represent the elements of the array. \n\n$\\mbox{M}$ queries follow. Each line contains a query of either type 1 or type 2 in the form $\\textbf{type i j}$  \n\nConstraints \n\n$1\\leq N,M\\leq10^5$ \n\n$1\\leq A[i]\\leq10^9$ \n\n$1\\leq i\\leq j\\leq N$\n\nOutput Format\n\nPrint the absolute value i.e. $abs(A[1]-A[N])$ in the first line. \n\nPrint elements of the resulting array in the second line. Each element should be seperated by a single space.\n\nSample Input\n8 4\n1 2 3 4 5 6 7 8\n1 2 4\n2 3 5\n1 4 7\n2 1 4\n\nSample Output\n1\n2 3 6 5 7 8 4 1\n\nExplanation\n\nGiven array is $\\{1,2,3,4,5,6,7,8\\}$. \n\nAfter execution of query $1\\:\\text{}2\\:\\text{}4$, the array becomes $\\{2,3,4,1,5,6,7,8\\}$. \n\nAfter execution of query$2\\:\\text{}3\\:\\text{}5$, the array becomes $\\{2,3,6,7,8,4,1,5\\}$. \n\nAfter execution of query $\\textbf{1}\\:4\\:7$, the array becomes $\\{7,8,4,1,2,3,6,5\\}$. \n\nAfter execution of query $2\\:\\text{}1\\:\\text{}4$, the array becomes $\\{2,3,6,5,7,8,4,1\\}$. \n\nNow $\\left|A[1]-A[N]\\right|$ is $|(2-1)|$ i.e. $1$ and the array is $23657841$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

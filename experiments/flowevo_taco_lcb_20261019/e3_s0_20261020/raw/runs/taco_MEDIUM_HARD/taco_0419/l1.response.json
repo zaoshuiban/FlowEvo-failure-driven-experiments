@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e5ac3555-4e5b-446c-9d0b-348edc5f4b85",
+  "created": 1792440620,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 858,
+    "completion_tokens": 1419,
+    "total_tokens": 2277,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1195
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 858
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        events_at_end = [[] for _ in range(49)]\n\n        for _ in range(n):\n            s = next(it)\n            e = next(it)\n            c = next(it)\n            events_at_end[e].append((s, c))\n\n        dp = [0] * 49\n\n        for end_time in range(49):\n            if end_time > 0:\n                dp[end_time] = max(dp[end_time], dp[end_time - 1])\n\n            for start_time, compensation in events_at_end[end_time]:\n                dp[end_time] = max(\n                    dp[end_time],\n                    dp[start_time] + compensation\n                )\n\n        answers.append(str(dp[48]))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 6.346,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef Po has given an online advertisement to provide Event organizing services. Chef got a huge response for his advertisement. He got various orders to conduct the events from different organizations. In turn, Chef will receive a compensation depend upon the type of event and the total numbers of persons in the event. Chef has received N orders for conducting events in this weekend in all. As weekend consists of two days all events will take place during the period of 48 hours. For the i-th order the corresponding event will start at S_{i} hours, ends at E_{i} hours and Chef will receive a compensation C_{i} for this event. For example, if S_{i} = 17 and E_{i} = 22 then duration of event is 22 – 17 = 5 hours and its time period is 17:00 – 22:00 of Saturday. Hours of Sunday are numbered by numbers from 24 to 48. So, for example, 10:00 of Sunday will be represented as 10 + 24 = 34. Because Chef is a newbie, the organizations had put a condition that Chef will receive a compensation for the event if and only if he is available for the entire duration of the event. It means that he can not choose overlapping events. Note, however, that if some event starts just in the moment another event has finished the Chef can safely conduct them both.\n\nIn general Chef will obey the orders on first come first serve basis. But on weekends Chef will select the orders in such a way that the total compensation for all the events he will conduct will be the maximal. Now your task is to help Chef and find this maximal total compensation.\n\n------ Input ------ \n\nThe first line of the input contains an integer T, the number of test cases. T test cases follow. The first line of each test case contains an integer N, the number of received orders for conducting events. Each of the next N lines contains three space separated integers S_{i}, E_{i}, C_{i}, the parameters of the i-th event described in the problem statement.\n\n------ Constraints ------ \n\n1 ≤ T ≤ 10\n1 ≤ N ≤ 2000\n0 ≤ S_{i} < E_{i} ≤ 48\n0 ≤ C_{i} ≤ 10^{6}\n\n------ Output ------ \n\nOutput for each test case should contain a single integer in a separate line, the maximal compensation Chef Po can get.\n\n----- Sample Input 1 ------ \n2\n4\n1 2 100\n2 3 200\n3 4 1600\n1 3 2100\n3\n1 10 2000\n2 5 100\n6 9 400\n----- Sample Output 1 ------ \n3700\n2000\n----- explanation 1 ------ \n\nCase 1. The best choice here is to conduct 3rd and 4th events. The total compensation is equal to 1600 + 2100 = 3700. These events do not overlap since 3rd event starts just after the finish of the 4th one. Alternatively we can conduct first three events that also do not overlap. But in this case compensation will be only 100 + 200 + 1600 = 1900.\n\nCase 2. Note that first event overlaps with both second and third events, while the last two events do not overlap. Hence there are two reasonable choices available for Chef. One is to take just the first order with total compensation 2000 and the second one is to take the last two orders with total compensation 100 + 400 = 500. Clearly the first choice is better. Hence the answer is 2000.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

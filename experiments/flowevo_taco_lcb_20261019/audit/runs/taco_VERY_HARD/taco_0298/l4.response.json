@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "333f3327-426b-4751-b49f-a29a1e7519c5",
+  "created": 1792464366,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 848,
+    "completion_tokens": 32768,
+    "total_tokens": 33616,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 208
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 167.396,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Vietnamese],\n[Bengali], [Mandarin Chinese], and [Russian] as well. \n\nFind $K$ distinct numbers in the range $[1, N]$ such that the bitwise XOR of all the numbers is maximized. Print any set of these numbers that maximize the XOR.\n\n------ Input ------\n\nThe first line contains an integer $T$, the number of test cases. Then the test cases follow. \nEach test case contains a single line of input, two integers $N$, $K$. \n\n------ Output ------\nFor each test case, output $K$ distinct integers in any order as described in the problem.\n\n------ Constraints  ------\n$1 ≤ T ≤ 10^{4}$\n$1 ≤ K ≤ N ≤ 10^{6}$\nThe sum of $N$ over all queries is at most $4\\cdot 10^{6}$.\nThe sum of $K$ over all queries is at most $2\\cdot 10^{6}$.\n\n------ Subtasks ------\nSubtask #1 (5 points):\n$1 ≤ T ≤ 50$\n$1 ≤ K ≤ N ≤ 20$\n\nSubtask #2 (20 points):\n$1 ≤ T ≤ 50$\n$1 ≤ K ≤ N ≤ 200$\nThe sum of $N$ over all queries is at most $800$.\nThe sum of $K$ over all queries is at most $400$.\n\nSubtask #3 (75 points): original constraints\n\n------ Sample Input ------\n\n3\n10 1\n9 2\n8 7\n\n------ Sample Output ------\n\n10\n7 8\n1 2 3 4 5 6 8\n\n------ Explanation ------\nTest Case $1$: The only possible set is $\\{10\\}$ which gives the value $10$.\n\nTest Case $2$: The other possible set is $\\{9, 6\\}$ which gives the value $9 \\oplus 6 = 15 = 7 \\oplus 8$.\n\nTest Case $3$: The only possible set is $\\{1, 2, 3, 4, 5, 6, 8\\}$ which gives the value $1 \\oplus 2 \\oplus 3 \\oplus 4 \\oplus 5 \\oplus 6 \\oplus 8 = 15$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: The Golomb sequence $G_1, G_2, \\ldots$ is a non-decreasing integer sequence such that for each positive integer $n$, $G_n$ is the number of occurrences of $n$ in this sequence. The first few elements \nSolution:\nimport sys\nfrom array import array\nfrom bisect import bisect_left\n\nMOD = 1_000_000_007\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    max_r = 0\n    idx = 1\n\n    for _ in range(t):\n        r = data[idx + 1]\n        if r > max_r:\n            max_r = r\n        idx += 2\n\n    # g[i] = G_i\n    # prefA[v] = sum_{i=1}^v G_i, the last position where value v occurs\n    # prefP[v] = sum_{i=1}^v i^2 * G_i\n    g = array('I', [0, 1"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

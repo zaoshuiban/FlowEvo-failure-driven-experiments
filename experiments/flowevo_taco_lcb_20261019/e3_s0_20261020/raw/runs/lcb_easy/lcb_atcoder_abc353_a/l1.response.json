@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "701ebbea-8cdc-4a94-8c19-80e136d2003c",
+  "created": 1792430442,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 390,
+    "completion_tokens": 179,
+    "total_tokens": 569,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 84
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 390
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    N = data[0]\n    H = data[1:1 + N]\n\n    first_height = H[0]\n\n    for i in range(1, N):\n        if H[i] > first_height:\n            print(i + 1)\n            return\n\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 1.384,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are N buildings aligned in a row. The i-th building from the left has a height of H_i.\nDetermine if there is a building taller than the first one from the left. If such a building exists, find the position of the leftmost such building from the left.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nH_1 H_2 \\ldots H_N\n\nOutput\n\nIf no building is taller than the first one from the left, print -1.\nIf such a building exists, print the position (index) of the leftmost such building from the left.\n\nConstraints\n\n\n- 1 \\leq N \\leq 100\n- 1 \\leq H_i \\leq 100\n- All input values are integers.\n\nSample Input 1\n\n4\r\n3 2 5 2\n\nSample Output 1\n\n3\r\n\nThe building taller than the first one from the left is the third one from the left.\n\nSample Input 2\n\n3\r\n4 3 2\n\nSample Output 2\n\n-1\r\n\nNo building is taller than the first one from the left.\n\nSample Input 3\n\n7\r\n10 5 10 2 10 13 15\n\nSample Output 3\n\n6\r\n\nThe buildings taller than the first one from the left are the sixth and seventh ones. Among them, the leftmost is the sixth one.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

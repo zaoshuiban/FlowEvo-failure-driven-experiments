@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "421191c0-69a4-4bf4-ae6c-3b0726254b55",
+  "created": 1792430154,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 475,
+    "completion_tokens": 308,
+    "total_tokens": 783,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 196
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 475
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def finalPositionOfSnake(self, n: int, commands: List[str]) -> int:\n        row = 0\n        col = 0\n\n        for command in commands:\n            if command == \"UP\":\n                row -= 1\n            elif command == \"DOWN\":\n                row += 1\n            elif command == \"LEFT\":\n                col -= 1\n            elif command == \"RIGHT\":\n                col += 1\n\n        return row * n + col\n```",
+  "latency_s": 1.834,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a snake in an n x n matrix grid and can move in four possible directions. Each cell in the grid is identified by the position: grid[i][j] = (i * n) + j.\nThe snake starts at cell 0 and follows a sequence of commands.\nYou are given an integer n representing the size of the grid and an array of strings commands where each command[i] is either \"UP\", \"RIGHT\", \"DOWN\", and \"LEFT\". It's guaranteed that the snake will remain within the grid boundaries throughout its movement.\nReturn the position of the final cell where the snake ends up after executing commands.\n \nExample 1:\n\nInput: n = 2, commands = [\"RIGHT\",\"DOWN\"]\nOutput: 3\nExplanation:\n\n\n\n\n0\n1\n\n\n2\n3\n\n\n\n\n\n\n0\n1\n\n\n2\n3\n\n\n\n\n\n\n0\n1\n\n\n2\n3\n\n\n\n\n\nExample 2:\n\nInput: n = 3, commands = [\"DOWN\",\"RIGHT\",\"UP\"]\nOutput: 1\nExplanation:\n\n\n\n\n0\n1\n2\n\n\n3\n4\n5\n\n\n6\n7\n8\n\n\n\n\n\n\n0\n1\n2\n\n\n3\n4\n5\n\n\n6\n7\n8\n\n\n\n\n\n\n0\n1\n2\n\n\n3\n4\n5\n\n\n6\n7\n8\n\n\n\n\n\n\n0\n1\n2\n\n\n3\n4\n5\n\n\n6\n7\n8\n\n\n\n\n\n \nConstraints:\n\n2 <= n <= 10\n1 <= commands.length <= 100\ncommands consists only of \"UP\", \"RIGHT\", \"DOWN\", and \"LEFT\".\nThe input is generated such the snake will not move outside of the boundaries.\n\nStarter code / required signature:\nclass Solution:\n    def finalPositionOfSnake(self, n: int, commands: List[str]) -> int:\n        \n\nUse the required function/method named finalPositionOfSnake. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

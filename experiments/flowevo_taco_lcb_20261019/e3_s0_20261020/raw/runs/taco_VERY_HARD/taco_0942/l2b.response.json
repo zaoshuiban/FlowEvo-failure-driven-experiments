@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "29e604ba-81fb-4274-8e67-bf732488331f",
+  "created": 1792453211,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 660,
+    "completion_tokens": 32768,
+    "total_tokens": 33428,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 148
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 170.731,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGroup of Berland scientists, with whom you have a close business relationship, makes a research in the area of peaceful nuclear energy. In particular, they found that a group of four nanobots, placed on a surface of a plate, can run a powerful chain reaction under certain conditions. \n\nTo be precise, researchers introduced a rectangular Cartesian coordinate system on a flat plate and selected four distinct points with integer coordinates where bots will be placed initially. Next each bot will be assigned with one of the four directions (up, down, left or right) parallel to the coordinate axes. After that, each bot is shifted by an integer distance (which may be different for different bots) along its direction. The chain reaction starts, if the bots are in the corners of a square with positive area with sides parallel to the coordinate axes. Each corner of the square must contain one nanobot. This reaction will be stronger, if bots spend less time to move. We can assume that bots move with unit speed. In other words, the lesser is the maximum length traveled by bot, the stronger is reaction.\n\nScientists have prepared a set of plates and selected starting position for the bots for each plate. Now they ask you to assign the direction for each bot to move after landing such that the maximum length traveled by bot is as small as possible.\n\nInput\n\nThe first line contains an integer number t (1 ≤ t ≤ 50) — the number of plates.\n\nt descriptions of plates follow. A description of each plate consists of four lines. Each line consists of a pair of integers numbers xi, yi ( - 108 ≤ xi, yi ≤ 108) — coordinates of the next bot. All bots are in different locations.\n\nNote, though, the problem can include several records in one test, you can hack other people's submissions only with the test of one plate, i.e. parameter t in a hack test should be equal to 1.\n\nOutput\n\nPrint answers for all plates separately. First goes a single integer number in a separate line. If scientists have made an unfortunate mistake and nanobots are not able to form the desired square, print -1. Otherwise, print the minimum possible length of the longest bot's path.\n\nIf a solution exists, in the next four lines print two integer numbers — positions of each bot after moving. Print bots' positions in the order they are specified in the input data.\n\nIf there are multiple solution, you can print any of them.\n\nExamples\n\nInput\n\n2\n1 1\n1 -1\n-1 1\n-1 -1\n1 1\n2 2\n4 4\n6 6\n\n\nOutput\n\n0\n1 1\n1 -1\n-1 1\n-1 -1\n-1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

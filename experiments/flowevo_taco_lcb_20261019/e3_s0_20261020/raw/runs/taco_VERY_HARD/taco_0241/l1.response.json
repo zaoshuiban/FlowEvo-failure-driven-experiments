@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f793bd80-c5dd-403c-9c4c-3fe54d48c271",
+  "created": 1792464534,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 966,
+    "completion_tokens": 32768,
+    "total_tokens": 33734,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 966
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 185.13,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Mandarin], [Bengali], and [Russian] as well.\n\nChef is a wanted criminal, and N police officers are up for catching him. The officers want to catch Chef no matter the cost, and Chef also wants to eliminate as many officers as possible (preferably everyone) before getting caught (or before running away after eliminating everyone). Neither the officers nor Chef will run away before accomplishing their goals.\n\nChef and the officers are on a one-dimensional grid with coordinates ranging from -10^{10} to 10^{10}. Chef is initially standing at coordinate C, and the i-th officer is initially at coordinate P_{i}. The officers and Chef then take turns to move, with the officer team moving first. \n\nDuring their turn, officers will have to move to an adjacent unoccupied cell one by one, in any order they want. Every officer will have to move. At every moment of time, no two officers can be in the same cell, and also no officer can be in the same cell as Chef. If the officer is unable to move to an adjacent unoccupied cell, he is eliminated (and the cell he was in becomes unoccupied). Note that the officer team will try to move to eliminate as few officers as possible. For example, with P = [2, 3, 4] and C = 6, then the next positions of the officers can be [1, 2, 3], [1, 2, 5], [1, 4, 5], or [3, 4, 5]. However, with P = [2, 3, 4] and C = 5, the only possible set of the next positions of the officers is [1, 2, 3].\n\nAfter the officer team's turn, Chef also moves to an adjacent unoccupied cell, or gets caught if he cannot find any adjacent unoccupied cell. The process then repeats until either Chef is caught, or all officers are eliminated and Chef runs away.\n\nYou need to find out the maximum number of officers that can be eliminated by Chef, and if Chef can run away or not.\n\nAs a reminder, two cells with coordinates X and Y are *adjacent* if and only if |X - Y| = 1.\n\n------ Input Format ------ \n\n- The first line contains T - the number of test cases. Then the test cases follow.\n- The first line of each test case contains a single integer N - the number of officers.\n- The second line of each test case contains a single integer C - the initial coordinate of Chef.\n- The third line of each test case contains N integers P_{1}, P_{2}, \\dots, P_{N} - the initial coordinates of the officers.\n\n------ Output Format ------ \n\nFor each test case, output on a single line two space-separated integers: the first integer is the maximum number of officers that can be eliminated by Chef, and the second integer is 1 if Chef runs away or -1 if Chef will be caught.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ C ≤ 10^{9}$\n$1 ≤ P_{i} ≤ 10^{9}$\n- All the coordinates are unique. That means $P_{i} \\ne C$ for all $1 ≤i ≤N$, and $P_{i} \\ne P_{j}$ for all $1 ≤i < j ≤N$\n\n----- Sample Input 1 ------ \n2\n2\n2\n1 4\n1\n2\n1\n\n----- Sample Output 1 ------ \n1 -1\n1 1\n\n----- explanation 1 ------ \n- Test case $1$: Chef chooses to always move to the left (i.e. to the smaller coordinate); this forces the officer at coordinate $1$ to always move to the left, and eventually being cornered and eliminated. However, the officer at coordinate $4$ cannot be eliminated, and hence Chef will be caught at the end.\n- Test case $2$: Similarly, Chef chooses to always move to the left, and eventually eliminating the only officer, thus running away at the end.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

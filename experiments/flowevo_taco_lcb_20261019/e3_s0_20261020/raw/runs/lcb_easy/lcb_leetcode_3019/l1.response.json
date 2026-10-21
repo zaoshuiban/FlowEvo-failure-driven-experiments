@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6e23c9f0-0c3b-460d-9609-faaa85645137",
+  "created": 1792430137,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 414,
+    "completion_tokens": 137,
+    "total_tokens": 551,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 78
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 414
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def furthestDistanceFromOrigin(self, moves: str) -> int:\n        left = moves.count('L')\n        right = moves.count('R')\n        wildcard = moves.count('_')\n        return abs(left - right) + wildcard\n```",
+  "latency_s": 1.543,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string moves of length n consisting only of characters 'L', 'R', and '_'. The string represents your movement on a number line starting from the origin 0.\nIn the i^th move, you can choose one of the following directions:\n\nmove to the left if moves[i] = 'L' or moves[i] = '_'\nmove to the right if moves[i] = 'R' or moves[i] = '_'\n\nReturn the distance from the origin of the furthest point you can get to after n moves.\n \nExample 1:\n\nInput: moves = \"L_RL__R\"\nOutput: 3\nExplanation: The furthest point we can reach from the origin 0 is point -3 through the following sequence of moves \"LLRLLLR\".\n\nExample 2:\n\nInput: moves = \"_R__LL_\"\nOutput: 5\nExplanation: The furthest point we can reach from the origin 0 is point -5 through the following sequence of moves \"LRLLLLL\".\n\nExample 3:\n\nInput: moves = \"_______\"\nOutput: 7\nExplanation: The furthest point we can reach from the origin 0 is point 7 through the following sequence of moves \"RRRRRRR\".\n\n \nConstraints:\n\n1 <= moves.length == n <= 50\nmoves consists only of characters 'L', 'R' and '_'.\n\nStarter code / required signature:\nclass Solution:\n    def furthestDistanceFromOrigin(self, moves: str) -> int:\n        \n\nUse the required function/method named furthestDistanceFromOrigin. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

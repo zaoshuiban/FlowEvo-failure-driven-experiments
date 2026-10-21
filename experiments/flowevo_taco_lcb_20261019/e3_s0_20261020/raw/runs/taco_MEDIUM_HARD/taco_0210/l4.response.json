@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ceaf16cb-347d-4ed2-a033-ae6d9d6a8cc5",
+  "created": 1792438362,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1177,
+    "completion_tokens": 25129,
+    "total_tokens": 26306,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24983
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 793
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.readline()\n    if not data:\n        return\n\n    k = int(data)\n    n = 100\n\n    graph = [['0'] * n for _ in range(n)]\n\n    for i in range(n):\n        for j in range(i):\n            if k >= j:\n                k -= j\n                graph[i][j] = graph[j][i] = '1'\n            else:\n                break\n\n    answer = [str(n)]\n    answer.extend(''.join(row) for row in graph)\n    sys.stdout.write('\\n'.join(answer))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 120.468,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nJohn Doe started thinking about graphs. After some thought he decided that he wants to paint an undirected graph, containing exactly k cycles of length 3. \n\nA cycle of length 3 is an unordered group of three distinct graph vertices a, b and c, such that each pair of them is connected by a graph edge. \n\nJohn has been painting for long, but he has not been a success. Help him find such graph. Note that the number of vertices there shouldn't exceed 100, or else John will have problems painting it.\n\n\n-----Input-----\n\nA single line contains an integer k (1 ≤ k ≤ 10^5) — the number of cycles of length 3 in the required graph.\n\n\n-----Output-----\n\nIn the first line print integer n (3 ≤ n ≤ 100) — the number of vertices in the found graph. In each of next n lines print n characters \"0\" and \"1\": the i-th character of the j-th line should equal \"0\", if vertices i and j do not have an edge between them, otherwise it should equal \"1\". Note that as the required graph is undirected, the i-th character of the j-th line must equal the j-th character of the i-th line. The graph shouldn't contain self-loops, so the i-th character of the i-th line must equal \"0\" for all i.\n\n\n-----Examples-----\nInput\n1\n\nOutput\n3\n011\n101\n110\n\nInput\n10\n\nOutput\n5\n01111\n10111\n11011\n11101\n11110\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.readline().strip()\n    if not data:\n        return\n\n    k = int(data)\n\n    def c2(x: int) -> int:\n        return x * (x - 1) // 2\n\n    def c3(x: int) -> int:\n        return x * (x - 1) * (x - 2) // 6\n\n    # Largest clique whose number of triangles does not exceed k.\n    a = 3\n    while c3(a + 1) <= k:\n        a += 1\n\n    remaining = k - c3(a)\n\n    # Represent remaining as a sum of numbers C(t, 2).\n    # Each such term will correspond to a new vertex connected to t clique vertices.\n    terms = []\n\n    if remaining > 0:\n        INF = 10**9\n        dp = [INF] * (remaining + 1)\n        prev_sum = [0] * (remaining + 1)\n        used_t = [0] * (remaining + 1)\n\n        dp[0] = 0\n\n        for s in range(1, remaining + 1):\n            for t in range(2, a + 1):\n                value = c2(t)\n                if value > s:\n                    break\n\n                if dp[s - value] + 1 < dp[s]:\n                    dp[s] = dp[s - value] + 1\n                    prev_sum[s] = s - value\n                    used_t[s] = t\n\n        cur = remaining\n        while cur > 0:\n            terms.append(used_t[cur])\n            cur = prev_sum[cur]\n\n    n = a + len(terms)\n    graph = [['0'] * n for _ in range(n)]\n\n    # Build a clique of size a.\n    for i in range(a):\n        for j in range(i + 1, a):\n            graph[i][j] = '1'\n            graph[j][i] = '1'\n\n    # Add extra vertices. Each one is connected to t vertices of the clique.\n    for idx, t in enumerate(terms):\n        v = a + idx\n        for u in range(t):\n            graph[v][u] = '1'\n            graph[u][v] = '1'\n\n    result = [str(n)]\n    result.extend(''.join(row) for row in graph)\n\n    sys.stdout.write('\\n'.join(result))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d83e5bb3-2399-45b7-ac6c-af68f2612d6f",
+  "created": 1792433685,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 502,
+    "completion_tokens": 445,
+    "total_tokens": 947,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 306
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 246
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    t = int(data[1])\n    s = list(data[2])\n\n    for _ in range(t):\n        i = 0\n        while i < n - 1:\n            if s[i] == 'B' and s[i + 1] == 'G':\n                s[i], s[i + 1] = s[i + 1], s[i]\n                i += 2\n            else:\n                i += 1\n\n    print(''.join(s))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 2.473,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nDuring the break the schoolchildren, boys and girls, formed a queue of n people in the canteen. Initially the children stood in the order they entered the canteen. However, after a while the boys started feeling awkward for standing in front of the girls in the queue and they started letting the girls move forward each second. \n\nLet's describe the process more precisely. Let's say that the positions in the queue are sequentially numbered by integers from 1 to n, at that the person in the position number 1 is served first. Then, if at time x a boy stands on the i-th position and a girl stands on the (i + 1)-th position, then at time x + 1 the i-th position will have a girl and the (i + 1)-th position will have a boy. The time is given in seconds.\n\nYou've got the initial position of the children, at the initial moment of time. Determine the way the queue is going to look after t seconds.\n\n\n-----Input-----\n\nThe first line contains two integers n and t (1 ≤ n, t ≤ 50), which represent the number of children in the queue and the time after which the queue will transform into the arrangement you need to find. \n\nThe next line contains string s, which represents the schoolchildren's initial arrangement. If the i-th position in the queue contains a boy, then the i-th character of string s equals \"B\", otherwise the i-th character equals \"G\".\n\n\n-----Output-----\n\nPrint string a, which describes the arrangement after t seconds. If the i-th position has a boy after the needed time, then the i-th character a must equal \"B\", otherwise it must equal \"G\".\n\n\n-----Examples-----\nInput\n5 1\nBGGBG\n\nOutput\nGBGGB\n\nInput\n5 2\nBGGBG\n\nOutput\nGGBGB\n\nInput\n4 1\nGGGB\n\nOutput\nGGGB\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

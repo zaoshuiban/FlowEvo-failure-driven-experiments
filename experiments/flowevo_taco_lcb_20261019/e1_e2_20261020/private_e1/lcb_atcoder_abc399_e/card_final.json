@@ -1,0 +1,52 @@
+{
+  "task_id": "lcb_atcoder_abc399_e",
+  "dataset": "lcb",
+  "difficulty": "hard",
+  "old_first_pass": false,
+  "old_final_pass": false,
+  "new_first_status": "NO_COMPLETE_CODE",
+  "new_original_final_status": "COMPILE_ERROR",
+  "any_saved_candidate_pass": false,
+  "first_passing_saved_stage": null,
+  "attempts": 5,
+  "invalid_cases": 0,
+  "reference_corrections": 0,
+  "input_coverage": "structural_and_signature_only",
+  "preflight_status": "READY",
+  "evaluation_epoch": "repair_v2_20261020",
+  "timing_unstable": false,
+  "reported_final_status": "COMPILE_ERROR",
+  "family": "strings",
+  "sampling_group": "exceptions",
+  "label": "VERIFIED_ALGORITHM_FAILURE",
+  "root_subtype": "truncated_generation_compile_error",
+  "finding": "历史最终输出达到 32768 Token 上限，未闭合代码块被提取为含 Markdown 围栏的截断程序；对任意合法输入均编译失败。确证的是实现/工作流完整性缺陷，不是算法选择错误。",
+  "static_syntax": "invalid syntax (<unknown>, line 1)",
+  "independent_evidence": {
+    "input": "1\na\nb\n",
+    "expected": "1",
+    "input_legality": "Explicit statement-domain construction, generated without hidden tests",
+    "actual": {
+      "status": "COMPILE_ERROR",
+      "error": "invalid syntax (<unknown>, line 1)",
+      "line": 1
+    },
+    "proof": "TACO: sum labels 1+2 of one intact leaf; LCB: replace a with b in one operation."
+  },
+  "review_scope": "task statement, original final code, test/expected contract, replay actual output/exception, old feedback and full candidate history; unknown retained where evidence insufficient",
+  "candidate_universally_correct": null,
+  "program_defect_excluded": false,
+  "new_status_observed": "COMPILE_ERROR",
+  "source_code_sha256": "9add9b1865a973ea8c82bd1c9c02ceb482e77c61a30c42aa9be42a12e8931207",
+  "task_sha256": "8eb66d7c684fbb8d0e6384d5541a7848360a1713eb9ab178e5f6c7f31ffdad9a",
+  "evidence_file_hashes": {
+    "history.json": "6724ff94161cf3368ffbbd772b6e26a87fae1913baa772ac87baf577e33e7260",
+    "replay.json": "f1be2cab6e6d6fc962e5fa200c2fb66a8eff7435825b19a62d4c8de9d8ff160e",
+    "original.py": "9add9b1865a973ea8c82bd1c9c02ceb482e77c61a30c42aa9be42a12e8931207",
+    "old_evaluator_trace.json": "d4b0e3627c4c2f057546acafb09f95dc4ae1781ce1144fd1e9898b6107cf6f96",
+    "preflight.json": "71481c176787936eb085946222cf3578de46746f0e27948d3b5ce85273263a2a",
+    "statement.txt": "f82b382de0766343b15a8385fcb4d5e14bc2f433695a65383cf7d385fbcbe0c1"
+  },
+  "reproduction": "cd /opt/flowevo-benchmark-20261019 && venv/bin/python repair_v2d_20261020/code/adapter.py --task data/tasks/lcb_atcoder_abc399_e.json --candidate e1_e2_20261020/private_e1/lcb_atcoder_abc399_e/original.py --policies repair_v2d_20261020/policies.json --out /tmp/e1_lcb_atcoder_abc399_e.json",
+  "root_cause_certainty": "confirmed specific defect"
+}

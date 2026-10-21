@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "703b4106-fbd0-457d-a9e0-b010ef490111",
+  "created": 1792432006,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 460,
+    "completion_tokens": 824,
+    "total_tokens": 1284,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 692
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 204
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, d = data[0], data[1]\n    x = data[2:2 + n]\n\n    ans = 0\n    left = 0\n\n    for right in range(n):\n        while x[right] - x[left] > d:\n            left += 1\n\n        count = right - left\n        ans += count * (count - 1) // 2\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 3.475,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLittle Petya likes points a lot. Recently his mom has presented him n points lying on the line OX. Now Petya is wondering in how many ways he can choose three distinct points so that the distance between the two farthest of them doesn't exceed d.\n\nNote that the order of the points inside the group of three chosen points doesn't matter.\n\n\n-----Input-----\n\nThe first line contains two integers: n and d (1 ≤ n ≤ 10^5; 1 ≤ d ≤ 10^9). The next line contains n integers x_1, x_2, ..., x_{n}, their absolute value doesn't exceed 10^9 — the x-coordinates of the points that Petya has got.\n\nIt is guaranteed that the coordinates of the points in the input strictly increase.\n\n\n-----Output-----\n\nPrint a single integer — the number of groups of three points, where the distance between two farthest points doesn't exceed d.\n\nPlease do not use the %lld specifier to read or write 64-bit integers in С++. It is preferred to use the cin, cout streams or the %I64d specifier.\n\n\n-----Examples-----\nInput\n4 3\n1 2 3 4\n\nOutput\n4\n\nInput\n4 2\n-3 -2 -1 0\n\nOutput\n2\n\nInput\n5 19\n1 10 20 30 50\n\nOutput\n1\n\n\n\n-----Note-----\n\nIn the first sample any group of three points meets our conditions.\n\nIn the seconds sample only 2 groups of three points meet our conditions: {-3, -2, -1} and {-2, -1, 0}.\n\nIn the third sample only one group does: {1, 10, 20}.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

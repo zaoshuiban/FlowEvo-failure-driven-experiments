@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5a44992e-1d1c-4e40-8393-000c07412d19",
+  "created": 1792436284,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 771,
+    "completion_tokens": 9799,
+    "total_tokens": 10570,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 9264
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 771
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N, K, Q = data[0], data[1], data[2]\n\n    value_set = set(data[4::2])\n    value_set.add(0)\n    values = sorted(value_set)\n\n    M = len(values)\n    pos = {v: i + 1 for i, v in enumerate(values)}\n\n    zero_pos = pos[0]\n    current = [zero_pos] * (N + 1)\n\n    bit_count = [0] * (M + 1)\n    bit_sum = [0] * (M + 1)\n\n    i = zero_pos\n    while i <= M:\n        bit_count[i] += N\n        i += i & -i\n\n    total_sum = 0\n    smallest_count = N - K\n    highest_bit = 1 << (M.bit_length() - 1)\n\n    answers = []\n    p = 3\n\n    for _ in range(Q):\n        x = data[p]\n        y = data[p + 1]\n        p += 2\n\n        old_pos = current[x]\n        new_pos = pos[y]\n\n        if old_pos != new_pos:\n            old_value = values[old_pos - 1]\n\n            i = old_pos\n            while i <= M:\n                bit_count[i] -= 1\n                bit_sum[i] -= old_value\n                i += i & -i\n\n            i = new_pos\n            while i <= M:\n                bit_count[i] += 1\n                bit_sum[i] += y\n                i += i & -i\n\n            current[x] = new_pos\n            total_sum += y - old_value\n\n        if smallest_count == 0:\n            answers.append(str(total_sum))\n            continue\n\n        target = smallest_count\n        idx = 0\n        count = 0\n        part_sum = 0\n        step = highest_bit\n\n        while step:\n            nxt = idx + step\n            if nxt <= M and count + bit_count[nxt] < target:\n                idx = nxt\n                count += bit_count[nxt]\n                part_sum += bit_sum[nxt]\n            step >>= 1\n\n        threshold = values[idx]\n        remaining = target - count\n        smallest_sum = part_sum + remaining * threshold\n\n        answers.append(str(total_sum - smallest_sum))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 44.244,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWe have a sequence A=(A_1,A_2,\\dots,A_N) of length N.  Initially, all the terms are 0.\r\nUsing an integer K given in the input, we define a function f(A) as follows:\n\n- Let B be the sequence obtained by sorting A in descending order (so that it becomes monotonically non-increasing).\n- Then, let f(A)=B_1 + B_2 + \\dots + B_K.\n\nWe consider applying Q updates on this sequence.\r\nApply the following operation on the sequence A for i=1,2,\\dots,Q in this order, and print the value f(A) at that point after each update.  \n\n- Change A_{X_i} to Y_i.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN K Q\r\nX_1 Y_1\r\nX_2 Y_2\r\n\\vdots\r\nX_Q Y_Q\n\nOutput\n\nPrint Q lines in total.  The i-th line should contain the value f(A) as an integer when the i-th update has ended.\n\nConstraints\n\n\n- All input values are integers.\n- 1 \\le K \\le N \\le 5 \\times 10^5\n- 1 \\le Q \\le 5 \\times 10^5\n- 1 \\le X_i \\le N\n- 0 \\le Y_i \\le 10^9\n\nSample Input 1\n\n4 2 10\r\n1 5\r\n2 1\r\n3 3\r\n4 2\r\n2 10\r\n1 0\r\n4 0\r\n3 1\r\n2 0\r\n3 0\n\nSample Output 1\n\n5\r\n6\r\n8\r\n8\r\n15\r\n13\r\n13\r\n11\r\n1\r\n0\r\n\nIn this input, N=4 and K=2.  Q=10 updates are applied.\n\n- The 1-st update makes A=(5, 0,0,0).  Now, f(A)=5.\n- The 2-nd update makes A=(5, 1,0,0).  Now, f(A)=6.\n- The 3-rd update makes A=(5, 1,3,0).  Now, f(A)=8.\n- The 4-th update makes A=(5, 1,3,2).  Now, f(A)=8.\n- The 5-th update makes A=(5,10,3,2).  Now, f(A)=15.\n- The 6-th update makes A=(0,10,3,2).  Now, f(A)=13.\n- The 7-th update makes A=(0,10,3,0).  Now, f(A)=13.\n- The 8-th update makes A=(0,10,1,0).  Now, f(A)=11.\n- The 9-th update makes A=(0, 0,1,0).  Now, f(A)=1.\n- The 10-th update makes A=(0, 0,0,0).  Now, f(A)=0.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

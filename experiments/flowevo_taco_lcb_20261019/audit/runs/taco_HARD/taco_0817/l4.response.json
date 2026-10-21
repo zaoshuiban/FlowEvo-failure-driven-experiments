@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e6ebbfe0-93bc-499a-9d89-0ce70301a036",
+  "created": 1792428683,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1214,
+    "completion_tokens": 3554,
+    "total_tokens": 4768,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3148
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 190
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data_in = sys.stdin.buffer\n    first = data_in.readline()\n    if not first:\n        return\n\n    n = int(first)\n    q = (n - 1).bit_length()\n\n    responses = []\n\n    for t in range(q):\n        # Query indices whose t-th bit is 1.\n        ones = [str(i + 1) for i in range(n) if ((i >> t) & 1)]\n        sys.stdout.write(str(len(ones)) + \"\\n\")\n        sys.stdout.write(\" \".join(ones) + \"\\n\")\n        sys.stdout.flush()\n\n        arr = list(map(int, data_in.readline().split()))\n        while len(arr) < n:\n            arr.extend(map(int, data_in.readline().split()))\n        responses.append((t, 1, arr))\n\n        # Query indices whose t-th bit is 0.\n        zeros = [str(i + 1) for i in range(n) if (((i >> t) & 1) == 0)]\n        sys.stdout.write(str(len(zeros)) + \"\\n\")\n        sys.stdout.write(\" \".join(zeros) + \"\\n\")\n        sys.stdout.flush()\n\n        arr = list(map(int, data_in.readline().split()))\n        while len(arr) < n:\n            arr.extend(map(int, data_in.readline().split()))\n        responses.append((t, 0, arr))\n\n    INF = 10**18\n    ans = [INF] * n\n\n    for t, bit_value, arr in responses:\n        for i in range(n):\n            if ((i >> t) & 1) != bit_value:\n                if arr[i] < ans[i]:\n                    ans[i] = arr[i]\n\n    sys.stdout.write(\"-1\\n\")\n    sys.stdout.write(\" \".join(map(str, ans)) + \"\\n\")\n    sys.stdout.flush()\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 16.153,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThis is an interactive problem. In the interaction section below you will see the information about flushing the output.\n\nIn this problem, you will be playing a game with Hongcow. How lucky of you!\n\nHongcow has a hidden n by n matrix M. Let Mi, j denote the entry i-th row and j-th column of the matrix. The rows and columns are labeled from 1 to n.\n\nThe matrix entries are between 0 and 109. In addition, Mi, i = 0 for all valid i. Your task is to find the minimum value along each row, excluding diagonal elements. Formally, for each i, you must find <image>.\n\nTo do this, you can ask Hongcow some questions.\n\nA question consists of giving Hongcow a subset of distinct indices {w1, w2, ..., wk}, with 1 ≤ k ≤ n. Hongcow will respond with n integers. The i-th integer will contain the minimum value of min1 ≤ j ≤ kMi, wj.\n\nYou may only ask Hongcow at most 20 questions — he thinks you only need that many questions answered.\n\nWhen you are ready to answer, print out a single integer  - 1 on its own line, then n integers on the next line. The i-th integer should be the minimum value in the i-th row of the matrix, excluding the i-th element. Do not forget to flush the final answer as well. Printing the answer does not count as asking a question.\n\nYou will get Wrong Answer verdict if \n\n  * Your question or answers are not in the format described in this statement. \n  * You ask strictly more than 20 questions. \n  * Your question contains duplicate indices. \n  * The value of k in your question does not lie in the range from 1 to n, inclusive. \n  * Your final answer is not correct. \n\nYou will get Idleness Limit Exceeded if you don't print anything or if you forget to flush the output, including for the final answer (more info about flushing output below).\n\nInput\n\nThe first line of input will contain a single integer n (2 ≤ n ≤ 1, 000).\n\nOutput\n\nTo print the final answer, print out the string -1 on its own line. Then, the next line should contain n integers. The i-th integer should be the minimum value of the i-th row of the matrix, excluding elements on the diagonal. Do not forget to flush your answer!\n\nInteraction\n\nTo ask a question, print out a single integer k on its own line, denoting the size of your subset. Then, the next line should contain k integers w1, w2, ... wk. Note, you must flush your output to get a response.\n\nHongcow will respond by printing out a line with n integers. The i-th integer in this line represents the minimum value of Mi, wj where j is between 1 and k.\n\nYou may only ask a question at most 20 times, otherwise, you will get Wrong Answer.\n\nTo flush you can use (just after printing an integer and end-of-line): \n\n  * fflush(stdout) in C++; \n  * System.out.flush() in Java; \n  * stdout.flush() in Python; \n  * flush(output) in Pascal; \n  * See the documentation for other languages. \n\n\n\nHacking To hack someone, use the following format \n    \n    \n      \n    n  \n    M_{1,1} M_{1,2} ... M_{1,n}  \n    M_{2,1} M_{2,2} ... M_{2,n}  \n    ...  \n    M_{n,1} M_{n,2} ... M_{n,n}  \n    \n\nOf course, contestant programs will not be able to see this input.\n\nExamples\n\nInput\n\n3\n0 0 0\n2 7 0\n0 0 4\n3 0 8\n0 5 4\n\nOutput\n\n3\n1 2 3\n1\n3\n2\n1 2\n1\n2\n1\n1\n-1\n2 5 4\n\n\nInput\n\n2\n0 0\n0 0\n\nOutput\n\n1\n2\n1\n1\n-1\n0 0\n\nNote\n\nIn the first sample, Hongcow has the hidden matrix \n    \n    \n      \n    [  \n     [0, 3, 2],  \n     [5, 0, 7],  \n     [4, 8 ,0],  \n    ]  \n    \n\nHere is a more readable version demonstrating the interaction. The column on the left represents Hongcow, while the column on the right represents the contestant. \n    \n    \n      \n    3  \n                  3  \n                  1 2 3  \n    0 0 0  \n                  1  \n                  3  \n    2 7 0  \n                  2  \n                  1 2  \n    0 0 4  \n                  1  \n                  2  \n    3 0 8  \n                  1  \n                  1  \n    0 5 4  \n                  -1  \n                  2 5 4  \n    \n\nFor the second sample, it is possible for off-diagonal elements of the matrix to be zero.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

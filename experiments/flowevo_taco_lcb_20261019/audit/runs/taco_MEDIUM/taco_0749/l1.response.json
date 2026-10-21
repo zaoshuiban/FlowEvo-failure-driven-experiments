@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3f7c0910-e78d-4f07-922d-7e0c98739893",
+  "created": 1792441565,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 493,
+    "completion_tokens": 1864,
+    "total_tokens": 2357,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1527
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 493
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef ints_from_bytes(data):\n    num = 0\n    in_num = False\n    for c in data:\n        if 48 <= c <= 57:\n            num = num * 10 + (c - 48)\n            in_num = True\n        elif in_num:\n            yield num\n            num = 0\n            in_num = False\n    if in_num:\n        yield num\n\n\ndef main():\n    data = sys.stdin.buffer.read()\n    it = ints_from_bytes(data)\n\n    n = next(it)\n    m = next(it)\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n\n    for _ in range(m):\n        k = next(it)\n        if k == 0:\n            continue\n\n        first = next(it) - 1\n        for _ in range(k - 1):\n            user = next(it) - 1\n            union(first, user)\n\n    answer = [str(size[find(i)]) for i in range(n)]\n    sys.stdout.write(\" \".join(answer))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 7.022,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIn some social network, there are $n$ users communicating with each other in $m$ groups of friends. Let's analyze the process of distributing some news between users.\n\nInitially, some user $x$ receives the news from some source. Then he or she sends the news to his or her friends (two users are friends if there is at least one group such that both of them belong to this group). Friends continue sending the news to their friends, and so on. The process ends when there is no pair of friends such that one of them knows the news, and another one doesn't know.\n\nFor each user $x$ you have to determine what is the number of users that will know the news if initially only user $x$ starts distributing it. \n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $m$ ($1 \\le n, m \\le 5 \\cdot 10^5$) — the number of users and the number of groups of friends, respectively.\n\nThen $m$ lines follow, each describing a group of friends. The $i$-th line begins with integer $k_i$ ($0 \\le k_i \\le n$) — the number of users in the $i$-th group. Then $k_i$ distinct integers follow, denoting the users belonging to the $i$-th group.\n\nIt is guaranteed that $\\sum \\limits_{i = 1}^{m} k_i \\le 5 \\cdot 10^5$.\n\n\n-----Output-----\n\nPrint $n$ integers. The $i$-th integer should be equal to the number of users that will know the news if user $i$ starts distributing it.\n\n\n-----Example-----\nInput\n7 5\n3 2 5 4\n0\n2 1 2\n1 1\n2 6 7\n\nOutput\n4 4 1 4 4 2 2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

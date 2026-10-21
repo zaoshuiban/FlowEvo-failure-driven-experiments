@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ad89ac3d-5aa8-417b-9f74-d79acc91afbc",
+  "created": 1792461005,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 741,
+    "completion_tokens": 23959,
+    "total_tokens": 24700,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 22775
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 741
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nsys.setrecursionlimit(1_000_000)\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    max_nodes = 2 * n + 20\n\n    left = [0] * max_nodes\n    right = [0] * max_nodes\n    keys = [0] * max_nodes\n    priority = [0] * max_nodes\n\n    ptr = 0\n    seed = 0x123456789ABCDEF\n    MASK = (1 << 64) - 1\n\n    def new_node(x: int) -> int:\n        nonlocal ptr, seed\n\n        ptr += 1\n        keys[ptr] = x\n\n        seed = (seed + 0x9E3779B97F4A7C15) & MASK\n        z = seed\n        z = ((z ^ (z >> 30)) * 0xBF58476D1CE4E5B9) & MASK\n        z = ((z ^ (z >> 27)) * 0x94D049BB133111EB) & MASK\n        priority[ptr] = z ^ (z >> 31)\n\n        left[ptr] = 0\n        right[ptr] = 0\n        return ptr\n\n    def merge(a: int, b: int) -> int:\n        if a == 0 or b == 0:\n            return a or b\n\n        if priority[a] > priority[b]:\n            right[a] = merge(right[a], b)\n            return a\n        else:\n            left[b] = merge(a, left[b])\n            return b\n\n    def split(root: int, x: int):\n        if root == 0:\n            return 0, 0\n\n        if keys[root] < x:\n            a, b = split(right[root], x)\n            right[root] = a\n            return root, b\n        else:\n            a, b = split(left[root], x)\n            left[root] = b\n            return a, root\n\n    def insert(root: int, x: int) -> int:\n        a, b = split(root, x)\n        mid, c = split(b, x + 1)\n\n        if mid == 0:\n            mid = new_node(x)\n\n        return merge(a, merge(mid, c))\n\n    def trim(root: int, low: int, high: int) -> int:\n        a, b = split(root, low)\n        mid, c = split(b, high + 1)\n        return mid\n\n    def get_min(root: int) -> int:\n        if root == 0:\n            return -1\n\n        while left[root] != 0:\n            root = left[root]\n\n        return keys[root]\n\n    karr = [0] * (n + 1)\n    rep_a = [-1] * (n + 1)\n    rep_b = [-1] * (n + 1)\n\n    root_a = 0\n    root_b = 0\n\n    for i in range(1, n + 1):\n        k = next(it)\n        al = next(it)\n        bl = next(it)\n        ar = next(it)\n        br = next(it)\n\n        karr[i] = k\n\n        if i == 1:\n            if al <= k <= bl and ar <= 0 <= br:\n                root_a = insert(root_a, 0)\n\n            if ar <= k <= br and al <= 0 <= bl:\n                root_b = insert(root_b, 0)\n\n        else:\n            prev_a_nonempty = root_a != 0\n            prev_b_nonempty = root_b != 0\n            prev_k = karr[i - 1]\n\n            valid_left = al <= k <= bl\n            valid_right = ar <= k <= br\n\n            if not valid_left:\n                root_a = 0\n            else:\n                root_a = trim(root_a, ar, br)\n\n                if prev_b_nonempty and ar <= prev_k <= br:\n                    root_a = insert(root_a, prev_k)\n\n            if not valid_right:\n                root_b = 0\n            else:\n                root_b = trim(root_b, al, bl)\n\n                if prev_a_nonempty and al <= prev_k <= bl:\n                    root_b = insert(root_b, prev_k)\n\n        rep_a[i] = get_min(root_a)\n        rep_b[i] = get_min(root_b)\n\n    if rep_a[n] == -1 and rep_b[n] == -1:\n        sys.stdout.write(\"No\\n\")\n        return\n\n    if rep_a[n] != -1:\n        choice = 0\n        value = rep_a[n]\n    else:\n        choice = 1\n        value = rep_b[n]\n\n    answer = [0] * (n + 1)\n\n    for i in range(n, 0, -1):\n        answer[i] = choice\n\n        if i == 1:\n            break\n\n        opposite = 1 - choice\n        opposite_rep = rep_b[i - 1] if opposite == 1 else rep_a[i - 1]\n\n        if value == karr[i - 1] and opposite_rep != -1:\n            choice = opposite\n            value = opposite_rep\n\n    sys.stdout.write(\"Yes\\n\")\n    sys.stdout.write(\" \".join(map(str, answer[1:])) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 125.963,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe Alice's computer is broken, so she can't play her favorite card game now. To help Alice, Bob wants to answer n her questions. \n\nInitially, Bob holds one card with number 0 in the left hand and one in the right hand. In the i-th question, Alice asks Bob to replace a card in the left or right hand with a card with number k_i (Bob chooses which of two cards he changes, Bob must replace exactly one card).\n\nAfter this action, Alice wants the numbers on the left and right cards to belong to given segments (segments for left and right cards can be different). Formally, let the number on the left card be x, and on the right card be y. Then after the i-th swap the following conditions must be satisfied: a_{l, i} ≤ x ≤ b_{l, i}, and a_{r, i} ≤ y ≤ b_{r,i}.\n\nPlease determine if Bob can answer all requests. If it is possible, find a way to do it.\n\nInput\n\nThe first line contains two integers n and m (2 ≤ n ≤ 100 000, 2 ≤ m ≤ 10^9) — the number of questions and the maximum possible value on the card.\n\nThen n queries are described. Every description contains 3 lines.\n\nThe first line of the description of the i-th query contains a single integer k_i (0 ≤ k_i ≤ m) — the number on a new card.\n\nThe second line of the description of the i-th query contains two integers a_{l, i} and b_{l, i} (0 ≤ a_{l, i} ≤ b_{l, i} ≤ m) — the minimum and maximum values of the card at the left hand after the replacement.\n\nThe third line of the description of the i-th query contains two integers a_{r, i} and b_{r,i} (0 ≤ a_{r, i} ≤ b_{r,i} ≤ m) — the minimum and maximum values of the card at the right hand after the replacement.\n\nOutput\n\nAt the first line, print \"Yes\", if Bob can answer all queries, and \"No\" otherwise.\n\nIf Bob can answer all n queries, then at the second line print n numbers: a way to satisfy all requirements. If in i-th query Bob needs to replace the card in the left hand, print 0, otherwise print 1. If there are multiple answers, print any.\n\nExamples\n\nInput\n\n\n2 10\n3\n0 3\n0 2\n2\n0 4\n0 2\n\n\nOutput\n\n\nYes\n0 1 \n\nInput\n\n\n2 10\n3\n0 3\n0 2\n2\n3 4\n0 1\n\n\nOutput\n\n\nNo\n\nInput\n\n\n5 10\n3\n0 3\n0 3\n7\n4 7\n1 3\n2\n2 3\n3 7\n8\n1 8\n1 8\n6\n1 6\n7 10\n\n\nOutput\n\n\nYes\n1 0 0 1 0\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

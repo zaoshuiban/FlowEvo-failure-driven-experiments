@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "fb6fd67c-bb26-4957-9c52-666aa39e368b",
+  "created": 1792458171,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 618,
+    "completion_tokens": 18602,
+    "total_tokens": 19220,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 18205
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 618
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    data = iter(map(int, sys.stdin.buffer.read().split()))\n    try:\n        t = next(data)\n    except StopIteration:\n        return\n\n    answers = []\n\n    for _ in range(t):\n        n = next(data)\n        d = next(data)\n\n        p = [next(data) for _ in range(n)]\n\n        possible = True\n        for i, value in enumerate(p):\n            if (value - 1) % d != i % d:\n                possible = False\n                break\n\n        if not possible:\n            answers.append(\"-1\")\n            continue\n\n        base = [0] * d\n        length = [0] * d\n        total = 0\n\n        for r in range(d):\n            base[r] = total\n            m = (n - 1 - r) // d + 1\n            length[r] = m\n            total += m\n\n        bit = [0] * (total + 1)\n        seen = [0] * d\n\n        answer = 0\n        r = 0\n\n        for value in p:\n            rank = (value - 1) // d + 1\n\n            b = base[r]\n            m = length[r]\n\n            count_leq = 0\n            j = rank\n            while j > 0:\n                count_leq += bit[b + j]\n                j -= j & -j\n\n            answer += seen[r] - count_leq\n\n            j = rank\n            while j <= m:\n                bit[b + j] += 1\n                j += j & -j\n\n            seen[r] += 1\n\n            r += 1\n            if r == d:\n                r = 0\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 95.681,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef received a permutation $P_1, P_2, \\ldots, P_N$ and also an integer $D$ from his good friend Grux, because Grux was afraid he would forget them somewhere. However, since Grux was just playing with the permutation, it was all shuffled, and Chef only likes sorted permutations, so he decided to sort it by performing some swaps.\nChef wants to use the integer $D$ he just received, so he is only willing to swap two elements of the permutation whenever their absolute difference is exactly $D$. He has limited time, so you should determine the minimum number of swaps he needs to perform to sort the permutation, or tell him that it is impossible to sort it his way.\n\n-----Input-----\n- The first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\n- The first line of each test case contains two space-separated integers $N$ and $D$.\n- The second line contains $N$ space-separated integers $P_1, P_2, \\ldots, P_N$.\n\n-----Output-----\nFor each test case, print a single line containing one integer ― the minimum number of swaps, or $-1$ if it is impossible to sort the permutation.\n\n-----Constraints-----\n- $1 \\le T \\le 20$\n- $1 \\le N \\le 200,000$\n- $1 \\le D \\le N$\n- $1 \\le P_i \\le N$ for each valid $i$\n- $P_1, P_2, \\ldots, P_N$ are pairwise distinct\n- the sum of $N$ over all test cases does not exceed $10^6$\n\n-----Subtasks-----\nSubtask #1 (20 points): $D = 1$\nSubtask #2 (30 points):\n- $N \\le 1,000$\n- the sum of $N$ over all test cases does not exceed $10,000$\nSubtask #3 (50 points): original constraints\n\n-----Example Input-----\n2\n5 2   \n3 4 5 2 1\n5 2    \n4 3 2 1 5  \n\n-----Example Output-----\n3\n-1\n\n-----Explanation-----\nExample case 1: Chef can perform the following swaps in this order:\n- swap the first and fifth element\n- swap the third and fifth element\n- swap the second and fourth element\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

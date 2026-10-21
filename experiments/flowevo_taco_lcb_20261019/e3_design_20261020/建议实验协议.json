@@ -1,0 +1,118 @@
+{
+  "status": "PROPOSED_NOT_EXECUTED",
+  "target": "FlowEvo code_math TACO/LCB adapter; repair operator first",
+  "new_model_calls_this_turn": 0,
+  "principles": {
+    "historical_800_role": "exploratory_only",
+    "hidden_final_feedback_in_repair": false,
+    "historical_retroactive_memory_injection": false,
+    "operator_internal_unbudgeted_llm_calls": false,
+    "unknown_evaluation_is_algorithm_failure": false
+  },
+  "mechanism_entry_gate": {
+    "minimum_distinct_original_problems": 3,
+    "minimum_provenance_groups": 2,
+    "legal_witness_and_independent_oracle_required": true,
+    "minimal_counterfactual_evidence_required": true,
+    "threshold_interpretation": "pilot engineering criterion, not statistical proof"
+  },
+  "stages": [
+    {
+      "stage": "E3-S1",
+      "ready": true,
+      "review_tasks_max": 48,
+      "strata": {
+        "unresolved_WA": 24,
+        "exception_or_timeout": 8,
+        "rule_flip": 8,
+        "positive_or_near_miss": 8
+      },
+      "historical_programs_max": 240,
+      "new_model_requests_max": 0,
+      "new_tokens_max": 0
+    },
+    {
+      "stage": "E3-S2",
+      "ready": false,
+      "checkpoints_max": 12,
+      "arms": [
+        "G",
+        "D_STAR_ORACLE_DIAGNOSIS"
+      ],
+      "repeats": 3,
+      "repair_calls_per_trial": 1,
+      "new_model_requests_max": 72,
+      "new_tokens_max": 3000000,
+      "whole_paired_block_budget_reservation": true
+    },
+    {
+      "stage": "E3-S3",
+      "ready": false,
+      "mechanisms_max": 2,
+      "generation_arms": [
+        "O0",
+        "O1"
+      ],
+      "candidates_per_mechanism_per_arm": 3,
+      "generation_calls_per_candidate_max": 2,
+      "design_tasks_per_mechanism_min": 3,
+      "design_repeats": 2,
+      "generation_requests_max": 24,
+      "candidate_evaluation_requests_max": 72,
+      "G_M_reference_requests_max": 24,
+      "new_model_requests_max": 120,
+      "new_tokens_max": 6000000
+    },
+    {
+      "stage": "E3-S4",
+      "ready": false,
+      "fresh_target_tasks_max": 24,
+      "fresh_regression_tasks_max": 24,
+      "common_initial_program_requests_max": 48,
+      "arms": [
+        "G",
+        "M",
+        "O0",
+        "O1"
+      ],
+      "repair_repeats": 2,
+      "repair_requests_max": 384,
+      "new_model_requests_max": 432,
+      "new_tokens_max": 20000000,
+      "initial_passes_retained": true,
+      "hidden_gate_reuse_for_candidate_repair": false
+    },
+    {
+      "stage": "E3-S5",
+      "ready": false,
+      "fresh_mixed_pilot_tasks_max": 30,
+      "system_arms": 3,
+      "workflow_runs_per_task_per_arm": 1,
+      "model_slots_max": 5,
+      "new_model_requests_max": 450,
+      "new_tokens_max": 20000000,
+      "population_claim": "engineering pilot only; independent confirmation required"
+    }
+  ],
+  "actual_model_policy": "log and compare actual service model; stop/reversion on mismatch, do not label historical flash as reasoner",
+  "model_output_limit_initial": 32768,
+  "future_stage_budgets_are_conditional": true,
+  "implementation_files_status": "planned, production runner not modified",
+  "source_documents": {
+    "experiments/flowevo_taco_lcb_20261019/e3_design_20261020/用户原始设计.md": {
+      "sha256": "11d2cdc3925e4daf4a0eabf19289e3ba81fcbc5965876d52f2bbcf8c07a0db0c"
+    },
+    "docs/FlowEvo失败驱动系统设计v1.md": {
+      "sha256": "dfd23186c5c24bb5f6890f1545cbdc301d84155e9e7410d368f764ae3fd9af31"
+    },
+    "docs/FlowEvo_E3下一步实验计划.md": {
+      "sha256": "a6ba23413964e7d8280332cfa0d0a908bd9128a35ceb7d6c7cff8e2cb5e4b8e9"
+    },
+    "experiments/flowevo_taco_lcb_20261019/e3_s0_20261020/summary.json": {
+      "sha256": "44286fc5bf1d490791edfb174bd97d11a1eb79ef874af724a8a0d57b1cd888e9"
+    },
+    "experiments/flowevo_taco_lcb_20261019/trusted_rgf_20261020/summary.json": {
+      "sha256": "058fa16e8d2c0dac190bb642b9b4a46917dd3f2766d63c05be9761c46ab7e432"
+    }
+  }
+}

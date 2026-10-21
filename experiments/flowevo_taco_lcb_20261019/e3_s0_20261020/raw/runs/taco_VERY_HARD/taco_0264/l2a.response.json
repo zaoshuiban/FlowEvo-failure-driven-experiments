@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "23b8d8f7-9d0b-434d-ac3c-ab91b5ac359e",
+  "created": 1792434923,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1098,
+    "completion_tokens": 23261,
+    "total_tokens": 24359,
+    "prompt_tokens_details": {
+      "cached_tokens": 896
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 22354
+    },
+    "prompt_cache_hit_tokens": 896,
+    "prompt_cache_miss_tokens": 202
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef min_greater(L: bytes, caps):\n    \"\"\"\n    Returns the lexicographically smallest string A such that:\n        A > L\n        count of each character in A <= caps\n    If no such string exists, returns None.\n    \"\"\"\n    rem = caps.copy()\n    n = len(L)\n\n    p = 0\n    while p < n:\n        idx = L[p] - 97\n        if rem[idx] > 0:\n            rem[idx] -= 1\n            p += 1\n        else:\n            break\n\n    if p == n:\n        # We can match the whole L. The best is to append the smallest\n        # available character, if any.\n        for d in range(26):\n            if rem[d] > 0:\n                return L + bytes((97 + d,))\n\n        # No character is left after matching L. Increase a character inside L.\n        for i in range(n - 1, -1, -1):\n            idx = L[i] - 97\n            rem[idx] += 1  # free L[i]\n\n            for d in range(idx + 1, 26):\n                if rem[d] > 0:\n                    return L[:i] + bytes((97 + d,))\n\n        return None\n\n    # We cannot match L[p]. Try to put a larger character at position p.\n    idx = L[p] - 97\n    for d in range(idx + 1, 26):\n        if rem[d] > 0:\n            return L[:p] + bytes((97 + d,))\n\n    # Otherwise, try increasing an earlier position.\n    for i in range(p - 1, -1, -1):\n        idx = L[i] - 97\n        rem[idx] += 1  # free L[i]\n\n        for d in range(idx + 1, 26):\n            if rem[d] > 0:\n                return L[:i] + bytes((97 + d,))\n\n    return None\n\n\ndef main():\n    tokens = sys.stdin.buffer.read().split()\n    idx = 0\n\n    N = int(tokens[idx])\n    idx += 1\n\n    S = tokens[idx]\n    idx += 1\n\n    C = list(map(int, tokens[idx:idx + 26]))\n    idx += 26\n\n    K = int(tokens[idx])\n    idx += 1\n\n    fixed_less = 0\n    suffixes = []\n\n    for _ in range(K):\n        P = tokens[idx]\n        idx += 1\n\n        m = min(len(P), N)\n\n        diff = -1\n        for i in range(m):\n            if P[i] != S[i]:\n                diff = i\n                break\n\n        if diff != -1:\n            if P[diff] < S[diff]:\n                fixed_less += 1\n            # If P[diff] > S[diff], this P can never become smaller than S + A.\n        else:\n            if len(P) < N:\n                # P is a proper prefix of S, so P < S + A always.\n                fixed_less += 1\n            elif len(P) == N:\n                # P == S. It becomes less only when at least one character is appended.\n                suffixes.append(b\"\")\n            else:\n                # P = S + R. Condition P < S + A is exactly R < A.\n                suffixes.append(P[N:])\n\n    suffixes.sort()\n    M = len(suffixes)\n\n    possible = bytearray(M + 1)\n    possible[0] = 1  # A = empty string\n\n    for q in range(1, M + 1):\n        L = suffixes[q - 1]\n        U = suffixes[q] if q < M else None\n\n        A = min_greater(L, C)\n\n        if A is not None and (U is None or A <= U):\n            possible[q] = 1\n\n    ans = []\n    for X in range(K + 1):\n        q = X - fixed_less\n        if 0 <= q <= M and possible[q]:\n            ans.append(\"Yes\")\n        else:\n            ans.append(\"No\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 118.657,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n*\"Raju - zor zor se bolke sabko scheme bata de\".  \nRaju intends to scam everyone in order to become rich quickly. But before doing that, he must prove to everyone his innocence, by doubling his own money with the help of a scheme.*\n\nRaju wants to double his money, but in order to invest in the scheme, he is required to solve the following problem. He has asked you to help him in solving the problem.\n\nYou are given the following:\nK strings P_{1}, P_{2}, P_{3}, \\ldots, P_{K}\nA string S of length N.\nSome number of available characters from 'a' to 'z'. This is given to you as an array C of size 26, where C_{1} is the number of 'a'-s, C_{2} is the number of 'b'-s, \\ldots, C_{26} is the number of 'z'-s you have.\n\nSolve the following problem independently for each X from 0 to K:\nIs it possible to append some (possibly 0) characters to S from the available characters such that the resulting string is strictly lexicographically greater than *exactly* X of the given K strings?\n\nNote that the process is independent for each X. That is, for each X, you start with the original string S and the values C_{1}, C_{2}, \\ldots, C_{26} given in the input.\n\nNote: A string A is said to be lexicographically larger than a string B if:\nB is a proper prefix of A (for example, abc is larger than a and ab); or\nLet i be the first position where A and B differ (i.e, A_{1} = B_{1}, A_{2} = B_{2}, \\ldots, A_{i-1} = B_{i-1}). Then, A_{i} > B_{i}.\n\n------ Input Format ------ \n\n- The first line of input will contain one integer N, the size of the string S.\n- The second line of input will contain string S.\n- The third line of input will contain 26 space-separated integers, representing the values C_{1}, C_{2}, \\ldots, C_{26}.\n- The fourth line of input will contain one integer K.\n- The i-th of the next K lines of input will contain the string P_{i}.\n\n------ Output Format ------ \n\nPrint K+1 lines of output. The i-th of these lines should contain the answer for X = i-1: Yes if it's possible to append some of the given characters to S to make it strictly lexicographically larger than exactly i-1 strings, and No otherwise.\n\nEach letter of the output may be printed in either uppercase or lowercase, i.e, Yes, YES, and yEs will all be treated as equivalent.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 10^{4}$\n$0 ≤ C_{i} ≤ 10^{6}$\n$1 ≤ K ≤ 10^{4}$\n$1 ≤ |P_{i}| ≤ 10^{4}$\n- Every input string will contain only lowercase English letters, i.e, the letters from $a$ to $z$.\n- The sum of $|P_{i}|$ across all $K$ strings won't exceed $10^{5}$.\n\n----- Sample Input 1 ------ \n4\nabcd\n1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n6\nabc\nabcd\nab\nabcde\na\nabcd\n\n----- Sample Output 1 ------ \nNo\nNo\nNo\nYes\nNo\nYes\nYes\n\n----- explanation 1 ------ \nThe answer for a few values of $X$ is as follows:\n\n- $X = 3$: Leave $S$ unchanged, and it is already greater than exactly three of the given strings (\"abc\", \"ab\", \"a\"). So, the answer is \"Yes\".\n- $X = 4$: There is no way to append some characters to the string $S$ from the ones we have (one copy each of 'a', 'c', 'z') such that the resulting string will be greater than exactly $4$ strings out of the given $6$ strings. So, the output is \"No\".\n- $X = 5$: Append 'c' to $S$, to form \"abcdc\". This is greater than all the input strings except \"abcde\", as needed.\n- $X = 6$: Append 'z' to $S$, to form \"abcdz\". This is greater than every input string.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bcd65a5a-1cf8-4a3c-8c35-a4417a239148",
+  "created": 1792430632,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 382,
+    "completion_tokens": 1819,
+    "total_tokens": 2201,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1688
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 382
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def lastNonEmptyString(self, s: str) -> str:\n        freq = [0] * 26\n        for ch in s:\n            freq[ord(ch) - ord('a')] += 1\n\n        max_freq = max(freq)\n        seen = [0] * 26\n        ans = []\n\n        for ch in s:\n            idx = ord(ch) - ord('a')\n            seen[idx] += 1\n            if freq[idx] == max_freq and seen[idx] == freq[idx]:\n                ans.append(ch)\n\n        return ''.join(ans)\n```",
+  "latency_s": 9.358,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string s.\nConsider performing the following operation until s becomes empty:\n\nFor every alphabet character from 'a' to 'z', remove the first occurrence of that character in s (if it exists).\n\nFor example, let initially s = \"aabcbbca\". We do the following operations:\n\nRemove the underlined characters s = \"aabcbbca\". The resulting string is s = \"abbca\".\nRemove the underlined characters s = \"abbca\". The resulting string is s = \"ba\".\nRemove the underlined characters s = \"ba\". The resulting string is s = \"\".\n\nReturn the value of the string s right before applying the last operation. In the example above, answer is \"ba\".\n \nExample 1:\n\nInput: s = \"aabcbbca\"\nOutput: \"ba\"\nExplanation: Explained in the statement.\n\nExample 2:\n\nInput: s = \"abcd\"\nOutput: \"abcd\"\nExplanation: We do the following operation:\n- Remove the underlined characters s = \"abcd\". The resulting string is s = \"\".\nThe string just before the last operation is \"abcd\".\n\n \nConstraints:\n\n1 <= s.length <= 5 * 10^5\ns consists only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def lastNonEmptyString(self, s: str) -> str:\n        \n\nUse the required function/method named lastNonEmptyString. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

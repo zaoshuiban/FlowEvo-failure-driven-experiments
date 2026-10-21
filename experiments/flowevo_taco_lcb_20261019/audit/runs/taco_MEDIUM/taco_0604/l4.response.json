@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2773e8f0-5837-41d1-9e02-59c1d234712b",
+  "created": 1792435944,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 845,
+    "completion_tokens": 13334,
+    "total_tokens": 14179,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13207
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 461
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    m = int(data[0])\n    answer = 0\n\n    for i in range(1, m + 1):\n        word = data[i]\n        stack = bytearray()\n\n        for ch in word:\n            if stack and stack[-1] == ch:\n                stack.pop()\n            else:\n                stack.append(ch)\n\n        if not stack:\n            answer += 1\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 68.389,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNikki's latest work is writing an story of letters. However, she finds writing story so boring that, after working for three hours, she realized that all she has written are M long words consisting entirely of letters A and B. Having accepted that she will never finish the story in time, poor Nikki has decided to at least have some fun with it by counting bubbly words.\n\nNow Nikki is connecting pairs of identical letters (A with A, B with B) by drawing arches above the word. A given word is bubbly if each letter can be connected to exactly one other letter in such a way that no two arches intersect. So here is your task. Help Nikki count how many words are bubbly.\n\nInput :\n\nThe first line of input contains the positive integer M , the number of words written down by Nikki. Each of the following M lines contains a single word consisting of letters A and B, with length between 2 and 10^5, inclusive. The sum of lengths of all words doesn't exceed 10^6.\n\nOutput :\n\nThe first and only line of output must contain the number of bubbly words.\n\nConstraints:\n\n1 ≤ M ≤ 100\n\nSAMPLE INPUT\n3\nABAB\nAABB\nABBA\n\nSAMPLE OUTPUT\n2\n\nExplanation\n\nABAB - It is not bubbly as A(indexed 1) will connect to A(indexed 3) by an arch and when we try to connect B(indexed 2) with B(indexed 4) by an arch then it will intersect with the arch b/w A and A.\nAABB - It is bubbly as arch b/w A and A will not intersect with the arch b/w B and B.\nABBA - It is also bubbly as  arches will not intersect. we can draw arches b/w A and A above the arch b/w B and B.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    m = int(data[0])\n    answer = 0\n\n    for word in data[1:1 + m]:\n        stack = []\n        for ch in word:\n            if stack and stack[-1] == ch:\n                stack.pop()\n            else:\n                stack.append(ch)\n\n        if not stack:\n            answer += 1\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given arrays A and B of length N each. Determine the number of *good* pairs.\n\nA pair (i,j) (1≤ i,j ≤ N) is said to be *good* if all of the following conditions are satisfied:\ni < j;\nA_{i} = B_\nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        A = [next(it) for _ in range(n)]\n        B = [next(it) for _ in range(n)]\n\n        freq = {}\n        ans = 0\n\n        for a, b in zip(A, B):\n            # Need previous i such that:\n            # A[i] = B[j] = b\n            # B[i] = A[j] = a\n            ans += freq.get((b, a), 0)\n\n            # Insert curre"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

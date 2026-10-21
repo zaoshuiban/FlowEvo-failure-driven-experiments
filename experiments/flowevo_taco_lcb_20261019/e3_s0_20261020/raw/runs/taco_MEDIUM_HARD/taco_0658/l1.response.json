@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9c0e60e9-ffbc-4b7a-99d0-a9722512420f",
+  "created": 1792441162,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 723,
+    "completion_tokens": 2176,
+    "total_tokens": 2899,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1939
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 723
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom functools import lru_cache\n\ndef main():\n    input = sys.stdin.readline\n\n    n, m = map(int, input().split())\n    graph = [[] for _ in range(n)]\n\n    for _ in range(m):\n        v, u, c = input().split()\n        v = int(v) - 1\n        u = int(u) - 1\n        char_code = ord(c) - ord('a')\n        graph[v].append((u, char_code))\n\n    @lru_cache(None)\n    def can_win(v, other, min_char):\n        for nxt, ch in graph[v]:\n            if ch >= min_char and not can_win(other, nxt, ch):\n                return True\n        return False\n\n    answer = []\n    for i in range(n):\n        row = []\n        for j in range(n):\n            row.append('A' if can_win(i, j, 0) else 'B')\n        answer.append(''.join(row))\n\n    sys.stdout.write('\\n'.join(answer))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 11.674,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAs we all know, Max is the best video game player among her friends. Her friends were so jealous of hers, that they created an actual game just to prove that she's not the best at games. The game is played on a directed acyclic graph (a DAG) with n vertices and m edges. There's a character written on each edge, a lowercase English letter.\n\n<image>\n\nMax and Lucas are playing the game. Max goes first, then Lucas, then Max again and so on. Each player has a marble, initially located at some vertex. Each player in his/her turn should move his/her marble along some edge (a player can move the marble from vertex v to vertex u if there's an outgoing edge from v to u). If the player moves his/her marble from vertex v to vertex u, the \"character\" of that round is the character written on the edge from v to u. There's one additional rule; the ASCII code of character of round i should be greater than or equal to the ASCII code of character of round i - 1 (for i > 1). The rounds are numbered for both players together, i. e. Max goes in odd numbers, Lucas goes in even numbers. The player that can't make a move loses the game. The marbles may be at the same vertex at the same time.\n\nSince the game could take a while and Lucas and Max have to focus on finding Dart, they don't have time to play. So they asked you, if they both play optimally, who wins the game?\n\nYou have to determine the winner of the game for all initial positions of the marbles.\n\nInput\n\nThe first line of input contains two integers n and m (2 ≤ n ≤ 100, <image>).\n\nThe next m lines contain the edges. Each line contains two integers v, u and a lowercase English letter c, meaning there's an edge from v to u written c on it (1 ≤ v, u ≤ n, v ≠ u). There's at most one edge between any pair of vertices. It is guaranteed that the graph is acyclic.\n\nOutput\n\nPrint n lines, a string of length n in each one. The j-th character in i-th line should be 'A' if Max will win the game in case her marble is initially at vertex i and Lucas's marble is initially at vertex j, and 'B' otherwise.\n\nExamples\n\nInput\n\n4 4\n1 2 b\n1 3 a\n2 4 c\n3 4 b\n\n\nOutput\n\nBAAA\nABAA\nBBBA\nBBBB\n\n\nInput\n\n5 8\n5 3 h\n1 2 c\n3 1 c\n3 2 r\n5 1 r\n4 3 z\n5 4 r\n5 2 h\n\n\nOutput\n\nBABBB\nBBBBB\nAABBB\nAAABA\nAAAAB\n\nNote\n\nHere's the graph in the first sample test case:\n\n<image>\n\nHere's the graph in the second sample test case:\n\n<image>\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

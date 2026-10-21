@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3fb11969-693d-471c-bd8e-eeece631b3ee",
+  "created": 1792442712,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 606,
+    "completion_tokens": 10279,
+    "total_tokens": 10885,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 9873
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 606
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N = data[0]\n    K = data[1]\n    A = data[2:2 + N]\n    del data\n\n    write = sys.stdout.write\n\n    if K == 1:\n        chunk = []\n        for x in A:\n            chunk.append(str(x))\n            if len(chunk) >= 10000:\n                write(\"\\n\".join(chunk) + \"\\n\")\n                chunk.clear()\n        if chunk:\n            write(\"\\n\".join(chunk) + \"\\n\")\n        return\n\n    if K == N:\n        g = 0\n        for x in A:\n            g = math.gcd(g, x)\n        write((str(g) + \"\\n\") * N)\n        return\n\n    M = max(A)\n    M1 = M + 1\n\n    freq = [0] * M1\n    for x in A:\n        freq[x] += 1\n\n    count = [0] * M1\n    for d in range(1, M1):\n        s = 0\n        for multiple in range(d, M1, d):\n            s += freq[multiple]\n        count[d] = s\n\n    best = [0] * M1\n    for d in range(1, M1):\n        if count[d] >= K:\n            for multiple in range(d, M1, d):\n                best[multiple] = d\n\n    chunk = []\n    for x in A:\n        chunk.append(str(best[x]))\n        if len(chunk) >= 10000:\n            write(\"\\n\".join(chunk) + \"\\n\")\n            chunk.clear()\n\n    if chunk:\n        write(\"\\n\".join(chunk) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 47.049,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a sequence A = (A_1, A_2, \\dots, A_N) of length N and a positive integer K (at most N).\r\nFor each i = 1, 2, \\dots, N, solve the following problem:\n\n- When you choose K elements from A that include A_i, find the maximum possible GCD (greatest common divisor) of those chosen elements.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN K\r\nA_1 A_2 \\dots A_N\n\nOutput\n\nPrint N lines. The j-th line should contain the answer for i=j.\n\nConstraints\n\n\n- 1 \\leq K \\leq N \\leq 1.2 \\times 10^6\n- 1 \\leq A_i \\leq 10^6\n- All input values are integers.\n\nSample Input 1\n\n5 2\r\n3 4 6 7 12\n\nSample Output 1\n\n3\r\n4\r\n6\r\n1\r\n6\r\n\nFor i=1, choosing A_1 and A_3 yields \\gcd(\\lbrace 3,6 \\rbrace) = 3, which is the maximum.\r\nFor i=2, choosing A_2 and A_5 yields \\gcd(\\lbrace 4,12 \\rbrace) = 4, which is the maximum.\r\nFor i=3, choosing A_3 and A_5 yields \\gcd(\\lbrace 6,12 \\rbrace) = 6, which is the maximum.\r\nFor i=4, choosing A_4 and A_2 yields \\gcd(\\lbrace 7,4 \\rbrace) = 1, which is the maximum.\r\nFor i=5, choosing A_5 and A_3 yields \\gcd(\\lbrace 12,6 \\rbrace) = 6, which is the maximum.\n\nSample Input 2\n\n3 3\r\n6 10 15\n\nSample Output 2\n\n1\r\n1\r\n1\n\nSample Input 3\n\n10 3\r\n414003 854320 485570 52740 833292 625990 909680 885153 435420 221663\n\nSample Output 3\n\n59\r\n590\r\n590\r\n879\r\n879\r\n590\r\n20\r\n879\r\n590\r\n59\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

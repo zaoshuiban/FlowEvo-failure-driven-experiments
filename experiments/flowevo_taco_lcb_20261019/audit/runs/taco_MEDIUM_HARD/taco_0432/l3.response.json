@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cea49b52-d90a-4f4e-8c2c-9e36d9d2321d",
+  "created": 1792443360,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1286,
+    "completion_tokens": 9188,
+    "total_tokens": 10474,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8961
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 518
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    pos = 1\n\n    pow2 = [1]\n\n    def ensure_powers(n):\n        while len(pow2) <= n:\n            pow2.append((pow2[-1] * 2) % MOD)\n\n    answers = []\n\n    for _ in range(t):\n        n = data[pos]\n        pos += 1\n\n        arr = data[pos:pos + n]\n        pos += n\n\n        ensure_powers(n - 1)\n        arr.sort()\n\n        ans = 0\n\n        for i, value in enumerate(arr):\n            coefficient = pow2[i] - pow2[n - 1 - i]\n            ans = (ans + (value % MOD) * coefficient) % MOD\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 40.771,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \n\nChuru is working as a data scientist in Coderpur. He works on a lot of data on the daily basis. One day, he found an interesting problem, which was very easy to solve for small data but was getting more complex with increasing number of data points. So, Churu needs your help in solving this problem.\n\nGiven a set S of N non-negative integers (Some integers might occur more than once in the set), find out the value of SETDIFF(S). \n\nWhere max(s) represents the maximum value in set s whereas min(s) represents the minimum value in the set s.\nAs value of  SETDIFF(S) can be very large, print it modulo  (10^{9} + 7) . \n\nThere might be repeated values in the set. For set S = {1,2,2}, consider that first 2 is not same as the second 2 and there will be two different subsets {1,2}. See last sample case for the more clarifications. \n\n------ Input ------ \n\nFirst line of input contains an integer T denoting number of test cases.  \nFor each test case, first line will contain an integer N denoting number of elements in set S.  \nNext line contains N space separated integers denoting the set S. \n\n------ Output ------ \n\nFor each test case, print a single integer representing the answer of that test case.\n\n------ Note ------ \n\nTwo subsets will be called different if there exists an index i such that S[i] occurs in one of the subset and not in another.\n\n------ Constraints ------ \n\nSubtask #1: 20 points\n\n\t$1 ≤ T  ≤ 5, 1 ≤ N  ≤ 1000,  0 ≤ value in set ≤ 10^{9}$\n\nSubtask #2: 25 points\n\n\t$1 ≤ T  ≤ 5, 1 ≤ N  ≤ 10^{5},  0 ≤ value in set ≤ 1000$\n\nSubtask #3: 55 points\n\n\t$1 ≤ T  ≤ 5, 1 ≤ N  ≤ 10^{5},  0 ≤ value in set ≤ 10^{9}$\n\n----- Sample Input 1 ------ \n4\n\n2\n\n1 2\n\n3\n\n1 2 3\n\n4\n\n1 2 3 4\n\n3\n\n1 2 2\n----- Sample Output 1 ------ \n1\n\n6 \n\n23\n\n3\n----- explanation 1 ------ \n\nFor first case answer will be 2-1 = 1.\n\nFor the second case:\nSubset = {1}, max(s)-min(s) = 0.\nSubset = {2}, max(s)-min(s) = 0.\nSubset = {3}, max(s)-min(s) = 0.\nSubset = {1,2}, max(s)-min(s) = 1.\nSubset = {2,3}, max(s)-min(s) = 1.\nSubset = {1,3}, max(s)-min(s) = 2.\nSubset = {1,2,3}, max(s)-min(s) = 2.\nSo the output will be 1+1+2+2 = 6.\n\nIn the last case, there are three subsets, {1,2}, {1,2} and {1,2,2} having max(s) - min(s) = 1 for each.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n\n    pow2 = [1]\n\n    def ensure_powers(n):\n        while len(pow2) <= n:\n            pow2.append((pow2[-1] * 2) % MOD)\n\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        arr = data[idx:idx + n]\n        idx += n\n\n        ensure_powers(n)\n\n        arr.sort()\n\n        total_max = 0\n        total_min = 0\n\n        for i, value in enumerate(arr):\n            value %= MOD\n            total_max = (total_max + value * pow2[i]) % MOD\n            total_min = (total_min + value * pow2[n - 1 - i]) % MOD\n\n        answers.append(str((total_max - total_min) % MOD))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

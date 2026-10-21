@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c9c72a3c-5bb6-4cb4-a5d2-2b1594585f68",
+  "created": 1792446814,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 602,
+    "completion_tokens": 4957,
+    "total_tokens": 5559,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4614
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 218
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    it = iter(map(int, sys.stdin.buffer.read().split()))\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n\n        # Number of visited cells is n + m - 1.\n        # Its sum can be 0 only if this number is even.\n        if (n + m) % 2 == 0:\n            for _ in range(n * m):\n                next(it)\n            answers.append(\"NO\")\n            continue\n\n        mn = [0] * m\n        mx = [0] * m\n\n        for i in range(n):\n            for j in range(m):\n                value = next(it)\n\n                if i == 0:\n                    if j == 0:\n                        mn[j] = mx[j] = value\n                    else:\n                        current = mn[j - 1] + value\n                        mn[j] = mx[j] = current\n                else:\n                    if j == 0:\n                        mn[j] += value\n                        mx[j] += value\n                    else:\n                        min_path = min(mn[j], mn[j - 1]) + value\n                        max_path = max(mx[j], mx[j - 1]) + value\n\n                        mn[j] = min_path\n                        mx[j] = max_path\n\n        if mn[m - 1] <= 0 <= mx[m - 1]:\n            answers.append(\"YES\")\n        else:\n            answers.append(\"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 21.894,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a grid with $n$ rows and $m$ columns. We denote the square on the $i$-th ($1\\le i\\le n$) row and $j$-th ($1\\le j\\le m$) column by $(i, j)$ and the number there by $a_{ij}$. All numbers are equal to $1$ or to $-1$.\n\nYou start from the square $(1, 1)$ and can move one square down or one square to the right at a time. In the end, you want to end up at the square $(n, m)$.\n\nIs it possible to move in such a way so that the sum of the values written in all the visited cells (including $a_{11}$ and $a_{nm}$) is $0$?\n\n\n-----Input-----\n\nEach test contains multiple test cases. The first line contains the number of test cases $t$ ($1 \\leq t \\leq 10^4$). Description of the test cases follows.\n\nThe first line of each test case contains two integers $n$ and $m$ ($1 \\le n, m \\le 1000$)  — the size of the grid.\n\nEach of the following $n$ lines contains $m$ integers. The $j$-th integer on the $i$-th line is $a_{ij}$ ($a_{ij} = 1$ or $-1$)  — the element in the cell $(i, j)$.\n\nIt is guaranteed that the sum of $n\\cdot m$ over all test cases does not exceed $10^6$.\n\n\n-----Output-----\n\nFor each test case, print \"YES\" if there exists a path from the top left to the bottom right that adds up to $0$, and \"NO\" otherwise. You can output each letter in any case.\n\n\n-----Examples-----\n\nInput\n5\n1 1\n1\n1 2\n1 -1\n1 4\n1 -1 1 -1\n3 4\n1 -1 -1 -1\n-1 1 1 -1\n1 1 1 -1\n3 4\n1 -1 1 1\n-1 1 -1 1\n1 -1 1 1\nOutput\nNO\nYES\nYES\nYES\nNO\n\n\n-----Note-----\n\nOne possible path for the fourth test case is given in the picture in the statement.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

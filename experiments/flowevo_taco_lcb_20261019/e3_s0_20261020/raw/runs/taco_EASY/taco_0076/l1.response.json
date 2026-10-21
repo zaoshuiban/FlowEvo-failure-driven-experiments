@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "14cc47ad-72d3-40f3-8b1b-00ec16a75241",
+  "created": 1792432594,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1014,
+    "completion_tokens": 24823,
+    "total_tokens": 25837,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 23768
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1014
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom math import comb\nfrom functools import lru_cache\n\n# Bell numbers, extended as needed\nBell = [1]\n\ndef ensure_bell(n):\n    while len(Bell) <= n:\n        idx = len(Bell)\n        val = 0\n        for k in range(idx):\n            val += comb(idx - 1, k) * Bell[k]\n        Bell.append(val)\n\n_coeff_cache = {}\n\ndef coefficients(length):\n    if length in _coeff_cache:\n        return _coeff_cache[length]\n\n    ensure_bell(length)\n    w = []\n\n    for i in range(length):\n        left = i\n        right = length - 1 - i\n\n        total = 0\n        left_combs = [comb(left, l) for l in range(left + 1)]\n        right_combs = [comb(right, r) for r in range(right + 1)]\n        powers10 = [10 ** r for r in range(right + 1)]\n\n        for l, cl in enumerate(left_combs):\n            for r, cr in enumerate(right_combs):\n                # This would mean all digits are in the same bucket,\n                # but distributions into only one bucket are excluded.\n                if l == left and r == right:\n                    continue\n\n                outside = length - 1 - l - r\n                total += cl * cr * powers10[r] * Bell[outside]\n\n        w.append(total)\n\n    _coeff_cache[length] = w\n    return w\n\n\n@lru_cache(maxsize=None)\ndef f_value(n):\n    s = str(n)\n    w = coefficients(len(s))\n    return sum((ord(s[i]) - 48) * w[i] for i in range(len(s)))\n\n\ndef digits_to_int(digits):\n    value = 0\n    for d in digits:\n        value = value * 10 + d\n    return value\n\n\ndef min_same_length_greater(n, target):\n    s = str(n)\n    m = len(s)\n    digits = [ord(c) - 48 for c in s]\n    w = coefficients(m)\n\n    prefix = [0] * (m + 1)\n    for i, d in enumerate(digits):\n        prefix[i + 1] = prefix[i] + d * w[i]\n\n    suffix_weight = [0] * (m + 1)\n    for i in range(m - 1, -1, -1):\n        suffix_weight[i] = suffix_weight[i + 1] + w[i]\n\n    # First differing position from the right to the left,\n    # so that we obtain the smallest number greater than n.\n    for p in range(m - 1, -1, -1):\n        base = prefix[p]\n        max_after = 9 * suffix_weight[p + 1]\n\n        for d in range(digits[p] + 1, 10):\n            cur = base + d * w[p]\n\n            if cur + max_after <= target:\n                continue\n\n            result_digits = digits[:p] + [d]\n            cur2 = cur\n            possible = True\n\n            for j in range(p + 1, m):\n                max_after_j = 9 * suffix_weight[j + 1]\n                chosen = -1\n\n                for nd in range(10):\n                    if cur2 + nd * w[j] + max_after_j > target:\n                        chosen = nd\n                        cur2 += nd * w[j]\n                        break\n\n                if chosen == -1:\n                    possible = False\n                    break\n\n                result_digits.append(chosen)\n\n            if possible:\n                return digits_to_int(result_digits)\n\n    return None\n\n\ndef min_length_number(target, length):\n    w = coefficients(length)\n\n    suffix_weight = [0] * (length + 1)\n    for i in range(length - 1, -1, -1):\n        suffix_weight[i] = suffix_weight[i + 1] + w[i]\n\n    cur = 0\n    result = []\n\n    for i in range(length):\n        start = 1 if i == 0 else 0\n        max_after = 9 * suffix_weight[i + 1]\n        chosen = -1\n\n        for d in range(start, 10):\n            if cur + d * w[i] + max_after > target:\n                chosen = d\n                cur += d * w[i]\n                break\n\n        if chosen == -1:\n            return None\n\n        result.append(chosen)\n\n    return digits_to_int(result)\n\n\ndef find(n, z):\n    target = f_value(n) + z\n    m = len(str(n))\n\n    answer = min_same_length_greater(n, target)\n    if answer is not None:\n        return answer\n\n    length = m + 1\n\n    while True:\n        w = coefficients(length)\n\n        if 9 * sum(w) > target:\n            answer = min_length_number(target, length)\n            if answer is not None:\n                return answer\n\n        length += 1\n```",
+  "latency_s": 109.863,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWe have the integer `9457`. \n\nWe distribute its digits in two buckets having the following possible distributions (we put the generated numbers as strings and we add the corresponding formed integers for each partition):\n```\n- one bucket with one digit and the other with three digits \n[['9'], ['4','5','7']] --> ['9','457'] --> 9 + 457 = 466\n[['9','5','7'], ['4']] --> ['957','4'] --> 957 + 4 = 961\n[['9','4','7'], ['5']] --> ['947','5'] --> 947 + 5 = 952\n[['9','4','5'], ['7']] --> ['945','7'] --> 945 + 7 = 952\n\n- two buckets with 2 digits each:\n[['9','4'], ['5','7']] --> ['94','57'] --> 94 + 57 = 151\n[['9','5'], ['4','7']] --> ['95','47'] --> 95 + 47 = 142\n[['9','7'], ['4','5']] --> ['97','45'] --> 97 + 45 = 142\n```\n\nNow we distribute the digits of that integer in three buckets, and we do the same presentation as above:\n```\none bucket of two digits and two buckets with one digit each:\n[['9'], ['4'], ['5','7']] --> ['9','4','57'] --> 9 + 4 + 57 = 70\n[['9','4'], ['5'], ['7']] --> ['94','5','7'] --> 94 + 5 + 7 = 106\n[['9'], ['4', '5'], ['7']] --> ['9','45','7'] --> 9 + 45 + 7 = 61\n[['9'], ['5'], ['4','7']] --> ['9','5','47'] --> 9 + 5 + 47 = 61\n[['9','5'], ['4'], ['7']] --> ['95','4','7'] --> 95 + 4 + 7 = 106\n[['9','7'], ['4'], ['5']] --> ['97','4','5'] --> 97 + 4 + 5 = 106\n```\nFinally we distribute the digits in the maximum possible amount of buckets for this integer, four buckets, with an unique distribution:\n```\nOne digit in each bucket.\n[['9'], ['4'], ['5'], ['7']] --> ['9','4','5','7'] --> 9 + 4 + 5 + 7 = 25\n```\nIn the distribution we can observe the following aspects:\n\n- the order of the buckets does not matter\n\n- the order of the digits in each bucket matters; the available digits have the same order than in the original number.\n\n- the amount of buckets varies from two up to the amount of digits\n\nThe function, `f =` `bucket_digit_distributions_total_sum`, gives for each integer, the result of the big sum of the total addition of generated numbers for each distribution of digits.\n```python\nbucket_digit_distributions_total_sum(9457) === 4301 # 466 + 961 + 952 + 952 + 151 + 142 + 142 + 70 + 106 + 61 + 61 + 106 + 106 + 25 = 4301\n```\nIt is interesting to see the value of this function for a number that has one or more zeroes as digits, for example:\n```python\nbucket_digit_distributions_total_sum(10001) === 5466\n```\nGiven an integer `n`, with its corresponding value of the above function, `f(n)`, and another integer `z`, find the closest and higher integer to n, `nf`, such `f(nf) > f(n) + z`.\n\nExample:\n```python\nfind(10001,100) === 10003\nfind(30000, 1000) === 30046\n``` \nFeatures of the random tests:\n```\n100 <= n <= 1500000\n50 <= z <= 6000\n```\n\nStarter code / required signature:\ndef find(n,z):\n\t\n\nUse the required function/method named find. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

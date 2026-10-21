@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f53877b2-6489-4f5e-8117-5e9626d69a4e",
+  "created": 1792438137,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 539,
+    "completion_tokens": 3010,
+    "total_tokens": 3549,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2806
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 539
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        idx += 2\n\n        a = data[idx:idx + n]\n        idx += n\n\n        best_i = 0\n        best_diff = a[k] - a[0]\n\n        for i in range(1, n - k):\n            diff = a[i + k] - a[i]\n            if diff < best_diff:\n                best_diff = diff\n                best_i = i\n\n        left = a[best_i]\n        right = a[best_i + k]\n        answers.append(str((left + right) // 2))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 13.558,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAt first, there was a legend related to the name of the problem, but now it's just a formal statement.\n\nYou are given $n$ points $a_1, a_2, \\dots, a_n$ on the $OX$ axis. Now you are asked to find such an integer point $x$ on $OX$ axis that $f_k(x)$ is minimal possible.\n\nThe function $f_k(x)$ can be described in the following way:   form a list of distances $d_1, d_2, \\dots, d_n$ where $d_i = |a_i - x|$ (distance between $a_i$ and $x$);  sort list $d$ in non-descending order;  take $d_{k + 1}$ as a result. \n\nIf there are multiple optimal answers you can print any of them.\n\n\n-----Input-----\n\nThe first line contains single integer $T$ ($ 1 \\le T \\le 2 \\cdot 10^5$) — number of queries. Next $2 \\cdot T$ lines contain descriptions of queries. All queries are independent. \n\nThe first line of each query contains two integers $n$, $k$ ($1 \\le n \\le 2 \\cdot 10^5$, $0 \\le k < n$) — the number of points and constant $k$.\n\nThe second line contains $n$ integers $a_1, a_2, \\dots, a_n$ ($1 \\le a_1 < a_2 < \\dots < a_n \\le 10^9$) — points in ascending order.\n\nIt's guaranteed that $\\sum{n}$ doesn't exceed $2 \\cdot 10^5$.\n\n\n-----Output-----\n\nPrint $T$ integers — corresponding points $x$ which have minimal possible value of $f_k(x)$. If there are multiple answers you can print any of them.\n\n\n-----Example-----\nInput\n3\n3 2\n1 2 5\n2 1\n1 1000000000\n1 0\n4\n\nOutput\n3\n500000000\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

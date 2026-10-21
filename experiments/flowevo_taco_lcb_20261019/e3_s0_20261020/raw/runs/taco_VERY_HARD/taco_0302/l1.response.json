@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "41e49621-1b6e-45d3-823e-6d7ad3c19177",
+  "created": 1792452849,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 764,
+    "completion_tokens": 16324,
+    "total_tokens": 17088,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15862
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 764
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    adj = [[] for _ in range(n)]\n    masks = [0] * n\n\n    for _ in range(m):\n        a = next(it) - 1\n        b = next(it) - 1\n        adj[a].append(b)\n        adj[b].append(a)\n        masks[a] |= 1 << b\n        masks[b] |= 1 << a\n\n    color = [-1] * n\n    components = []\n\n    for start in range(n):\n        if color[start] != -1:\n            continue\n\n        color[start] = 0\n        queue = [start]\n        head = 0\n        vertices = []\n\n        while head < len(queue):\n            v = queue[head]\n            head += 1\n            vertices.append(v)\n\n            for u in adj[v]:\n                if color[u] == -1:\n                    color[u] = color[v] ^ 1\n                    queue.append(u)\n                elif color[u] == color[v]:\n                    print(-1)\n                    return\n\n        components.append(vertices)\n\n    answer = 0\n\n    for vertices in components:\n        size = len(vertices)\n        if size == 1:\n            continue\n\n        diameter = 0\n\n        for source in vertices:\n            visited = 1 << source\n            frontier = visited\n            distance = 0\n\n            while True:\n                neighbours = 0\n                f = frontier\n\n                while f:\n                    lsb = f & -f\n                    vertex = lsb.bit_length() - 1\n                    neighbours |= masks[vertex]\n                    f ^= lsb\n\n                neighbours &= ~visited\n                if neighbours == 0:\n                    break\n\n                visited |= neighbours\n                frontier = neighbours\n                distance += 1\n\n            if distance > diameter:\n                diameter = distance\n                if diameter == size - 1:\n                    break\n\n        answer += diameter\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 86.122,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nVova and Marina love offering puzzles to each other. Today Marina offered Vova to cope with the following task.\n\nVova has a non-directed graph consisting of n vertices and m edges without loops and multiple edges. Let's define the operation of contraction two vertices a and b that are not connected by an edge. As a result of this operation vertices a and b are deleted and instead of them a new vertex x is added into the graph, and also edges are drawn from it to all vertices that were connected with a or with b (specifically, if the vertex was connected with both a and b, then also exactly one edge is added from x to it). Thus, as a result of contraction again a non-directed graph is formed, it contains no loops nor multiple edges, and it contains (n - 1) vertices.\n\nVova must perform the contraction an arbitrary number of times to transform the given graph into a chain of the maximum length. A chain of length k (k ≥ 0) is a connected graph whose vertices can be numbered with integers from 1 to k + 1 so that the edges of the graph connect all pairs of vertices (i, i + 1) (1 ≤ i ≤ k) and only them. Specifically, the graph that consists of one vertex is a chain of length 0. The vertices that are formed as a result of the contraction are allowed to be used in the following operations of contraction.\n\n [Image] The picture illustrates the contraction of two vertices marked by red. \n\nHelp Vova cope with his girlfriend's task. Find the maximum length of the chain that can be obtained from the resulting graph or else determine that it is impossible to obtain the chain.\n\n\n-----Input-----\n\nThe first line contains two integers n, m (1 ≤ n ≤ 1000, 0 ≤ m ≤ 100 000) — the number of vertices and the number of edges in the original graph.\n\nNext m lines contain the descriptions of edges in the format a_{i}, b_{i} (1 ≤ a_{i}, b_{i} ≤ n, a_{i} ≠ b_{i}), which means that there is an edge between vertices a_{i} and b_{i}. It is guaranteed that there is at most one edge between each pair of vertexes.\n\n\n-----Output-----\n\nIf it is impossible to obtain a chain from the given graph, print  - 1. Otherwise, print the maximum possible number of edges in the resulting chain.\n\n\n-----Examples-----\nInput\n5 4\n1 2\n2 3\n3 4\n3 5\n\nOutput\n3\n\nInput\n4 6\n1 2\n2 3\n1 3\n3 4\n2 4\n1 4\n\nOutput\n-1\n\nInput\n4 2\n1 3\n2 4\n\nOutput\n2\n\n\n\n-----Note-----\n\nIn the first sample test you can contract vertices 4 and 5 and obtain a chain of length 3.\n\nIn the second sample test it is initially impossible to contract any pair of vertexes, so it is impossible to achieve the desired result.\n\nIn the third sample test you can contract vertices 1 and 2 and obtain a chain of length 2.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

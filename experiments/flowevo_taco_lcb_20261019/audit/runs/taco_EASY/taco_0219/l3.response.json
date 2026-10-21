@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e3d40c51-a4ab-42a4-bb95-688142c09874",
+  "created": 1792429944,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1311,
+    "completion_tokens": 32768,
+    "total_tokens": 34079,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 671
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 163.07,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe secret services of Armin, an otherwise peace-loving country, have decided to perform a surgical strike in the war-torn city of Tashka. Tashka is under enemy control and the objective of the strike is to gain control over the city. \nThe mission is subdivided into the following steps:\n1) Divide in groups and infiltrate all enemy bases in Tashka as unarmed civilians, and find the status of enemy's defense strength at that base.\n ( You can assume that the number of groups are sufficiently large to cover each base separately )\n2) Pick up the required amount of ammunition from our secret ammunition store in the city.\n3) Return to the bases and destroy the enemy defense.\n4) Rush to the Town Hall for the Helicopter pick up out of the town.  \n\nThere are a total of  N buildings in Tashka, numbered from 1 to N .  The agents will be dropped at building denoted by S, post which they will divide into groups and each enemy base will have a group moving towards it. The ammunition store is denoted by A and town hall is denoted by H . All the buildings except these three are enemy bases and are to be infiltrated.  There are a total of M bidirectional roads in the city, each road connects two cities. There can be multiple roads between a pair of cities and each road has a time taken to cross associated with its terrain.\nMonk is made in charge of the pickup.  He can not land the Helicopter before all the groups have arrived at the Town Hall. Find the Minimum units of Time,  post dropping the agents, that the Helicopter should be landed such that all groups are able to reach the Town Hall.  \n\nInput:\nFirst line contains an integer T. T test cases follow.\nFirst line of each test cases contains two space-separated integers N, M.\nEach of the next M lines contains three space-separated integers X, Y, C, denoting that there is a bidirectional road between X and Y that needs C units of time to cross. \nThe next line contains three space-separated integers S, A and H (not necessarily distinct) .  \n\nOutput:\nPrint the answer to each test case in a new line.  \n\nConstraints:\n1 ≤ T ≤ 10\n4 ≤ N ≤ 100\n1 ≤ M ≤ 10000\n1 ≤ X, Y, S, A, H  ≤ N\n1 ≤ C ≤ 100  \n\nNote:\nTime taken to note status of enemy defense, load ammunition or attack enemy enemy base can be considered negligible compared to time taken to travel.\n\nSAMPLE INPUT\n1\n4 4\n1 4 1\n1 2 1\n2 3 1\n2 4 1\n1 2 3\n\nSAMPLE OUTPUT\n5\n\nExplanation\n\nAgents start at 1, rush to enemy base at 4 (Time taken =2 units). Go to ammunition store at 2, and return back to attack enemy base (Time taken=2 units) , destroy the base and head off to pickup point (Time taken =1 units).\nHence, 2+2+1= 5units.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    t = next(it)\n    answers = []\n    INF = 10**15\n\n    for _ in range(t):\n        n = next(it)\n        m = next(it)\n\n        dist = [[INF] * n for _ in range(n)]\n        for i in range(n):\n            dist[i][i] = 0\n\n        for _ in range(m):\n            x = next(it) - 1\n            y = next(it) - 1\n            c = next(it)\n            if c < dist[x][y]:\n                dist[x][y] = c\n                dist[y][x] = c\n\n        s = next(it) - 1\n        a = next(it) - 1\n        h = next(it) - 1\n\n        for k in range(n):\n            dk = dist[k]\n            for i in range(n):\n                dik = dist[i][k]\n                if dik == INF:\n                    continue\n                di = dist[i]\n                for j in range(n):\n                    nd = dik + dk[j]\n                    if nd < di[j]:\n                        di[j] = nd\n\n        excluded = {s, a, h}\n        ans = 0\n\n        for i in range(n):\n            if i not in excluded:\n                time_needed = dist[s][i] + 2 * dist[a][i] + dist[h][i]\n                if time_needed > ans:\n                    ans = time_needed\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given two integers $a$ and $b$. Print $a+b$.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 10^4$) — the number of test cases in the input. Then $t$ test cases follow.\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        a = data[idx]\n        b = data[idx + 1]\n        idx += 2\n        ans.append(str(a + b))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

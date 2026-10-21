@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d05a745b-f982-44e6-b3a6-8470677fe1e2",
+  "created": 1792437742,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 294,
+    "completion_tokens": 347,
+    "total_tokens": 641,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 196
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 166
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    freq = Counter()\n\n    index = 1\n    for _ in range(n):\n        a = int(data[index])\n        b = int(data[index + 1])\n        c = int(data[index + 2])\n        index += 3\n\n        sides = tuple(sorted((a, b, c)))\n        freq[sides] += 1\n\n    unique_count = sum(1 for count in freq.values() if count == 1)\n    print(unique_count)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 1.739,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given n triangles. \n\nYou are required to find how many triangles are unique out of given triangles.\nFor each triangle you are given three integers a,b,c , the sides of a\ntriangle.\n\nA triangle is said to be unique if there is no other triangle with same set of sides.\n\nNote : It is always possible to form triangle with given sides.\n\nINPUT:\n\nFirst line contains n, the number of triangles. Each of next n lines contain\nthree integers a,b,c (sides of a triangle).\n\nOutput:\n\nprint single integer, the number of unique triangles.\n\nConstraints:\n\n1 ≤ n ≤ 10^5\n1 ≤ a,b,c ≤ 10^15\n\nSAMPLE INPUT\n5\n7 6 5\n5 7 6\n8 2 9\n2 3 4\n2 4 3 \n\nSAMPLE OUTPUT\n1\n\nExplanation\n\nonly triangle with sides 8, 2, 9 is unique\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

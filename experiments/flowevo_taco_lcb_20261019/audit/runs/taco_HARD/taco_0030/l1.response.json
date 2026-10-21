@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "25959ffd-2a1f-477d-893c-cfbf5274f3b3",
+  "created": 1792457258,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 750,
+    "completion_tokens": 13537,
+    "total_tokens": 14287,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13094
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 750
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    q = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(q):\n        n = data[idx]\n        u = data[idx + 1]\n        v = data[idx + 2]\n        idx += 3\n\n        su = bin(u)[3:]\n        sv = bin(v)[3:]\n\n        common = 0\n        limit = min(len(su), len(sv))\n        while common < limit and su[common] == sv[common]:\n            common += 1\n\n        left_suffix = su[common:]\n        right_suffix = sv[common:]\n\n        len_a = len(left_suffix)\n        len_b = len(right_suffix)\n\n        val_a = int(left_suffix, 2) if len_a else 0\n        val_b = int(right_suffix, 2) if len_b else 0\n\n        total = 0\n\n        for m in range(n.bit_length() + 1):\n            max_p = (1 << m) - 1\n\n            base_a = 1 << (m + len_a)\n            if base_a + val_a <= n:\n                upper_a = (n - base_a - val_a) >> len_a\n                if upper_a > max_p:\n                    upper_a = max_p\n            else:\n                upper_a = -1\n\n            base_b = 1 << (m + len_b)\n            if base_b + val_b <= n:\n                upper_b = (n - base_b - val_b) >> len_b\n                if upper_b > max_p:\n                    upper_b = max_p\n            else:\n                upper_b = -1\n\n            upper = upper_a if upper_a < upper_b else upper_b\n            if upper >= 0:\n                total += upper + 1\n\n        answers.append(str(total))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 66.373,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well.\n\nLet's consider a rooted binary tree with the following properties:\n\nThe number of nodes and edges in the tree is infinite\nThe tree root is labeled by $1$\nA node labeled by $v$ has two children: $2 \\cdot v$ (the left child of $v$), and $2 \\cdot v + 1$ (the right child of $v$).\n\nHere is an image of the first several layers of such a tree:\n\nLet's consider four operations that you are allowed to apply during the tree traversal:\n\nmove to the left child - move from $v$ to $2 \\cdot v$\nmove to the right child - move from $v$ to $2 \\cdot v + 1$\nmove to the parent as a left child - move from $v$ to $\\frac{v}{2}$ if $v$ is an even integer\nmove to the parent as a right child - move from $v$ to $\\frac{v - 1}{2}$ if $v$ is an odd integer\n\nIt can be proven, that for any pair of nodes $u$ and $v$, there is only one sequence of commands that moves from $u$ to $v$ and visits each node of the tree at most once. Let's call such a sequence of commands a path configuration for a pair of nodes $(u, v)$.\n\nYou are asked to process a series of the following queries: \n\nYou are given three integers $n$, $u$ and $v$ ($1 ≤ u, v ≤ n$). Count the pairs of nodes $(w, t)$ ($1 ≤ w, t ≤ n$) such that the path configuration for $(w, t)$ is the same with the path configuration for $(u, v)$.\n\n------  Input ------\nThe first line of input contains a single integer $Q$, denoting the number of queries to process.\nEach of the next $Q$ lines contains three space-separated integers $n$, $u$ and $v$ denoting a query.\n\n------  Output ------\nFor each query, print the answer on a separate line.\n\n------  Constraints ------\n$1 ≤ Q ≤ 2 \\cdot 10^{4}$\n$1 ≤ u, v ≤ n ≤ 10^{9}$\n\n----- Sample Input 1 ------ \n3\n\n11 9 11\n\n10 2 2\n\n8 1 8\n----- Sample Output 1 ------ \n2\n\n10\n\n1\n----- explanation 1 ------ \nIn the first query from the example test case, you should count pairs $(5, 7)$ and $(9, 11)$.\n\nIn the second query from the example test case, you should count the following pairs: $(1, 1)$, $(2, 2)$, $(3, 3)$, $(4, 4)$, $(5, 5)$, $(6, 6)$, $(7, 7)$, $(8, 8)$, $(9, 9)$ and $(10, 10)$.\n\nIn the third query from the example test case, you should only count a pair $(1, 8)$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

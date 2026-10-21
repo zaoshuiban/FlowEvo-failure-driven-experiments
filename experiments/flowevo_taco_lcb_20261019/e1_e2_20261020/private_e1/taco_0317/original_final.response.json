@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "492d7e73-bbfb-446b-ba39-cac1a58e48cd",
+  "created": 1792444392,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 330,
+    "completion_tokens": 341,
+    "total_tokens": 671,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 192
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 330
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    answers = []\n    idx = 1\n\n    for _ in range(n):\n        i = data[idx]\n        j = data[idx + 1]\n        idx += 2\n\n        distance = 0\n        while i != j:\n            if i > j:\n                i //= 2\n            else:\n                j //= 2\n            distance += 1\n\n        answers.append(str(distance))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 1.896,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \n\nConsider an infinite full binary tree (each node has two children except the leaf nodes) defined as follows. For a node labelled v its left child will be labelled 2*v and its right child will be labelled 2*v+1. The root is labelled as 1.\n\nYou are given N queries of the form i j. For each query, you have to print the length of the shortest path between node labelled i and  node labelled j.\n\n------ Input ------ \n\nFirst line contains N, the number of queries. Each query consists of two space separated integers i and j in one line.\n\n------ Output ------ \n\nFor each query, print the required answer in one line.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ i,j ≤ 10^{9}$\n\n----- Sample Input 1 ------ \n3\n1 2\n2 3\n4 3\n----- Sample Output 1 ------ \n1\n2\n3\n----- explanation 1 ------ \nFor first query, 1 is directly connected to 2 by an edge. Hence distance 1.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

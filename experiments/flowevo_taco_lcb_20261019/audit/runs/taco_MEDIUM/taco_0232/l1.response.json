@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "24a72746-b72c-4b0a-b121-a52998b2f9b9",
+  "created": 1792441465,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 848,
+    "completion_tokens": 831,
+    "total_tokens": 1679,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 640
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 848
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_left\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    q = next(it)\n\n    roots = [next(it) for _ in range(n)]\n    roots.sort()\n\n    answers = []\n\n    for _ in range(q):\n        x = next(it)\n        pos = bisect_left(roots, x)\n\n        if pos < n and roots[pos] == x:\n            answers.append(\"0\")\n        else:\n            # Number of negative factors is n - pos\n            if (n - pos) % 2 == 1:\n                answers.append(\"NEGATIVE\")\n            else:\n                answers.append(\"POSITIVE\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 3.658,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in [Mandarin Chinese], [Russian], [Vietnamese] and [Bengali] as well.\n\nChef is stuck in the wavey world of polynomials. You are given all $N$ roots of a polynomial $P(x) = \\prod_{i=1}^N (x - a_{i})$. The roots are pairwise distinct integers, but they are not given in any particular order.\n\nTo help Chef escape, you should answer $Q$ queries (numbered $1$ through $Q$). For each valid $i$, in the $i$-th query, you are given an integer $x_{i}$ and you have to determine whether $P(x_{i})$ is positive, negative or $0$.\n\n------  Input ------\nThe first line of the input contains two space-separated integers $N$ and $Q$.\nThe second line contains $N$ space-separated integers $a_{1}, a_{2}, \\ldots, a_{N}$.\n$Q$ lines follow. For each valid $i$, the $i$-th of these lines contains a single integer $x_{i}$ describing the $i$-th query.\n\n------  Output ------\nFor each query, print a single line containing the string \"POSITIVE\", \"NEGATIVE\" or \"0\" (without quotes) describing the value of the polynomial for the $i$-th query.\n\n------  Constraints ------\n$1 ≤ N, Q ≤ 2 \\cdot 10^{5}$\n$|a_{i}| ≤ 10^{9}$ for each valid $i$\n$a_{1}, a_{2}, \\ldots, a_{N}$ are pairwise distinct\n$|x_{i}| ≤ 10^{9}$ for each valid $i$\n\n----- Sample Input 1 ------ \n4 6\n1 3 5 100\n-2\n2\n4\n80\n107\n5\n----- Sample Output 1 ------ \nPOSITIVE\nNEGATIVE\nPOSITIVE\nNEGATIVE\nPOSITIVE\n0\n----- explanation 1 ------ \nThe given polynomial is $(x-1)\\cdot (x-3)\\cdot (x-5)\\cdot (x-100)$.\n\nQuery $1$: $x = -2$. This means that $P(-2) = (-2-1)\\cdot (-2-3)\\cdot (-2-5)\\cdot (-2-100) = (-3)\\cdot (-5)\\cdot (-7)\\cdot (-102) = 10710 > 0$. Thus, the answer is POSITIVE.\n\nQuery $2$: $x = 2$. This means that $P(2) = (2-1)\\cdot (2-3)\\cdot (2-5)\\cdot (2-100) = (1)\\cdot (-1)\\cdot (-3)\\cdot (-98) = -294 < 0$. Thus, the answer is NEGATIVE.\n\nQuery $3$: $x = 4$. This means that $P(4) = (4-1)\\cdot (4-3)\\cdot (4-5)\\cdot (4-100) = (3)\\cdot (1)\\cdot (-1)\\cdot (-96) = 288 > 0$. Thus, the answer is POSITIVE.\n\nQuery $6$: $x = 5$. This means that $P(5) = (5-1)\\cdot (5-3)\\cdot (5-5)\\cdot (5-100) = (4)\\cdot (2)\\cdot (0)\\cdot (-95) = 0$. Thus, the answer is 0.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

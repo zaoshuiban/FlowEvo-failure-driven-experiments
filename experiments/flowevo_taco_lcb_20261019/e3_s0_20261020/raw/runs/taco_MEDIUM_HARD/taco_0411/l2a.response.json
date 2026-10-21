@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "3007f944-e9ce-49f3-91f9-d57822e54df6",
+  "created": 1792445735,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 409,
+    "completion_tokens": 4474,
+    "total_tokens": 4883,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3954
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 153
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom functools import lru_cache\n\nMAX_BIT = 60\n\ndef solve_query(l, r):\n    @lru_cache(maxsize=None)\n    def dp(pos, tight_low, tight_high):\n        if pos < 0:\n            return 0\n\n        low_bit = (l >> pos) & 1\n        high_bit = (r >> pos) & 1\n        best = -1\n\n        for bit in (0, 1):\n            if tight_low and bit < low_bit:\n                continue\n            if tight_high and bit > high_bit:\n                continue\n\n            next_tight_low = tight_low and (bit == low_bit)\n            next_tight_high = tight_high and (bit == high_bit)\n\n            best = max(\n                best,\n                bit + dp(pos - 1, next_tight_low, next_tight_high)\n            )\n\n        return best\n\n    remaining = dp(MAX_BIT, True, True)\n\n    answer = 0\n    tight_low = True\n    tight_high = True\n\n    for pos in range(MAX_BIT, -1, -1):\n        low_bit = (l >> pos) & 1\n        high_bit = (r >> pos) & 1\n\n        for bit in (0, 1):\n            if tight_low and bit < low_bit:\n                continue\n            if tight_high and bit > high_bit:\n                continue\n\n            next_tight_low = tight_low and (bit == low_bit)\n            next_tight_high = tight_high and (bit == high_bit)\n\n            current = bit + dp(pos - 1, next_tight_low, next_tight_high)\n\n            if current == remaining:\n                if bit:\n                    answer |= 1 << pos\n\n                remaining -= bit\n                tight_low = next_tight_low\n                tight_high = next_tight_high\n                break\n\n    return answer\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    results = []\n    idx = 1\n\n    for _ in range(n):\n        l = data[idx]\n        r = data[idx + 1]\n        idx += 2\n\n        results.append(str(solve_query(l, r)))\n\n    sys.stdout.write(\"\\n\".join(results))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 20.483,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLet's denote as $\\text{popcount}(x)$ the number of bits set ('1' bits) in the binary representation of the non-negative integer x.\n\nYou are given multiple queries consisting of pairs of integers l and r. For each query, find the x, such that l ≤ x ≤ r, and $\\text{popcount}(x)$ is maximum possible. If there are multiple such numbers find the smallest of them.\n\n\n-----Input-----\n\nThe first line contains integer n — the number of queries (1 ≤ n ≤ 10000).\n\nEach of the following n lines contain two integers l_{i}, r_{i} — the arguments for the corresponding query (0 ≤ l_{i} ≤ r_{i} ≤ 10^18).\n\n\n-----Output-----\n\nFor each query print the answer in a separate line.\n\n\n-----Examples-----\nInput\n3\n1 2\n2 4\n1 10\n\nOutput\n1\n3\n7\n\n\n\n-----Note-----\n\nThe binary representations of numbers from 1 to 10 are listed below:\n\n1_10 = 1_2\n\n2_10 = 10_2\n\n3_10 = 11_2\n\n4_10 = 100_2\n\n5_10 = 101_2\n\n6_10 = 110_2\n\n7_10 = 111_2\n\n8_10 = 1000_2\n\n9_10 = 1001_2\n\n10_10 = 1010_2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

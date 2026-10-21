@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d29f57e7-0547-477a-8e57-56ee436baab8",
+  "created": 1792439795,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1475,
+    "completion_tokens": 16898,
+    "total_tokens": 18373,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16612
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 707
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a1, a2, a3 = data[1], data[2], data[3]  # Alice: rock, scissors, paper\n    b1, b2, b3 = data[4], data[5], data[6]  # Bob: rock, scissors, paper\n\n    # Minimum wins: unavoidable wins for each of Alice's choices.\n    min_wins = max(\n        0,\n        a1 - b1 - b3,  # Alice's rock cannot win against Bob's rock or paper\n        a2 - b2 - b1,  # Alice's scissors cannot win against Bob's scissors or rock\n        a3 - b3 - b2   # Alice's paper cannot win against Bob's paper or scissors\n    )\n\n    # Maximum wins: independently match each winning pair.\n    max_wins = (\n        min(a1, b2) +  # rock beats scissors\n        min(a2, b3) +  # scissors beats paper\n        min(a3, b1)    # paper beats rock\n    )\n\n    print(min_wins, max_wins)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 78.458,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAlice and Bob have decided to play the game \"Rock, Paper, Scissors\". \n\nThe game consists of several rounds, each round is independent of each other. In each round, both players show one of the following things at the same time: rock, paper or scissors. If both players showed the same things then the round outcome is a draw. Otherwise, the following rules applied:\n\n  if one player showed rock and the other one showed scissors, then the player who showed rock is considered the winner and the other one is considered the loser;  if one player showed scissors and the other one showed paper, then the player who showed scissors is considered the winner and the other one is considered the loser;  if one player showed paper and the other one showed rock, then the player who showed paper is considered the winner and the other one is considered the loser. \n\nAlice and Bob decided to play exactly $n$ rounds of the game described above. Alice decided to show rock $a_1$ times, show scissors $a_2$ times and show paper $a_3$ times. Bob decided to show rock $b_1$ times, show scissors $b_2$ times and show paper $b_3$ times. Though, both Alice and Bob did not choose the sequence in which they show things. It is guaranteed that $a_1 + a_2 + a_3 = n$ and $b_1 + b_2 + b_3 = n$.\n\nYour task is to find two numbers:\n\n  the minimum number of round Alice can win;  the maximum number of rounds Alice can win. \n\n\n-----Input-----\n\nThe first line of the input contains one integer $n$ ($1 \\le n \\le 10^{9}$) — the number of rounds.\n\nThe second line of the input contains three integers $a_1, a_2, a_3$ ($0 \\le a_i \\le n$) — the number of times Alice will show rock, scissors and paper, respectively. It is guaranteed that $a_1 + a_2 + a_3 = n$.\n\nThe third line of the input contains three integers $b_1, b_2, b_3$ ($0 \\le b_j \\le n$) — the number of times Bob will show rock, scissors and paper, respectively. It is guaranteed that $b_1 + b_2 + b_3 = n$.\n\n\n-----Output-----\n\nPrint two integers: the minimum and the maximum number of rounds Alice can win.\n\n\n-----Examples-----\nInput\n2\n0 1 1\n1 1 0\n\nOutput\n0 1\n\nInput\n15\n5 5 5\n5 5 5\n\nOutput\n0 15\n\nInput\n3\n0 0 3\n3 0 0\n\nOutput\n3 3\n\nInput\n686\n479 178 29\n11 145 530\n\nOutput\n22 334\n\nInput\n319\n10 53 256\n182 103 34\n\nOutput\n119 226\n\n\n\n-----Note-----\n\nIn the first example, Alice will not win any rounds if she shows scissors and then paper and Bob shows rock and then scissors. In the best outcome, Alice will win one round if she shows paper and then scissors, and Bob shows rock and then scissors.\n\nIn the second example, Alice will not win any rounds if Bob shows the same things as Alice each round.\n\nIn the third example, Alice always shows paper and Bob always shows rock so Alice will win all three rounds anyway.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:4]  # Alice: rock, scissors, paper\n    b = data[4:7]  # Bob: rock, scissors, paper\n\n    # Maximum wins:\n    # Alice rock beats Bob scissors\n    # Alice scissors beats Bob paper\n    # Alice paper beats Bob rock\n    max_wins = (\n        min(a[0], b[1]) +\n        min(a[1], b[2]) +\n        min(a[2], b[0])\n    )\n\n    # Non-winning Bob choices for each Alice choice:\n    # Alice rock: Bob rock/paper -> indices 0,2\n    # Alice scissors: Bob scissors/rock -> indices 1,0\n    # Alice paper: Bob paper/scissors -> indices 2,1\n    non_winning_masks = [\n        (1 << 0) | (1 << 2),\n        (1 << 1) | (1 << 0),\n        (1 << 2) | (1 << 1)\n    ]\n\n    min_wins = 0\n\n    # Check every subset of Alice choices using the matching deficit formula.\n    for alice_mask in range(8):\n        alice_sum = 0\n        bob_mask = 0\n\n        for i in range(3):\n            if alice_mask & (1 << i):\n                alice_sum += a[i]\n                bob_mask |= non_winning_masks[i]\n\n        bob_sum = 0\n        for j in range(3):\n            if bob_mask & (1 << j):\n                bob_sum += b[j]\n\n        min_wins = max(min_wins, alice_sum - bob_sum)\n\n    print(min_wins, max_wins)\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

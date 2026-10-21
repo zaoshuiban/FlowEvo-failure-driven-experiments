@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "95aec584-a556-40e6-bdc4-1b7e2a033f9b",
+  "created": 1792430858,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 547,
+    "completion_tokens": 1696,
+    "total_tokens": 2243,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1407
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 547
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\nimport heapq\n\nclass Solution:\n    def findSafeWalk(self, grid: List[List[int]], health: int) -> bool:\n        m, n = len(grid), len(grid[0])\n        INF = 10**9\n        dist = [[INF] * n for _ in range(m)]\n        \n        dist[0][0] = grid[0][0]\n        pq = [(dist[0][0], 0, 0)]\n        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n        \n        while pq:\n            cost, x, y = heapq.heappop(pq)\n            \n            if cost != dist[x][y]:\n                continue\n            \n            if x == m - 1 and y == n - 1:\n                return cost < health\n            \n            for dx, dy in directions:\n                nx, ny = x + dx, y + dy\n                \n                if 0 <= nx < m and 0 <= ny < n:\n                    new_cost = cost + grid[nx][ny]\n                    \n                    if new_cost < dist[nx][ny]:\n                        dist[nx][ny] = new_cost\n                        heapq.heappush(pq, (new_cost, nx, ny))\n        \n        return dist[m - 1][n - 1] < health\n```",
+  "latency_s": 7.651,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an m x n binary matrix grid and an integer health.\nYou start on the upper-left corner (0, 0) and would like to get to the lower-right corner (m - 1, n - 1).\nYou can move up, down, left, or right from one cell to another adjacent cell as long as your health remains positive.\nCells (i, j) with grid[i][j] = 1 are considered unsafe and reduce your health by 1.\nReturn true if you can reach the final cell with a health value of 1 or more, and false otherwise.\n \nExample 1:\n\nInput: grid = [[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]], health = 1\nOutput: true\nExplanation:\nThe final cell can be reached safely by walking along the gray cells below.\n\nExample 2:\n\nInput: grid = [[0,1,1,0,0,0],[1,0,1,0,0,0],[0,1,1,1,0,1],[0,0,1,0,1,0]], health = 3\nOutput: false\nExplanation:\nA minimum of 4 health points is needed to reach the final cell safely.\n\nExample 3:\n\nInput: grid = [[1,1,1],[1,0,1],[1,1,1]], health = 5\nOutput: true\nExplanation:\nThe final cell can be reached safely by walking along the gray cells below.\n\nAny path that does not go through the cell (1, 1) is unsafe since your health will drop to 0 when reaching the final cell.\n\n \nConstraints:\n\nm == grid.length\nn == grid[i].length\n1 <= m, n <= 50\n2 <= m * n\n1 <= health <= m + n\ngrid[i][j] is either 0 or 1.\n\nStarter code / required signature:\nclass Solution:\n    def findSafeWalk(self, grid: List[List[int]], health: int) -> bool:\n        \n\nUse the required function/method named findSafeWalk. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4e79b9ea-c229-4eb2-acf2-9d3d9e80806b",
+  "created": 1792449988,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 458,
+    "completion_tokens": 11225,
+    "total_tokens": 11683,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10792
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 458
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n    b = data[1 + n:1 + 2 * n]\n\n    base = 0\n    positive = []  # a_i > b_i, interval [b_i, a_i]\n    negative = []  # a_i < b_i, interval [a_i, b_i]\n\n    for x, y in zip(a, b):\n        if x > y:\n            base += x - y\n            positive.append((y, x))\n        elif x < y:\n            base += y - x\n            negative.append((x, y))\n\n    if not positive or not negative:\n        print(base)\n        return\n\n    def max_ordered(intervals_a, intervals_b):\n        \"\"\"\n        Maximum intersection length between interval A from intervals_a\n        and interval B from intervals_b, where B.left <= A.left.\n        \"\"\"\n        if not intervals_a or not intervals_b:\n            return 0\n\n        intervals_b = sorted(intervals_b)\n        intervals_a = sorted(intervals_a)\n\n        j = 0\n        max_right_b = -1\n        best = 0\n        m = len(intervals_b)\n\n        for left_a, right_a in intervals_a:\n            while j < m and intervals_b[j][0] <= left_a:\n                max_right_b = max(max_right_b, intervals_b[j][1])\n                j += 1\n\n            if max_right_b >= left_a:\n                intersection = min(right_a, max_right_b) - left_a\n                if intersection > best:\n                    best = intersection\n\n        return best\n\n    best_gain_interval = max(\n        max_ordered(positive, negative),\n        max_ordered(negative, positive)\n    )\n\n    print(base - 2 * best_gain_interval)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 50.488,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given 2 arrays $a$ and $b$, both of size $n$. You can swap two elements in $b$ at most once (or leave it as it is), and you are required to minimize the value $$\\sum_{i}|a_{i}-b_{i}|.$$\n\nFind the minimum possible value of this sum.\n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($1 \\le n \\le 2 \\cdot 10^5$).\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ ($1 \\le a_i \\le {10^9}$).\n\nThe third line contains $n$ integers $b_1, b_2, \\ldots, b_n$ ($1 \\le b_i \\le {10^9}$).\n\n\n-----Output-----\n\nOutput the minimum value of $\\sum_{i}|a_{i}-b_{i}|$.\n\n\n-----Examples-----\n\nInput\n5\n5 4 3 2 1\n1 2 3 4 5\nOutput\n4\nInput\n2\n1 3\n4 2\nOutput\n2\n\n\n-----Note-----\n\nIn the first example, we can swap the first and fifth element in array $b$, so that it becomes $[ 5, 2, 3, 4, 1 ]$.\n\nTherefore, the minimum possible value of this sum would be $|5-5| + |4-2| + |3-3| + |2-4| + |1-1| = 4$.\n\nIn the second example, we can swap the first and second elements. So, our answer would be $2$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

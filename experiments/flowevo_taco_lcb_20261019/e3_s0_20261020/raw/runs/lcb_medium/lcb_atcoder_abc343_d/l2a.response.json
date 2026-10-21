@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "934c54d4-ca76-422e-825e-5301bf50333c",
+  "created": 1792432957,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 821,
+    "completion_tokens": 1201,
+    "total_tokens": 2022,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 972
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 181
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N, T = data[0], data[1]\n\n    scores = [0] * N\n    freq = {0: N}\n    distinct = 1\n\n    answers = []\n    idx = 2\n\n    for _ in range(T):\n        player = data[idx] - 1\n        increase = data[idx + 1]\n        idx += 2\n\n        old_score = scores[player]\n        new_score = old_score + increase\n\n        freq[old_score] -= 1\n        if freq[old_score] == 0:\n            del freq[old_score]\n            distinct -= 1\n\n        if new_score in freq:\n            freq[new_score] += 1\n        else:\n            freq[new_score] = 1\n            distinct += 1\n\n        scores[player] = new_score\n        answers.append(str(distinct))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 5.348,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTakahashi is hosting a contest with N players numbered 1 to N. \nThe players will compete for points. Currently, all players have zero points.\nTakahashi's foreseeing ability lets him know how the players' scores will change. Specifically, for i=1,2,\\dots,T, the score of player A_i will increase by B_i points at i seconds from now. There will be no other change in the scores.\nTakahashi, who prefers diversity in scores, wants to know how many different score values will appear among the players' scores at each moment. For each i=1,2,\\dots,T, find the number of different score values among the players' scores at i+0.5 seconds from now.\nFor example, if the players have 10, 20, 30, and 20 points at some moment, there are three different score values among the players' scores at that moment.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN T\nA_1 B_1\nA_2 B_2\n\\vdots\nA_T B_T\n\nOutput\n\nPrint T lines.\nThe i-th line (1\\leq i \\leq T) should contain an integer representing the number of different score values among the players' scores at i+0.5 seconds from now.\n\nConstraints\n\n\n- 1\\leq N, T\\leq 2\\times 10^5\n- 1\\leq A_i \\leq N\n- 1\\leq B_i \\leq 10^9\n- All input values are integers.\n\nSample Input 1\n\n3 4\n1 10\n3 20\n2 10\n2 10\n\nSample Output 1\n\n2\n3\n2\n2\n\nLet S be the sequence of scores of players 1, 2, 3 in this order.\nCurrently, S=\\lbrace 0,0,0\\rbrace.\n\n- After one second, the score of player 1 increases by 10 points, making S=\\lbrace 10,0,0\\rbrace. Thus, there are two different score values among the players' scores at 1.5 seconds from now.\n- After two seconds, the score of player 3 increases by 20 points, making S=\\lbrace 10,0,20\\rbrace. Thus, there are three different score values among the players' scores at 2.5 seconds from now.\n- After three seconds, the score of player 2 increases by 10 points, making S=\\lbrace 10,10,20\\rbrace. Therefore, there are two different score values among the players' scores at 3.5 seconds from now.\n- After four seconds, the score of player 2 increases by 10 points, making S=\\lbrace 10,20,20\\rbrace. Therefore, there are two different score values among the players' scores at 4.5 seconds from now.\n\nSample Input 2\n\n1 3\n1 3\n1 4\n1 3\n\nSample Output 2\n\n1\n1\n1\n\nSample Input 3\n\n10 10\n7 2620\n9 2620\n8 3375\n1 3375\n6 1395\n5 1395\n6 2923\n10 3375\n9 5929\n5 1225\n\nSample Output 3\n\n2\n2\n3\n3\n4\n4\n5\n5\n6\n5\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

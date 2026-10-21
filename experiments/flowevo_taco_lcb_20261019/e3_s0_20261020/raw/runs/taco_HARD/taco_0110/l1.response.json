@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "07da30dc-ed4e-40c4-b57e-ead6b801947f",
+  "created": 1792429387,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 910,
+    "completion_tokens": 12350,
+    "total_tokens": 13260,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12159
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 910
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        a, b, c, d = data[idx:idx + 4]\n        idx += 4\n\n        if a > b * c:\n            answers.append(\"-1\")\n        else:\n            m = (c + d - 1) // d\n            n = a // (b * d) + 1\n            if n > m:\n                n = m\n\n            ans = n * a - b * d * n * (n - 1) // 2\n            answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 55.827,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMeka-Naruto plays a computer game. His character has the following ability: given an enemy hero, deal a instant damage to him, and then heal that enemy b health points at the end of every second, for exactly c seconds, starting one second after the ability is used. That means that if the ability is used at time t, the enemy's health decreases by a at time t, and then increases by b at time points t + 1, t + 2, ..., t + c due to this ability.\n\nThe ability has a cooldown of d seconds, i. e. if Meka-Naruto uses it at time moment t, next time he can use it is the time t + d. Please note that he can only use the ability at integer points in time, so all changes to the enemy's health also occur at integer times only.\n\nThe effects from different uses of the ability may stack with each other; that is, the enemy which is currently under k spells gets k⋅ b amount of heal this time. Also, if several health changes occur at the same moment, they are all counted at once.\n\nNow Meka-Naruto wonders if he can kill the enemy by just using the ability each time he can (that is, every d seconds). The enemy is killed if their health points become 0 or less. Assume that the enemy's health is not affected in any way other than by Meka-Naruto's character ability. What is the maximal number of health points the enemy can have so that Meka-Naruto is able to kill them?\n\nInput\n\nThe first line contains an integer t (1≤ t≤ 10^5) standing for the number of testcases.\n\nEach test case is described with one line containing four numbers a, b, c and d (1≤ a, b, c, d≤ 10^6) denoting the amount of instant damage, the amount of heal per second, the number of heals and the ability cooldown, respectively.\n\nOutput\n\nFor each testcase in a separate line print -1 if the skill can kill an enemy hero with an arbitrary number of health points, otherwise print the maximal number of health points of the enemy that can be killed.\n\nExample\n\nInput\n\n\n7\n1 1 1 1\n2 2 2 2\n1 2 3 4\n4 3 2 1\n228 21 11 3\n239 21 11 3\n1000000 1 1000000 1\n\n\nOutput\n\n\n1\n2\n1\n5\n534\n-1\n500000500000\n\nNote\n\nIn the first test case of the example each unit of damage is cancelled in a second, so Meka-Naruto cannot deal more than 1 damage.\n\nIn the fourth test case of the example the enemy gets:\n\n  * 4 damage (1-st spell cast) at time 0; \n  * 4 damage (2-nd spell cast) and 3 heal (1-st spell cast) at time 1 (the total of 5 damage to the initial health); \n  * 4 damage (3-nd spell cast) and 6 heal (1-st and 2-nd spell casts) at time 2 (the total of 3 damage to the initial health); \n  * and so on. \n\n\n\nOne can prove that there is no time where the enemy gets the total of 6 damage or more, so the answer is 5. Please note how the health is recalculated: for example, 8-health enemy would not die at time 1, as if we first subtracted 4 damage from his health and then considered him dead, before adding 3 heal.\n\nIn the sixth test case an arbitrarily healthy enemy can be killed in a sufficient amount of time.\n\nIn the seventh test case the answer does not fit into a 32-bit integer type.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "51a57a3a-938e-41f2-81c3-1f6e6cca2aba",
+  "created": 1792436858,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 495,
+    "completion_tokens": 496,
+    "total_tokens": 991,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 445
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 495
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef shortest_time(speed):\n    a, b, c, d = sorted(speed)\n    return min(\n        a + 3 * b + d,\n        2 * a + b + c + d\n    )\n```",
+  "latency_s": 2.552,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n## Story\n\nThere are four warriors, they need to go through a dark tunnel. Tunnel is very narrow, every time only can let two warriors through, and there are lot of dangerous traps. Fortunately, they have a lamp that can illuminate the tunnel to avoid being trapped by the trap.\n\nIn order to pass this tunnel, they need five steps:\n\n1. Two people go through the tunnel with the lamp\n2. And then one people come back with the lamp\n3. And then two people go through the tunnel with the lamp\n4. And then one people come back with the lamp\n5. And then two people go through the tunnel with the lamp\n \nEach warrior has his own walking speed, we need to calculate the shortest time they have to cross the tunnel.\n \nFor example:\n \nFour warriors is `a,b,c,d`. Their speed are `[3,4,5,6]`. It means they need 3 minutes, 4 minutes, 5 minutes and 6 minutes to cross the tunnel. The shortest crossing time should be 21 minutes, the method is as follows:\n \n```\na and b go through the tunnel  ---> Spend 4 minutes\n(Time spent should be calculated by the person who is slow)\na come back                    ---> Spend 3 minutes\na and c go through the tunnel  ---> Spend 5 minutes\na come back                    ---> Spend 3 minutes\na and d go through the tunnel  ---> Spend 6 minutes\n```\nDo you have any other better way?\n \n## Task\nComplete function `shortestTime()` that accepts 1 argument: `speed` that are the spent time of four warriors. Returns the shortest time that all warriors go through the tunnel.\n \n**Note: The method in example above is not always the best way.**\n\n## Example\n\nStarter code / required signature:\ndef shortest_time(speed):\n\t\n\nUse the required function/method named shortest_time. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

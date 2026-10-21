@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "194d227f-bc51-48fe-8d58-a87ed0422501",
+  "created": 1792433893,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 766,
+    "completion_tokens": 2039,
+    "total_tokens": 2805,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1861
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 254
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    n = data[idx]\n    idx += 1\n\n    frequencies = data[idx:idx + n]\n    idx += n\n\n    k = data[idx]\n    idx += 1\n\n    key_sizes = data[idx:idx + k]\n\n    if sum(key_sizes) < n:\n        print(-1)\n        return\n\n    frequencies.sort(reverse=True)\n\n    costs = []\n    for size in key_sizes:\n        costs.extend(range(1, size + 1))\n\n    costs.sort()\n\n    answer = sum(frequencies[i] * costs[i] for i in range(n))\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 10.126,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nSome people remain old fashioned and John is one of them. He doesn't like the new smart phones with full keypads and still uses the old keypads which require you to tap a key multiple times to type a single letter. For example, if the keyboard has two keys, one with the letters \"adef\" and the other one with the letters \"zyx\", then typing 'a' requires one keystroke, typing 'f' requires four keystrokes, typing 'y' requires two keystrokes, and so on.\n\nHe recently moved to a new country where the language is such that his keypad is not the most efficient. In every language some characters occur more often than others. He wants to create  a specific keyboard for this language that uses N different letters. He has a large body of text in this language, and has already analyzed it to find the frequencies of all N letters of its alphabet.\n\nYou are given an array 'frequencies' with N elements. Each element of frequencies is the number of times one of the letters in the new language appears in the text John has. Each element of frequencies will be strictly positive. (I.e., each of the N letters occurs at least once.)\n\nYou are also given an array keySize. The number of elements of keySize is the number of keys on the keyboard. Each element of keySize gives the maximal number of letters that maybe put on one of the keys.\n\nFind an assignment of letters to keys that minimizes the number of keystrokes needed to type the entire text. Output that minimum number of keystrokes. If there is not enough room on the keys and some letters of the alphabet won't fit, Output -1 instead.\n\nInput Format\nThe first line will contain a number 'N' that specifies the size of 'frequencies' array \nThe second line will contain N numbers that form the frequencies array\nThe third line contains a number 'K' that specifies the size of the 'keySize' array\nThe fourth line contains K numbers that form the keySize array\n\nOutput Format\nOutput a single integer that is answer to the problem.\n\nConstraints\nfrequencies will contain between 1 and 50 elements, inclusive.\nEach element of frequencies will be between 1 and 1,000, inclusive.\nkeySizes will contain between 1 and 50 elements, inclusive.\nEach element of keySizes will be between 1 and 50, inclusive.\n\nSAMPLE INPUT\n4\n7 3 4 1\n2\n2 2\n\nSAMPLE OUTPUT\n19\n\nExplanation\n\nThe foreign language has four letters. Let us call them W, X, Y and Z. John's text contains seven Ws, three Xs, four Ys, and one Z. The keyboard has two keys, each of them may contain at most two letters. One optimal solution is to use the keys \"WZ\" and \"YX\". We can then type each W and each Y using a single keystroke, and we need two keystrokes for each X and each Z. Therefore, the total number of keystrokes when typing the entire text will be 71 + 32 + 41 + 12 = 19.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

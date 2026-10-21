@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bd80efcd-2f0b-4aba-aa35-c33fad1707bc",
+  "created": 1792438119,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 500,
+    "completion_tokens": 1241,
+    "total_tokens": 1741,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1107
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 500
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        base = (pow(2, n, MOD) - 1) % MOD\n        ans.append(str(pow(base, m, MOD)))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 5.368,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Vietnamese],\n[Bengali], [Mandarin Chinese], and [Russian] as well. \n\nChef has two numbers $N$ and $M$. Help Chef to find number of integer $N$-tuples $(A_{1}, A_{2}, \\ldots, A_{N})$ such that $0 ≤ A_{1}, A_{2}, \\ldots, A_{N} ≤ 2^{M} - 1$ and $A_{1} \\& A_{2} \\& \\ldots \\& A_{N} = 0$, where $\\&$ denotes the [bitwise AND] operator.\n\nSince the number of tuples can be large, output it modulo $10^{9}+7$. \n\n------  Input ------\nThe first line contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first and only line of each test case contains two integers $N$ and $M$.\n\n------  Output ------\nFor each test case, output in a single line the answer to the problem modulo $10^{9}+7$. \n\n------  Constraints ------\n$1 ≤ T ≤ 10^{5}$\n$1 ≤ N, M ≤ 10^{6}$\n\n------ Subtasks ------\nSubtask #1 (100 points): original constraints\n\n----- Sample Input 1 ------ \n4\n\n1 2\n\n2 2\n\n4 2\n\n8 4\n----- Sample Output 1 ------ \n1\n\n9\n\n225\n\n228250597\n----- explanation 1 ------ \nTest Case $1$: The only possible tuple is $(0)$.\n\nTest Case $2$: The tuples are $(0, 0)$, $(0, 1)$, $(0, 2)$, $(0, 3)$, $(1, 0)$, $(2, 0)$, $(3, 0)$, $(1, 2)$, $(2, 1)$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

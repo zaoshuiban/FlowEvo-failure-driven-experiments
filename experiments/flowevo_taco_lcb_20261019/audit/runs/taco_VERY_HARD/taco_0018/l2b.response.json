@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "010002e1-be25-4d3a-9858-e3e1ed15c7bd",
+  "created": 1792463315,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 914,
+    "completion_tokens": 8378,
+    "total_tokens": 9292,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8199
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 146
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, r = data[0], data[1]\n    size = 1 << n\n\n    values = data[2:2 + size]\n    total = sum(values)\n\n    idx = 2 + size\n    ans = []\n\n    ans.append(f\"{total / size:.15f}\")\n\n    for _ in range(r):\n        z = data[idx]\n        g = data[idx + 1]\n        idx += 2\n\n        total += g - values[z]\n        values[z] = g\n\n        ans.append(f\"{total / size:.15f}\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 42.979,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAllen and Bessie are playing a simple number game. They both know a function $f: \\{0, 1\\}^n \\to \\mathbb{R}$, i. e. the function takes $n$ binary arguments and returns a real value. At the start of the game, the variables $x_1, x_2, \\dots, x_n$ are all set to $-1$. Each round, with equal probability, one of Allen or Bessie gets to make a move. A move consists of picking an $i$ such that $x_i = -1$ and either setting $x_i \\to 0$ or $x_i \\to 1$.\n\nAfter $n$ rounds all variables are set, and the game value resolves to $f(x_1, x_2, \\dots, x_n)$. Allen wants to maximize the game value, and Bessie wants to minimize it.\n\nYour goal is to help Allen and Bessie find the expected game value! They will play $r+1$ times though, so between each game, exactly one value of $f$ changes. In other words, between rounds $i$ and $i+1$ for $1 \\le i \\le r$, $f(z_1, \\dots, z_n) \\to g_i$ for some $(z_1, \\dots, z_n) \\in \\{0, 1\\}^n$. You are to find the expected game value in the beginning and after each change.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $r$ ($1 \\le n \\le 18$, $0 \\le r \\le 2^{18}$).\n\nThe next line contains $2^n$ integers $c_0, c_1, \\dots, c_{2^n-1}$ ($0 \\le c_i \\le 10^9$), denoting the initial values of $f$. More specifically, $f(x_0, x_1, \\dots, x_{n-1}) = c_x$, if $x = \\overline{x_{n-1} \\ldots x_0}$ in binary.\n\nEach of the next $r$ lines contains two integers $z$ and $g$ ($0 \\le z \\le 2^n - 1$, $0 \\le g \\le 10^9$). If $z = \\overline{z_{n-1} \\dots z_0}$ in binary, then this means to set $f(z_0, \\dots, z_{n-1}) \\to g$.\n\n\n-----Output-----\n\nPrint $r+1$ lines, the $i$-th of which denotes the value of the game $f$ during the $i$-th round. Your answer must have absolute or relative error within $10^{-6}$.\n\nFormally, let your answer be $a$, and the jury's answer be $b$. Your answer is considered correct if $\\frac{|a - b|}{\\max{(1, |b|)}} \\le 10^{-6}$.\n\n\n-----Examples-----\nInput\n2 2\n0 1 2 3\n2 5\n0 4\n\nOutput\n1.500000\n2.250000\n3.250000\n\nInput\n1 0\n2 3\n\nOutput\n2.500000\n\nInput\n2 0\n1 1 1 1\n\nOutput\n1.000000\n\n\n\n-----Note-----\n\nConsider the second test case. If Allen goes first, he will set $x_1 \\to 1$, so the final value will be $3$. If Bessie goes first, then she will set $x_1 \\to 0$ so the final value will be $2$. Thus the answer is $2.5$.\n\nIn the third test case, the game value will always be $1$ regardless of Allen and Bessie's play.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

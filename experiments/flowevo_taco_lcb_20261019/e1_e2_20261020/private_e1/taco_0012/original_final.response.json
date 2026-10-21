@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "60195b3e-7557-44fa-a81c-e8302926cbfe",
+  "created": 1792435741,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 770,
+    "completion_tokens": 3267,
+    "total_tokens": 4037,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2836
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 770
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    tests = []\n    max_n = 0\n\n    for _ in range(t):\n        U, V, K, P = data[idx], data[idx + 1], data[idx + 2], data[idx + 3]\n        idx += 4\n        tests.append((U, V, K, P))\n        max_n = max(max_n, U * P)\n\n    fact = [1] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        fact[i] = fact[i - 1] * i % MOD\n\n    inv_fact = [1] * (max_n + 1)\n    inv_fact[max_n] = pow(fact[max_n], MOD - 2, MOD)\n\n    for i in range(max_n, 0, -1):\n        inv_fact[i - 1] = inv_fact[i] * i % MOD\n\n    def comb(n, r):\n        if r < 0 or r > n:\n            return 0\n        return fact[n] * inv_fact[r] % MOD * inv_fact[n - r] % MOD\n\n    answers = []\n\n    for U, V, K, P in tests:\n        total_ways = comb(U * P, V * P)\n        sym_ways = comb(U, V)\n\n        diff = (total_ways - sym_ways) % MOD\n        inv_p = pow(P, MOD - 2, MOD)\n\n        if K == 0:\n            ans = (sym_ways + diff * inv_p) % MOD\n        else:\n            ans = diff * inv_p % MOD\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 13.073,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGrimmjow is not dead. He comes back to take revenge from Ichigo. This time, Grimmjow has a new release which gives a difficult mathematical question which is as follows. Given an odd prime number P, a non-negative integer K less than P, and positive integers U,V , find the number of ways of choosing a subset of (V * P) distinct numbers from the set {1, 2, 3, ..., (U * P)}, such that, the sum of these (V * P) numbers, when divided by P, leaves remainder K.  \n\nBecause his zanpakutou is useless here, Ichigo cannot do anything except to solve it. So, he asks you to solve it for him, so that, he can beat Grimmjow and rescue Orihime yet again. Since the answer can be large, output the number modulo (10^{9}+7).  \n\nInput Format\n\nLine 1: T  where T is the number of test cases. \n\nLines 2 to T+1: U V K P \n\nU, V, K, P - As defined above.  \n\nOutput Format\n\nA single integer on each line that denotes the number of ways to choose the subsets modulo (10^{9}+7).  \n\nConstraints\n\n1 ≤ T ≤ 5000 \n\n1 ≤ V ≤ U \n\n( U * P ) ≤ 100000  \n\nSample Input\n\n4\n1 1 0 5\n2 1 0 3\n2 1 1 3\n2 1 2 3\n\nSample Output\n\n1\n8\n6\n6\n\nExplanation\n\nIn the first test case, we have to choose 5 numbers from {1, 2, 3, 4, 5} whose sum is divisible by 5. Only way to do this is to choose the set itself.\n\nIn the next three test cases, we have to choose 3 numbers from {1, 2, 3, 4, 5, 6}. There are 20 possible selections overall.  \n\nThe selections {1, 2, 3}, {1, 2, 6}, {1, 3, 5}, {1, 5, 6}, {2, 3, 4}, {2, 4, 6}, {3, 4, 5}, {4, 5, 6} are such that the sum of the chosen numbers leave remainder 0 when divided by 3.  \n\nThe selections {1, 2, 4}, {1, 3, 6}, {1, 4, 5}, {2, 3, 5}, {2, 5, 6}, {3, 4, 6} are such that the sum of the chosen numbers leave remainder 1 when divided by 3.  \n\nThe selections {1, 2, 5}, {1, 3, 4}, {1, 4, 6}, {2, 3, 6}, {2, 4, 5}, {3, 5, 6} are such that the sum of the chosen numbers leave remainder 2 when divided by 3.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

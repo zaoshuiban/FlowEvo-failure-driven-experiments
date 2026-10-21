@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cf6c6003-be98-47f8-bfe2-1568beba2077",
+  "created": 1792430560,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 524,
+    "completion_tokens": 820,
+    "total_tokens": 1344,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 699
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 524
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def countArrays(self, original: List[int], bounds: List[List[int]]) -> int:\n        base = original[0]\n        low = -10**30\n        high = 10**30\n\n        for o, (u, v) in zip(original, bounds):\n            shift = o - base\n            low = max(low, u - shift)\n            high = min(high, v - shift)\n\n            if low > high:\n                return 0\n\n        return high - low + 1\n```",
+  "latency_s": 3.513,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array original of length n and a 2D array bounds of length n x 2, where bounds[i] = [u_i, v_i].\nYou need to find the number of possible arrays copy of length n such that:\n\n(copy[i] - copy[i - 1]) == (original[i] - original[i - 1]) for 1 <= i <= n - 1.\nu_i <= copy[i] <= v_i for 0 <= i <= n - 1.\n\nReturn the number of such arrays.\n \nExample 1:\n\nInput: original = [1,2,3,4], bounds = [[1,2],[2,3],[3,4],[4,5]]\nOutput: 2\nExplanation:\nThe possible arrays are:\n\n[1, 2, 3, 4]\n[2, 3, 4, 5]\n\n\nExample 2:\n\nInput: original = [1,2,3,4], bounds = [[1,10],[2,9],[3,8],[4,7]]\nOutput: 4\nExplanation:\nThe possible arrays are:\n\n[1, 2, 3, 4]\n[2, 3, 4, 5]\n[3, 4, 5, 6]\n[4, 5, 6, 7]\n\n\nExample 3:\n\nInput: original = [1,2,1,2], bounds = [[1,1],[2,3],[3,3],[2,3]]\nOutput: 0\nExplanation:\nNo array is possible.\n\n \nConstraints:\n\n2 <= n == original.length <= 10^5\n1 <= original[i] <= 10^9\nbounds.length == n\nbounds[i].length == 2\n1 <= bounds[i][0] <= bounds[i][1] <= 10^9\n\nStarter code / required signature:\nclass Solution:\n    def countArrays(self, original: List[int], bounds: List[List[int]]) -> int:\n        \n\nUse the required function/method named countArrays. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

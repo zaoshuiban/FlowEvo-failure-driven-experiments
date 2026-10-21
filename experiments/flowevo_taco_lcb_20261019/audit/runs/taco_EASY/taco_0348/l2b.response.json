@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5f74ed93-5118-48aa-a6d0-21236e3d8bd9",
+  "created": 1792436930,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 392,
+    "completion_tokens": 365,
+    "total_tokens": 757,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 317
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 136
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nH, L = map(int, sys.stdin.readline().split())\n\ndepth = (L * L - H * H) / (2.0 * H)\n\nprint(f\"{depth:.15f}\")\n```",
+  "latency_s": 2.274,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWhile sailing on a boat, Inessa noticed a beautiful water lily flower above the lake's surface. She came closer and it turned out that the lily was exactly $H$ centimeters above the water surface. Inessa grabbed the flower and sailed the distance of $L$ centimeters. Exactly at this point the flower touched the water surface. [Image] \n\nSuppose that the lily grows at some point $A$ on the lake bottom, and its stem is always a straight segment with one endpoint at point $A$. Also suppose that initially the flower was exactly above the point $A$, i.e. its stem was vertical. Can you determine the depth of the lake at point $A$?\n\n\n-----Input-----\n\nThe only line contains two integers $H$ and $L$ ($1 \\le H < L \\le 10^{6}$).\n\n\n-----Output-----\n\nPrint a single number — the depth of the lake at point $A$. The absolute or relative error should not exceed $10^{-6}$.\n\nFormally, let your answer be $A$, and the jury's answer be $B$. Your answer is accepted if and only if $\\frac{|A - B|}{\\max{(1, |B|)}} \\le 10^{-6}$.\n\n\n-----Examples-----\nInput\n1 2\n\nOutput\n1.5000000000000\n\nInput\n3 5\n\nOutput\n2.6666666666667\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

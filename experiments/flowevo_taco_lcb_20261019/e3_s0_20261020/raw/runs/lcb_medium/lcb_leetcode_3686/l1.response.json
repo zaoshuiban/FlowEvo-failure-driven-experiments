@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a810fd25-acbc-4d01-90ca-adf7aee52cea",
+  "created": 1792431210,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 355,
+    "completion_tokens": 12313,
+    "total_tokens": 12668,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11875
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 355
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def beautifulSplits(self, nums: List[int]) -> int:\n        n = len(nums)\n        if n < 3:\n            return 0\n\n        # Z-function to check where nums1 is a prefix of nums2.\n        z = [0] * n\n        l = r = 0\n        for i in range(1, n):\n            if i < r:\n                z[i] = min(r - i, z[i - l])\n            while i + z[i] < n and nums[z[i]] == nums[i + z[i]]:\n                z[i] += 1\n            if i + z[i] > r:\n                l, r = i, i + z[i]\n\n        good_first = [False] * n\n        count_a = 0\n\n        # i is the length of nums1, and also the start of nums2.\n        for i in range(1, n):\n            if z[i] >= i:\n                good_first[i] = True\n                if 2 * i <= n - 1:\n                    count_a += n - 2 * i\n\n        # Count cases where nums2 is a prefix of nums3 using LCP DP.\n        nxt = [0] * (n + 1)\n        count_b = 0\n        both = 0\n\n        for i in range(n - 1, 0, -1):\n            cur = [0] * (n + 1)\n            ai = nums[i]\n            limit = (n + i) // 2\n\n            for j in range(n - 1, i, -1):\n                if ai == nums[j]:\n                    v = nxt[j + 1] + 1\n                    cur[j] = v\n\n                    if j <= limit and v >= j - i:\n                        count_b += 1\n                        if good_first[i] and j >= 2 * i:\n                            both += 1\n\n            nxt = cur\n\n        return count_a + count_b - both\n```",
+  "latency_s": 53.009,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array nums.\nA split of an array nums is beautiful if:\n\nThe array nums is split into three subarrays: nums1, nums2, and nums3, such that nums can be formed by concatenating nums1, nums2, and nums3 in that order.\nThe subarray nums1 is a prefix of nums2 OR nums2 is a prefix of nums3.\n\nReturn the number of ways you can make this split.\n \nExample 1:\n\nInput: nums = [1,1,2,1]\nOutput: 2\nExplanation:\nThe beautiful splits are:\n\nA split with nums1 = [1], nums2 = [1,2], nums3 = [1].\nA split with nums1 = [1], nums2 = [1], nums3 = [2,1].\n\n\nExample 2:\n\nInput: nums = [1,2,3,4]\nOutput: 0\nExplanation:\nThere are 0 beautiful splits.\n\n \nConstraints:\n\n1 <= nums.length <= 5000\n0 <= nums[i] <= 50\n\nStarter code / required signature:\nclass Solution:\n    def beautifulSplits(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named beautifulSplits. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

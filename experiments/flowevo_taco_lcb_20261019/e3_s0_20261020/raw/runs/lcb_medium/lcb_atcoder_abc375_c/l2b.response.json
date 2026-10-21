@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "daaa2489-4fa3-40ca-a84d-3547a5f32566",
+  "created": 1792430324,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 962,
+    "completion_tokens": 9603,
+    "total_tokens": 10565,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 9338
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 194
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    input = sys.stdin.buffer.readline\n\n    N = int(input())\n    A = [input().strip() for _ in range(N)]\n\n    n1 = N - 1\n    h = [j if j < n1 - j else n1 - j for j in range(N)]\n\n    result = []\n    append = result.append\n\n    for i in range(N):\n        vi = i if i < n1 - i else n1 - i\n        ri2 = n1 - i\n\n        row = bytearray(N)\n        Ai = A[i]\n\n        for j in range(N):\n            hj = h[j]\n            d = vi if vi < hj else hj\n            k = (d + 1) & 3\n\n            if k == 0:\n                row[j] = Ai[j]\n            elif k == 1:\n                row[j] = A[n1 - j][i]\n            elif k == 2:\n                row[j] = A[ri2][n1 - j]\n            else:\n                row[j] = A[j][ri2]\n\n        append(bytes(row))\n\n    sys.stdout.buffer.write(b\"\\n\".join(result))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 45.27,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a grid with N rows and N columns, where N is an even number. Let (i, j) denote the cell at the i-th row from the top and j-th column from the left.\nEach cell is painted black or white. If A_{i, j} = #, cell (i, j) is black; if A_{i, j} = ., it is white.\nFind the color of each cell after performing the following operation for i = 1, 2, \\ldots, \\frac{N}{2} in this order.\n\n- For all pairs of integers x, y between i and N + 1 - i, inclusive, replace the color of cell (y, N + 1 - x) with the color of cell (x, y). Perform these replacements simultaneously for all such pairs x, y.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nA_{1,1}A_{1,2}\\ldots A_{1,N}\r\nA_{2,1}A_{2,2}\\ldots A_{2,N}\r\n\\vdots\r\nA_{N,1}A_{N,2}\\ldots A_{N,N}\n\nOutput\n\nAfter all operations, let B_{i, j} = # if cell (i, j) is black, and B_{i, j} = . if it is white. Print the grid in the following format:\nB_{1,1}B_{1,2}\\ldots B_{1,N}\r\nB_{2,1}B_{2,2}\\ldots B_{2,N}\r\n\\vdots\r\nB_{N,1}B_{N,2}\\ldots B_{N,N}\n\nConstraints\n\n\n- N is an even number between 2 and 3000, inclusive.\n- Each A_{i, j} is # or ..\n\nSample Input 1\n\n8\r\n.......#\r\n.......#\r\n.####..#\r\n.####..#\r\n.##....#\r\n.##....#\r\n.#######\r\n.#######\n\nSample Output 1\n\n........\r\n#######.\r\n#.....#.\r\n#.###.#.\r\n#.#...#.\r\n#.#####.\r\n#.......\r\n########\r\n\nThe operations change the colors of the grid cells as follows:\n.......#   ........   ........   ........   ........\r\n.......#   ######..   #######.   #######.   #######.\r\n.####..#   ######..   #....##.   #.....#.   #.....#.\r\n.####..# → ##..##.. → #....##. → #.##..#. → #.###.#.\r\n.##....#   ##..##..   #..####.   #.##..#.   #.#...#.\r\n.##....#   ##......   #..####.   #.#####.   #.#####.\r\n.#######   ##......   #.......   #.......   #.......\r\n.#######   ########   ########   ########   ########\n\nSample Input 2\n\n6\r\n.#.#.#\r\n##.#..\r\n...###\r\n###...\r\n..#.##\r\n#.#.#.\n\nSample Output 2\n\n#.#.#.\r\n.#.#.#\r\n#.#.#.\r\n.#.#.#\r\n#.#.#.\r\n.#.#.#\n\nSample Input 3\n\n12\r\n.......#.###\r\n#...#...#..#\r\n###.#..#####\r\n..#.#.#.#...\r\n.#.....#.###\r\n.......#.#..\r\n#...#..#....\r\n#####.......\r\n...#...#.#.#\r\n..###..#..##\r\n#..#.#.#.#.#\r\n.####.......\n\nSample Output 3\n\n.#..##...##.\r\n#.#.#.#.#...\r\n###.##..#...\r\n#.#.#.#.#...\r\n#.#.##...##.\r\n............\r\n............\r\n.###.###.###\r\n...#...#.#..\r\n.###...#.###\r\n...#...#...#\r\n.###...#.###\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

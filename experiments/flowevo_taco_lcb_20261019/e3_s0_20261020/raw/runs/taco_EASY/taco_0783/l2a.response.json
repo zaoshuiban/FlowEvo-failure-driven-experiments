@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1e800578-8fd0-44d4-a206-5bcc55dfa435",
+  "created": 1792434049,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 504,
+    "completion_tokens": 962,
+    "total_tokens": 1466,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 723
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 248
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    answers = []\n\n    for case in range(1, t + 1):\n        s = data[case]\n        n = len(s)\n\n        count = [0, 0, 0]\n        distinct = 0\n        left = 0\n        ans = n + 1\n\n        for right, ch in enumerate(s):\n            idx = ch - ord('1')\n            if count[idx] == 0:\n                distinct += 1\n            count[idx] += 1\n\n            while distinct == 3:\n                ans = min(ans, right - left + 1)\n\n                left_idx = s[left] - ord('1')\n                count[left_idx] -= 1\n\n                if count[left_idx] == 0:\n                    distinct -= 1\n\n                left += 1\n\n        answers.append(str(ans if ans <= n else 0))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 4.059,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string $s$ such that each its character is either 1, 2, or 3. You have to choose the shortest contiguous substring of $s$ such that it contains each of these three characters at least once.\n\nA contiguous substring of string $s$ is a string that can be obtained from $s$ by removing some (possibly zero) characters from the beginning of $s$ and some (possibly zero) characters from the end of $s$.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 20000$) — the number of test cases.\n\nEach test case consists of one line containing the string $s$ ($1 \\le |s| \\le 200000$). It is guaranteed that each character of $s$ is either 1, 2, or 3.\n\nThe sum of lengths of all strings in all test cases does not exceed $200000$.\n\n\n-----Output-----\n\nFor each test case, print one integer — the length of the shortest contiguous substring of $s$ containing all three types of characters at least once. If there is no such substring, print $0$ instead.\n\n\n-----Example-----\nInput\n7\n123\n12222133333332\n112233\n332211\n12121212\n333333\n31121\n\nOutput\n3\n3\n4\n4\n0\n0\n4\n\n\n\n-----Note-----\n\nConsider the example test:\n\nIn the first test case, the substring 123 can be used.\n\nIn the second test case, the substring 213 can be used.\n\nIn the third test case, the substring 1223 can be used.\n\nIn the fourth test case, the substring 3221 can be used.\n\nIn the fifth test case, there is no character 3 in $s$.\n\nIn the sixth test case, there is no character 1 in $s$.\n\nIn the seventh test case, the substring 3112 can be used.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

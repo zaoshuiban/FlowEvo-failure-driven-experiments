@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "47f33174-0318-4889-a9c2-b53f999f41c9",
+  "created": 1792441536,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 754,
+    "completion_tokens": 4374,
+    "total_tokens": 5128,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4049
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 242
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef int_generator():\n    data = sys.stdin.buffer.read()\n    num = 0\n    in_number = False\n\n    for b in data:\n        if 48 <= b <= 57:\n            num = num * 10 + (b - 48)\n            in_number = True\n        else:\n            if in_number:\n                yield num\n                num = 0\n                in_number = False\n\n    if in_number:\n        yield num\n\n\ndef solve():\n    it = int_generator()\n\n    try:\n        T = next(it)\n    except StopIteration:\n        return\n\n    answers = []\n\n    for _ in range(T):\n        N = next(it)\n        H = next(it)\n\n        diff = [0] * (N + 1)\n\n        for _ in range(N):\n            l = next(it)\n            h = next(it)\n\n            diff[l] += 1\n            diff[h + 1] -= 1\n\n        current = 0\n\n        for i in range(N):\n            current += diff[i]\n            diff[i] = current\n\n        window_sum = 0\n\n        for i in range(H):\n            window_sum += diff[i]\n\n        best = window_sum\n\n        for i in range(H, N):\n            window_sum += diff[i] - diff[i - H]\n            if window_sum > best:\n                best = window_sum\n\n        answers.append(str(N * H - best))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 19.201,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \n\nOh, no! Chef’s in trouble. He’s got himself stuck in a cave (we don’t know how) and is looking for a way out. The bigger problem is that he needs to get his tractor out of the cave (don't ask why Chef owns a tractor!). He currently faces a large block of height N cells and length N cells, and needs to get his tractor across this block. The block is made up of vertical columns of soil, each of which is one cell long. Each column has a continuous vertical gap, with the i^{th} column having its gap from the l_{i}^{th} cell to the h_{i}^{th} cell (starting from the bottom, 0-indexing). That is, in the i^{th} column, there is no soil from the l_{i}^{th} cell to the h_{i}^{th} cell (both inclusive). Chef can build additional gaps by clearing some cells of soil. His tractor has height H, and therefore, he needs to build a horizontal corridor of height H passing through all the columns. That is, some consecutive H rows must have no soil. Please see the figures in the example and explanation sections for more details.\nChef is able to clear one cell of soil by spending one unit of energy. Chef is smart, and will figure out a way to build the horizontal corridor while spending the minimum possible amount of energy. To estimate how many of his tasty dishes he will still be able to cook for you tonight, find out what is the minimum possible energy he needs to spend.\n\n------ Input ------ \n\nFirst line of input contains one integer T - number of test cases. T test cases follow.\nEach test case starts with two integers N and H – size of the cave and height of the tractor, respectively. In each of the next N lines are two integers l_{i} and h_{i}, respectively indicating lowest and highest number of cell for the gap in the i^{th} column.\n\n------ Output ------ \n\nOne integer – minimum energy required.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{3}$\n$1 ≤ N ≤ 10^{6}$\n$1 ≤ sum of N over all test cases ≤ 10^{6}$\n$1 ≤ H ≤ N$\n$0 ≤ l_{i} ≤ h_{i} < N$\n\n------ Subtasks ------ \n\nSubtask 1 (25 points): T ≤ 100, N ≤ 100\nSubtask 2 (75 points): No additional constraints\n\n----- Sample Input 1 ------ \n2\n\n4 3\n\n1 2\n\n1 2\n\n1 2\n\n1 2\n\n5 2\n\n2 3\n\n1 2\n\n2 3\n\n1 2\n\n2 3\n----- Sample Output 1 ------ \n4\n\n2\n----- explanation 1 ------ \nIn the second case, the figure describes the initial map, where white cells denote empty cells and brown cells denote soil cells.\n\nWhen we removed soil in two cells as the following figure, then we can make a corridor of height 2, adn this is the optimal way to make a corridor.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

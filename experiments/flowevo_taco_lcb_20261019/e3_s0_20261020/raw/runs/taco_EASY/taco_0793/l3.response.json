@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "beb867e2-35c9-41ae-901f-4d92c7466bfe",
+  "created": 1792430540,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 900,
+    "completion_tokens": 28980,
+    "total_tokens": 29880,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 28831
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 516
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    m = data[0]\n    A = data[1:1 + m]\n    B = data[1 + m:1 + 2 * m]\n\n    A.sort()\n\n    order = list(range(m))\n    order.sort(key=lambda i: B[i], reverse=True)\n\n    answer = [0] * m\n    for a, idx in zip(A, order):\n        answer[idx] = a\n\n    sys.stdout.write(\" \".join(map(str, answer)))\n    sys.stdout.write(\"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 133.849,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLeha like all kinds of strange things. Recently he liked the function F(n, k). Consider all possible k-element subsets of the set [1, 2, ..., n]. For subset find minimal element in it. F(n, k) — mathematical expectation of the minimal element among all k-element subsets.\n\nBut only function does not interest him. He wants to do interesting things with it. Mom brought him two arrays A and B, each consists of m integers. For all i, j such that 1 ≤ i, j ≤ m the condition A_{i} ≥ B_{j} holds. Help Leha rearrange the numbers in the array A so that the sum $\\sum_{i = 1}^{m} F(A_{i}^{\\prime}, B_{i})$ is maximally possible, where A' is already rearranged array.\n\n\n-----Input-----\n\nFirst line of input data contains single integer m (1 ≤ m ≤ 2·10^5) — length of arrays A and B.\n\nNext line contains m integers a_1, a_2, ..., a_{m} (1 ≤ a_{i} ≤ 10^9) — array A.\n\nNext line contains m integers b_1, b_2, ..., b_{m} (1 ≤ b_{i} ≤ 10^9) — array B.\n\n\n-----Output-----\n\nOutput m integers a'_1, a'_2, ..., a'_{m} — array A' which is permutation of the array A.\n\n\n-----Examples-----\nInput\n5\n7 3 5 3 4\n2 1 3 2 3\n\nOutput\n4 7 3 5 3\n\nInput\n7\n4 6 5 8 8 2 6\n2 1 2 2 1 1 2\n\nOutput\n2 6 4 5 8 8 6\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    m = data[0]\n    A = data[1:1 + m]\n    B = data[1 + m:1 + 2 * m]\n\n    A.sort()\n\n    indices = list(range(m))\n    indices.sort(key=lambda i: B[i], reverse=True)\n\n    answer = [0] * m\n\n    for a, i in zip(A, indices):\n        answer[i] = a\n\n    print(*answer)\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: A permutation of length $n$ is an array consisting of $n$ distinct integers from $1$ to $n$ in arbitrary order. For example, $[2,3,1,5,4]$ is a permutation, but $[1,2,2]$ is not a permutation ($2$ app\nSolution:\nimport sys\n\nMOD = 1_000_000_007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ns = data[1:1 + t]\n\n    max_n = max(ns) if ns else 0\n\n    fact = [1] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        fact[i] = fact[i - 1] * i % MOD\n\n    answers = []\n    for n in ns:\n        ans = n * (n - 1) % MOD\n        ans = ans * fact[n] % MOD\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

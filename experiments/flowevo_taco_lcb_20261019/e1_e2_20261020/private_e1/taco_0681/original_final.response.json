@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ac22bc9e-bbd4-4c98-bca9-3630af1e8c4e",
+  "created": 1792432293,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 938,
+    "completion_tokens": 24236,
+    "total_tokens": 25174,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 23680
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 938
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    idx = 0\n    length = len(data)\n\n    def next_int():\n        nonlocal idx\n        while idx < length and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < length and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    t = next_int()\n    answers = []\n    isqrt = math.isqrt\n\n    for _ in range(t):\n        n = next_int()\n        a = next_int()\n        b = next_int()\n\n        events = []\n        append = events.append\n\n        for _ in range(n):\n            l = next_int()\n            r = next_int()\n            append((l, 1))\n            append((r + 1, -1))\n\n        events.sort()\n\n        k = b - a + 1\n\n        # Maximum possible sum: sum of all numbers from a to b\n        total_max = k * b - k * (k - 1) // 2\n\n        p = 2 * a - 1\n        c_formula = 2 * b + 1\n\n        current_joy = 0\n        prev_time = None\n        answer = 0\n\n        i = 0\n        m_events = len(events)\n\n        while i < m_events:\n            x = events[i][0]\n\n            if prev_time is not None and current_joy > answer:\n                left = prev_time\n                right = x - 1\n\n                if left <= total_max:\n                    # Largest m such that minimum sum of m elements <= right\n                    ml = (isqrt(p * p + 8 * right) - p) // 2\n                    if ml > k:\n                        ml = k\n\n                    # Smallest m such that maximum sum of m elements >= left\n                    d = c_formula * c_formula - 8 * left\n                    if d >= 0:\n                        mh = (c_formula - isqrt(d) + 1) // 2\n                        if mh <= ml:\n                            answer = current_joy\n\n            delta = 0\n            while i < m_events and events[i][0] == x:\n                delta += events[i][1]\n                i += 1\n\n            current_joy += delta\n            prev_time = x\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 110.074,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nEgor came to the Olympiad in Informatics. But the tasks turned out to be too difficult, so Egor chose to sleep instead of solving problems. But as we all know, everyone is very happy when someone is the first who solved the problem. \n\nThere are N problems in the contest. The i-th of them was solved at minute L_{i} for the first time. This task will stop increasing the joy of everyone around at the minute R_{i} + 1 (that is, R_{i} is the last minute when the task increases the joy). In other words, the i-th task increases the joyfulness for everyone by 1 unit from the minute L_{i} to the minute R_{i}.\n\nIn the anime that Egor watched recently, there are various techniques that can make a person fall asleep. Egor knows techniques that will allow him to sleep for any minutes between A and B minutes, i.e. Egor can sleep for A minutes, A + 1 minutes, ..., B minutes. Egor can also combine techniques, i.e. he can choose techniques with different duration and then sleep the total time of all techniques.\n\nEgor wants to combine techniques to wake up in the most joyful moment possible. Your task is to find the maximum joy in which Egor can wake up.\n\n------ Input Format ------ \n\n- The first line of the input contains the number T - the number of test cases. The test cases then follow.\n- The first line of each test case contains integers N, A, and B - the number of tasks and A, B values described in the statement.\n- The next N lines give you a description of the problems. Each line contains two numbers L_{i}, R_{i} - a segment of joy for every task.\n\n------ Output Format ------ \n\nFor each test case, print the maximum level of joy at which Egor can wake up.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 3 \\cdot 10^{5}$\n$1 ≤N ≤3 \\cdot 10^{5}$\n$1 ≤ A ≤ B ≤ 10^{9}$\n$1 ≤ L_{i} ≤ R_{i} ≤ 10^{18}$\n- Sum of $N$ over all test cases does not exceed $3 \\cdot 10^{5}$\n\n------ subtasks ------ \n\nSubtask $1$ (30 points): $1 ≤ L_{i} ≤ R_{i} ≤ 10^{9}$\nSubtask $2$ (10 points): $A = 1$\nSubtask $3$ (60 points): Original constraints\n\n----- Sample Input 1 ------ \n3\n3 1 5\n1 5\n3 9\n6 9\n3 7 54\n54 228\n228 1337\n69 213\n3 1 9\n100 100\n99 99\n98 98\n\n----- Sample Output 1 ------ \n2\n2\n0\n\n----- explanation 1 ------ \n- Test case $1$: We can use techniques $1$ and $2$ to wake up at minute $1 + 2 = 3$. At that time, there are $2$ tasks that give Egor joy: task $1$ (which gives joy during the range $[1, 5]$), and task $2$ (which gives joy during the range $[3, 9]$). It can be proven that Egor cannot acquire joy from all $3$ tasks at the same time, so $2$ is the maximum joyfulness Egor can wake up to.\n- Test case $2$: We can use techniques $15$, $22$, and $32$ to wake up at minute $15 + 22 + 32 = 69$. At that time. there are $2$ tasks that give Egor joy: task $1$ and task $3$.\n- Test case $3$: The maximum minute we can wake up to is $1 + 2 + \\dots + 9 = 45$, which means we cannot acquire joy from any task.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

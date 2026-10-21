@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9221b804-6e4f-4bdf-b188-149e9c9b621b",
+  "created": 1792448974,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 467,
+    "completion_tokens": 25216,
+    "total_tokens": 25683,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24439
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 211
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    q, r = divmod(n, 10)\n\n    digits = list(map(int, str(q)))  # q >= 0; str(0) == \"0\"\n    L = len(digits)\n\n    # agg_next[length][pmax][u]\n    # agg_cost[length][pmax][u]\n    # Process all suffixes of given length in descending order,\n    # where the maximum digit of the fixed prefix is pmax,\n    # starting from unit digit/state u.\n    agg_next = [[None for _ in range(10)] for _ in range(L + 1)]\n    agg_cost = [[None for _ in range(10)] for _ in range(L + 1)]\n\n    # Length 0: one fixed number whose maximum digit is pmax.\n    for pmax in range(10):\n        nxt = [0] * 10\n        cost = [0] * 10\n        for u in range(10):\n            if pmax == 0:\n                nxt[u] = u\n                cost[u] = 0\n            elif u >= pmax:\n                nxt[u] = 10 - pmax\n                cost[u] = 2\n            else:\n                nxt[u] = u + 10 - pmax\n                cost[u] = 1\n        agg_next[0][pmax] = nxt\n        agg_cost[0][pmax] = cost\n\n    for length in range(1, L + 1):\n        for pmax in range(10):\n            nxt = [0] * 10\n            cost = [0] * 10\n\n            for start_u in range(10):\n                u = start_u\n                total = 0\n\n                for d in range(9, -1, -1):\n                    new_pmax = max(pmax, d)\n                    block_next = agg_next[length - 1][new_pmax]\n                    block_cost = agg_cost[length - 1][new_pmax]\n\n                    total += block_cost[u]\n                    u = block_next[u]\n\n                nxt[start_u] = u\n                cost[start_u] = total\n\n            agg_next[length][pmax] = nxt\n            agg_cost[length][pmax] = cost\n\n    def dfs(pos: int, pmax: int, u: int):\n        if pos == L:\n            if pmax == 0:\n                return u, 0\n            if u >= pmax:\n                return 10 - pmax, 2\n            return u + 10 - pmax, 1\n\n        cur_digit = digits[pos]\n\n        # First process numbers with the same prefix and same current digit.\n        u, cost = dfs(pos + 1, max(pmax, cur_digit), u)\n\n        remaining = L - pos - 1\n\n        # Then process smaller digits at this position in descending order.\n        for d in range(cur_digit - 1, -1, -1):\n            new_pmax = max(pmax, d)\n            block_next = agg_next[remaining][new_pmax]\n            block_cost = agg_cost[remaining][new_pmax]\n\n            cost += block_cost[u]\n            u = block_next[u]\n\n        return u, cost\n\n    final_digit, operations = dfs(0, 0, r)\n    if final_digit > 0:\n        operations += 1\n\n    print(operations)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 113.543,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYet another Armageddon is coming! This time the culprit is the Julya tribe calendar. \n\nThe beavers in this tribe knew math very well. Smart Beaver, an archaeologist, got a sacred plate with a magic integer on it. The translation from Old Beaverish is as follows: \n\n\"May the Great Beaver bless you! May your chacres open and may your third eye never turn blind from beholding the Truth! Take the magic number, subtract a digit from it (the digit must occur in the number) and get a new magic number. Repeat this operation until a magic number equals zero. The Earth will stand on Three Beavers for the time, equal to the number of subtractions you perform!\"\n\nDistinct subtraction sequences can obviously get you different number of operations. But the Smart Beaver is ready to face the worst and is asking you to count the minimum number of operations he needs to reduce the magic number to zero.\n\nInput\n\nThe single line contains the magic integer n, 0 ≤ n.\n\n  * to get 20 points, you need to solve the problem with constraints: n ≤ 106 (subproblem C1); \n  * to get 40 points, you need to solve the problem with constraints: n ≤ 1012 (subproblems C1+C2); \n  * to get 100 points, you need to solve the problem with constraints: n ≤ 1018 (subproblems C1+C2+C3). \n\nOutput\n\nPrint a single integer — the minimum number of subtractions that turns the magic number to a zero.\n\nExamples\n\nInput\n\n24\n\n\nOutput\n\n5\n\nNote\n\nIn the first test sample the minimum number of operations can be reached by the following sequence of subtractions: \n\n24 → 20 → 18 → 10 → 9 → 0\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

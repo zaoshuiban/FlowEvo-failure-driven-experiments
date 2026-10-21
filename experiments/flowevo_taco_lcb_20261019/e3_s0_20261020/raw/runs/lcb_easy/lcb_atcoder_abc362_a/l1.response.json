@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "14bf5943-1eb8-47c4-a300-57cf941d8d3b",
+  "created": 1792430307,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 375,
+    "completion_tokens": 312,
+    "total_tokens": 687,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 213
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 375
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    R, G, B = map(int, data[:3])\n    C = data[3]\n\n    pens = {\n        \"Red\": R,\n        \"Green\": G,\n        \"Blue\": B\n    }\n\n    answer = min(price for color, price in pens.items() if color != C)\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 1.837,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTakahashi came to a store to buy a pen. Here, a red pen costs R yen, a green pen costs G yen, and a blue pen costs B yen.\nTakahashi dislikes the color C. If C is Red, he cannot buy a red pen; if C is Green, he cannot buy a green pen; and if C is Blue, he cannot buy a blue pen.\nDetermine the minimum amount of money he needs to buy one pen.\n\nInput\n\nThe input is given from Standard Input in the following format:\nR G B\r\nC\n\nOutput\n\nIf the minimum amount of money Takahashi needs to buy one pen is X yen, print X.\n\nConstraints\n\n\n-  1\\leq R,G,B\\leq 100\n- R, G, and B are integers.\n- C is Red, Green, or Blue.\n\nSample Input 1\n\n20 30 10\r\nBlue\n\nSample Output 1\n\n20\r\n\nA red pen costs 20 yen, a green pen costs 30 yen, and a blue pen costs 10 yen. Takahashi cannot buy a blue pen, but he can buy a red pen for 20 yen.\n\nSample Input 2\n\n100 100 100\r\nRed\n\nSample Output 2\n\n100\n\nSample Input 3\n\n37 39 93\r\nBlue\n\nSample Output 3\n\n37\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

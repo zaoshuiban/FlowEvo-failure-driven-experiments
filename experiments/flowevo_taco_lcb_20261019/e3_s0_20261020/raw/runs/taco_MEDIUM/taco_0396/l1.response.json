@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "167c68a2-b12b-48dc-a07d-06d5a29cfc75",
+  "created": 1792442795,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 712,
+    "completion_tokens": 1413,
+    "total_tokens": 2125,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1064
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 712
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    parent = list(range(n + 1))\n    size = [1] * (n + 1)\n    degree = [0] * (n + 1)\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a: int, b: int) -> None:\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n\n    idx = 2\n    for _ in range(m):\n        u = data[idx]\n        v = data[idx + 1]\n        idx += 2\n\n        degree[u] += 1\n        degree[v] += 1\n        union(u, v)\n\n    bad = [False] * (n + 1)\n\n    for v in range(1, n + 1):\n        if degree[v] != 2:\n            bad[find(v)] = True\n\n    answer = 0\n\n    for v in range(1, n + 1):\n        if parent[v] == v and not bad[v]:\n            answer += 1\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 6.415,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an undirected graph consisting of $n$ vertices and $m$ edges. Your task is to find the number of connected components which are cycles.\n\nHere are some definitions of graph theory.\n\nAn undirected graph consists of two sets: set of nodes (called vertices) and set of edges. Each edge connects a pair of vertices. All edges are bidirectional (i.e. if a vertex $a$ is connected with a vertex $b$, a vertex $b$ is also connected with a vertex $a$). An edge can't connect vertex with itself, there is at most one edge between a pair of vertices.\n\nTwo vertices $u$ and $v$ belong to the same connected component if and only if there is at least one path along edges connecting $u$ and $v$.\n\nA connected component is a cycle if and only if its vertices can be reordered in such a way that:  the first vertex is connected with the second vertex by an edge,  the second vertex is connected with the third vertex by an edge,  ...  the last vertex is connected with the first vertex by an edge,  all the described edges of a cycle are distinct. \n\nA cycle doesn't contain any other edges except described above. By definition any cycle contains three or more vertices. [Image] There are $6$ connected components, $2$ of them are cycles: $[7, 10, 16]$ and $[5, 11, 9, 15]$. \n\n\n-----Input-----\n\nThe first line contains two integer numbers $n$ and $m$ ($1 \\le n \\le 2 \\cdot 10^5$, $0 \\le m \\le 2 \\cdot 10^5$) — number of vertices and edges.\n\nThe following $m$ lines contains edges: edge $i$ is given as a pair of vertices $v_i$, $u_i$ ($1 \\le v_i, u_i \\le n$, $u_i \\ne v_i$). There is no multiple edges in the given graph, i.e. for each pair ($v_i, u_i$) there no other pairs ($v_i, u_i$) and ($u_i, v_i$) in the list of edges.\n\n\n-----Output-----\n\nPrint one integer — the number of connected components which are also cycles.\n\n\n-----Examples-----\nInput\n5 4\n1 2\n3 4\n5 4\n3 5\n\nOutput\n1\n\nInput\n17 15\n1 8\n1 12\n5 11\n11 9\n9 15\n15 5\n4 13\n3 13\n4 3\n10 16\n7 10\n16 7\n14 3\n14 4\n17 6\n\nOutput\n2\n\n\n\n-----Note-----\n\nIn the first example only component $[3, 4, 5]$ is also a cycle.\n\nThe illustration above corresponds to the second example.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

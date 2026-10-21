@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "23364f4a-1d60-4cd6-bad0-1cb66eade39a",
+  "created": 1792437277,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 635,
+    "completion_tokens": 16821,
+    "total_tokens": 17456,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16025
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 635
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import Counter\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    arr = data[1:1 + 2 * n]\n\n    counter = Counter(arr)\n    values = list(counter.keys())\n    counts = [counter[v] for v in values]\n    m = len(values)\n\n    # dp[u][a] = maximum number of distinct values in the second heap,\n    # after processing some values, where:\n    # u = number of cubes put into the first heap,\n    # a = number of distinct values in the first heap.\n    prev = [[-1] * (m + 1) for _ in range(n + 1)]\n    prev[0][0] = 0\n    layers = [prev]\n\n    for c in counts:\n        cur = [[-1] * (m + 1) for _ in range(n + 1)]\n\n        for u in range(n + 1):\n            row = prev[u]\n            for a, d2 in enumerate(row):\n                if d2 < 0:\n                    continue\n\n                # Put all c copies into the second heap.\n                if d2 + 1 > cur[u][a]:\n                    cur[u][a] = d2 + 1\n\n                # Put all c copies into the first heap.\n                if u + c <= n and a + 1 <= m:\n                    if d2 > cur[u + c][a + 1]:\n                        cur[u + c][a + 1] = d2\n\n                # Split copies between both heaps.\n                if c >= 2 and a + 1 <= m:\n                    nd = d2 + 1\n                    max_x = min(c - 1, n - u)\n                    for x in range(1, max_x + 1):\n                        if nd > cur[u + x][a + 1]:\n                            cur[u + x][a + 1] = nd\n\n        prev = cur\n        layers.append(cur)\n\n    best = -1\n    best_a = 0\n    best_b = 0\n\n    for a in range(m + 1):\n        b = prev[n][a]\n        if b >= 0:\n            prod = a * b\n            if prod > best:\n                best = prod\n                best_a = a\n                best_b = b\n\n    # Reconstruct how many copies of each value go to the first heap.\n    xval = [0] * m\n    u = n\n    a = best_a\n    b = best_b\n\n    for idx in range(m - 1, -1, -1):\n        c = counts[idx]\n        pre = layers[idx]\n        max_x = min(c, u)\n\n        for x in range(max_x + 1):\n            da = 1 if x > 0 else 0\n            db = 1 if x < c else 0\n\n            if a - da < 0 or b - db < 0:\n                continue\n\n            if pre[u - x][a - da] == b - db:\n                xval[idx] = x\n                u -= x\n                a -= da\n                b -= db\n                break\n\n    remaining = {values[i]: xval[i] for i in range(m)}\n\n    labels = []\n    for v in arr:\n        if remaining.get(v, 0) > 0:\n            labels.append('1')\n            remaining[v] -= 1\n        else:\n            labels.append('2')\n\n    sys.stdout.write(str(best) + \"\\n\" + \" \".join(labels) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 80.663,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nValera has 2·n cubes, each cube contains an integer from 10 to 99. He arbitrarily chooses n cubes and puts them in the first heap. The remaining cubes form the second heap. \n\nValera decided to play with cubes. During the game he takes a cube from the first heap and writes down the number it has. Then he takes a cube from the second heap and write out its two digits near two digits he had written (to the right of them). In the end he obtained a single fourdigit integer — the first two digits of it is written on the cube from the first heap, and the second two digits of it is written on the second cube from the second heap.\n\nValera knows arithmetic very well. So, he can easily count the number of distinct fourdigit numbers he can get in the game. The other question is: how to split cubes into two heaps so that this number (the number of distinct fourdigit integers Valera can get) will be as large as possible?\n\n\n-----Input-----\n\nThe first line contains integer n (1 ≤ n ≤ 100). The second line contains 2·n space-separated integers a_{i} (10 ≤ a_{i} ≤ 99), denoting the numbers on the cubes.\n\n\n-----Output-----\n\nIn the first line print a single number — the maximum possible number of distinct four-digit numbers Valera can obtain. In the second line print 2·n numbers b_{i} (1 ≤ b_{i} ≤ 2). The numbers mean: the i-th cube belongs to the b_{i}-th heap in your division.\n\nIf there are multiple optimal ways to split the cubes into the heaps, print any of them.\n\n\n-----Examples-----\nInput\n1\n10 99\n\nOutput\n1\n2 1 \n\nInput\n2\n13 24 13 45\n\nOutput\n4\n1 2 2 1 \n\n\n\n-----Note-----\n\nIn the first test case Valera can put the first cube in the first heap, and second cube — in second heap. In this case he obtain number 1099. If he put the second cube in the first heap, and the first cube in the second heap, then he can obtain number 9910. In both cases the maximum number of distinct integers is equal to one.\n\nIn the second test case Valera can obtain numbers 1313, 1345, 2413, 2445. Note, that if he put the first and the third cubes in the first heap, he can obtain only two numbers 1324 and 1345.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

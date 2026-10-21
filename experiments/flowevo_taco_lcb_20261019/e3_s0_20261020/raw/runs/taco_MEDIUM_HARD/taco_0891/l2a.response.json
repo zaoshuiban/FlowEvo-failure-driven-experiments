@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8fbf2662-12b0-4e76-a4c9-70d0c0e01ff6",
+  "created": 1792431785,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 294,
+    "completion_tokens": 2918,
+    "total_tokens": 3212,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2767
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 166
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    s, x = map(int, data[:2])\n\n    if s < x or (s - x) % 2 != 0:\n        print(0)\n        return\n\n    common = (s - x) // 2\n\n    if common & x:\n        print(0)\n        return\n\n    ans = 1 << x.bit_count()\n\n    # If common == 0, the cases where one of the numbers is zero are included.\n    if common == 0:\n        ans -= 2\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 13.38,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTwo positive integers a and b have a sum of s and a bitwise XOR of x. How many possible values are there for the ordered pair (a, b)?\n\nInput\n\nThe first line of the input contains two integers s and x (2 ≤ s ≤ 1012, 0 ≤ x ≤ 1012), the sum and bitwise xor of the pair of positive integers, respectively.\n\nOutput\n\nPrint a single integer, the number of solutions to the given conditions. If no solutions exist, print 0.\n\nExamples\n\nInput\n\n9 5\n\n\nOutput\n\n4\n\n\nInput\n\n3 3\n\n\nOutput\n\n2\n\n\nInput\n\n5 2\n\n\nOutput\n\n0\n\nNote\n\nIn the first sample, we have the following solutions: (2, 7), (3, 6), (6, 3), (7, 2).\n\nIn the second sample, the only solutions are (1, 2) and (2, 1).\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

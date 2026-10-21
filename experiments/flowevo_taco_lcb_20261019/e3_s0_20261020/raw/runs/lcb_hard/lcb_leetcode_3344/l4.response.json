@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d09f7d96-9b77-4061-b957-8d899a1ed6b2",
+  "created": 1792439704,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1170,
+    "completion_tokens": 4048,
+    "total_tokens": 5218,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3556
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 658
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def minimumDistance(self, points: List[List[int]]) -> int:\n        n = len(points)\n        INF = 10**30\n\n        a = [0] * n\n        b = [0] * n\n\n        min_a1 = min_a2 = INF\n        max_a1 = max_a2 = -INF\n        min_b1 = min_b2 = INF\n        max_b1 = max_b2 = -INF\n\n        min_a_idx = max_a_idx = min_b_idx = max_b_idx = -1\n\n        for i, (x, y) in enumerate(points):\n            av = x + y\n            bv = x - y\n\n            a[i] = av\n            b[i] = bv\n\n            if av < min_a1:\n                min_a2 = min_a1\n                min_a1 = av\n                min_a_idx = i\n            elif av < min_a2:\n                min_a2 = av\n\n            if av > max_a1:\n                max_a2 = max_a1\n                max_a1 = av\n                max_a_idx = i\n            elif av > max_a2:\n                max_a2 = av\n\n            if bv < min_b1:\n                min_b2 = min_b1\n                min_b1 = bv\n                min_b_idx = i\n            elif bv < min_b2:\n                min_b2 = bv\n\n            if bv > max_b1:\n                max_b2 = max_b1\n                max_b1 = bv\n                max_b_idx = i\n            elif bv > max_b2:\n                max_b2 = bv\n\n        answer = INF\n\n        for i in range(n):\n            cur_min_a = min_a2 if i == min_a_idx else min_a1\n            cur_max_a = max_a2 if i == max_a_idx else max_a1\n\n            cur_min_b = min_b2 if i == min_b_idx else min_b1\n            cur_max_b = max_b2 if i == max_b_idx else max_b1\n\n            current_max_distance = max(\n                cur_max_a - cur_min_a,\n                cur_max_b - cur_min_b\n            )\n\n            answer = min(answer, current_max_distance)\n\n        return answer\n```",
+  "latency_s": 17.594,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a array points representing integer coordinates of some points on a 2D plane, where points[i] = [x_i, y_i].\nThe distance between two points is defined as their Manhattan distance.\nReturn the minimum possible value for maximum distance between any two points by removing exactly one point.\n \nExample 1:\n\nInput: points = [[3,10],[5,15],[10,2],[4,4]]\nOutput: 12\nExplanation:\nThe maximum distance after removing each point is the following:\n\nAfter removing the 0^th point the maximum distance is between points (5, 15) and (10, 2), which is |5 - 10| + |15 - 2| = 18.\nAfter removing the 1^st point the maximum distance is between points (3, 10) and (10, 2), which is |3 - 10| + |10 - 2| = 15.\nAfter removing the 2^nd point the maximum distance is between points (5, 15) and (4, 4), which is |5 - 4| + |15 - 4| = 12.\nAfter removing the 3^rd point the maximum distance is between points (5, 15) and (10, 2), which is |5 - 10| + |15 - 2| = 18.\n\n12 is the minimum possible maximum distance between any two points after removing exactly one point.\n\nExample 2:\n\nInput: points = [[1,1],[1,1],[1,1]]\nOutput: 0\nExplanation:\nRemoving any of the points results in the maximum distance between any two points of 0.\n\n \nConstraints:\n\n3 <= points.length <= 10^5\npoints[i].length == 2\n1 <= points[i][0], points[i][1] <= 10^8\n\nStarter code / required signature:\nclass Solution:\n    def minimumDistance(self, points: List[List[int]]) -> int:\n        \n\nUse the required function/method named minimumDistance. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nfrom typing import List\n\nclass Solution:\n    def minimumDistance(self, points: List[List[int]]) -> int:\n        n = len(points)\n        INF = 10**30\n\n        a_vals = [0] * n\n        b_vals = [0] * n\n\n        min_a = min_b = INF\n        max_a = max_b = -INF\n\n        min_a_idx = max_a_idx = min_b_idx = max_b_idx = 0\n\n        for i, (x, y) in enumerate(points):\n            a = x + y\n            b = x - y\n\n            a_vals[i] = a\n            b_vals[i] = b\n\n            if a < min_a:\n                min_a = a\n                min_a_idx = i\n            if a > max_a:\n                max_a = a\n                max_a_idx = i\n            if b < min_b:\n                min_b = b\n                min_b_idx = i\n            if b > max_b:\n                max_b = b\n                max_b_idx = i\n\n        candidates = {min_a_idx, max_a_idx, min_b_idx, max_b_idx}\n        answer = INF\n\n        for skip in candidates:\n            cur_min_a = cur_min_b = INF\n            cur_max_a = cur_max_b = -INF\n\n            for i in range(n):\n                if i == skip:\n                    continue\n\n                a = a_vals[i]\n                b = b_vals[i]\n\n                if a < cur_min_a:\n                    cur_min_a = a\n                if a > cur_max_a:\n                    cur_max_a = a\n                if b < cur_min_b:\n                    cur_min_b = b\n                if b > cur_max_b:\n                    cur_max_b = b\n\n            current_max_distance = max(\n                cur_max_a - cur_min_a,\n                cur_max_b - cur_min_b\n            )\n            answer = min(answer, current_max_distance)\n\n        return answer\n```\n\nVerifier feedback: Compilation or testing error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given an array nums of n integers, and a 2D integer array queries of size q, where queries[i] = [l_i, r_i].\nFor each query, you must find the maximum XOR score of any subarray of nums[l_i..r_i\nSolution:\nfrom typing import List\n\nclass Solution:\n    def maximumSubarrayXor(self, nums: List[int], queries: List[List[int]]) -> List[int]:\n        n = len(nums)\n        q = len(queries)\n\n        queries_by_length = [[] for _ in range(n + 1)]\n        for idx, (l, r) in enumerate(queries):\n            length = r - l + 1\n            queries_by_length[length].append((l, idx))\n\n        answer = [0] * q\n\n        # For intervals of length 1\n        prev_score = nums[:]\n        prev_max = nums[:]\n\n        for l"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

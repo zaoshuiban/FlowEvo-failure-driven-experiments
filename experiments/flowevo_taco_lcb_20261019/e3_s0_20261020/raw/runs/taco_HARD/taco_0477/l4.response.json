@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9e541bd8-903a-41d2-bd9b-9430de7db52c",
+  "created": 1792452467,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1179,
+    "completion_tokens": 17515,
+    "total_tokens": 18694,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 17044
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 795
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    p = [x - 1 for x in data[1:1 + n]]\n\n    # If p has a fixed vertex, a star centered at it is invariant.\n    for center in range(n):\n        if p[center] == center:\n            ans = [\"YES\"]\n            for v in range(n):\n                if v != center:\n                    ans.append(f\"{center + 1} {v + 1}\")\n            sys.stdout.write(\"\\n\".join(ans) + \"\\n\")\n            return\n\n    # Otherwise, every cycle must have even length, and a 2-cycle\n    # is needed for the central edge of the tree.\n    visited = [False] * n\n    cycles = []\n    possible = True\n\n    for i in range(n):\n        if visited[i]:\n            continue\n\n        cur = i\n        cycle = []\n        while not visited[cur]:\n            visited[cur] = True\n            cycle.append(cur)\n            cur = p[cur]\n\n        cycles.append(cycle)\n\n        if len(cycle) % 2 == 1:\n            possible = False\n\n    if not possible:\n        sys.stdout.write(\"NO\\n\")\n        return\n\n    center_idx = -1\n    for idx, cycle in enumerate(cycles):\n        if len(cycle) == 2:\n            center_idx = idx\n            break\n\n    if center_idx == -1:\n        sys.stdout.write(\"NO\\n\")\n        return\n\n    a, b = cycles[center_idx]\n    edges = [(a, b)]\n\n    for idx, cycle in enumerate(cycles):\n        if idx == center_idx:\n            continue\n\n        for pos, v in enumerate(cycle):\n            if pos % 2 == 0:\n                edges.append((a, v))\n            else:\n                edges.append((b, v))\n\n    ans = [\"YES\"]\n    for u, v in edges:\n        ans.append(f\"{u + 1} {v + 1}\")\n\n    sys.stdout.write(\"\\n\".join(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 82.955,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA tree of size n is an undirected connected graph consisting of n vertices without cycles.\n\nConsider some tree with n vertices. We call a tree invariant relative to permutation p = p1p2... pn, if for any two vertices of the tree u and v the condition holds: \"vertices u and v are connected by an edge if and only if vertices pu and pv are connected by an edge\".\n\nYou are given permutation p of size n. Find some tree size n, invariant relative to the given permutation.\n\nInput\n\nThe first line contains number n (1 ≤ n ≤ 105) — the size of the permutation (also equal to the size of the sought tree).\n\nThe second line contains permutation pi (1 ≤ pi ≤ n).\n\nOutput\n\nIf the sought tree does not exist, print \"NO\" (without the quotes).\n\nOtherwise, print \"YES\", and then print n - 1 lines, each of which contains two integers — the numbers of vertices connected by an edge of the tree you found. The vertices are numbered from 1, the order of the edges and the order of the vertices within the edges does not matter.\n\nIf there are multiple solutions, output any of them.\n\nExamples\n\nInput\n\n4\n4 3 2 1\n\n\nOutput\n\nYES\n4 1\n4 2\n1 3\n\n\nInput\n\n3\n3 1 2\n\n\nOutput\n\nNO\n\nNote\n\nIn the first sample test a permutation transforms edge (4, 1) into edge (1, 4), edge (4, 2) into edge (1, 3) and edge (1, 3) into edge (4, 2). These edges all appear in the resulting tree.\n\nIt can be shown that in the second sample test no tree satisfies the given condition.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    p = [x - 1 for x in data[1:1 + n]]\n\n    # If p has a fixed vertex, a star centered at it is invariant.\n    fixed = -1\n    for i in range(n):\n        if p[i] == i:\n            fixed = i\n            break\n\n    if fixed != -1:\n        ans = [\"YES\"]\n        for v in range(n):\n            if v != fixed:\n                ans.append(f\"{fixed + 1} {v + 1}\")\n        sys.stdout.write(\"\\n\".join(ans) + \"\\n\")\n        return\n\n    # Otherwise, every cycle must have even length, and a 2-cycle is needed\n    # as the central edge of the tree.\n    visited = [False] * n\n    cycles = []\n    center = None\n    possible = True\n\n    for i in range(n):\n        if visited[i]:\n            continue\n\n        cur = i\n        cycle = []\n        while not visited[cur]:\n            visited[cur] = True\n            cycle.append(cur)\n            cur = p[cur]\n\n        cycles.append(cycle)\n\n        if len(cycle) % 2 == 1:\n            possible = False\n        if len(cycle) == 2 and center is None:\n            center = cycle\n\n    if not possible or center is None:\n        sys.stdout.write(\"NO\\n\")\n        return\n\n    a, b = center\n    edges = [(a, b)]\n\n    for cycle in cycles:\n        if cycle is center:\n            continue\n\n        for idx, v in enumerate(cycle):\n            if idx % 2 == 0:\n                edges.append((a, v))\n            else:\n                edges.append((b, v))\n\n    ans = [\"YES\"]\n    for u, v in edges:\n        ans.append(f\"{u + 1} {v + 1}\")\n\n    sys.stdout.write(\"\\n\".join(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: As you know, an undirected connected graph with n nodes and n - 1 edges is called a tree. You are given an integer d and a tree consisting of n nodes. Each node i has a value a_{i} associated with it.\nSolution:\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    d, n = data[0], data[1]\n    a = [0] + data[2:2 + n]\n\n    adj = [[] for _ in range(n + 1)]\n    pos = 2 + n\n\n    for _ in range(n - 1):\n        u, v = data[pos], data[pos + 1]\n        pos += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    sys.setrecursionlimit(1_000_000)\n\n    answer = 0\n\n    for root in range(1, n + 1):\n        base = a[root]\n        li"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

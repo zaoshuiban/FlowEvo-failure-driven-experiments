@@ -1,0 +1,50 @@
+Grimmjow is not dead. He comes back to take revenge from Ichigo. This time, Grimmjow has a new release which gives a difficult mathematical question which is as follows. Given an odd prime number P, a non-negative integer K less than P, and positive integers U,V , find the number of ways of choosing a subset of (V * P) distinct numbers from the set {1, 2, 3, ..., (U * P)}, such that, the sum of these (V * P) numbers, when divided by P, leaves remainder K.  
+
+Because his zanpakutou is useless here, Ichigo cannot do anything except to solve it. So, he asks you to solve it for him, so that, he can beat Grimmjow and rescue Orihime yet again. Since the answer can be large, output the number modulo (10^{9}+7).  
+
+Input Format
+
+Line 1: T  where T is the number of test cases. 
+
+Lines 2 to T+1: U V K P 
+
+U, V, K, P - As defined above.  
+
+Output Format
+
+A single integer on each line that denotes the number of ways to choose the subsets modulo (10^{9}+7).  
+
+Constraints
+
+1 ≤ T ≤ 5000 
+
+1 ≤ V ≤ U 
+
+( U * P ) ≤ 100000  
+
+Sample Input
+
+4
+1 1 0 5
+2 1 0 3
+2 1 1 3
+2 1 2 3
+
+Sample Output
+
+1
+8
+6
+6
+
+Explanation
+
+In the first test case, we have to choose 5 numbers from {1, 2, 3, 4, 5} whose sum is divisible by 5. Only way to do this is to choose the set itself.
+
+In the next three test cases, we have to choose 3 numbers from {1, 2, 3, 4, 5, 6}. There are 20 possible selections overall.  
+
+The selections {1, 2, 3}, {1, 2, 6}, {1, 3, 5}, {1, 5, 6}, {2, 3, 4}, {2, 4, 6}, {3, 4, 5}, {4, 5, 6} are such that the sum of the chosen numbers leave remainder 0 when divided by 3.  
+
+The selections {1, 2, 4}, {1, 3, 6}, {1, 4, 5}, {2, 3, 5}, {2, 5, 6}, {3, 4, 6} are such that the sum of the chosen numbers leave remainder 1 when divided by 3.  
+
+The selections {1, 2, 5}, {1, 3, 4}, {1, 4, 6}, {2, 3, 6}, {2, 4, 5}, {3, 5, 6} are such that the sum of the chosen numbers leave remainder 2 when divided by 3.

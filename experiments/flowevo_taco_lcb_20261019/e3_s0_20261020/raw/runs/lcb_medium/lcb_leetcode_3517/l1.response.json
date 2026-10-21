@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9535b62a-7b7e-43ca-ab67-10237ba48a40",
+  "created": 1792431410,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 580,
+    "completion_tokens": 667,
+    "total_tokens": 1247,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 467
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 580
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\nfrom collections import deque\n\nclass Solution:\n    def shortestDistanceAfterQueries(self, n: int, queries: List[List[int]]) -> List[int]:\n        graph = [[] for _ in range(n)]\n        \n        for i in range(n - 1):\n            graph[i].append(i + 1)\n        \n        answer = []\n        \n        for u, v in queries:\n            graph[u].append(v)\n            \n            dist = [-1] * n\n            dist[0] = 0\n            queue = deque([0])\n            \n            while queue:\n                city = queue.popleft()\n                \n                if city == n - 1:\n                    break\n                \n                for nxt in graph[city]:\n                    if dist[nxt] == -1:\n                        dist[nxt] = dist[city] + 1\n                        queue.append(nxt)\n            \n            answer.append(dist[n - 1])\n        \n        return answer\n```",
+  "latency_s": 3.033,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer n and a 2D integer array queries.\nThere are n cities numbered from 0 to n - 1. Initially, there is a unidirectional road from city i to city i + 1 for all 0 <= i < n - 1.\nqueries[i] = [u_i, v_i] represents the addition of a new unidirectional road from city u_i to city v_i. After each query, you need to find the length of the shortest path from city 0 to city n - 1.\nReturn an array answer where for each i in the range [0, queries.length - 1], answer[i] is the length of the shortest path from city 0 to city n - 1 after processing the first i + 1 queries.\n \nExample 1:\n\nInput: n = 5, queries = [[2,4],[0,2],[0,4]]\nOutput: [3,2,1]\nExplanation: \n\nAfter the addition of the road from 2 to 4, the length of the shortest path from 0 to 4 is 3.\n\nAfter the addition of the road from 0 to 2, the length of the shortest path from 0 to 4 is 2.\n\nAfter the addition of the road from 0 to 4, the length of the shortest path from 0 to 4 is 1.\n\nExample 2:\n\nInput: n = 4, queries = [[0,3],[0,2]]\nOutput: [1,1]\nExplanation:\n\nAfter the addition of the road from 0 to 3, the length of the shortest path from 0 to 3 is 1.\n\nAfter the addition of the road from 0 to 2, the length of the shortest path remains 1.\n\n \nConstraints:\n\n3 <= n <= 500\n1 <= queries.length <= 500\nqueries[i].length == 2\n0 <= queries[i][0] < queries[i][1] < n\n1 < queries[i][1] - queries[i][0]\nThere are no repeated roads among the queries.\n\nStarter code / required signature:\nclass Solution:\n    def shortestDistanceAfterQueries(self, n: int, queries: List[List[int]]) -> List[int]:\n        \n\nUse the required function/method named shortestDistanceAfterQueries. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

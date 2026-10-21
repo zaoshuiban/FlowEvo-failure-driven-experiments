@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "49fe3486-a35c-4292-b83a-4a943b140966",
+  "created": 1792435760,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1189,
+    "completion_tokens": 32768,
+    "total_tokens": 33957,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 677
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 165.273,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWe all know the impressive story of Robin Hood. Robin Hood uses his archery skills and his wits to steal the money from rich, and return it to the poor.\n\nThere are n citizens in Kekoland, each person has c_{i} coins. Each day, Robin Hood will take exactly 1 coin from the richest person in the city and he will give it to the poorest person (poorest person right after taking richest's 1 coin). In case the choice is not unique, he will select one among them at random. Sadly, Robin Hood is old and want to retire in k days. He decided to spend these last days with helping poor people. \n\nAfter taking his money are taken by Robin Hood richest person may become poorest person as well, and it might even happen that Robin Hood will give his money back. For example if all people have same number of coins, then next day they will have same number of coins too. \n\nYour task is to find the difference between richest and poorest persons wealth after k days. Note that the choosing at random among richest and poorest doesn't affect the answer.\n\n\n-----Input-----\n\nThe first line of the input contains two integers n and k (1 ≤ n ≤ 500 000, 0 ≤ k ≤ 10^9) — the number of citizens in Kekoland and the number of days left till Robin Hood's retirement.\n\nThe second line contains n integers, the i-th of them is c_{i} (1 ≤ c_{i} ≤ 10^9) — initial wealth of the i-th person.\n\n\n-----Output-----\n\nPrint a single line containing the difference between richest and poorest peoples wealth.\n\n\n-----Examples-----\nInput\n4 1\n1 1 4 2\n\nOutput\n2\n\nInput\n3 1\n2 2 2\n\nOutput\n0\n\n\n\n-----Note-----\n\nLets look at how wealth changes through day in the first sample.  [1, 1, 4, 2]  [2, 1, 3, 2] or [1, 2, 3, 2] \n\nSo the answer is 3 - 1 = 2\n\nIn second sample wealth will remain the same for each person.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom bisect import bisect_left, bisect_right\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n    a.sort()\n\n    prefix = [0] * (n + 1)\n    total = 0\n    for i, value in enumerate(a, 1):\n        total += value\n        prefix[i] = total\n\n    # Find the maximum possible final minimum.\n    left = a[0]\n    right = total // n\n    min_value = left\n\n    while left <= right:\n        mid = (left + right) // 2\n        idx = bisect_left(a, mid)\n        cost = mid * idx - prefix[idx]\n\n        if cost <= k:\n            min_value = mid\n            left = mid + 1\n        else:\n            right = mid - 1\n\n    # Find the minimum possible final maximum.\n    left = (total + n - 1) // n\n    right = a[-1]\n    max_value = right\n\n    while left <= right:\n        mid = (left + right) // 2\n        idx = bisect_right(a, mid)\n        cost = (total - prefix[idx]) - mid * (n - idx)\n\n        if cost <= k:\n            max_value = mid\n            right = mid - 1\n        else:\n            left = mid + 1\n\n    print(max_value - min_value)\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d8f8422d-e840-4017-a3df-098e19757673",
+  "created": 1792443454,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 774,
+    "completion_tokens": 5565,
+    "total_tokens": 6339,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5025
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 134
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    g = [bytearray(n) for _ in range(n)]\n\n    idx = 2\n    for _ in range(m):\n        u = data[idx] - 1\n        v = data[idx + 1] - 1\n        idx += 2\n        g[u][v] = 1\n        g[v][u] = 1\n\n    # Build the complement graph.\n    h = [[] for _ in range(n)]\n    for i in range(n):\n        gi = g[i]\n        for j in range(i + 1, n):\n            if not gi[j]:\n                h[i].append(j)\n                h[j].append(i)\n\n    start = -1\n    for i in range(n):\n        if h[i]:\n            start = i\n            break\n\n    # The original graph is complete, so all vertices may have the same letter.\n    if start == -1:\n        sys.stdout.write(\"Yes\\n\" + \"a\" * n + \"\\n\")\n        return\n\n    color = [-1] * n\n    color[start] = 0\n    q = deque([start])\n\n    cnt = [0, 0]\n    degree_sum = 0\n\n    while q:\n        v = q.popleft()\n        cnt[color[v]] += 1\n        degree_sum += len(h[v])\n\n        for to in h[v]:\n            if color[to] == -1:\n                color[to] = color[v] ^ 1\n                q.append(to)\n            elif color[to] == color[v]:\n                sys.stdout.write(\"No\\n\")\n                return\n\n    # All non-isolated vertices in the complement must belong to one component.\n    for i in range(n):\n        if h[i] and color[i] == -1:\n            sys.stdout.write(\"No\\n\")\n            return\n\n    edges = degree_sum // 2\n    if edges != cnt[0] * cnt[1]:\n        sys.stdout.write(\"No\\n\")\n        return\n\n    answer = []\n    for i in range(n):\n        if h[i]:\n            answer.append('a' if color[i] == 0 else 'c')\n        else:\n            answer.append('b')\n\n    sys.stdout.write(\"Yes\\n\" + ''.join(answer) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 26.967,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nOne day student Vasya was sitting on a lecture and mentioned a string s_1s_2... s_{n}, consisting of letters \"a\", \"b\" and \"c\" that was written on his desk. As the lecture was boring, Vasya decided to complete the picture by composing a graph G with the following properties:   G has exactly n vertices, numbered from 1 to n.  For all pairs of vertices i and j, where i ≠ j, there is an edge connecting them if and only if characters s_{i} and s_{j} are either equal or neighbouring in the alphabet. That is, letters in pairs \"a\"-\"b\" and \"b\"-\"c\" are neighbouring, while letters \"a\"-\"c\" are not. \n\nVasya painted the resulting graph near the string and then erased the string. Next day Vasya's friend Petya came to a lecture and found some graph at his desk. He had heard of Vasya's adventure and now he wants to find out whether it could be the original graph G, painted by Vasya. In order to verify this, Petya needs to know whether there exists a string s, such that if Vasya used this s he would produce the given graph G.\n\n\n-----Input-----\n\nThe first line of the input contains two integers n and m $(1 \\leq n \\leq 500,0 \\leq m \\leq \\frac{n(n - 1)}{2})$ — the number of vertices and edges in the graph found by Petya, respectively.\n\nEach of the next m lines contains two integers u_{i} and v_{i} (1 ≤ u_{i}, v_{i} ≤ n, u_{i} ≠ v_{i}) — the edges of the graph G. It is guaranteed, that there are no multiple edges, that is any pair of vertexes appear in this list no more than once.\n\n\n-----Output-----\n\nIn the first line print \"Yes\" (without the quotes), if the string s Petya is interested in really exists and \"No\" (without the quotes) otherwise.\n\nIf the string s exists, then print it on the second line of the output. The length of s must be exactly n, it must consist of only letters \"a\", \"b\" and \"c\" only, and the graph built using this string must coincide with G. If there are multiple possible answers, you may print any of them.\n\n\n-----Examples-----\nInput\n2 1\n1 2\n\nOutput\nYes\naa\n\nInput\n4 3\n1 2\n1 3\n1 4\n\nOutput\nNo\n\n\n\n-----Note-----\n\nIn the first sample you are given a graph made of two vertices with an edge between them. So, these vertices can correspond to both the same and adjacent letters. Any of the following strings \"aa\", \"ab\", \"ba\", \"bb\", \"bc\", \"cb\", \"cc\" meets the graph's conditions. \n\nIn the second sample the first vertex is connected to all three other vertices, but these three vertices are not connected with each other. That means that they must correspond to distinct letters that are not adjacent, but that is impossible as there are only two such letters: a and c.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

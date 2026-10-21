@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "41339159-7133-4e6e-8b25-249ea95e75ae",
+  "created": 1792448227,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 362,
+    "completion_tokens": 9822,
+    "total_tokens": 10184,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8738
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 234
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    m = data[1]\n\n    u = array('i')\n    v = array('i')\n    w = array('i')\n\n    p = 2\n    for _ in range(m):\n        u.append(data[p] - 1)\n        v.append(data[p + 1] - 1)\n        w.append(data[p + 2])\n        p += 3\n\n    del data\n\n    if n == 1:\n        return\n\n    order = list(range(m))\n    order.sort(key=w.__getitem__)\n\n    parent = list(range(n))\n    size = [1] * n\n\n    head = array('i', [-1]) * n\n    to = array('i')\n    weight = array('i')\n    nxt = array('i')\n\n    is_tree = bytearray(m)\n    total = 0\n    used = 0\n    need = n - 1\n\n    for idx in order:\n        a = u[idx]\n        b = v[idx]\n\n        x = a\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        ra = x\n\n        x = b\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        rb = x\n\n        if ra == rb:\n            continue\n\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n\n        parent[rb] = ra\n        size[ra] += size[rb]\n\n        c = w[idx]\n        total += c\n        is_tree[idx] = 1\n\n        pos = len(to)\n        to.append(b)\n        weight.append(c)\n        nxt.append(head[a])\n        head[a] = pos\n\n        pos = len(to)\n        to.append(a)\n        weight.append(c)\n        nxt.append(head[b])\n        head[b] = pos\n\n        used += 1\n        if used == need:\n            break\n\n    LOG = max(1, n.bit_length())\n\n    up0 = array('i', [-1]) * n\n    mx0 = array('i', [0]) * n\n    depth = array('i', [0]) * n\n\n    up0[0] = 0\n    stack = [0]\n\n    while stack:\n        x = stack.pop()\n        e = head[x]\n        nd = depth[x] + 1\n\n        while e != -1:\n            y = to[e]\n            if up0[y] == -1:\n                up0[y] = x\n                mx0[y] = weight[e]\n                depth[y] = nd\n                stack.append(y)\n            e = nxt[e]\n\n    up = [up0]\n    mx = [mx0]\n\n    for _ in range(1, LOG):\n        prev_up = up[-1]\n        prev_mx = mx[-1]\n\n        cur_up = array('i', [0]) * n\n        cur_mx = array('i', [0]) * n\n\n        for i in range(n):\n            par = prev_up[i]\n            cur_up[i] = prev_up[par]\n\n            best = prev_mx[i]\n            other = prev_mx[par]\n            if other > best:\n                best = other\n            cur_mx[i] = best\n\n        up.append(cur_up)\n        mx.append(cur_mx)\n\n    def max_on_path(a, b):\n        answer = 0\n\n        if depth[a] < depth[b]:\n            a, b = b, a\n\n        diff = depth[a] - depth[b]\n        bit = 0\n\n        while diff:\n            if diff & 1:\n                val = mx[bit][a]\n                if val > answer:\n                    answer = val\n                a = up[bit][a]\n\n            diff >>= 1\n            bit += 1\n\n        if a == b:\n            return answer\n\n        for k in range(LOG - 1, -1, -1):\n            ua = up[k][a]\n            ub = up[k][b]\n\n            if ua != ub:\n                val = mx[k][a]\n                if val > answer:\n                    answer = val\n\n                val = mx[k][b]\n                if val > answer:\n                    answer = val\n\n                a = ua\n                b = ub\n\n        val = mx[0][a]\n        if val > answer:\n            answer = val\n\n        val = mx[0][b]\n        if val > answer:\n            answer = val\n\n        return answer\n\n    result = []\n    append = result.append\n\n    for i in range(m):\n        if is_tree[i]:\n            append(str(total))\n        else:\n            maximum = max_on_path(u[i], v[i])\n            append(str(total + w[i] - maximum))\n\n    sys.stdout.write(\"\\n\".join(result))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 39.187,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nConnected undirected weighted graph without self-loops and multiple edges is given. Graph contains n vertices and m edges.\n\nFor each edge (u, v) find the minimal possible weight of the spanning tree that contains the edge (u, v).\n\nThe weight of the spanning tree is the sum of weights of all edges included in spanning tree.\n\nInput\n\nFirst line contains two integers n and m (1 ≤ n ≤ 2·105, n - 1 ≤ m ≤ 2·105) — the number of vertices and edges in graph.\n\nEach of the next m lines contains three integers ui, vi, wi (1 ≤ ui, vi ≤ n, ui ≠ vi, 1 ≤ wi ≤ 109) — the endpoints of the i-th edge and its weight.\n\nOutput\n\nPrint m lines. i-th line should contain the minimal possible weight of the spanning tree that contains i-th edge.\n\nThe edges are numbered from 1 to m in order of their appearing in input.\n\nExamples\n\nInput\n\n5 7\n1 2 3\n1 3 1\n1 4 5\n2 3 2\n2 5 3\n3 4 2\n4 5 4\n\n\nOutput\n\n9\n8\n11\n8\n8\n8\n9\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

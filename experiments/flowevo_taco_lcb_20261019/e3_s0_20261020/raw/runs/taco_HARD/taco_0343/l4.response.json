@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0654aaa9-4279-4f1e-a828-4d0657dea1c7",
+  "created": 1792456576,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1488,
+    "completion_tokens": 32767,
+    "total_tokens": 34255,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32767
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 720
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 146.738,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIvan is playing yet another roguelike computer game. He controls a single hero in the game. The hero has $n$ equipment slots. There is a list of $c_i$ items for the $i$-th slot, the $j$-th of them increases the hero strength by $a_{i,j}$. The items for each slot are pairwise distinct and are listed in the increasing order of their strength increase. So, $a_{i,1} < a_{i,2} < \\dots < a_{i,c_i}$.\n\nFor each slot Ivan chooses exactly one item. Let the chosen item for the $i$-th slot be the $b_i$-th item in the corresponding list. The sequence of choices $[b_1, b_2, \\dots, b_n]$ is called a build.\n\nThe strength of a build is the sum of the strength increases of the items in it. Some builds are banned from the game. There is a list of $m$ pairwise distinct banned builds. It's guaranteed that there's at least one build that's not banned.\n\nWhat is the build with the maximum strength that is not banned from the game? If there are multiple builds with maximum strength, print any of them.\n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($1 \\le n \\le 10$) — the number of equipment slots.\n\nThe $i$-th of the next $n$ lines contains the description of the items for the $i$-th slot. First, one integer $c_i$ ($1 \\le c_i \\le 2 \\cdot 10^5$) — the number of items for the $i$-th slot. Then $c_i$ integers $a_{i,1}, a_{i,2}, \\dots, a_{i,c_i}$ ($1 \\le a_{i,1} < a_{i,2} < \\dots < a_{i,c_i} \\le 10^8$).\n\nThe sum of $c_i$ doesn't exceed $2 \\cdot 10^5$.\n\nThe next line contains a single integer $m$ ($0 \\le m \\le 10^5$) — the number of banned builds.\n\nEach of the next $m$ lines contains a description of a banned build — a sequence of $n$ integers $b_1, b_2, \\dots, b_n$ ($1 \\le b_i \\le c_i$).\n\nThe builds are pairwise distinct, and there's at least one build that's not banned.\n\n\n-----Output-----\n\nPrint the build with the maximum strength that is not banned from the game. If there are multiple builds with maximum strength, print any of them.\n\n\n-----Examples-----\n\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n3 2 2\nOutput\n2 2 3\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n2 2 3\nOutput\n1 2 3\nInput\n3\n3 1 2 3\n2 1 5\n3 2 4 6\n2\n3 2 3\n2 2 3\nOutput\n3 2 2\nInput\n4\n1 10\n1 4\n1 7\n1 3\n0\nOutput\n1 1 1 1\n\n\n-----Note-----\n\nNone\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    ptr = 0\n    n = data[ptr]\n    ptr += 1\n\n    slots = []\n    for _ in range(n):\n        c = data[ptr]\n        ptr += 1\n        slots.append(data[ptr:ptr + c])\n        ptr += c\n\n    m = data[ptr]\n    ptr += 1\n\n    banned = set()\n    banned_builds = []\n\n    for _ in range(m):\n        build = tuple(data[ptr + i] - 1 for i in range(n))\n        ptr += n\n        banned.add(build)\n        banned_builds.append(build)\n\n    max_build = tuple(len(s) - 1 for s in slots)\n\n    if max_build not in banned:\n        print(\" \".join(str(x + 1) for x in max_build))\n        return\n\n    best_strength = -1\n    best_build = None\n\n    for build in banned_builds:\n        base_strength = sum(slots[i][build[i]] for i in range(n))\n\n        for i in range(n):\n            if build[i] > 0:\n                candidate = list(build)\n                candidate[i] -= 1\n                candidate = tuple(candidate)\n\n                if candidate not in banned:\n                    strength = (\n                        base_strength\n                        - slots[i][build[i]]\n                        + slots[i][build[i] - 1]\n                    )\n\n                    if strength > best_strength:\n                        best_strength = strength\n                        best_build = candidate\n\n    print(\" \".join(str(x + 1) for x in best_build))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: As you know, an undirected connected graph with n nodes and n - 1 edges is called a tree. You are given an integer d and a tree consisting of n nodes. Each node i has a value a_{i} associated with it.\nSolution:\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    d, n = data[0], data[1]\n    a = [0] + data[2:2 + n]\n\n    adj = [[] for _ in range(n + 1)]\n    pos = 2 + n\n\n    for _ in range(n - 1):\n        u, v = data[pos], data[pos + 1]\n        pos += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    sys.setrecursionlimit(1_000_000)\n\n    answer = 0\n\n    for root in range(1, n + 1):\n        base = a[root]\n        li"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

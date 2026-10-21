@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4353acf7-423b-4f87-8a54-eeccabe82aa9",
+  "created": 1792441425,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 304,
+    "completion_tokens": 378,
+    "total_tokens": 682,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 284
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 304
+  },
+  "finish_reason": "stop",
+  "text": "```python\ndef count_change(money, coins):\n    if money < 0:\n        return 0\n\n    dp = [0] * (money + 1)\n    dp[0] = 1\n\n    for coin in coins:\n        if coin <= 0:\n            continue\n        for amount in range(coin, money + 1):\n            dp[amount] += dp[amount - coin]\n\n    return dp[money]\n```",
+  "latency_s": 2.059,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWrite a function that counts how many different ways you can make change for an amount of money, given an array of coin denominations. For example, there are 3 ways to give change for 4 if you have coins with denomination 1 and 2: \n```\n1+1+1+1, 1+1+2, 2+2.\n```\nThe order of coins does not matter:\n```\n1+1+2 == 2+1+1\n```\nAlso, assume that you have an infinite amount of coins.\n\nYour function should take an amount to change and an array of unique denominations for the coins:\n\n```python\n  count_change(4, [1,2]) # => 3\n  count_change(10, [5,2,3]) # => 4\n  count_change(11, [5,7]) # => 0\n```\n\nStarter code / required signature:\ndef count_change(money, coins):\n\t\n\nUse the required function/method named count_change. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

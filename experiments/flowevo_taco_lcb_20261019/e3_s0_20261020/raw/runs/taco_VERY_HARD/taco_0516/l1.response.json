@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ea408f88-a111-47b2-9bd2-2e1fcb906452",
+  "created": 1792453664,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 693,
+    "completion_tokens": 20904,
+    "total_tokens": 21597,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 20417
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 693
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    T = int(data[0])\n    cases = []\n    max_c = 1\n    idx = 1\n\n    for _ in range(T):\n        s = data[idx]\n        K = int(data[idx + 1])\n        idx += 2\n\n        n = len(s)\n        total = 0\n        c = 0\n\n        if K >= 1:\n            for i, ch in enumerate(s):\n                d = ch - ord('0')\n                if d:\n                    length = n - i  # position from right + 1\n                    total += d * length\n                    c += d\n            if c > max_c:\n                max_c = c\n\n        cases.append((s, K, total, c))\n\n    inv = [0] * (max_c + 2)\n    inv[1] = 1\n    for i in range(2, max_c + 2):\n        inv[i] = MOD - (MOD // i) * inv[MOD % i] % MOD\n\n    answers = []\n\n    for s, K, total, c in cases:\n        n = len(s)\n\n        if K == 0:\n            answers.append(str(n % MOD))\n            continue\n\n        if K == 1:\n            answers.append(str(total % MOD))\n            continue\n\n        r = K - 1\n\n        ans = 0\n        weight = 1\n        t = 1\n        remaining = total % MOD\n\n        for i, ch in enumerate(s):\n            d = ch - ord('0')\n            if d == 0:\n                continue\n\n            length = n - i\n\n            for _ in range(d):\n                ans = (ans + weight * remaining) % MOD\n\n                # weight for the next 1\n                weight = weight * ((r + t - 1) % MOD) % MOD\n                weight = weight * inv[t] % MOD\n\n                t += 1\n                remaining -= length\n                if remaining < 0:\n                    remaining += MOD\n\n        answers.append(str(ans % MOD))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 98.352,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven a positive integer X, an operation on X is defined as follows:\nSplit X into powers of 10 such that the number of integers into which X is split, is minimum.  \nLet A define the array containing all integers of the split.\nSort the array A in non-increasing order.\nConcatenate the elements of A and assign the value to X.\n\nFor example, an operation on X = 22 looks like:\nSplitting 22 into minimum number of integers such that each is integer is a power of 10.  \nHere, 22 = 1 + 1 + 10 + 10. Thus, A = [1, 1, 10, 10].\nSorting the array A in non-increasing order. Thus, A = [10, 10, 1, 1].\nConcatenating the elements of A gives 101011. Thus, the new value of X = 101011.\n\nKulyash has given you two integers N and K. \n\nYou need to perform the above-mentioned operation K times on the integer N. Find the number of digits in the final integer. Since the answer can be huge, output it modulo 998244353.\n\n------ Input Format ------ \n\n- The first line of input will contain a single integer T, denoting the number of test cases.\n- The first and only line of each test case contains two space-separated integers N and K — the initial number and the number of operations to be performed.\n\n------ Output Format ------ \n\nFor each test case, output on a new line, the number of digits in the final number after K operations are performed on N, modulo 998244353.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{2}$\n$1 ≤ N ≤ 10^{10^{4}}$\n$0 ≤ K ≤ 10^{9}$\n\n------ subtasks ------ \n\nSubtask 1 (40 points): $1 ≤ N ≤ 10^{3}$\nSubtask 2 (60 points): Original constraints\n\n----- Sample Input 1 ------ \n2\n101 3\n32 1\n\n----- Sample Output 1 ------ \n6\n8\n\n----- explanation 1 ------ \nTest case $1$: Let us perform $3$ operations on $101:$\n- Operation $1$ — $101 = 100 + 1$, thus $N = 1001$\n- Operation $2$ — $1001 = 1000 + 1$, thus $N = 10001$\n- Operation $3$ — $10001 = 10000 + 1$, thus $N = 100001$. The final value of $N$ is $100001$ which has $6$ digits.\n\nTest case $2$: $32 = 10 + 10 + 10 + 1 + 1$, thus $N = 10101011$, which has $8$ digits.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

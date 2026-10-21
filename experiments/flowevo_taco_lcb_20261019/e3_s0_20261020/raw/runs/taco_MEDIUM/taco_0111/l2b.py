@@ -1,0 +1,30 @@
+import sys
+
+def solve():
+    data = list(map(int, sys.stdin.buffer.read().split()))
+    idx = 0
+    t = data[idx]
+    idx += 1
+
+    answers = []
+
+    for _ in range(t):
+        n = data[idx]
+        idx += 1
+
+        a = data[idx:idx + n]
+        idx += n
+
+        x = data[idx:idx + n]
+        idx += n
+
+        nim_sum = 0
+        for ai, xi in zip(a, x):
+            nim_sum ^= (xi - 1) ^ (ai - xi)
+
+        answers.append("First" if nim_sum != 0 else "Second")
+
+    sys.stdout.write("\n".join(answers))
+
+if __name__ == "__main__":
+    solve()

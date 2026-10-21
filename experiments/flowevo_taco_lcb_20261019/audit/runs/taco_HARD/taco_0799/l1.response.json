@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "87e23d41-82d7-45ac-9dce-a59155e7046a",
+  "created": 1792436021,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 446,
+    "completion_tokens": 32125,
+    "total_tokens": 32571,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 30468
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 446
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef is_prime(num: int) -> bool:\n    if num < 2:\n        return False\n\n    small_primes = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)\n    for p in small_primes:\n        if num % p == 0:\n            return num == p\n\n    d = num - 1\n    s = 0\n    while d % 2 == 0:\n        s += 1\n        d //= 2\n\n    for a in (2, 3, 5, 7, 11, 13, 17):\n        if a >= num:\n            continue\n        x = pow(a, d, num)\n        if x == 1 or x == num - 1:\n            continue\n\n        for _ in range(s - 1):\n            x = x * x % num\n            if x == num - 1:\n                break\n        else:\n            return False\n\n    return True\n\n\ndef find_prime(target: int, maxn: int) -> int:\n    p = (target // maxn) * maxn + 1\n    while p < target or not is_prime(p):\n        p += maxn\n    return p\n\n\ndef prepare_roots(n: int, root: int, mod: int):\n    inv_root = pow(root, mod - 2, mod)\n\n    forward_roots = []\n    length = n\n    while length > 1:\n        half = length >> 1\n        wlen = pow(root, n // length, mod)\n\n        ws = [1] * half\n        cur = 1\n        for j in range(1, half):\n            cur = cur * wlen % mod\n            ws[j] = cur\n\n        forward_roots.append(ws)\n        length >>= 1\n\n    inverse_roots = []\n    length = 2\n    while length <= n:\n        half = length >> 1\n        wlen = pow(inv_root, n // length, mod)\n\n        ws = [1] * half\n        cur = 1\n        for j in range(1, half):\n            cur = cur * wlen % mod\n            ws[j] = cur\n\n        inverse_roots.append(ws)\n        length <<= 1\n\n    return forward_roots, inverse_roots\n\n\ndef ntt_forward(a, roots, mod, n):\n    length = n\n    level = 0\n\n    while length > 1:\n        half = length >> 1\n        ws = roots[level]\n\n        for start in range(0, n, length):\n            idx = start\n            u = a[idx]\n            v = a[idx + half]\n\n            s = u + v\n            if s >= mod:\n                s -= mod\n\n            d = u - v\n            if d < 0:\n                d += mod\n\n            a[idx] = s\n            a[idx + half] = d\n\n            for j in range(1, half):\n                idx = start + j\n                u = a[idx]\n                v = a[idx + half]\n\n                s = u + v\n                if s >= mod:\n                    s -= mod\n\n                d = u - v\n                if d < 0:\n                    d += mod\n\n                a[idx] = s\n                a[idx + half] = d * ws[j] % mod\n\n        length = half\n        level += 1\n\n\ndef ntt_inverse(a, roots, mod, n):\n    length = 2\n    level = 0\n\n    while length <= n:\n        half = length >> 1\n        ws = roots[level]\n\n        for start in range(0, n, length):\n            idx = start\n            u = a[idx]\n            v = a[idx + half]\n\n            s = u + v\n            if s >= mod:\n                s -= mod\n\n            d = u - v\n            if d < 0:\n                d += mod\n\n            a[idx] = s\n            a[idx + half] = d\n\n            for j in range(1, half):\n                idx = start + j\n                u = a[idx]\n                v = a[idx + half] * ws[j] % mod\n\n                s = u + v\n                if s >= mod:\n                    s -= mod\n\n                d = u - v\n                if d < 0:\n                    d += mod\n\n                a[idx] = s\n                a[idx + half] = d\n\n        length <<= 1\n        level += 1\n\n    inv_n = pow(n, mod - 2, mod)\n    for i in range(n):\n        a[i] = a[i] * inv_n % mod\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    x = data[1]\n    arr = data[2:2 + n]\n\n    less_positions = []\n    for i, value in enumerate(arr, 1):\n        if value < x:\n            less_positions.append(i)\n\n    m = len(less_positions)\n    answer = [0] * (n + 1)\n\n    if m == 0:\n        answer[0] = n * (n + 1) // 2\n        sys.stdout.write(\" \".join(map(str, answer)) + \"\\n\")\n        return\n\n    gaps = [0] * (m + 1)\n\n    gaps[0] = less_positions[0]\n    for i in range(1, m):\n        gaps[i] = less_positions[i] - less_positions[i - 1]\n    gaps[m] = n + 1 - less_positions[-1]\n\n    zero_count = 0\n    for v in gaps:\n        z = v - 1\n        zero_count += z * (z + 1) // 2\n\n    answer[0] = zero_count\n\n    size = m + 1\n    convolution_len = 2 * size - 1\n\n    ntt_size = 1\n    while ntt_size < convolution_len:\n        ntt_size <<= 1\n\n    max_root_power = 1 << 19\n    upper_bound = (n + 1) * (n + 1) + 1\n    mod = find_prime(upper_bound, max_root_power)\n\n    primitive = None\n    a = 2\n    while True:\n        r = pow(a, (mod - 1) // max_root_power, mod)\n        if pow(r, max_root_power // 2, mod) != 1:\n            primitive = r\n            break\n        a += 1\n\n    root = pow(primitive, max_root_power // ntt_size, mod)\n\n    forward_roots, inverse_roots = prepare_roots(ntt_size, root, mod)\n\n    fa = gaps + [0] * (ntt_size - size)\n    fb = gaps[::-1] + [0] * (ntt_size - size)\n\n    ntt_forward(fa, forward_roots, mod, ntt_size)\n    ntt_forward(fb, forward_roots, mod, ntt_size)\n\n    for i in range(ntt_size):\n        fa[i] = fa[i] * fb[i] % mod\n\n    ntt_inverse(fa, inverse_roots, mod, ntt_size)\n\n    offset = size - 1\n\n    for k in range(1, m + 1):\n        answer[k] = fa[offset + k]\n\n    sys.stdout.write(\" \".join(map(str, answer)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 139.535,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNikita likes tasks on order statistics, for example, he can easily find the $k$-th number in increasing order on a segment of an array. But now Nikita wonders how many segments of an array there are such that a given number $x$ is the $k$-th number in increasing order on this segment. In other words, you should find the number of segments of a given array such that there are exactly $k$ numbers of this segment which are less than $x$.\n\nNikita wants to get answer for this question for each $k$ from $0$ to $n$, where $n$ is the size of the array.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $x$ $(1 \\le n \\le 2 \\cdot 10^5, -10^9 \\le x \\le 10^9)$.\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ $(-10^9 \\le a_i \\le 10^9)$ — the given array.\n\n\n-----Output-----\n\nPrint $n+1$ integers, where the $i$-th number is the answer for Nikita's question for $k=i-1$.\n\n\n-----Examples-----\nInput\n5 3\n1 2 3 4 5\n\nOutput\n6 5 4 0 0 0 \nInput\n2 6\n-5 9\n\nOutput\n1 2 0 \nInput\n6 99\n-1 -1 -1 -1 -1 -1\n\nOutput\n0 6 5 4 3 2 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

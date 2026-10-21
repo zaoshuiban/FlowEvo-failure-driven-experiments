@@ -1,0 +1,109 @@
+{
+  "task_id": "taco_0616",
+  "sampling_group": "flip_oldpass_newfail",
+  "dataset": "taco",
+  "difficulty": "EASY",
+  "source_id": "616",
+  "provenance_group_id": "source_b9ed39cbf351195e",
+  "source_group_status": "conservative automated grouping; manual independence not certified",
+  "selection_hash": "5ecba79c022e2d3f3de63a415cb8ab32cbbde71ccb54ed9454fa4346dbb4d388",
+  "historical_programs": [
+    {
+      "stage": "l1",
+      "code_sha256": "ff287a4a00e5570ff2e678406c3dd10281e0bb2dee3c76ad2380d5f2b612f293",
+      "old_status": "PASS",
+      "repaired_status": "WRONG_ANSWER",
+      "source_path": "../e3_s0_20261020/raw/runs/taco_EASY/taco_0616/l1.py"
+    }
+  ],
+  "classification": "ROOT_CAUSE_UNKNOWN",
+  "classification_scope": "finite probe evidence; full-domain root cause not established",
+  "public_case_count": 104,
+  "oracle_evidence": "public_suite.json and code/legal_suite.py; prior cases preserve prior_case provenance",
+  "programs": [
+    {
+      "stage": "l1",
+      "code_sha256": "ff287a4a00e5570ff2e678406c3dd10281e0bb2dee3c76ad2380d5f2b612f293",
+      "old_status": "PASS",
+      "repaired_status": "WRONG_ANSWER",
+      "source_path": "../e3_s0_20261020/raw/runs/taco_EASY/taco_0616/l1.py",
+      "combined_status": "PASS",
+      "base_verdict": {
+        "tests_total": 104,
+        "tests_run": 104,
+        "tests_passed": 104,
+        "failures": [],
+        "executions": 104,
+        "status": "PASS",
+        "passed": true,
+        "seconds": 0.048168342997087166,
+        "task_id": "taco_0616",
+        "stage": "l1",
+        "code_sha256": "ff287a4a00e5570ff2e678406c3dd10281e0bb2dee3c76ad2380d5f2b612f293",
+        "public_suite_sha256": "e3b7469d15aeedfaceabd6826d29c892ceb093ada05c4eba3ae16abc37cbb89a"
+      },
+      "stress_v2_verdict": null,
+      "ast_features": {
+        "Module": 1,
+        "FunctionDef": 1,
+        "arguments": 1,
+        "If": 4,
+        "Assign": 2,
+        "Return": 5,
+        "arg": 2,
+        "BoolOp": 3,
+        "Compare": 7,
+        "Name": 16,
+        "BinOp": 7,
+        "Tuple": 2,
+        "Or": 2,
+        "Constant": 16,
+        "And": 1,
+        "NotEq": 1,
+        "Store": 2,
+        "FloorDiv": 1,
+        "Sub": 3,
+        "Load": 16,
+        "Lt": 4,
+        "Eq": 2,
+        "Mod": 1,
+        "Mult": 2
+      },
+      "legal_counterexample": null,
+      "minimal_patch": null
+    }
+  ],
+  "legacy_case_evidence": [
+    {
+      "task_id": "taco_0616",
+      "stage": "l1",
+      "code_sha256": "ff287a4a00e5570ff2e678406c3dd10281e0bb2dee3c76ad2380d5f2b612f293",
+      "regrade_epoch": "repair_v2_20261020",
+      "regraded_status": "WRONG_ANSWER",
+      "raw_index": 16,
+      "raw_index_mapping_confirmed": true,
+      "scope": "exact historical candidate and old raw case only",
+      "classification": "ROOT_CAUSE_UNKNOWN",
+      "raw_input": [
+        5,
+        14
+      ],
+      "normalized_input": [
+        5,
+        14
+      ],
+      "legacy_expected": [
+        [
+          3.0,
+          2.0
+        ]
+      ],
+      "reason": "function-specific legacy diagnosis retained in prior audit"
+    }
+  ],
+  "evaluation_counterfactual": null,
+  "limitations": [
+    "Finite PASS does not prove program correctness.",
+    "No failed input or patch fabricated for unconfirmed causes."
+  ]
+}

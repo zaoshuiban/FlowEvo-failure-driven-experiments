@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "22f80122-d0bc-436e-a9ed-d155252d29d4",
+  "created": 1792429466,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 736,
+    "completion_tokens": 1973,
+    "total_tokens": 2709,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1635
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 736
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    initial = [next(it) for _ in range(n)]\n    controlled_by = [[] for _ in range(n)]\n\n    for switch in range(m):\n        cnt = next(it)\n        for _ in range(cnt):\n            room = next(it) - 1\n            controlled_by[room].append(switch)\n\n    graph = [[] for _ in range(m)]\n\n    for room in range(n):\n        a, b = controlled_by[room]\n        # Need: initial[room] XOR x[a] XOR x[b] = 1\n        # Therefore: x[a] XOR x[b] = 1 XOR initial[room]\n        required = 1 ^ initial[room]\n        graph[a].append((b, required))\n        graph[b].append((a, required))\n\n    color = [-1] * m\n\n    for start in range(m):\n        if color[start] != -1:\n            continue\n\n        color[start] = 0\n        queue = deque([start])\n\n        while queue:\n            u = queue.popleft()\n\n            for v, required in graph[u]:\n                expected = color[u] ^ required\n\n                if color[v] == -1:\n                    color[v] = expected\n                    queue.append(v)\n                elif color[v] != expected:\n                    print(\"NO\")\n                    return\n\n    print(\"YES\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 8.728,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMoriarty has trapped n people in n distinct rooms in a hotel. Some rooms are locked, others are unlocked. But, there is a condition that the people in the hotel can only escape when all the doors are unlocked at the same time. There are m switches. Each switch control doors of some rooms, but each door is controlled by exactly two switches.\n\nYou are given the initial configuration of the doors. Toggling any switch, that is, turning it ON when it is OFF, or turning it OFF when it is ON, toggles the condition of the doors that this switch controls. Say, we toggled switch 1, which was connected to room 1, 2 and 3 which were respectively locked, unlocked and unlocked. Then, after toggling the switch, they become unlocked, locked and locked.\n\nYou need to tell Sherlock, if there exists a way to unlock all doors at the same time.\n\n\n-----Input-----\n\nFirst line of input contains two integers n and m (2 ≤ n ≤ 10^5, 2 ≤ m ≤ 10^5) — the number of rooms and the number of switches.\n\nNext line contains n space-separated integers r_1, r_2, ..., r_{n} (0 ≤ r_{i} ≤ 1) which tell the status of room doors. The i-th room is locked if r_{i} = 0, otherwise it is unlocked.\n\nThe i-th of next m lines contains an integer x_{i} (0 ≤ x_{i} ≤ n) followed by x_{i} distinct integers separated by space, denoting the number of rooms controlled by the i-th switch followed by the room numbers that this switch controls. It is guaranteed that the room numbers are in the range from 1 to n. It is guaranteed that each door is controlled by exactly two switches.\n\n\n-----Output-----\n\nOutput \"YES\" without quotes, if it is possible to open all doors at the same time, otherwise output \"NO\" without quotes.\n\n\n-----Examples-----\nInput\n3 3\n1 0 1\n2 1 3\n2 1 2\n2 2 3\n\nOutput\nNO\nInput\n3 3\n1 0 1\n3 1 2 3\n1 2\n2 1 3\n\nOutput\nYES\nInput\n3 3\n1 0 1\n3 1 2 3\n2 1 2\n1 3\n\nOutput\nNO\n\n\n-----Note-----\n\nIn the second example input, the initial statuses of the doors are [1, 0, 1] (0 means locked, 1 — unlocked).\n\nAfter toggling switch 3, we get [0, 0, 0] that means all doors are locked.\n\nThen, after toggling switch 1, we get [1, 1, 1] that means all doors are unlocked.\n\nIt can be seen that for the first and for the third example inputs it is not possible to make all doors unlocked.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

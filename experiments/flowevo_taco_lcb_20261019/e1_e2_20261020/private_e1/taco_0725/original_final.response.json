@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1b41777d-b759-4cd5-a892-eb3f071efcd2",
+  "created": 1792429598,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1389,
+    "completion_tokens": 13975,
+    "total_tokens": 15364,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13635
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 749
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    n = data[idx]\n    idx += 1\n    m = data[idx]\n    idx += 1\n\n    r = data[idx:idx + n]\n    idx += n\n\n    first_switch = [-1] * n\n    graph = [[] for _ in range(m)]\n\n    for switch in range(m):\n        cnt = data[idx]\n        idx += 1\n\n        for _ in range(cnt):\n            room = data[idx] - 1\n            idx += 1\n\n            if first_switch[room] == -1:\n                first_switch[room] = switch\n            else:\n                other = first_switch[room]\n                required = r[room] ^ 1\n\n                graph[switch].append((other, required))\n                graph[other].append((switch, required))\n\n    color = [-1] * m\n\n    for start in range(m):\n        if color[start] != -1:\n            continue\n\n        color[start] = 0\n        queue = deque([start])\n\n        while queue:\n            u = queue.popleft()\n\n            for v, required in graph[u]:\n                expected = color[u] ^ required\n\n                if color[v] == -1:\n                    color[v] = expected\n                    queue.append(v)\n                elif color[v] != expected:\n                    print(\"NO\")\n                    return\n\n    print(\"YES\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 66.403,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMoriarty has trapped n people in n distinct rooms in a hotel. Some rooms are locked, others are unlocked. But, there is a condition that the people in the hotel can only escape when all the doors are unlocked at the same time. There are m switches. Each switch control doors of some rooms, but each door is controlled by exactly two switches.\n\nYou are given the initial configuration of the doors. Toggling any switch, that is, turning it ON when it is OFF, or turning it OFF when it is ON, toggles the condition of the doors that this switch controls. Say, we toggled switch 1, which was connected to room 1, 2 and 3 which were respectively locked, unlocked and unlocked. Then, after toggling the switch, they become unlocked, locked and locked.\n\nYou need to tell Sherlock, if there exists a way to unlock all doors at the same time.\n\n\n-----Input-----\n\nFirst line of input contains two integers n and m (2 ≤ n ≤ 10^5, 2 ≤ m ≤ 10^5) — the number of rooms and the number of switches.\n\nNext line contains n space-separated integers r_1, r_2, ..., r_{n} (0 ≤ r_{i} ≤ 1) which tell the status of room doors. The i-th room is locked if r_{i} = 0, otherwise it is unlocked.\n\nThe i-th of next m lines contains an integer x_{i} (0 ≤ x_{i} ≤ n) followed by x_{i} distinct integers separated by space, denoting the number of rooms controlled by the i-th switch followed by the room numbers that this switch controls. It is guaranteed that the room numbers are in the range from 1 to n. It is guaranteed that each door is controlled by exactly two switches.\n\n\n-----Output-----\n\nOutput \"YES\" without quotes, if it is possible to open all doors at the same time, otherwise output \"NO\" without quotes.\n\n\n-----Examples-----\nInput\n3 3\n1 0 1\n2 1 3\n2 1 2\n2 2 3\n\nOutput\nNO\nInput\n3 3\n1 0 1\n3 1 2 3\n1 2\n2 1 3\n\nOutput\nYES\nInput\n3 3\n1 0 1\n3 1 2 3\n2 1 2\n1 3\n\nOutput\nNO\n\n\n-----Note-----\n\nIn the second example input, the initial statuses of the doors are [1, 0, 1] (0 means locked, 1 — unlocked).\n\nAfter toggling switch 3, we get [0, 0, 0] that means all doors are locked.\n\nThen, after toggling switch 1, we get [1, 1, 1] that means all doors are unlocked.\n\nIt can be seen that for the first and for the third example inputs it is not possible to make all doors unlocked.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    r = [next(it) for _ in range(n)]\n\n    first_switch = [-1] * n\n\n    parent = list(range(m))\n    xor_to_parent = [0] * m\n    size = [1] * m\n\n    def find(x):\n        if parent[x] == x:\n            return x\n\n        y = x\n        path = []\n        while parent[y] != y:\n            path.append(y)\n            y = parent[y]\n\n        root = y\n\n        for node in reversed(path):\n            p = parent[node]\n            if p != root:\n                xor_to_parent[node] ^= xor_to_parent[p]\n            parent[node] = root\n\n        return root\n\n    for switch in range(m):\n        cnt = next(it)\n\n        for _ in range(cnt):\n            room = next(it) - 1\n\n            if first_switch[room] == -1:\n                first_switch[room] = switch\n            else:\n                a = first_switch[room]\n                b = switch\n                required = r[room] ^ 1\n\n                ra = find(a)\n                rb = find(b)\n\n                if ra == rb:\n                    if (xor_to_parent[a] ^ xor_to_parent[b]) != required:\n                        print(\"NO\")\n                        return\n                else:\n                    d = required ^ xor_to_parent[a] ^ xor_to_parent[b]\n\n                    if size[ra] < size[rb]:\n                        parent[ra] = rb\n                        xor_to_parent[ra] = d\n                        size[rb] += size[ra]\n                    else:\n                        parent[rb] = ra\n                        xor_to_parent[rb] = d\n                        size[ra] += size[rb]\n\n    print(\"YES\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Captain Marmot wants to prepare a huge and important battle against his enemy, Captain Snake. For this battle he has n regiments, each consisting of 4 moles.\n\nInitially, each mole i (1 ≤ i ≤ 4n) is pl\nSolution:\nimport sys\nfrom itertools import product\n\n\ndef is_square(points):\n    distances = []\n    for i in range(4):\n        x1, y1 = points[i]\n        for j in range(i + 1, 4):\n            x2, y2 = points[j]\n            dx = x1 - x2\n            dy = y1 - y2\n            distances.append(dx * dx + dy * dy)\n\n    distances.sort()\n    side = distances[0]\n\n    return (\n        side > 0\n        and distances[1] == side\n        and distances[2] == side\n        and distances[3] == side\n        and distances[4] ="
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

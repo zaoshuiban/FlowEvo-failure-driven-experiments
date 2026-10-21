@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b063a19e-bc5b-40b8-8b76-3ad6507ade0e",
+  "created": 1792434795,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1098,
+    "completion_tokens": 24854,
+    "total_tokens": 25952,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24128
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1098
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import defaultdict\n\n\ndef min_greater(L: bytes, C):\n    \"\"\"\n    Returns the lexicographically smallest string A such that:\n        A > L, and count(A, ch) <= C[ch] for all ch\n    Returns None if no such string exists.\n    \"\"\"\n    n = len(L)\n    cnt = [0] * 26\n    for b in L:\n        cnt[b - 97] += 1\n\n    fits = True\n    for i in range(26):\n        if cnt[i] > C[i]:\n            fits = False\n            break\n\n    # Best case: L itself can be used, then append the smallest available char.\n    if fits:\n        for c in range(26):\n            if cnt[c] < C[c]:\n                return L + bytes((97 + c,))\n\n    viol = 0\n    for i in range(26):\n        if cnt[i] > C[i]:\n            viol += 1\n\n    # Find the rightmost possible divergence from L.\n    for pos in range(n - 1, -1, -1):\n        x = L[pos] - 97\n\n        old_bad = cnt[x] > C[x]\n        cnt[x] -= 1\n        new_bad = cnt[x] > C[x]\n\n        if old_bad and not new_bad:\n            viol -= 1\n        elif new_bad and not old_bad:\n            viol += 1\n\n        # cnt now stores counts of L[:pos]\n        if viol == 0:\n            for c in range(x + 1, 26):\n                if cnt[c] < C[c]:\n                    return L[:pos] + bytes((97 + c,))\n\n    return None\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n\n    N = int(next(it))\n    S = next(it)\n\n    C = [int(next(it)) for _ in range(26)]\n\n    K = int(next(it))\n\n    base = 0\n    var_count = defaultdict(int)\n\n    for _ in range(K):\n        P = next(it)\n\n        if P.startswith(S):\n            R = P[N:]\n            var_count[R] += 1\n        else:\n            if S > P:\n                base += 1\n\n    M = sum(var_count.values())\n\n    possible_y = [False] * (M + 1)\n    possible_y[0] = True  # A = empty string\n\n    items = sorted(var_count.items())  # sorted by R lexicographically\n    d = len(items)\n\n    cumulative = 0\n\n    for idx, (R, freq) in enumerate(items):\n        cumulative += freq\n        y = cumulative\n\n        A = min_greater(R, C)\n\n        if A is not None:\n            if idx == d - 1 or A <= items[idx + 1][0]:\n                possible_y[y] = True\n\n    possible_total = [False] * (K + 1)\n\n    for y in range(M + 1):\n        if possible_y[y]:\n            total = base + y\n            if total <= K:\n                possible_total[total] = True\n\n    ans = []\n    for x in range(K + 1):\n        ans.append(\"Yes\" if possible_total[x] else \"No\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 127.381,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n*\"Raju - zor zor se bolke sabko scheme bata de\".  \nRaju intends to scam everyone in order to become rich quickly. But before doing that, he must prove to everyone his innocence, by doubling his own money with the help of a scheme.*\n\nRaju wants to double his money, but in order to invest in the scheme, he is required to solve the following problem. He has asked you to help him in solving the problem.\n\nYou are given the following:\nK strings P_{1}, P_{2}, P_{3}, \\ldots, P_{K}\nA string S of length N.\nSome number of available characters from 'a' to 'z'. This is given to you as an array C of size 26, where C_{1} is the number of 'a'-s, C_{2} is the number of 'b'-s, \\ldots, C_{26} is the number of 'z'-s you have.\n\nSolve the following problem independently for each X from 0 to K:\nIs it possible to append some (possibly 0) characters to S from the available characters such that the resulting string is strictly lexicographically greater than *exactly* X of the given K strings?\n\nNote that the process is independent for each X. That is, for each X, you start with the original string S and the values C_{1}, C_{2}, \\ldots, C_{26} given in the input.\n\nNote: A string A is said to be lexicographically larger than a string B if:\nB is a proper prefix of A (for example, abc is larger than a and ab); or\nLet i be the first position where A and B differ (i.e, A_{1} = B_{1}, A_{2} = B_{2}, \\ldots, A_{i-1} = B_{i-1}). Then, A_{i} > B_{i}.\n\n------ Input Format ------ \n\n- The first line of input will contain one integer N, the size of the string S.\n- The second line of input will contain string S.\n- The third line of input will contain 26 space-separated integers, representing the values C_{1}, C_{2}, \\ldots, C_{26}.\n- The fourth line of input will contain one integer K.\n- The i-th of the next K lines of input will contain the string P_{i}.\n\n------ Output Format ------ \n\nPrint K+1 lines of output. The i-th of these lines should contain the answer for X = i-1: Yes if it's possible to append some of the given characters to S to make it strictly lexicographically larger than exactly i-1 strings, and No otherwise.\n\nEach letter of the output may be printed in either uppercase or lowercase, i.e, Yes, YES, and yEs will all be treated as equivalent.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 10^{4}$\n$0 ≤ C_{i} ≤ 10^{6}$\n$1 ≤ K ≤ 10^{4}$\n$1 ≤ |P_{i}| ≤ 10^{4}$\n- Every input string will contain only lowercase English letters, i.e, the letters from $a$ to $z$.\n- The sum of $|P_{i}|$ across all $K$ strings won't exceed $10^{5}$.\n\n----- Sample Input 1 ------ \n4\nabcd\n1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1\n6\nabc\nabcd\nab\nabcde\na\nabcd\n\n----- Sample Output 1 ------ \nNo\nNo\nNo\nYes\nNo\nYes\nYes\n\n----- explanation 1 ------ \nThe answer for a few values of $X$ is as follows:\n\n- $X = 3$: Leave $S$ unchanged, and it is already greater than exactly three of the given strings (\"abc\", \"ab\", \"a\"). So, the answer is \"Yes\".\n- $X = 4$: There is no way to append some characters to the string $S$ from the ones we have (one copy each of 'a', 'c', 'z') such that the resulting string will be greater than exactly $4$ strings out of the given $6$ strings. So, the output is \"No\".\n- $X = 5$: Append 'c' to $S$, to form \"abcdc\". This is greater than all the input strings except \"abcde\", as needed.\n- $X = 6$: Append 'z' to $S$, to form \"abcdz\". This is greater than every input string.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

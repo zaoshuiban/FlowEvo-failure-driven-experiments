@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5dc25699-e927-451e-b592-ab4746bba603",
+  "created": 1792434798,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 961,
+    "completion_tokens": 24594,
+    "total_tokens": 25555,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24041
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 321
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    rows = next(it)\n    n = next(it)\n\n    occupied = {}\n    for _ in range(n):\n        r = next(it)\n        c = next(it) - 1\n        occupied[r] = c\n\n    # dp[m][left_mask][right_mask]\n    # m consecutive rows, with unavailable cells given by masks\n    # at the first and last row.\n    dp = [[[0 for _ in range(4)] for _ in range(4)] for _ in range(rows + 1)]\n\n    for m in range(1, rows + 1):\n        for left_mask in range(4):\n            for right_mask in range(4):\n                reachable = set()\n\n                for i in range(1, m + 1):\n                    for c in (0, 1):\n                        bit = 1 << c\n\n                        if i == 1 and (left_mask & bit):\n                            continue\n                        if i == m and (right_mask & bit):\n                            continue\n\n                        opposite = 1 << (1 - c)\n                        value = 0\n\n                        if i > 1:\n                            value ^= dp[i - 1][left_mask][opposite]\n\n                        if i < m:\n                            value ^= dp[m - i][opposite][right_mask]\n\n                        reachable.add(value)\n\n                mex = 0\n                while mex in reachable:\n                    mex += 1\n\n                dp[m][left_mask][right_mask] = mex\n\n    xor_sum = 0\n    prev_row = 0\n    prev_col = None\n\n    for row in sorted(occupied):\n        col = occupied[row]\n\n        length = row - prev_row - 1\n        if length > 0:\n            left_mask = 0\n            if prev_col is not None:\n                left_mask = 1 << (1 - prev_col)\n\n            right_mask = 1 << (1 - col)\n            xor_sum ^= dp[length][left_mask][right_mask]\n\n        prev_row = row\n        prev_col = col\n\n    length = rows - prev_row\n    if length > 0:\n        left_mask = 0\n        if prev_col is not None:\n            left_mask = 1 << (1 - prev_col)\n\n        xor_sum ^= dp[length][left_mask][0]\n\n    print(\"WIN\" if xor_sum != 0 else \"LOSE\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 122.181,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIn a far away land, there are two cities near a river. One day, the cities decide that they have too little space and would like to reclaim some of the river area into land.\n\nThe river area can be represented by a grid with r rows and exactly two columns — each cell represents a rectangular area. The rows are numbered 1 through r from top to bottom, while the columns are numbered 1 and 2.\n\nInitially, all of the cells are occupied by the river. The plan is to turn some of those cells into land one by one, with the cities alternately choosing a cell to reclaim, and continuing until no more cells can be reclaimed.\n\nHowever, the river is also used as a major trade route. The cities need to make sure that ships will still be able to sail from one end of the river to the other. More formally, if a cell (r, c) has been reclaimed, it is not allowed to reclaim any of the cells (r - 1, 3 - c), (r, 3 - c), or (r + 1, 3 - c).\n\nThe cities are not on friendly terms, and each city wants to be the last city to reclaim a cell (they don't care about how many cells they reclaim, just who reclaims a cell last). The cities have already reclaimed n cells. Your job is to determine which city will be the last to reclaim a cell, assuming both choose cells optimally from current moment.\n\n\n-----Input-----\n\nThe first line consists of two integers r and n (1 ≤ r ≤ 100, 0 ≤ n ≤ r). Then n lines follow, describing the cells that were already reclaimed. Each line consists of two integers: r_{i} and c_{i} (1 ≤ r_{i} ≤ r, 1 ≤ c_{i} ≤ 2), which represent the cell located at row r_{i} and column c_{i}. All of the lines describing the cells will be distinct, and the reclaimed cells will not violate the constraints above.\n\n\n-----Output-----\n\nOutput \"WIN\" if the city whose turn it is to choose a cell can guarantee that they will be the last to choose a cell. Otherwise print \"LOSE\".\n\n\n-----Examples-----\nInput\n3 1\n1 1\n\nOutput\nWIN\n\nInput\n12 2\n4 1\n8 1\n\nOutput\nWIN\n\nInput\n1 1\n1 2\n\nOutput\nLOSE\n\n\n\n-----Note-----\n\nIn the first example, there are 3 possible cells for the first city to reclaim: (2, 1), (3, 1), or (3, 2). The first two possibilities both lose, as they leave exactly one cell for the other city. [Image] \n\nHowever, reclaiming the cell at (3, 2) leaves no more cells that can be reclaimed, and therefore the first city wins. $\\text{-}$ \n\nIn the third example, there are no cells that can be reclaimed.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: The robot is located on a checkered rectangular board of size n × m (n rows, m columns). The rows in the board are numbered from 1 to n from top to bottom, and the columns — from 1 to m from left to r\nSolution:\nimport sys\nfrom array import array\n\n\ndef main():\n    data = sys.stdin.buffer.read()\n    p = 0\n    ld = len(data)\n\n    def read_int():\n        nonlocal p\n        while p < ld and data[p] <= 32:\n            p += 1\n        num = 0\n        while p < ld and data[p] > 32:\n            num = num * 10 + (data[p] - 48)\n            p += 1\n        return num\n\n    t = read_int()\n    answers = []\n\n    for _ in range(t):\n        n = read_int()\n        m = read_int()\n        total = n * m\n\n        nxt = array('"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

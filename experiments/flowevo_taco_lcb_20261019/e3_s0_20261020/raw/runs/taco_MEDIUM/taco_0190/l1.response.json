@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "44ede8e4-c8e8-4e34-a309-ac96363e237d",
+  "created": 1792436089,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 471,
+    "completion_tokens": 21443,
+    "total_tokens": 21914,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 21074
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 471
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, D = data[0], data[1]\n    workers = []\n    idx = 2\n\n    for _ in range(n):\n        t, x, y = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n        workers.append((t, x, y))\n\n    workers.sort(key=lambda w: w[0])\n\n    ans = 0\n    remaining = D\n    current_speed = 0\n    prev_time = None\n\n    i = 0\n    finished = False\n\n    while i < n and not finished:\n        t = workers[i][0]\n\n        max_y = -1\n        min_cost = 10**18\n        j = i\n\n        while j < n and workers[j][0] == t:\n            _, cost, speed = workers[j]\n\n            if speed > max_y:\n                max_y = speed\n                min_cost = cost\n            elif speed == max_y and cost < min_cost:\n                min_cost = cost\n\n            j += 1\n\n        if max_y > current_speed:\n            if current_speed == 0:\n                ans += min_cost\n                current_speed = max_y\n                prev_time = t\n            else:\n                area = current_speed * (t - prev_time)\n\n                if remaining <= area:\n                    finished = True\n                    break\n\n                remaining -= area\n                ans += min_cost\n                current_speed = max_y\n                prev_time = t\n\n        i = j\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 115.727,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou want to repaint your house entirely for an upcoming occasion. The total area of your house is D units. There are a total of N workers. The i^th worker has his available time Ti, hiring cost Xi and speed Yi. This means that he is available for hiring from time Ti  and remains available ever since. Once available, you can hire him with cost Xi, after which he will start painting the house immediately, covering exactly Yi units of house with paint per time unit. You may or may not hire a worker and can also hire or fire him at any later point of time. However, no more than 1 worker can be painting the house at a given time.\n\nSince you want the work to be done as fast as possible, figure out a way to hire the workers, such that your house gets painted at the earliest possible time, with minimum cost to spend for hiring workers.\n\nNote: You can hire a previously hired worker without paying him again.\n\nINPUT\n\nThe first line of input contains two integers \"N D\", the number of workers and the area of your house respectively. The i^th of the next N lines denotes the i^th worker, and contains three integers \"Ti Xi Yi\", described in the statement.\n\nOUTPUT\n\nOutput one integer, the minimum cost that you can spend in order to get your house painted at the earliest.\n\nCONSTRAINTS\n\n1 ≤ N, T, X, Y ≤ 10^5\n1 ≤ D ≤ 10^11\n\nSAMPLE INPUT\n3 3\n1 1 1\n2 2 2\n3 1 5\n\nSAMPLE OUTPUT\n3\n\nExplanation\n\nWe can hire the first worker at cost of 1 and second at cost of 2, to finish painting at the minimum time of exactly 2 time units.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

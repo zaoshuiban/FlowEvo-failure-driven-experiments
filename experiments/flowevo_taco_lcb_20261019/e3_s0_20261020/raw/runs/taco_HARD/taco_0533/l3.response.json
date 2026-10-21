@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "074fa704-fea1-45fa-a4a7-384a7be4bf4c",
+  "created": 1792440781,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1014,
+    "completion_tokens": 14775,
+    "total_tokens": 15789,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14461
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 630
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    forbidden = [[] for _ in range(n)]\n\n    idx = 2\n    for _ in range(m):\n        x = data[idx] - 1\n        y = data[idx + 1] - 1\n        idx += 2\n        forbidden[x].append(y)\n        forbidden[y].append(x)\n\n    unvisited = set(range(n))\n    mark = [0] * n\n    stamp = 0\n    components = []\n\n    while unvisited:\n        start = unvisited.pop()\n        queue = [start]\n        head = 0\n        size = 0\n\n        while head < len(queue):\n            v = queue[head]\n            head += 1\n            size += 1\n\n            stamp += 1\n            for u in forbidden[v]:\n                mark[u] = stamp\n\n            to_add = []\n            for u in unvisited:\n                if mark[u] != stamp:\n                    to_add.append(u)\n\n            if to_add:\n                unvisited.difference_update(to_add)\n                queue.extend(to_add)\n\n        components.append(size)\n\n    components.sort()\n\n    sys.stdout.write(str(len(components)) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, components)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 72.037,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an undirected graph consisting of n vertices and $\\frac{n(n - 1)}{2} - m$ edges. Instead of giving you the edges that exist in the graph, we give you m unordered pairs (x, y) such that there is no edge between x and y, and if some pair of vertices is not listed in the input, then there is an edge between these vertices.\n\nYou have to find the number of connected components in the graph and the size of each component. A connected component is a set of vertices X such that for every two vertices from this set there exists at least one path in the graph connecting these vertices, but adding any other vertex to X violates this rule.\n\n\n-----Input-----\n\nThe first line contains two integers n and m (1 ≤ n ≤ 200000, $0 \\leq m \\leq \\operatorname{min}(\\frac{n(n - 1)}{2}, 200000)$).\n\nThen m lines follow, each containing a pair of integers x and y (1 ≤ x, y ≤ n, x ≠ y) denoting that there is no edge between x and y. Each pair is listed at most once; (x, y) and (y, x) are considered the same (so they are never listed in the same test). If some pair of vertices is not listed in the input, then there exists an edge between those vertices. \n\n\n-----Output-----\n\nFirstly print k — the number of connected components in this graph.\n\nThen print k integers — the sizes of components. You should output these integers in non-descending order.\n\n\n-----Example-----\nInput\n5 5\n1 2\n3 4\n3 2\n4 2\n2 5\n\nOutput\n2\n1 4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = iter(map(int, sys.stdin.buffer.read().split()))\n    try:\n        n = next(data)\n    except StopIteration:\n        return\n    m = next(data)\n\n    forbidden = [[] for _ in range(n)]\n\n    for _ in range(m):\n        x = next(data) - 1\n        y = next(data) - 1\n        forbidden[x].append(y)\n        forbidden[y].append(x)\n\n    unvisited = set(range(n))\n    mark = [0] * n\n    components = []\n\n    while unvisited:\n        start = unvisited.pop()\n        queue = [start]\n        head = 0\n        size = 0\n\n        while head < len(queue):\n            v = queue[head]\n            head += 1\n            size += 1\n\n            token = v + 1\n            for u in forbidden[v]:\n                mark[u] = token\n\n            to_add = []\n            for u in unvisited:\n                if mark[u] != token:\n                    to_add.append(u)\n\n            if to_add:\n                unvisited.difference_update(to_add)\n                queue.extend(to_add)\n\n        components.append(size)\n\n    components.sort()\n\n    sys.stdout.write(str(len(components)) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, components)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: As you know, an undirected connected graph with n nodes and n - 1 edges is called a tree. You are given an integer d and a tree consisting of n nodes. Each node i has a value a_{i} associated with it.\nSolution:\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    d, n = data[0], data[1]\n    a = [0] + data[2:2 + n]\n\n    adj = [[] for _ in range(n + 1)]\n    pos = 2 + n\n\n    for _ in range(n - 1):\n        u, v = data[pos], data[pos + 1]\n        pos += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    sys.setrecursionlimit(1_000_000)\n\n    answer = 0\n\n    for root in range(1, n + 1):\n        base = a[root]\n        li"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

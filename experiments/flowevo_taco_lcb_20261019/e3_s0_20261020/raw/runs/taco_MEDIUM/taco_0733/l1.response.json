@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f47f9303-4796-43eb-ad3a-92ba31f66844",
+  "created": 1792434788,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 689,
+    "completion_tokens": 687,
+    "total_tokens": 1376,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 534
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 689
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    T = next(it)\n    answers = []\n\n    for _ in range(T):\n        N = next(it)\n        tasks = [next(it) for _ in range(N)]\n\n        total = sum(tasks)\n        prefix = 0\n        answer = total  # Assign all tasks to the second processor\n\n        for time in tasks:\n            prefix += time\n            suffix = total - prefix\n            answer = min(answer, max(prefix, suffix))\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 3.285,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are N tasks waiting in line to be executed. The execution time for the i^{th} task is A_{i} seconds. \n\nChef has two processors to execute these N tasks. Both these processors work simultaneously. Each processor executes the assigned tasks one by one.\n\nChef assigns a prefix of these tasks to the first processor and the remaining tasks to the second processor. \n\nFor example, if there are 3 tasks, Chef can do one of the following:\nAssign no task to the first processor. This means, the second processor will execute tasks 1, 2 and 3.\nAssign task 1 to the first processor. This means, the second processor will execute tasks 2 and 3.\nAssign tasks 1 and 2 to the first processor. This means, the second processor will execute task 3.\nAssign tasks 1, 2 and 3 to the first processor. Thus, second processor would execute no tasks.\n\nFind the minimum time in which all the tasks can be executed.\n\n------ Input Format ------ \n\n- First line will contain T, number of test cases. Then the test cases follow.\n- The first line of each test case contains a single integer N, the number of tasks waiting to be executed.\n- The second line of each test case contains N space separated positive integers A_{1}, A_{2}, \\ldots, A_{N} denoting the execution time for each task.\n\n------ Output Format ------ \n\nFor each test case, output in a single line, the minimum time in which all tasks can be executed.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 100$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i} ≤ 10^{5}$\n- The sum of $N$ over all test cases is not more than $2\\cdot 10^{5}$.\n\n------ subtasks ------ \n\nSubtask #1 (100 points): original constraints\n\n----- Sample Input 1 ------ \n3\n3\n4 2 3\n6\n1 1 1 1 1 1\n1\n5\n----- Sample Output 1 ------ \n5\n3\n5\n----- explanation 1 ------ \nTest Case 1: Chef assigns task $1$ to the first processor and tasks $2$ and $3$ to the second processor. The first processor takes $4$ seconds to execute task $1$. The second processor takes $2+3 = 5$ seconds to execute tasks $2$ and $3$. Thus, atleast $5$ seconds are required to execute all tasks. \n\nTest Case 2: Chef assigns tasks $1, 2$ and $3$ to the first processor. Processes $4, 5$ ad $6$ are executed by second processor.\n\nTest Case 3: Chef assigns task $1$ to the first processor. No task is executed by second processor.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

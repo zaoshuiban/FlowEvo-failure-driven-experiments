@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "46a9f0dd-f30d-4a21-94b3-3f1fe583b570",
+  "created": 1792433902,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 338,
+    "completion_tokens": 6950,
+    "total_tokens": 7288,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6487
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 338
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef possible_counts(a):\n    if a == 0:\n        return (0, 1)\n\n    d = 1 + 8 * a\n    r = math.isqrt(d)\n\n    if r * r != d:\n        return ()\n\n    n = (1 + r) // 2\n    if n * (n - 1) // 2 == a:\n        return (n,)\n\n    return ()\n\n\ndef build_string(n0, n1, a01):\n    if n0 == 0:\n        return '1' * n1\n    if n1 == 0:\n        return '0' * n0\n\n    q, rem = divmod(a01, n1)\n\n    parts = []\n\n    if q > 0:\n        parts.append('0' * q)\n\n    first_ones = n1 - rem\n    if first_ones > 0:\n        parts.append('1' * first_ones)\n\n    if rem > 0:\n        parts.append('0')\n        parts.append('1' * rem)\n        trailing_zeros = n0 - q - 1\n    else:\n        trailing_zeros = n0 - q\n\n    if trailing_zeros > 0:\n        parts.append('0' * trailing_zeros)\n\n    return ''.join(parts)\n\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    a00, a01, a10, a11 = map(int, data[:4])\n\n    zero_counts = possible_counts(a00)\n    one_counts = possible_counts(a11)\n\n    for n0 in zero_counts:\n        for n1 in one_counts:\n            if n0 + n1 == 0:\n                continue\n\n            total_cross = n0 * n1\n\n            if a01 + a10 != total_cross:\n                continue\n\n            if a01 > total_cross:\n                continue\n\n            ans = build_string(n0, n1, a01)\n\n            if 0 < len(ans) <= 1_000_000:\n                print(ans)\n                return\n\n    print(\"Impossible\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 30.001,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFor each string s consisting of characters '0' and '1' one can define four integers a00, a01, a10 and a11, where axy is the number of subsequences of length 2 of the string s equal to the sequence {x, y}. \n\nIn these problem you are given four integers a00, a01, a10, a11 and have to find any non-empty string s that matches them, or determine that there is no such string. One can prove that if at least one answer exists, there exists an answer of length no more than 1 000 000.\n\nInput\n\nThe only line of the input contains four non-negative integers a00, a01, a10 and a11. Each of them doesn't exceed 109.\n\nOutput\n\nIf there exists a non-empty string that matches four integers from the input, print it in the only line of the output. Otherwise, print \"Impossible\". The length of your answer must not exceed 1 000 000.\n\nExamples\n\nInput\n\n1 2 3 4\n\n\nOutput\n\nImpossible\n\n\nInput\n\n1 2 2 1\n\n\nOutput\n\n0110\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

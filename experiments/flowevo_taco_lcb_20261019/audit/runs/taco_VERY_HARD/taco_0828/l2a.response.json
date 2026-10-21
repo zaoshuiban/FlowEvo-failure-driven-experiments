@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "87b8962a-6468-44b1-903c-39a3d9a12ac9",
+  "created": 1792452220,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 860,
+    "completion_tokens": 27232,
+    "total_tokens": 28092,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 26243
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 220
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\n\ndef solve():\n    tokens = sys.stdin.buffer.read().split()\n    if not tokens:\n        return\n\n    t = int(tokens[0])\n    idx = 1\n    out = []\n\n    DOT = ord('.')\n    INF = 10**9\n\n    for _ in range(t):\n        n = int(tokens[idx])\n        m = int(tokens[idx + 1])\n        idx += 2\n\n        grid = tokens[idx:idx + n]\n        idx += n\n\n        total_cells = n * m\n        row_offset = total_cells\n        total_nodes = total_cells + n\n\n        dist = [INF] * total_nodes\n        visited = bytearray(total_nodes)\n\n        dq = deque()\n        dist[0] = 0\n        dq.append(0)\n\n        last_row = n - 1\n        if grid[last_row][m - 1] == DOT:\n            target = total_cells - 1\n        else:\n            target = row_offset + last_row\n\n        while dq:\n            v = dq.popleft()\n\n            if visited[v]:\n                continue\n            visited[v] = 1\n\n            d = dist[v]\n\n            if v == target:\n                break\n\n            if v < total_cells:\n                row = v // m\n                col = v - row * m\n\n                if row > 0:\n                    nid = v - m\n                    if grid[row - 1][col] == DOT and d < dist[nid]:\n                        dist[nid] = d\n                        dq.appendleft(nid)\n\n                if row + 1 < n:\n                    nid = v + m\n                    if grid[row + 1][col] == DOT and d < dist[nid]:\n                        dist[nid] = d\n                        dq.appendleft(nid)\n\n                if col > 0:\n                    nid = v - 1\n                    if grid[row][col - 1] == DOT and d < dist[nid]:\n                        dist[nid] = d\n                        dq.appendleft(nid)\n\n                if col + 1 < m:\n                    nid = v + 1\n                    if grid[row][col + 1] == DOT and d < dist[nid]:\n                        dist[nid] = d\n                        dq.appendleft(nid)\n\n                nd = d + 1\n\n                rv = row_offset + row\n                if nd < dist[rv]:\n                    dist[rv] = nd\n                    dq.append(rv)\n\n                if row > 0:\n                    rv = row_offset + row - 1\n                    if nd < dist[rv]:\n                        dist[rv] = nd\n                        dq.append(rv)\n\n                if row + 1 < n:\n                    rv = row_offset + row + 1\n                    if nd < dist[rv]:\n                        dist[rv] = nd\n                        dq.append(rv)\n\n            else:\n                row = v - row_offset\n\n                if row > 0:\n                    s = row - 1\n                    base = s * m\n                    row_bytes = grid[s]\n\n                    for col in range(m):\n                        if row_bytes[col] == DOT:\n                            nid = base + col\n                            if d < dist[nid]:\n                                dist[nid] = d\n                                dq.appendleft(nid)\n\n                s = row\n                base = s * m\n                row_bytes = grid[s]\n\n                for col in range(m):\n                    if row_bytes[col] == DOT:\n                        nid = base + col\n                        if d < dist[nid]:\n                            dist[nid] = d\n                            dq.appendleft(nid)\n\n                if row + 1 < n:\n                    s = row + 1\n                    base = s * m\n                    row_bytes = grid[s]\n\n                    for col in range(m):\n                        if row_bytes[col] == DOT:\n                            nid = base + col\n                            if d < dist[nid]:\n                                dist[nid] = d\n                                dq.appendleft(nid)\n\n                nd = d + 1\n\n                if row > 0:\n                    rv = row_offset + row - 1\n                    if nd < dist[rv]:\n                        dist[rv] = nd\n                        dq.append(rv)\n\n                if row + 1 < n:\n                    rv = row_offset + row + 1\n                    if nd < dist[rv]:\n                        dist[rv] = nd\n                        dq.append(rv)\n\n        out.append(str(dist[target]))\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 137.886,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is an N \\times M grid, with rows numbered 1 to N from top to bottom, and columns 1 to M from left to right.\n\nChef starts at cell (1, 1) and wants to reach cell (N, M). However, some cells contain walls. Chef can move from their current cell to any adjacent cell (a cell which shares an edge) within the grid that does not contain a wall. So it may be possible initially that all of Chef's paths to (N, M) are blocked by walls.\n\nTo get around this, Chef can call an airstrike on any row and annihilate all walls present in that row. More formally, if Chef chooses row i (1 ≤ i ≤ N), then any walls in cells (i, 1), (i, 2) \\ldots (i, M) are destroyed. Once a wall is destroyed, the cell becomes freely passable.\n\nSince airstrikes are expensive, help Chef find the minimum number of airstrikes Chef must call to guarantee that Chef can reach (N, M) from (1, 1).\n\n------ Input Format ------ \n\n- The first line contains a single integer T — the number of test cases. Then the test cases follow.\n- The first line of each test case contains two integers N and M — the number of rows and the number of columns in the grid.\n- The next N lines contain M characters each, describing the grid. The character at the i-th row and j-th column S_{i, j} is \\texttt{'.'} if the cell (i, j) is empty and \\texttt{'\\#'} if there is a wall.\n\n------ Output Format ------ \n\nFor each test case, output on a new line the minimum number of airstrikes Chef must call to guarantee that Chef can reach (N, M) from (1, 1).\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 2 \\cdot 10^{5}$\n$2 ≤ N \\times M ≤ 5 \\cdot 10^{5}$\n$S_{i, j} \\in \\{\\texttt{'.'}, \\texttt{'\\#'}\\}$\n- The sum of $N \\times M$ over all test cases does not exceed $5 \\cdot 10^{5}$.\n- It is guaranteed that the starting cell $(1, 1)$ is not blocked by a wall.\n\n----- Sample Input 1 ------ \n5\n1 2\n..\n1 4\n.##.\n4 1\n.\n#\n#\n.\n3 2\n.#\n##\n##\n3 3\n.##\n#.#\n##.\n\n----- Sample Output 1 ------ \n0\n1\n2\n2\n1\n\n----- explanation 1 ------ \nTest case 1: \nChef does not need to call any airstrikes. Chef can follow the path $(1, 1) \\rightarrow (1, 2)$.\n\nTest case 2: \nChef must call an airstrike on row $1$. This will destroy the walls at $(1, 2)$ and $(1, 3)$. Chef can then follow the path $(1, 1) \\rightarrow (1, 2) \\rightarrow (1, 3) \\rightarrow (1, 4)$.\n\nTest case 3: \nChef must call airstrikes on rows $2$ and $3$. This will destroy the walls at $(2, 1)$ and $(3, 1)$ respectively. Chef can then follow the path $(1, 1) \\rightarrow (2, 1) \\rightarrow (3, 1) \\rightarrow (4, 1)$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

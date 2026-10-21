@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "18d1510d-d79b-45d2-9e7f-5aaabf082838",
+  "created": 1792458908,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 558,
+    "completion_tokens": 27763,
+    "total_tokens": 28321,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 26566
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 174
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef integer_stream():\n    data = sys.stdin.buffer.read()\n    num = 0\n    in_num = False\n    for ch in data:\n        if 48 <= ch <= 57:\n            num = num * 10 + (ch - 48)\n            in_num = True\n        else:\n            if in_num:\n                yield num\n                num = 0\n                in_num = False\n    if in_num:\n        yield num\n\n\ndef solve():\n    it = iter(integer_stream())\n    T = next(it)\n    answers = []\n    INF = 10**8\n\n    # State index inside a node's DP:\n    # k = number of coin children, capped at 2: 0, 1, 2\n    # flag = whether any child has a coin child\n    # state = k * 2 + flag\n    trans = [[0] * 4 for _ in range(6)]\n    for state in range(6):\n        k = state >> 1\n        flag = state & 1\n        for cu in (0, 1):\n            nk = k + cu\n            if nk > 2:\n                nk = 2\n            for hu in (0, 1):\n                opt = (cu << 1) | hu\n                nflag = flag | hu\n                trans[state][opt] = (nk << 1) | nflag\n\n    for _ in range(T):\n        N = next(it)\n\n        adj = [[] for _ in range(N + 1)]\n        for _ in range(N - 1):\n            u = next(it)\n            v = next(it)\n            adj[u].append(v)\n            adj[v].append(u)\n\n        parent = [0] * (N + 1)\n        parent[1] = -1\n        order = []\n        stack = [1]\n\n        while stack:\n            v = stack.pop()\n            order.append(v)\n            for u in adj[v]:\n                if u == parent[v]:\n                    continue\n                parent[u] = v\n                stack.append(u)\n\n        dp = [None] * (N + 1)\n\n        for v in reversed(order):\n            # aggs[p][state], p = 2 * parent_coin + v_coin\n            # state = (coin_children_count_capped_at_2) * 2 + any_grandchild_coin\n            aggs = []\n            for _ in range(4):\n                arr = [INF] * 6\n                arr[0] = 0\n                aggs.append(arr)\n\n            pv = parent[v]\n\n            for u in adj[v]:\n                if u == pv:\n                    continue\n\n                child_dp = dp[u]\n\n                for p in range(4):\n                    base = p << 2\n                    opts = (\n                        child_dp[base],\n                        child_dp[base + 1],\n                        child_dp[base + 2],\n                        child_dp[base + 3],\n                    )\n\n                    cur = aggs[p]\n                    new = [INF] * 6\n\n                    for state in range(6):\n                        cur_val = cur[state]\n                        if cur_val >= INF:\n                            continue\n\n                        tr = trans[state]\n\n                        for opt in range(4):\n                            opt_val = opts[opt]\n                            if opt_val >= INF:\n                                continue\n\n                            new_state = tr[opt]\n                            new_val = cur_val + opt_val\n                            if new_val < new[new_state]:\n                                new[new_state] = new_val\n\n                    aggs[p] = new\n\n            cur_dp = [INF] * 16\n\n            for p in range(4):\n                b = p >> 1          # parent has coin\n                c = p & 1           # current node has coin\n                cost = aggs[p]\n\n                if c == 0:\n                    # If current node has no coin, it needs two coin neighbours.\n                    # h = 1 since it must have at least one coin child.\n                    best = INF\n\n                    if b == 1:\n                        best = min(best, cost[2], cost[3])\n\n                    best = min(best, cost[4], cost[5])\n\n                    if best < INF:\n                        idx = (p << 1) + 1\n                        cur_dp[idx] = best\n                        cur_dp[8 + idx] = best\n\n                else:\n                    # Current node has a coin.\n                    any_grandchild_0 = cost[0]\n                    any_grandchild_1 = cost[1]\n\n                    best_h1 = min(cost[2], cost[3], cost[4], cost[5])\n                    if best_h1 < INF:\n                        best_h1 += 1\n\n                    base_idx = p << 1\n\n                    for a in (0, 1):\n                        if b or a:\n                            best_h0 = min(any_grandchild_0, any_grandchild_1)\n                        else:\n                            best_h0 = any_grandchild_1\n\n                        if best_h0 < INF:\n                            cur_dp[(a << 3) + base_idx] = best_h0 + 1\n\n                        if best_h1 < INF:\n                            cur_dp[(a << 3) + base_idx + 1] = best_h1\n\n            dp[v] = cur_dp\n\n        ans = min(dp[1][0:4])\n\n        if ans >= INF:\n            answers.append(\"-1\")\n        else:\n            answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 131.627,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nYou are given a rooted tree consisting of N nodes. The nodes are numbered from 1 to N, and node 1 is the root. At each node of the tree, you can put zero or one coin such that the following property is satisfied for the tree:\n\nFor each node of the tree, starting from the original configuration, we should be able to get two coins on the node by applying at most two operations of the following kind:\nTake a coin from a node and move it to an adjacent node.\n  \nWhile trying to get to a particular node, if the same coin is moved in two operations, both those operations should either be towards the root, or both of them should be away from the root. That is, you cannot move a coin to its parent in one operation and then take it to another child of the parent in the second operation.\n\nFind the minimum total number of coins which can be used to get a valid configuration.\n\n------ Input ------ \n\nThe first line of the input contains an integer T.\nFor each test case, the first line contains an integer N.\nEach of the next N - 1 lines, contains two space separated integers u, v, denoting that there is an edge between node u and node v of the tree.\n\n------ Output ------ \n\nFor each test case, output a single integer corresponding to the minimum number of coins that can be used. If it's not possible to achieve this, output -1.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤  u, v ≤ N$\n\n------ Subtasks ------ \n\nSubtask #1 (40 points)\n\n$1 ≤ N ≤ 1000$\n\nSubtask #2 (60 points)\n\n$Original constraints$\n\n----- Sample Input 1 ------ \n2\n\n3\n\n1 2\n\n1 3\n\n5\n\n1 2\n\n1 3\n\n3 4\n\n3 5\n----- Sample Output 1 ------ \n3\n\n4\n----- explanation 1 ------ \nExample case 1. \n\nThe nodes which have a coin in them are shown by blue color. You can see that each node satisfies the desired property.\n\nExample case 2.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

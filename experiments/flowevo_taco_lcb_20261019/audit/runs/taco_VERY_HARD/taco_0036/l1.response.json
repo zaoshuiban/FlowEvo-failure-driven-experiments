@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "afefa159-9edf-40cd-9c5d-92547ea3204e",
+  "created": 1792459900,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 621,
+    "completion_tokens": 24335,
+    "total_tokens": 24956,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 23574
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 621
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    c = [next(it) for _ in range(n)]\n\n    u = [0] * m\n    v = [0] * m\n    adj = [[] for _ in range(n)]\n\n    for i in range(m):\n        a = next(it) - 1\n        b = next(it) - 1\n        u[i] = a\n        v[i] = b\n        adj[a].append((b, i))\n        adj[b].append((a, i))\n\n    parent = [-2] * n\n    parent_edge = [-1] * n\n    parity = [0] * n\n    order = []\n\n    root = 0\n    parent[root] = -1\n    stack = [root]\n\n    while stack:\n        x = stack.pop()\n        order.append(x)\n\n        for y, eid in adj[x]:\n            if parent[y] == -2:\n                parent[y] = x\n                parent_edge[y] = eid\n                parity[y] = parity[x] ^ 1\n                stack.append(y)\n\n    is_tree = [False] * m\n    for x in range(n):\n        if parent[x] >= 0:\n            is_tree[parent_edge[x]] = True\n\n    special = -1\n    su = sv = -1\n\n    for eid in range(m):\n        if not is_tree[eid]:\n            a = u[eid]\n            b = v[eid]\n            if parity[a] == parity[b]:\n                special = eid\n                su = a\n                sv = b\n                break\n\n    base = [0] * m\n    coef = [0] * m\n\n    acc_base = [0] * n\n    acc_coef = [0] * n\n\n    for x in reversed(order):\n        if x == root:\n            continue\n\n        inc = 1 if special != -1 and (x == su or x == sv) else 0\n\n        eid = parent_edge[x]\n        b = c[x] - acc_base[x]\n        co = -(acc_coef[x] + inc)\n\n        base[eid] = b\n        coef[eid] = co\n\n        p = parent[x]\n        acc_base[p] += b\n        acc_coef[p] += co\n\n    inc_root = 1 if special != -1 and (root == su or root == sv) else 0\n\n    b_root = acc_base[root]\n    a_root = acc_coef[root] + inc_root\n    residual = c[root] - b_root\n\n    if special == -1:\n        if residual != 0:\n            print(\"NO\")\n            return\n        x_value = 0\n    else:\n        if a_root == 0:\n            if residual != 0:\n                print(\"NO\")\n                return\n            x_value = 0\n        else:\n            if residual % a_root != 0:\n                print(\"NO\")\n                return\n            x_value = residual // a_root\n\n    answer = []\n\n    for eid in range(m):\n        if eid == special:\n            w = x_value\n        else:\n            w = base[eid] + coef[eid] * x_value\n        answer.append(str(w))\n\n    sys.stdout.write(\"YES\\n\" + \"\\n\".join(answer))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 130.48,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a connected undirected graph with n vertices and m edges. The vertices are enumerated from 1 to n. \n\nYou are given n integers c1, c2, ..., cn, each of them is between  - n and n, inclusive. It is also guaranteed that the parity of cv equals the parity of degree of vertex v. The degree of a vertex is the number of edges connected to it.\n\nYou are to write a weight between  - 2·n2 and 2·n2 (inclusive) on each edge in such a way, that for each vertex v the sum of weights on edges connected to this vertex is equal to cv, or determine that this is impossible.\n\nInput\n\nThe first line contains two integers n and m (2 ≤ n ≤ 105, n - 1 ≤ m ≤ 105) — the number of vertices and the number of edges.\n\nThe next line contains n integers c1, c2, ..., cn ( - n ≤ ci ≤ n), where ci is the required sum of weights of edges connected to vertex i. It is guaranteed that the parity of ci equals the parity of degree of vertex i.\n\nThe next m lines describe edges of the graph. The i-th of these lines contains two integers ai and bi (1 ≤ ai, bi ≤ n; ai ≠ bi), meaning that the i-th edge connects vertices ai and bi.\n\nIt is guaranteed that the given graph is connected and does not contain loops and multiple edges.\n\nOutput\n\nIf there is no solution, print \"NO\".\n\nOtherwise print \"YES\" and then m lines, the i-th of them is the weight of the i-th edge wi ( - 2·n2 ≤ wi ≤ 2·n2).\n\nExamples\n\nInput\n\n3 3\n2 2 2\n1 2\n2 3\n1 3\n\n\nOutput\n\nYES\n1\n1\n1\n\n\nInput\n\n4 3\n-1 0 2 1\n1 2\n2 3\n3 4\n\n\nOutput\n\nYES\n-1\n1\n1\n\n\nInput\n\n6 6\n3 5 5 5 1 5\n1 4\n3 2\n4 3\n4 5\n3 5\n5 6\n\n\nOutput\n\nYES\n3\n5\n3\n-1\n-3\n5\n\n\nInput\n\n4 4\n4 4 2 4\n1 2\n2 3\n3 4\n4 1\n\n\nOutput\n\nNO\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

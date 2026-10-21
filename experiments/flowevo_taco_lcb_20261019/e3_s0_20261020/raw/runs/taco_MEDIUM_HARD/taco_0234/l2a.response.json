@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ebd03c13-f784-4d39-aa2b-26774836d39b",
+  "created": 1792436855,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 752,
+    "completion_tokens": 9051,
+    "total_tokens": 9803,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8376
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 240
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport random\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    pos = 2\n    initial = data[pos:pos + n]\n    pos += n\n\n    left = [0] * (n + 1)\n    right = [0] * (n + 1)\n    size = [0] * (n + 1)\n    value = [0] * (n + 1)\n    priority = [0] * (n + 1)\n\n    sys.setrecursionlimit(1_000_000)\n\n    def merge(a, b):\n        if a == 0:\n            return b\n        if b == 0:\n            return a\n\n        if priority[a] > priority[b]:\n            right[a] = merge(right[a], b)\n            size[a] = size[left[a]] + size[right[a]] + 1\n            return a\n        else:\n            left[b] = merge(a, left[b])\n            size[b] = size[left[b]] + size[right[b]] + 1\n            return b\n\n    def split(root, k):\n        if root == 0:\n            return 0, 0\n\n        l = left[root]\n\n        if size[l] >= k:\n            a, b = split(l, k)\n            left[root] = b\n            size[root] = size[left[root]] + size[right[root]] + 1\n            return a, root\n        else:\n            a, b = split(right[root], k - size[l] - 1)\n            right[root] = a\n            size[root] = size[left[root]] + size[right[root]] + 1\n            return root, b\n\n    randbits = random.getrandbits\n\n    root = 0\n    for i, x in enumerate(initial, 1):\n        value[i] = x\n        size[i] = 1\n        priority[i] = randbits(64)\n        root = merge(root, i)\n\n    for _ in range(m):\n        typ = data[pos]\n        i = data[pos + 1]\n        j = data[pos + 2]\n        pos += 3\n\n        if (typ == 1 and i == 1) or (typ == 2 and j == n):\n            continue\n\n        a, rest = split(root, i - 1)\n        b, c = split(rest, j - i + 1)\n\n        if typ == 1:\n            root = merge(b, merge(a, c))\n        else:\n            root = merge(merge(a, c), b)\n\n    result = []\n    stack = []\n    cur = root\n\n    while cur or stack:\n        while cur:\n            stack.append(cur)\n            cur = left[cur]\n\n        cur = stack.pop()\n        result.append(value[cur])\n        cur = right[cur]\n\n    ans = abs(result[0] - result[-1])\n\n    sys.stdout.write(str(ans) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, result)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 37.483,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven two numbers $N$ and $\\mbox{M}$. $N$ indicates the number of elements in the array $A[](1-indexed)$ and $\\mbox{M}$ indicates number of queries. You need to perform two types of queries on the array $\\boldsymbol{A\\left[\\right]}$.  \n\nYou are given $\\mbox{M}$ queries. Queries can be of two types, type 1 and type 2.  \n\nType 1 queries are represented as 1 i j : Modify the given array by removing elements from $\\boldsymbol{i}$ to $j$ and adding them to the front.  \n\nType 2 queries are represented as 2 i j : Modify the given array by removing elements from $\\boldsymbol{i}$ to $j$ and adding them to the back.  \n\nYour task is to simply print $\\left|A[1]-A[N]\\right|$ of the resulting array after the execution of $\\mbox{M}$ queries followed by the resulting array.  \n\nNote While adding at back or front the order of elements is preserved.  \n\nInput Format\n\nFirst line consists of two space-separated integers, $N$ and $\\mbox{M}$. \n\nSecond line contains $N$ integers, which represent the elements of the array. \n\n$\\mbox{M}$ queries follow. Each line contains a query of either type 1 or type 2 in the form $\\textbf{type i j}$  \n\nConstraints \n\n$1\\leq N,M\\leq10^5$ \n\n$1\\leq A[i]\\leq10^9$ \n\n$1\\leq i\\leq j\\leq N$\n\nOutput Format\n\nPrint the absolute value i.e. $abs(A[1]-A[N])$ in the first line. \n\nPrint elements of the resulting array in the second line. Each element should be seperated by a single space.\n\nSample Input\n8 4\n1 2 3 4 5 6 7 8\n1 2 4\n2 3 5\n1 4 7\n2 1 4\n\nSample Output\n1\n2 3 6 5 7 8 4 1\n\nExplanation\n\nGiven array is $\\{1,2,3,4,5,6,7,8\\}$. \n\nAfter execution of query $1\\:\\text{}2\\:\\text{}4$, the array becomes $\\{2,3,4,1,5,6,7,8\\}$. \n\nAfter execution of query$2\\:\\text{}3\\:\\text{}5$, the array becomes $\\{2,3,6,7,8,4,1,5\\}$. \n\nAfter execution of query $\\textbf{1}\\:4\\:7$, the array becomes $\\{7,8,4,1,2,3,6,5\\}$. \n\nAfter execution of query $2\\:\\text{}1\\:\\text{}4$, the array becomes $\\{2,3,6,5,7,8,4,1\\}$. \n\nNow $\\left|A[1]-A[N]\\right|$ is $|(2-1)|$ i.e. $1$ and the array is $23657841$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

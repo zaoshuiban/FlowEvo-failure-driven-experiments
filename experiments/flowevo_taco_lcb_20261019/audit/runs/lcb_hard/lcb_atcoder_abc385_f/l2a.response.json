@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b34344d2-2a54-47e4-9314-1f8365ff60a8",
+  "created": 1792441546,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 571,
+    "completion_tokens": 23116,
+    "total_tokens": 23687,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 22911
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 187
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    if n == 1:\n        print(-1)\n        return\n\n    xs = data[1::2]\n    hs = data[2::2]\n\n    best_num = None\n    best_den = 1\n\n    for i in range(n - 1):\n        num = hs[i] * xs[i + 1] - hs[i + 1] * xs[i]\n        den = xs[i + 1] - xs[i]\n\n        if best_num is None or num * best_den > best_num * den:\n            best_num = num\n            best_den = den\n\n    if best_num < 0:\n        print(-1)\n    else:\n        ans = best_num / best_den\n        print(f\"{ans:.18f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 108.281,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are N buildings numbered 1 to N on a number line.\nBuilding i is at coordinate X_i and has height H_i. The size in directions other than height is negligible.\nFrom a point P with coordinate x and height h, building i is considered visible if there exists a point Q on building i such that the line segment PQ does not intersect with any other building.\nFind the maximum height at coordinate 0 from which it is not possible to see all buildings. Height must be non-negative; if it is possible to see all buildings at height 0 at coordinate 0, report -1 instead.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\nX_1 H_1\n\\vdots\nX_N H_N\n\nOutput\n\nIf it is possible to see all buildings from coordinate 0 and height 0, print -1. Otherwise, print the maximum height at coordinate 0 from which it is not possible to see all buildings. Answers with an absolute or relative error of at most 10^{-9} from the true answer will be considered correct.\n\nConstraints\n\n\n- 1 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq X_1 < \\dots < X_N \\leq 10^9\n- 1 \\leq H_i \\leq 10^9\n- All input values are integers.\n\nSample Input 1\n\n3\n3 2\n5 4\n7 5\n\nSample Output 1\n\n1.500000000000000000\n\nFrom coordinate 0 and height 1.5, building 3 cannot be seen. If the height is even slightly greater than 1.5, all buildings including building 3 can be seen. Thus, the answer is 1.5.\n\nSample Input 2\n\n2\n1 1\n2 100\n\nSample Output 2\n\n-1\n\nNote that -1.000 or similar outputs would be considered incorrect.\n\nSample Input 3\n\n3\n1 1\n2 2\n3 3\n\nSample Output 3\n\n0.000000000000000000\n\nSample Input 4\n\n4\n10 10\n17 5\n20 100\n27 270\n\nSample Output 4\n\n17.142857142857142350\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "226c2386-0e67-4539-ba2f-fa35aa691066",
+  "created": 1792430164,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 379,
+    "completion_tokens": 732,
+    "total_tokens": 1111,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 568
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 379
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        a = data[idx:idx + n]\n        idx += n\n\n        min_pos = 0\n        for i in range(1, n):\n            if a[i] < a[min_pos]:\n                min_pos = i\n\n        a[min_pos] += 1\n\n        product = 1\n        for x in a:\n            product *= x\n\n        answers.append(str(product))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 4.043,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nSlavic is preparing a present for a friend's birthday. He has an array $a$ of $n$ digits and the present will be the product of all these digits. Because Slavic is a good kid who wants to make the biggest product possible, he wants to add $1$ to exactly one of his digits. \n\nWhat is the maximum product Slavic can make?\n\nInput\n\nThe first line contains a single integer $t$ ($1 \\leq t \\leq 10^4$) — the number of test cases.\n\nThe first line of each test case contains a single integer $n$ ($1 \\leq n \\leq 9$) — the number of digits.\n\nThe second line of each test case contains $n$ space-separated integers $a_i$ ($0 \\leq a_i \\leq 9$) — the digits in the array.\n\nOutput\n\nFor each test case, output a single integer — the maximum product Slavic can make, by adding $1$ to exactly one of his digits.Sample Input 1:\n4\n\n4\n\n2 2 1 2\n\n3\n\n0 1 2\n\n5\n\n4 3 2 3 4\n\n9\n\n9 9 9 9 9 9 9 9 9\n\n\n\nSample Output 1:\n\n16\n2\n432\n430467210\n\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "75a88a4e-70c3-4286-bf6b-8ed4d9d9c357",
+  "created": 1792437985,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1117,
+    "completion_tokens": 15890,
+    "total_tokens": 17007,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15552
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 605
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        m = int(data[idx + 1])\n        idx += 2\n\n        s = data[idx].decode()\n        idx += 1\n        a = data[idx].decode()\n        idx += 1\n\n        # If A is already a subsequence of the fixed characters of S,\n        # replacing '?' cannot remove A.\n        j = 0\n        for ch in s:\n            if ch != '?' and j < m and ch == a[j]:\n                j += 1\n                if j == m:\n                    break\n\n        if j == m:\n            answers.append(\"-1\")\n            continue\n\n        # Construct S' by making every '?' not match the currently needed\n        # character of A. This keeps the matched prefix unchanged.\n        res = []\n        j = 0\n\n        for ch in s:\n            if ch == '?':\n                # j < m is guaranteed because fixed characters do not contain A.\n                if a[j] == 'a':\n                    res.append('e')\n                else:\n                    res.append('a')\n            else:\n                res.append(ch)\n                if j < m and ch == a[j]:\n                    j += 1\n\n        answers.append(''.join(res))\n\n    sys.stdout.write('\\n'.join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 82.121,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two strings S and A of lengths N and M respectively.\nString S contains characters from the set \\texttt{\\{?, a, b, c, d, e\\}}. \nString A contains characters from the set \\texttt{\\{a, b, c, d, e\\}}. \n\nLet S' denote the string formed by replacing all the \\texttt{?} in S using the characters from the set \\texttt{\\{a, b, c, d, e\\}}.  \nConstruct S' such that A is not a [subsequence] of S'.\n\nIf multiple such S' exist, output any. If no such S' exists, print -1.\n\n------ Input Format ------ \n\n- The first line will contain T - the number of test cases. Then the test cases follow.\n- The first line of each test case contains two integers N and M - the lengths of strings S and A respectively.\n- The second line of each test case contains string S.\n- The third line of each test case contains string A.\n\n------ Output Format ------ \n\nFor each test case, output any valid string S'. If no such string exists, print -1.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 1000$\n$1 ≤ N,M ≤ 10^{5}$\n- Sum of $N$ over all test cases does not exceed $3 \\cdot 10^{5}$.\n- Sum of $M$ over all test cases does not exceed $3 \\cdot 10^{5}$.\n\n----- Sample Input 1 ------ \n2\n4 2\n?ab?\nba\n4 2\na??b\nab\n\n----- Sample Output 1 ------ \naabe\n-1\n----- explanation 1 ------ \nTest case $1$: Replace the $\\texttt{?}$ at indices $1$ and $4$ using characters $\\texttt{a}$ and $\\texttt{e}$ respectively. Both the characters belong to the set $\\texttt{\\{a, b, c, d, e\\}}$.  \nThe string $S' = \\texttt{aabe}$. Note that no subsequence of $S'$ is equal to $\\texttt{ba}$.\n\nTest case $2$: There is no possible value of $S'$ such that $\\texttt{ab}$ is not a subsequence of $S'$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        m = int(data[idx + 1])\n        idx += 2\n\n        s = data[idx]\n        idx += 1\n        a = data[idx]\n        idx += 1\n\n        # Check whether A is already a subsequence of the fixed characters of S.\n        j = 0\n        for ch in s:\n            if ch != ord('?') and j < m and ch == a[j]:\n                j += 1\n                if j == m:\n                    break\n\n        if j == m:\n            answers.append(b\"-1\")\n            continue\n\n        # Construct a valid S'.\n        res = bytearray()\n        j = 0\n\n        for ch in s:\n            if ch == ord('?'):\n                # Pick a character different from the next required character of A.\n                if j < m and a[j] == ord('a'):\n                    res.append(ord('b'))\n                else:\n                    res.append(ord('a'))\n            else:\n                res.append(ch)\n                if j < m and ch == a[j]:\n                    j += 1\n\n        answers.append(bytes(res))\n\n    sys.stdout.buffer.write(b\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

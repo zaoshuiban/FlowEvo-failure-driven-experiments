@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "594b0bcb-5ce1-461f-a995-b8dd9eb7f9c4",
+  "created": 1792430390,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 273,
+    "completion_tokens": 371,
+    "total_tokens": 644,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 326
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 273
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nX = int(sys.stdin.readline())\n\nfactorial = 1\nn = 1\n\nwhile factorial < X:\n    n += 1\n    factorial *= n\n\nprint(n)\n```",
+  "latency_s": 2.711,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer X not less than 2.\nFind the positive integer N such that N! = X.\nHere, N! denotes the factorial of N, and it is guaranteed that there is exactly one such N.\n\nInput\n\nThe input is given from Standard Input in the following format:\nX\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 2 \\leq X \\leq 3 \\times 10^{18}\n- There is exactly one positive integer N such that N!=X.\n- All input values are integers.\n\nSample Input 1\n\n6\n\nSample Output 1\n\n3\r\n\nFrom 3!=3\\times2\\times1=6, print 3.\n\nSample Input 2\n\n2432902008176640000\n\nSample Output 2\n\n20\r\n\nFrom 20!=2432902008176640000, print 20.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "30ea6eb3-fa1b-4746-889c-762df676c5e6",
+  "created": 1792442504,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 302,
+    "completion_tokens": 1530,
+    "total_tokens": 1832,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1425
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 302
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nif not data:\n    sys.exit()\n\nt = data[0]\nanswers = []\n\nfor i in range(1, t + 1):\n    n = data[i]\n    ans = (pow(2, n + 1, MOD) + 2) % MOD\n    answers.append(str(ans))\n\nsys.stdout.write(\"\\n\".join(answers))\n```",
+  "latency_s": 7.645,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWatson gives a square of side length 1 to Sherlock. Now, after each second, each square of some arbitrary side $\\boldsymbol{\\mbox{I}}$ will break into four squares each of side $L/2$(as shown in the image below). \n\nNow, Watson asks Sherlock: What will be the sum of length of solid lines after $N$ seconds?  \n\nAs the number can be large print result mod $(10^9+7)$.\n\nFor example, after 0 seconds, the length is 4. \n\nAfter 1 second, the length is 6.\n\nInput Format \n\nFirst line contains $\\mathbf{T}$, the number of testcases. Each testcase contains $N$ in one line.   \n\nOutput Format\n\nFor each testcase, print the required answer in a new line. \n\nConstraints \n\n$1\\leq T\\leq10^5$ \n\n$0\\leq N\\leq10^9$\n\nSample input\n\n3\n0\n1\n5\n\nSample output\n\n4\n6\n66\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

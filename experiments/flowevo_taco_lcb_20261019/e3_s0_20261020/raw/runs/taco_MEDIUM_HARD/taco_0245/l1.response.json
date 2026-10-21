@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ef840f5e-de07-4706-a7bd-b8494fb8f292",
+  "created": 1792435453,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 651,
+    "completion_tokens": 2077,
+    "total_tokens": 2728,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1842
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 651
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, W, L = data[0], data[1], data[2]\n    trees = []\n\n    idx = 3\n    for _ in range(n):\n        h, r = data[idx], data[idx + 1]\n        trees.append((h, r))\n        idx += 2\n\n    def can(months):\n        total = 0\n        for h, r in trees:\n            height = h + r * months\n            if height >= L:\n                total += height\n                if total >= W:\n                    return True\n        return total >= W\n\n    low = 0\n    high = 1\n\n    while not can(high):\n        high *= 2\n\n    while low < high:\n        mid = (low + high) // 2\n        if can(mid):\n            high = mid\n        else:\n            low = mid + 1\n\n    print(low)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 9.649,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nChef is the head of commercial logging industry that recently bought a farm containing N trees. You are given initial height of the i-th tree by H_{i} and the rate of growth of height as R_{i} meters per month. For simplicity, you can assume that all the trees are perfect cylinders of equal radius. This allows us to consider only the height of trees when we talk about the amount of wood. \n\nIn Chef's country, laws don't allow one to cut a tree partially, so one has to cut the tree completely for gathering wood. Also, laws prohibit cutting trees of heights (strictly) lower than L meters. \n\nToday Chef received an order of W meters (of height) of wood. Chef wants to deliver this order as soon as possible. Find out how minimum number of months he should wait after which he will able to fulfill the order. You can assume that Chef's company's sawing machines are very efficient and take negligible amount of time to cut the trees.\n\n------ Input ------ \n\nThere is a single test case per test file.\nThe first line of the input contains three space separated integers N, W and L denoting the number of trees in the farm, the amount of wood (in meters) that have to be gathered and the minimum allowed height of the tree to cut.\nEach of next N lines contain two space separated integers denoting H_{i} and R_{i} respectively.\n\n------ Output ------ \n\nOutput a single integer denoting the number of months that have to pass before Chef will be able to fulfill the order.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ W, L ≤ 10^{18}$\n$1 ≤ H_{i}, R_{i} ≤ 10^{9}$\n\n------ Subtasks ------ \n\n$Subtask #1 [40 points]: 1 ≤  N, W, L ≤ 10^{4}$\n$Subtask #2 [60 points]: No additional constraints$\n\n----- Sample Input 1 ------ \n3 74 51\n\n2 2\n\n5 7\n\n2 9\n----- Sample Output 1 ------ \n7\n----- explanation 1 ------ \nAfter 6 months, heights of each tree will be 14, 47 and 56 respectively. Chef is allowed to cut only the third tree, sadly it is not enough to fulfill an order of 74 meters of wood.\nAfter 7 months, heights of each tree will be 16, 54 and 65 respectively. Now Chef is allowed to cut second and third trees. Cutting both of them would provide him 119 meters of wood, which is enough to fulfill the order.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

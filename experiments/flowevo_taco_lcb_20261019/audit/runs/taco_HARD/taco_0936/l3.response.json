@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c5e7fa04-f1f0-4e01-868a-d45e73666bd0",
+  "created": 1792434029,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1035,
+    "completion_tokens": 18529,
+    "total_tokens": 19564,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 18001
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 779
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import isqrt\n\n\ndef possible_n(a):\n    if a == 0:\n        return (0, 1)\n\n    d = 1 + 8 * a\n    r = isqrt(d)\n\n    if r * r != d:\n        return ()\n\n    n = (1 + r) // 2\n    if n * (n - 1) // 2 == a:\n        return (n,)\n\n    return ()\n\n\ndef count_subsequences(s):\n    zeros = ones = 0\n    c00 = c01 = c10 = c11 = 0\n\n    for ch in s:\n        if ch == '0':\n            c00 += zeros\n            c10 += ones\n            zeros += 1\n        else:\n            c11 += ones\n            c01 += zeros\n            ones += 1\n\n    return c00, c01, c10, c11\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if len(data) < 4:\n        return\n\n    a00, a01, a10, a11 = data[:4]\n\n    for n0 in possible_n(a00):\n        for n1 in possible_n(a11):\n            if n0 + n1 == 0:\n                continue\n\n            if n0 * n1 != a01 + a10:\n                continue\n\n            if n0 + n1 > 1_000_000:\n                continue\n\n            if n1 == 0:\n                s = '0' * n0\n            elif n0 == 0:\n                s = '1' * n1\n            else:\n                q, r = divmod(a01, n1)\n\n                if q > n0 or (r and q + 1 > n0):\n                    continue\n\n                gaps = [0] * (n0 + 1)\n                gaps[q] += n1 - r\n                if r:\n                    gaps[q + 1] += r\n\n                parts = []\n                for i in range(n0 + 1):\n                    if gaps[i]:\n                        parts.append('1' * gaps[i])\n                    if i < n0:\n                        parts.append('0')\n\n                s = ''.join(parts)\n\n            if count_subsequences(s) == (a00, a01, a10, a11):\n                sys.stdout.write(s + '\\n')\n                return\n\n    sys.stdout.write(\"Impossible\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 80.263,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFor each string s consisting of characters '0' and '1' one can define four integers a00, a01, a10 and a11, where axy is the number of subsequences of length 2 of the string s equal to the sequence {x, y}. \n\nIn these problem you are given four integers a00, a01, a10, a11 and have to find any non-empty string s that matches them, or determine that there is no such string. One can prove that if at least one answer exists, there exists an answer of length no more than 1 000 000.\n\nInput\n\nThe only line of the input contains four non-negative integers a00, a01, a10 and a11. Each of them doesn't exceed 109.\n\nOutput\n\nIf there exists a non-empty string that matches four integers from the input, print it in the only line of the output. Otherwise, print \"Impossible\". The length of your answer must not exceed 1 000 000.\n\nExamples\n\nInput\n\n1 2 3 4\n\n\nOutput\n\nImpossible\n\n\nInput\n\n1 2 2 1\n\n\nOutput\n\n0110\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom math import isqrt\n\n\ndef possible_counts(a):\n    if a == 0:\n        return (0, 1)\n\n    d = 1 + 8 * a\n    r = isqrt(d)\n\n    if r * r != d:\n        return ()\n\n    if (1 + r) % 2 != 0:\n        return ()\n\n    n = (1 + r) // 2\n\n    if n * (n - 1) // 2 == a:\n        return (n,)\n\n    return ()\n\n\ndef solve():\n    a00, a01, a10, a11 = map(int, sys.stdin.buffer.readline().split())\n\n    zero_counts = possible_counts(a00)\n    one_counts = possible_counts(a11)\n\n    for n0 in zero_counts:\n        for n1 in one_counts:\n            if n0 + n1 == 0:\n                continue\n\n            if a01 + a10 != n0 * n1:\n                continue\n\n            if n1 == 0:\n                result = \"0\" * n0\n            elif n0 == 0:\n                result = \"1\" * n1\n            else:\n                gaps = [0] * (n0 + 1)\n\n                q, r = divmod(a01, n1)\n\n                if q > n0:\n                    continue\n\n                gaps[q] += n1 - r\n\n                if r:\n                    if q + 1 > n0:\n                        continue\n                    gaps[q + 1] += r\n\n                parts = []\n\n                for i in range(n0 + 1):\n                    if gaps[i]:\n                        parts.append(\"1\" * gaps[i])\n                    if i < n0:\n                        parts.append(\"0\")\n\n                result = \"\".join(parts)\n\n            if result and len(result) <= 1_000_000:\n                print(result)\n                return\n\n    print(\"Impossible\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

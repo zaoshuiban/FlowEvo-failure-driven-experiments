@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "fa988ca0-ebb7-4f54-9ebc-b3bb4cb6b5f8",
+  "created": 1792430236,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 790,
+    "completion_tokens": 1621,
+    "total_tokens": 2411,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1316
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 790
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    k = next(it)\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n\n    for _ in range(n - 1):\n        u = next(it) - 1\n        v = next(it) - 1\n        color = next(it)\n\n        if color == 0:  # red edge\n            union(u, v)\n\n    bad = 0\n    for i in range(n):\n        if parent[i] == i:\n            bad = (bad + pow(size[i], k, MOD)) % MOD\n\n    total = pow(n, k, MOD)\n    answer = (total - bad) % MOD\n    print(answer)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 7.505,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a tree (a connected undirected graph without cycles) of $n$ vertices. Each of the $n - 1$ edges of the tree is colored in either black or red.\n\nYou are also given an integer $k$. Consider sequences of $k$ vertices. Let's call a sequence $[a_1, a_2, \\ldots, a_k]$ good if it satisfies the following criterion:  We will walk a path (possibly visiting same edge/vertex multiple times) on the tree, starting from $a_1$ and ending at $a_k$.  Start at $a_1$, then go to $a_2$ using the shortest path between $a_1$ and $a_2$, then go to $a_3$ in a similar way, and so on, until you travel the shortest path between $a_{k-1}$ and $a_k$. If you walked over at least one black edge during this process, then the sequence is good.  [Image] \n\nConsider the tree on the picture. If $k=3$ then the following sequences are good: $[1, 4, 7]$, $[5, 5, 3]$ and $[2, 3, 7]$. The following sequences are not good: $[1, 4, 6]$, $[5, 5, 5]$, $[3, 7, 3]$.\n\nThere are $n^k$ sequences of vertices, count how many of them are good. Since this number can be quite large, print it modulo $10^9+7$.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $k$ ($2 \\le n \\le 10^5$, $2 \\le k \\le 100$), the size of the tree and the length of the vertex sequence.\n\nEach of the next $n - 1$ lines contains three integers $u_i$, $v_i$ and $x_i$ ($1 \\le u_i, v_i \\le n$, $x_i \\in \\{0, 1\\}$), where $u_i$ and $v_i$ denote the endpoints of the corresponding edge and $x_i$ is the color of this edge ($0$ denotes red edge and $1$ denotes black edge).\n\n\n-----Output-----\n\nPrint the number of good sequences modulo $10^9 + 7$.\n\n\n-----Examples-----\nInput\n4 4\n1 2 1\n2 3 1\n3 4 1\n\nOutput\n252\nInput\n4 6\n1 2 0\n1 3 0\n1 4 0\n\nOutput\n0\nInput\n3 5\n1 2 1\n2 3 0\n\nOutput\n210\n\n\n-----Note-----\n\nIn the first example, all sequences ($4^4$) of length $4$ except the following are good:   $[1, 1, 1, 1]$ $[2, 2, 2, 2]$ $[3, 3, 3, 3]$ $[4, 4, 4, 4]$ \n\nIn the second example, all edges are red, hence there aren't any good sequences.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

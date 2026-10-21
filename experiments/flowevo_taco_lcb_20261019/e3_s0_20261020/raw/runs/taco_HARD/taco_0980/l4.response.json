@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1693c146-7340-4622-b128-70c8fb796658",
+  "created": 1792441833,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1450,
+    "completion_tokens": 7113,
+    "total_tokens": 8563,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6730
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 810
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    heads = data[2:2 + n]\n    targets = data[2 + n:2 + n + m]\n\n    if m == 0:\n        print(0)\n        return\n\n    def feasible(t: int) -> bool:\n        j = 0\n\n        for h in heads:\n            if j >= m:\n                return True\n\n            p = targets[j]\n\n            # This head cannot reach the first unread target.\n            if h + t < p:\n                continue\n\n            # No current or later head can reach this target.\n            if h - t > p:\n                return False\n\n            if p >= h:\n                rightmost = h + t\n            else:\n                rightmost = h\n\n                # Go left to p first, then right.\n                reach_left_first = 2 * p + t - h\n                if reach_left_first > rightmost:\n                    rightmost = reach_left_first\n\n                # Go right first, then left to p.\n                reach_right_first = h + (t - (h - p)) // 2\n                if reach_right_first > rightmost:\n                    rightmost = reach_right_first\n\n            while j < m and targets[j] <= rightmost:\n                j += 1\n\n        return j >= m\n\n    lo = -1\n    hi = 10**18\n\n    while hi - lo > 1:\n        mid = (lo + hi) // 2\n        if feasible(mid):\n            hi = mid\n        else:\n            lo = mid\n\n    print(hi)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 34.444,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMad scientist Mike does not use slow hard disks. His modification of a hard drive has not one, but n different heads that can read data in parallel.\n\nWhen viewed from the side, Mike's hard drive is an endless array of tracks. The tracks of the array are numbered from left to right with integers, starting with 1. In the initial state the i-th reading head is above the track number h_{i}. For each of the reading heads, the hard drive's firmware can move the head exactly one track to the right or to the left, or leave it on the current track. During the operation each head's movement does not affect the movement of the other heads: the heads can change their relative order; there can be multiple reading heads above any of the tracks. A track is considered read if at least one head has visited this track. In particular, all of the tracks numbered h_1, h_2, ..., h_{n} have been read at the beginning of the operation. [Image] \n\nMike needs to read the data on m distinct tracks with numbers p_1, p_2, ..., p_{m}. Determine the minimum time the hard drive firmware needs to move the heads and read all the given tracks. Note that an arbitrary number of other tracks can also be read.\n\n\n-----Input-----\n\nThe first line of the input contains two space-separated integers n, m (1 ≤ n, m ≤ 10^5) — the number of disk heads and the number of tracks to read, accordingly. The second line contains n distinct integers h_{i} in ascending order (1 ≤ h_{i} ≤ 10^10, h_{i} < h_{i} + 1) — the initial positions of the heads. The third line contains m distinct integers p_{i} in ascending order (1 ≤ p_{i} ≤ 10^10, p_{i} < p_{i} + 1) - the numbers of tracks to read.\n\nPlease, do not use the %lld specifier to read or write 64-bit integers in С++. It is recommended to use the cin, cout streams or the %I64d specifier.\n\n\n-----Output-----\n\nPrint a single number — the minimum time required, in seconds, to read all the needed tracks.\n\n\n-----Examples-----\nInput\n3 4\n2 5 6\n1 3 6 8\n\nOutput\n2\n\nInput\n3 3\n1 2 3\n1 2 3\n\nOutput\n0\n\nInput\n1 2\n165\n142 200\n\nOutput\n81\n\n\n\n-----Note-----\n\nThe first test coincides with the figure. In this case the given tracks can be read in 2 seconds in the following way:   during the first second move the 1-st head to the left and let it stay there;  move the second head to the left twice;  move the third head to the right twice (note that the 6-th track has already been read at the beginning). \n\nOne cannot read the tracks in 1 second as the 3-rd head is at distance 2 from the 8-th track.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    heads = data[2:2 + n]\n    tracks = data[2 + n:2 + n + m]\n\n    if m == 0:\n        print(0)\n        return\n\n    def feasible(t: int) -> bool:\n        j = 0\n\n        for h in heads:\n            if j == m:\n                return True\n\n            p = tracks[j]\n\n            # This head cannot reach the leftmost unread track.\n            if h + t < p:\n                continue\n\n            # All following heads are to the right, so nobody can reach it.\n            if h - t > p:\n                return False\n\n            if p >= h:\n                rightmost = h + t\n            else:\n                rightmost = h\n\n                # Go right first, then left to p.\n                v = (h + t + p) // 2\n                if v > rightmost:\n                    rightmost = v\n\n                # Go left to p first, then right.\n                v = h + t - 2 * (h - p)\n                if v > rightmost:\n                    rightmost = v\n\n            while j < m and tracks[j] <= rightmost:\n                j += 1\n\n        return j == m\n\n    max_coord = max(heads[-1], tracks[-1])\n    min_coord = min(heads[0], tracks[0])\n\n    lo = -1\n    hi = 2 * (max_coord - min_coord) + 1\n\n    while hi - lo > 1:\n        mid = (lo + hi) // 2\n        if feasible(mid):\n            hi = mid\n        else:\n            lo = mid\n\n    print(hi)\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Runtime error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4c798a8e-5d93-4b5f-be7f-80a1bc45e3ba",
+  "created": 1792455662,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 562,
+    "completion_tokens": 15069,
+    "total_tokens": 15631,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14109
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 562
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_left, bisect_right\n\nINF = 10**18\n\n\ndef minimum_extra(A, B, n, m):\n    # Iterate over the smaller position list for speed.\n    if len(A) > len(B):\n        A, B = B, A\n        n, m = m, n\n\n    p = n - 1\n    q = m - 1\n    diff = n - m\n\n    if diff >= 0:\n        Ld, Rd = 0, diff\n    else:\n        Ld, Rd = diff, 0\n\n    if p <= q:\n        Ls, Rs = p, q\n    else:\n        Ls, Rs = q, p\n\n    best = INF\n    blen = len(B)\n    bisl = bisect_left\n    bisr = bisect_right\n\n    for a in A:\n        for dside in range(3):\n            if dside == 0:  # a - b < Ld\n                lo1 = a - Ld + 1\n                hi1 = INF\n                ca1, cb1, cc1 = -1, 1, Ld\n            elif dside == 1:  # Ld <= a - b <= Rd\n                lo1 = a - Rd\n                hi1 = a - Ld\n                ca1, cb1, cc1 = 0, 0, 0\n            else:  # a - b > Rd\n                lo1 = -INF\n                hi1 = a - Rd - 1\n                ca1, cb1, cc1 = 1, -1, -Rd\n\n            for sside in range(3):\n                if sside == 0:  # a + b < Ls\n                    lo2 = -INF\n                    hi2 = Ls - a - 1\n                    ca2, cb2, cc2 = -1, -1, Ls\n                elif sside == 1:  # Ls <= a + b <= Rs\n                    lo2 = Ls - a\n                    hi2 = Rs - a\n                    ca2, cb2, cc2 = 0, 0, 0\n                else:  # a + b > Rs\n                    lo2 = Rs - a + 1\n                    hi2 = INF\n                    ca2, cb2, cc2 = 1, 1, -Rs\n\n                lo = max(lo1, lo2)\n                hi = min(hi1, hi2)\n\n                if lo > hi:\n                    continue\n\n                left = bisl(B, lo)\n                right = bisr(B, hi)\n\n                if left >= right:\n                    continue\n\n                cb = cb1 + cb2\n\n                if cb > 0:\n                    b = B[left]\n                elif cb < 0:\n                    b = B[right - 1]\n                else:\n                    b = B[left]\n\n                value = (ca1 + ca2) * a + cb * b + (cc1 + cc2)\n\n                if value < best:\n                    best = value\n                    if best == 0:\n                        return 0\n\n    return best\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        s1 = data[idx]\n        idx += 1\n        s2 = data[idx]\n        idx += 1\n\n        n = len(s1)\n        m = len(s2)\n\n        pos1 = [[] for _ in range(26)]\n        pos2 = [[] for _ in range(26)]\n\n        for i, ch in enumerate(s1):\n            pos1[ch - 65].append(i)\n\n        for j, ch in enumerate(s2):\n            pos2[ch - 65].append(j)\n\n        min_extra = INF\n\n        for c in range(26):\n            A = pos1[c]\n            B = pos2[c]\n\n            if A and B:\n                cur = minimum_extra(A, B, n, m)\n                if cur < min_extra:\n                    min_extra = cur\n                    if min_extra == 0:\n                        break\n\n        answer = 2 * (abs(n - m) + min_extra)\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 66.863,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nWatson gives to Sherlock two strings S_{1} and S_{2} consisting of uppercase English alphabets. Next he wants Sherlock to build a flower in the following way:\n\nHe puts both strings perpendicular to each other in such a way that they overlap at the same character. For example, if he has two strings \"ABCDEF\" and \"XXBCZQ\", one possible way to make a flower is:\n   \nLength of petals in the above flower are 2, 2, 3 and 3.\nA flower's ugliness is sum of absolute difference of adjacent petal lengths i.e. i.e. if adjacent petal lengths are L_{1}, L_{2}, L_{3}, L_{4}, then ugliness of flower is |L_{1} - L_{2}| + |L_{2} - L_{3}| + |L_{3} - L_{4}| + |L_{4} - L_{1}|. \n\nSherlock wants to find minimum value of ugliness if we consider all possible flower configurations. Note that a configuration is valid even if any of the petal length is 0.\n\n------ Input ------ \n\nFirst line contains T, number of test cases. Each test case consists of string S_{1} in one line followed by string S_{2} in the next line. It is guaranteed that there exists at least one possible way to make a flower.\n  \n------ Output ------ \n\nFor each test case, output in one line the required answer.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$1 ≤ length(S_{1}), length(S_{2}) ≤ 10^{5}$\n\n----- Sample Input 1 ------ \n2\nABCDE\nXXBCZQ\nBBB\nBBBBBB\n----- Sample Output 1 ------ \n2\n6\n----- explanation 1 ------ \n\nTest case 1:\nIf we keep the configuration shown in statement, the ugliness is 2, which is minimum possible.\n\nTest case 2:\nOne of the best configurations is\n\nB \nB B B  B  B B\nB\n\nwhere petal lengths are 1, 3, 1, 2.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

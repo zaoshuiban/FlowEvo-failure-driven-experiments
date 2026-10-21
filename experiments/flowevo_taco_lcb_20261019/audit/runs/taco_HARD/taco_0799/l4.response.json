@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "43259b75-f93d-409b-a63c-230379bc4f1d",
+  "created": 1792436561,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 737,
+    "completion_tokens": 25030,
+    "total_tokens": 25767,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 23665
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 353
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef is_prime(num: int) -> bool:\n    if num < 2:\n        return False\n\n    small_primes = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)\n    for p in small_primes:\n        if num % p == 0:\n            return num == p\n\n    d = num - 1\n    s = 0\n    while d % 2 == 0:\n        s += 1\n        d //= 2\n\n    for a in (2, 3, 5, 7, 11, 13, 17):\n        if a >= num:\n            continue\n        x = pow(a, d, num)\n        if x == 1 or x == num - 1:\n            continue\n\n        for _ in range(s - 1):\n            x = x * x % num\n            if x == num - 1:\n                break\n        else:\n            return False\n\n    return True\n\n\ndef find_root_of_order(p: int, n: int) -> int:\n    # n is a power of two and divides p - 1.\n    # Find a primitive n-th root modulo p.\n    half = n >> 1\n    exp = (p - 1) // n\n    a = 2\n\n    while True:\n        root = pow(a, exp, p)\n        if root != 1 and pow(root, half, p) != 1:\n            return root\n        a += 1\n\n\ndef build_roots(p: int, n: int, root: int):\n    roots = [0] * n\n    length = 2\n\n    while length <= n:\n        half = length >> 1\n        wlen = pow(root, n // length, p)\n        w = 1\n\n        for j in range(half):\n            roots[half + j] = w\n            w = w * wlen % p\n\n        length <<= 1\n\n    return roots\n\n\ndef ntt(a, p, roots, rev):\n    n = len(a)\n\n    a[:] = [a[i] for i in rev]\n\n    length = 2\n    mod = p\n    rt = roots\n\n    while length <= n:\n        half = length >> 1\n\n        for start in range(0, n, length):\n            end = start + half\n            j = 0\n\n            for idx in range(start, end):\n                u = a[idx]\n                v = a[idx + half] * rt[half + j] % mod\n\n                s = u + v\n                if s >= mod:\n                    s -= mod\n\n                d = u - v\n                if d < 0:\n                    d += mod\n\n                a[idx] = s\n                a[idx + half] = d\n                j += 1\n\n        length <<= 1\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    x = data[1]\n    a = data[2:2 + n]\n\n    ones_pos = []\n    ans0 = 0\n    run = 0\n\n    for idx, value in enumerate(a, start=1):\n        if value < x:\n            ones_pos.append(idx)\n            ans0 += run * (run + 1) // 2\n            run = 0\n        else:\n            run += 1\n\n    ans0 += run * (run + 1) // 2\n\n    m = len(ones_pos)\n    ans = [0] * (n + 1)\n    ans[0] = ans0\n\n    if m == 0:\n        sys.stdout.write(\" \".join(map(str, ans)))\n        return\n\n    left = [0] * m\n    prev = 0\n\n    for i, pos in enumerate(ones_pos):\n        left[i] = pos - prev\n        prev = pos\n\n    right = [0] * m\n    nxt = n + 1\n\n    for i in range(m - 1, -1, -1):\n        right[i] = nxt - ones_pos[i]\n        nxt = ones_pos[i]\n\n    # For small m, direct computation is faster.\n    if m <= 700:\n        for k in range(1, m + 1):\n            total = 0\n            limit = m - k\n            for i in range(limit + 1):\n                total += left[i] * right[i + k - 1]\n            ans[k] = total\n\n        sys.stdout.write(\" \".join(map(str, ans)))\n        return\n\n    need = 2 * m - 1\n    size = 1\n    while size < need:\n        size <<= 1\n\n    limit = n * (n + 1) // 2\n    p = ((limit // size) + 1) * size + 1\n\n    while not is_prime(p):\n        p += size\n\n    root = find_root_of_order(p, size)\n    roots = build_roots(p, size, root)\n\n    rev = [0] * size\n    bits = size.bit_length() - 1\n\n    for i in range(1, size):\n        rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << (bits - 1))\n\n    fa = left + [0] * (size - m)\n    fb = right[::-1] + [0] * (size - m)\n\n    ntt(fa, p, roots, rev)\n    ntt(fb, p, roots, rev)\n\n    for i in range(size):\n        fa[i] = fa[i] * fb[i] % p\n\n    # Inverse NTT using the reverse trick.\n    fa[1:] = fa[:0:-1]\n    ntt(fa, p, roots, rev)\n\n    inv_size = pow(size, p - 2, p)\n    for i in range(size):\n        fa[i] = fa[i] * inv_size % p\n\n    for k in range(1, m + 1):\n        ans[k] = fa[m - k]\n\n    sys.stdout.write(\" \".join(map(str, ans)))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 104.721,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNikita likes tasks on order statistics, for example, he can easily find the $k$-th number in increasing order on a segment of an array. But now Nikita wonders how many segments of an array there are such that a given number $x$ is the $k$-th number in increasing order on this segment. In other words, you should find the number of segments of a given array such that there are exactly $k$ numbers of this segment which are less than $x$.\n\nNikita wants to get answer for this question for each $k$ from $0$ to $n$, where $n$ is the size of the array.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $x$ $(1 \\le n \\le 2 \\cdot 10^5, -10^9 \\le x \\le 10^9)$.\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ $(-10^9 \\le a_i \\le 10^9)$ — the given array.\n\n\n-----Output-----\n\nPrint $n+1$ integers, where the $i$-th number is the answer for Nikita's question for $k=i-1$.\n\n\n-----Examples-----\nInput\n5 3\n1 2 3 4 5\n\nOutput\n6 5 4 0 0 0 \nInput\n2 6\n-5 9\n\nOutput\n1 2 0 \nInput\n6 99\n-1 -1 -1 -1 -1 -1\n\nOutput\n0 6 5 4 3 2 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8de4cfc1-7afc-4a1a-85a3-e709f0235f34",
+  "created": 1792443786,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 462,
+    "completion_tokens": 840,
+    "total_tokens": 1302,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 704
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 462
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    ans = []\n\n    for _ in range(t):\n        n = data[idx]\n        x = data[idx + 1]\n        idx += 2\n\n        total = x * pow(2, n - 1, MOD) % MOD\n        ans.append(str(total))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 3.64,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAlice jogs everyday to keep herself fit and active. She noticed that she burns X calories when jogging the first kilometer, and for K > 1, jogging the K^{th} kilometer burns calories equivalent to the total number of calories burned while jogging the first K-1 kilometers.\n\nWhat is the total number of calories that Alice burns after jogging for N kilometers? The answer can be very large, so report it modulo 10^{9} + 7 (1000000007).\n\n------ Input Format ------ \n\n- The first line of input will contain an integer T — the number of test cases. The description of T test cases follows.\n- The first and only line of each test case contains two space-separated integers N and X, as described in the problem statement. \n\n------ Output Format ------ \n\nFor each test case, output on a new line the total number of calories that Alice burns after jogging for N kilometers, modulo 10^{9} + 7.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{5}$\n$1 ≤ N ≤ 10^{6}$\n$1 ≤ X ≤ 100$\n\n----- Sample Input 1 ------ \n3\n1 2\n2 1\n12548 1\n\n----- Sample Output 1 ------ \n2\n2\n588809226\n\n----- explanation 1 ------ \nTest case $1$: Alice only jogs one kilometer, which burns $2$ calories since $X = 2$.\n\nTest case $2$: Alice jogs two kilometers. The first burns $X = 1$ calorie, and the second also burns $1$ calorie since the total amount burnt before this is $1$ calorie. So, the total is $1 + 1 = 2$ calories burned.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

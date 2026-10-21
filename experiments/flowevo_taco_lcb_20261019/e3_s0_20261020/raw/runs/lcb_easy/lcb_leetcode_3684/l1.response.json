@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "790047c1-5068-4a2f-83a2-f11b20542ca5",
+  "created": 1792430345,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 352,
+    "completion_tokens": 1610,
+    "total_tokens": 1962,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1539
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 352
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def hasMatch(self, s: str, p: str) -> bool:\n        left, right = p.split('*')\n        left_pos = s.find(left)\n        if left_pos == -1:\n            return False\n        return s.find(right, left_pos + len(left)) != -1\n```",
+  "latency_s": 8.754,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a string s and a pattern string p, where p contains exactly one '*' character.\nThe '*' in p can be replaced with any sequence of zero or more characters.\nReturn true if p can be made a substring of s, and false otherwise.\nA substring is a contiguous non-empty sequence of characters within a string.\n \nExample 1:\n\nInput: s = \"leetcode\", p = \"ee*e\"\nOutput: true\nExplanation:\nBy replacing the '*' with \"tcod\", the substring \"eetcode\" matches the pattern.\n\nExample 2:\n\nInput: s = \"car\", p = \"c*v\"\nOutput: false\nExplanation:\nThere is no substring matching the pattern.\n\nExample 3:\n\nInput: s = \"luck\", p = \"u*\"\nOutput: true\nExplanation:\nThe substrings \"u\", \"uc\", and \"uck\" match the pattern.\n\n \nConstraints:\n\n1 <= s.length <= 50\n1 <= p.length <= 50 \ns contains only lowercase English letters.\np contains only lowercase English letters and exactly one '*'\n\nStarter code / required signature:\nclass Solution:\n    def hasMatch(self, s: str, p: str) -> bool:\n        \n\nUse the required function/method named hasMatch. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

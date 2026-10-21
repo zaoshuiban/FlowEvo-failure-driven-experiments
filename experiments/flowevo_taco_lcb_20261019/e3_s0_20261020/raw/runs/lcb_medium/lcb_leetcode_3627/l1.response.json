@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a46ca64b-da80-4fc8-a6fe-57111def5367",
+  "created": 1792431273,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 537,
+    "completion_tokens": 1132,
+    "total_tokens": 1669,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 853
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 537
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\nimport heapq\n\nclass Solution:\n    def minTimeToReach(self, moveTime: List[List[int]]) -> int:\n        n, m = len(moveTime), len(moveTime[0])\n        INF = float(\"inf\")\n        dist = [[INF] * m for _ in range(n)]\n        dist[0][0] = 0\n\n        heap = [(0, 0, 0)]\n        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n        while heap:\n            time, r, c = heapq.heappop(heap)\n\n            if time != dist[r][c]:\n                continue\n\n            if r == n - 1 and c == m - 1:\n                return time\n\n            for dr, dc in directions:\n                nr, nc = r + dr, c + dc\n\n                if 0 <= nr < n and 0 <= nc < m:\n                    next_time = max(time, moveTime[nr][nc]) + 1\n\n                    if next_time < dist[nr][nc]:\n                        dist[nr][nc] = next_time\n                        heapq.heappush(heap, (next_time, nr, nc))\n\n        return dist[n - 1][m - 1]\n```",
+  "latency_s": 5.273,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a dungeon with n x m rooms arranged as a grid.\nYou are given a 2D array moveTime of size n x m, where moveTime[i][j] represents the minimum time in seconds when you can start moving to that room. You start from the room (0, 0) at time t = 0 and can move to an adjacent room. Moving between adjacent rooms takes exactly one second.\nReturn the minimum time to reach the room (n - 1, m - 1).\nTwo rooms are adjacent if they share a common wall, either horizontally or vertically.\n \nExample 1:\n\nInput: moveTime = [[0,4],[4,4]]\nOutput: 6\nExplanation:\nThe minimum time required is 6 seconds.\n\nAt time t == 4, move from room (0, 0) to room (1, 0) in one second.\nAt time t == 5, move from room (1, 0) to room (1, 1) in one second.\n\n\nExample 2:\n\nInput: moveTime = [[0,0,0],[0,0,0]]\nOutput: 3\nExplanation:\nThe minimum time required is 3 seconds.\n\nAt time t == 0, move from room (0, 0) to room (1, 0) in one second.\nAt time t == 1, move from room (1, 0) to room (1, 1) in one second.\nAt time t == 2, move from room (1, 1) to room (1, 2) in one second.\n\n\nExample 3:\n\nInput: moveTime = [[0,1],[1,2]]\nOutput: 3\n\n \nConstraints:\n\n2 <= n == moveTime.length <= 50\n2 <= m == moveTime[i].length <= 50\n0 <= moveTime[i][j] <= 10^9\n\nStarter code / required signature:\nclass Solution:\n    def minTimeToReach(self, moveTime: List[List[int]]) -> int:\n        \n\nUse the required function/method named minTimeToReach. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

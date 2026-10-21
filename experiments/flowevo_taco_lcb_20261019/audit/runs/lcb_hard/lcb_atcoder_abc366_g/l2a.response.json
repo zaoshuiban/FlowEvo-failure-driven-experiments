@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "2e1cf1ed-8fb8-4674-9a0c-26cbfd6ca93b",
+  "created": 1792433457,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 717,
+    "completion_tokens": 9179,
+    "total_tokens": 9896,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8626
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 205
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    input = sys.stdin.buffer.readline\n\n    N, M = map(int, input().split())\n    rows = [0] * N\n\n    for _ in range(M):\n        u, v = map(int, input().split())\n        u -= 1\n        v -= 1\n        rows[u] |= 1 << v\n        rows[v] |= 1 << u\n\n    a = rows[:]\n    rank = 0\n    pivots = []\n\n    # Gauss-Jordan elimination over GF(2)\n    for col in range(N):\n        pivot = -1\n        for i in range(rank, N):\n            if (a[i] >> col) & 1:\n                pivot = i\n                break\n\n        if pivot == -1:\n            continue\n\n        a[rank], a[pivot] = a[pivot], a[rank]\n\n        for i in range(N):\n            if i != rank and ((a[i] >> col) & 1):\n                a[i] ^= a[rank]\n\n        pivots.append(col)\n        rank += 1\n\n    is_pivot = [False] * N\n    for col in pivots:\n        is_pivot[col] = True\n\n    # Build a basis of the nullspace of the adjacency matrix over GF(2).\n    basis = []\n    for free_col in range(N):\n        if is_pivot[free_col]:\n            continue\n\n        vec = 1 << free_col\n        for i, pivot_col in enumerate(pivots):\n            if (a[i] >> free_col) & 1:\n                vec |= 1 << pivot_col\n\n        basis.append(vec)\n\n    covered = 0\n    for vec in basis:\n        covered |= vec\n\n    full_mask = (1 << N) - 1\n    if covered != full_mask:\n        print(\"No\")\n        return\n\n    # For each vertex i, choose a nullspace vector whose i-th bit is 1.\n    chosen = [0] * N\n    for i in range(N):\n        for vec in basis:\n            if (vec >> i) & 1:\n                chosen[i] = vec\n                break\n\n    answer = [0] * N\n\n    # Use bit i for the vector chosen for vertex i.\n    for i, vec in enumerate(chosen):\n        bit_value = 1 << i\n        for j in range(N):\n            if (vec >> j) & 1:\n                answer[j] |= bit_value\n\n    print(\"Yes\")\n    print(*answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 44.366,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a simple undirected graph with N vertices and M edges. The i-th edge connects vertices u_i and v_i bidirectionally.\nDetermine if there exists a way to write an integer between 1 and 2^{60} - 1, inclusive, on each vertex of this graph so that the following condition is satisfied:\n\n- For every vertex v with a degree of at least 1, the total XOR of the numbers written on its adjacent vertices (excluding v itself) is 0.\n\n\nWhat is XOR?\n\nThe XOR of two non-negative integers A and B, denoted as A \\oplus B, is defined as follows:\n\n\n- In the binary representation of A \\oplus B, the bit at position 2^k \\, (k \\geq 0) is 1 if and only if exactly one of the bits at position 2^k in the binary representations of A and B is 1. Otherwise, it is 0.\n\n\nFor example, 3 \\oplus 5 = 6 (in binary: 011 \\oplus 101 = 110).\n\nIn general, the bitwise XOR of k integers p_1, \\dots, p_k is defined as (\\cdots ((p_1 \\oplus p_2) \\oplus p_3) \\oplus \\cdots \\oplus p_k).  It can be proved that this is independent of the order of p_1, \\dots, p_k.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M\nu_1 v_1\nu_2 v_2\n\\vdots\nu_M v_M\n\nOutput\n\nIf there is no way to write integers satisfying the condition, print No.\nOtherwise, let X_v be the integer written on vertex v, and print your solution in the following format. If multiple solutions exist, any of them will be accepted.\nYes\nX_1 X_2 \\dots X_N\n\nConstraints\n\n\n- 1 \\leq N \\leq 60\n- 0 \\leq M \\leq N(N-1)/2\n- 1 \\leq u_i < v_i \\leq N\n- (u_i, v_i) \\neq (u_j, v_j) for i \\neq j.\n- All input values are integers.\n\nSample Input 1\n\n3 3\n1 2\n1 3\n2 3\n\nSample Output 1\n\nYes\n4 4 4\n\nOther acceptable solutions include writing (2,2,2) or (3,3,3).\n\nSample Input 2\n\n2 1\n1 2\n\nSample Output 2\n\nNo\n\nSample Input 3\n\n1 0\n\nSample Output 3\n\nYes\n1\n\nAny integer between 1 and 2^{60} - 1 can be written.\n\nSample Input 4\n\n4 5\n1 2\n1 3\n2 3\n2 4\n3 4\n\nSample Output 4\n\nYes\n12 4 4 8\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9dc7d639-6dfb-4bc2-954d-ff36f4722b43",
+  "created": 1792456723,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 750,
+    "completion_tokens": 8781,
+    "total_tokens": 9531,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8532
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 750
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    it = iter(map(int, sys.stdin.buffer.read().split()))\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        A = [0] * n\n        total = 0\n\n        for i in range(n):\n            val = next(it)\n            A[i] = val\n            if i & 1:\n                total -= val\n            else:\n                total += val\n\n        suffix = 0\n        best_gain = 0\n\n        for L in range(n, 0, -1):\n            val = A[L - 1]\n            signed_val = val if (L & 1) else -val\n\n            if ((n - L) & 1) == 0:\n                gain = -2 * suffix\n            else:\n                gain = -2 * (suffix + signed_val)\n\n            if gain > best_gain:\n                best_gain = gain\n\n            suffix += signed_val\n\n        answers.append(str(total + best_gain))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 37.806,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe alternating sum of an array A = [A_{1}, A_{2}, \\ldots, A_{N}] is defined to be\n\nA_{1} - A_{2} + A_{3} - \\ldots + (-1)^{N-1}A_{N}\n\nYou are allowed to perform the following operation at most once on A:\nChoose a subarray of A of odd length, remove this subarray from the original array, and concatenate it at the end of the remaining array. In other words, pick 1≤ L ≤ R ≤ N such that R-L+1 is odd, and transform A into the array [A_{1}, A_{2}, \\ldots, A_{L-1}, A_{R+1}, \\ldots, A_{N}, A_{L}, A_{L+1}, \\ldots, A_{R}].\n\nFor example, if the original array is [1, 2, 3, 4, 5], two possible moves are:\nChoose the subarray [1] and move it to the end to obtain [2, 3, 4, 5, 1]\nChoose the subarray [2, 3, 4] and move it to the end to obtain [1, 5, 2, 3, 4]\n\nGiven that you can perform this operation at most once, what is the maximum possible alternating sum the resulting array can achieve?\n\n------ Input Format ------ \n\n- The first line contains a single integer T, denoting the number of test cases. The description of T test cases follows.\n- The first line of each test case contains a single integer N, denoting the number of elements in A.\n- The second line of each test case contains N space-separated integers A_{1}, A_{2}, \\ldots, A_{N}, the elements of A.\n\n------ Output Format ------ \n\nFor each test case, print a single line containing one integer — the maximum possible alternating sum obtainable after performing the given operation at most once.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{5}$\n$3 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i} ≤ 10^{9}$\n- The sum of $N$ over all test cases does not exceed $10^{6}$.\n\n----- Sample Input 1 ------ \n2\n3\n1 5 2\n5\n1 10 1 5 2\n\n----- Sample Output 1 ------ \n4\n13\n\n----- explanation 1 ------ \n- Test Case $1$: Move subarray $[5]$ to the end to obtain the array $[1, 2, 5]$. The alternating sum of this array is $1 - 2 + 5 = 4$, and no larger is possible.\n\n- Test Case $2$: Move subarray $[1]$ starting at index $1$ to the end to obtain the array $[10, 1, 5, 2, 1]$. The alternating sum of this array is $10 - 1 + 5 - 2 + 1 = 13$, and no larger is possible.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

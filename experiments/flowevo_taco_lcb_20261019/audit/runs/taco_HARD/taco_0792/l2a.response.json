@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "19d7d9a8-3de1-4909-a289-32c1d5a6c50b",
+  "created": 1792436902,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 680,
+    "completion_tokens": 17547,
+    "total_tokens": 18227,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16660
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 168
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read()\n\n    def ints():\n        num = 0\n        in_num = False\n        for c in data:\n            if 48 <= c <= 57:\n                num = num * 10 + (c - 48)\n                in_num = True\n            elif in_num:\n                yield num\n                num = 0\n                in_num = False\n        if in_num:\n            yield num\n\n    it = ints()\n    try:\n        n = next(it)\n    except StopIteration:\n        return\n    e = next(it)\n\n    u = [0] * e\n    v = [0] * e\n\n    adj = [[] for _ in range(n + 1)]\n    degree = [0] * (n + 1)\n\n    for edge_id in range(e):\n        a = next(it)\n        b = next(it)\n        u[edge_id] = a\n        v[edge_id] = b\n\n        adj[a].append((b, edge_id))\n        adj[b].append((a, edge_id))\n\n        degree[a] += 1\n        degree[b] += 1\n\n    # An Eulerian orientation exists only if every degree is even.\n    for city in range(1, n + 1):\n        if degree[city] & 1:\n            sys.stdout.write(\"NO\\n\")\n            return\n\n    if e == 0:\n        sys.stdout.write(\"YES\\n\" if n == 1 else \"NO\\n\")\n        return\n\n    # Find a non-isolated starting city.\n    start = 1\n    while start <= n and degree[start] == 0:\n        start += 1\n\n    # The underlying undirected graph must connect all cities.\n    visited = [False] * (n + 1)\n    stack = [start]\n    visited[start] = True\n    visited_count = 0\n\n    while stack:\n        city = stack.pop()\n        visited_count += 1\n\n        for nxt, _ in adj[city]:\n            if not visited[nxt]:\n                visited[nxt] = True\n                stack.append(nxt)\n\n    if visited_count != n:\n        sys.stdout.write(\"NO\\n\")\n        return\n\n    # Hierholzer's algorithm for an undirected Euler circuit.\n    used = bytearray(e)\n    ptr = [0] * (n + 1)\n\n    vertex_stack = [start]\n    edge_stack = [-1]\n    popped_edges = []\n\n    while vertex_stack:\n        city = vertex_stack[-1]\n        av = adj[city]\n        p = ptr[city]\n\n        while p < len(av) and used[av[p][1]]:\n            p += 1\n\n        ptr[city] = p\n\n        if p < len(av):\n            nxt, edge_id = av[p]\n            used[edge_id] = 1\n            ptr[city] = p + 1\n\n            vertex_stack.append(nxt)\n            edge_stack.append(edge_id)\n        else:\n            vertex_stack.pop()\n            edge_id = edge_stack.pop()\n\n            if edge_id != -1:\n                popped_edges.append(edge_id)\n\n    if len(popped_edges) != e:\n        sys.stdout.write(\"NO\\n\")\n        return\n\n    # Reverse the popped edge order to get an Euler circuit.\n    answer_u = [0] * e\n    answer_v = [0] * e\n\n    current = start\n\n    for idx in range(e - 1, -1, -1):\n        edge_id = popped_edges[idx]\n        a = u[edge_id]\n        b = v[edge_id]\n\n        if current == a:\n            answer_u[edge_id] = a\n            answer_v[edge_id] = b\n            current = b\n        else:\n            answer_u[edge_id] = b\n            answer_v[edge_id] = a\n            current = a\n\n    output = [\"YES\"]\n    output.extend(f\"{answer_u[i]} {answer_v[i]}\" for i in range(e))\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 82.875,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe grand kingdom of Mancunia is famous for its tourist attractions and visitors flock to it throughout the year. King Mancunian is the benevolent ruler of the prosperous country whose main source of revenue is, of course, tourism.\n\nThe country can be represented by a network of unidirectional roads between the cities. But Mancunian, our benign monarch, has a headache. The road network of the country is not tourist-friendly and this is affecting revenue. To increase the GDP of the nation, he wants to redirect some of the roads to make the road network tourist-friendly and hence, ensure happiness and prosperity for his loyal subjects.\n\nNow is the time for some formal definitions. :(\n\nA road network is said to be tourist-friendly if for every city in the country, if a tourist starts his journey there, there is a path she can take to visit each and every city of the nation and traverse each road exactly once before ending up at the city where she started.\n\nGiven a description of the road network of Mancunia, can you come up with a scheme to redirect some (possibly none) of the roads to make it tourist-friendly?\n\n-----Input-----\nThe first line contains two integers N and E denoting the number of cities and roads in the beautiful country of Mancunia respectively.\nEach of the next E lines contains two integers a and b implying that there is a unidirectional road from city a to city b.\n\nIt is guaranteed that there aren't multiple roads in the exact same direction and that there is no road from a city to itself.\n\n-----Output-----\nIf there is no solution, print \"NO\" (without quotes). Else, print \"YES\" (without quotes), followed by exactly E lines.\nThe ith line of output should represent the ith road in the input. It should have two integers a and b denoting that the final orientation of that road is from a to b.\n\n-----Constraints-----\n\n- 1 ≤ N ≤ 100000\n- 1 ≤ E ≤ 200000\n- 1 ≤ a, b ≤ N\n\nSubtask 1: (20 points)\n- 1 ≤ N ≤ 20\n- 1 ≤ E ≤ 21\n\nSubtask 2: (80 points)\n- Same as original constraints\n\n-----Example 1-----\nInput:\n3 3\n1 2\n2 3\n3 1\n\nOutput:\nYES\n1 2\n2 3\n3 1\n\n-----Example 2-----\nInput:\n3 2\n1 2\n2 3\n\nOutput:\nNO\n\n-----Example 3-----\nInput:\n5 6\n1 2\n2 3\n3 4\n2 4\n2 5\n1 5\n\nOutput:\nYES\n1 2\n2 3\n3 4\n4 2\n2 5\n5 1\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cab2cef1-5ee5-44c3-83b9-da63304ee11b",
+  "created": 1792446875,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 493,
+    "completion_tokens": 7481,
+    "total_tokens": 7974,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7206
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 493
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n\n    graph = [[] for _ in range(n)]\n    for _ in range(n - 1):\n        u = next(it) - 1\n        v = next(it) - 1\n        graph[u].append(v)\n        graph[v].append(u)\n\n    degree = [len(neighbors) for neighbors in graph]\n\n    visited = [False] * n\n    answer = 0\n\n    for start in range(n):\n        if degree[start] != 3 or visited[start]:\n            continue\n\n        visited[start] = True\n        stack = [start]\n        count_degree_two = 0\n\n        while stack:\n            v = stack.pop()\n\n            for nxt in graph[v]:\n                if degree[nxt] == 2:\n                    count_degree_two += 1\n                elif degree[nxt] == 3 and not visited[nxt]:\n                    visited[nxt] = True\n                    stack.append(nxt)\n\n        answer += count_degree_two * (count_degree_two - 1) // 2\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 37.228,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a tree with N vertices. The i-th edge (1 \\leq i \\leq N-1) connects vertices u_i and v_i bidirectionally.\nAdding one undirected edge to the given tree always yields a graph with exactly one cycle.\nAmong such graphs, how many satisfy all of the following conditions?\n\n- The graph is simple.\n- All vertices in the cycle have degree 3.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nu_1 v_1\r\nu_2 v_2\r\n\\vdots\r\nu_{N-1} v_{N-1}\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 3 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq u_i, v_i \\leq N\n- The given graph is a tree.\n- All input values are integers.\n\nSample Input 1\n\n6\r\n1 2\r\n2 3\r\n3 4\r\n4 5\r\n3 6\n\nSample Output 1\n\n1\r\n\nAdding an edge connecting vertices 2 and 4 yields a simple graph where all vertices in the cycle have degree 3, so it satisfies the conditions.\n\nSample Input 2\n\n7\r\n1 2\r\n2 7\r\n3 5\r\n7 3\r\n6 2\r\n4 7\n\nSample Output 2\n\n0\r\n\nThere are cases where no graphs satisfy the conditions.\n\nSample Input 3\n\n15\r\n1 15\r\n11 14\r\n2 10\r\n1 7\r\n9 8\r\n6 9\r\n4 12\r\n14 5\r\n4 9\r\n8 11\r\n7 4\r\n1 13\r\n3 6\r\n11 10\n\nSample Output 3\n\n6\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

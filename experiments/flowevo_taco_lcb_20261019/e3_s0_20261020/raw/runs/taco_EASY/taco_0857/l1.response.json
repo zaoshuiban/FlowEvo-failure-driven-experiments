@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "46de0a42-389f-4447-85e7-3753f9d10a12",
+  "created": 1792432178,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 736,
+    "completion_tokens": 2922,
+    "total_tokens": 3658,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2698
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 736
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom math import isqrt\n\n_counts = None\n\ndef _build_counts(limit):\n    counts = [0] * (limit + 1)\n    for c in range(1, limit + 1):\n        n = c * c * c\n        count = 0\n        max_a = isqrt(n // 2)\n\n        for a in range(1, max_a + 1):\n            rem = n - a * a\n            b = isqrt(rem)\n            if b * b == rem:\n                count += 1\n\n        counts[c] = count\n\n    return counts\n\n\ndef find_abc_sumsqcube(c_max, num_sol):\n    global _counts\n\n    if _counts is None:\n        _counts = _build_counts(max(1000, c_max))\n    elif c_max >= len(_counts):\n        _counts = _build_counts(c_max)\n\n    return [c for c in range(1, c_max + 1) if _counts[c] == num_sol]\n```",
+  "latency_s": 12.525,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nWe are interested in collecting the triples of positive integers ```(a, b, c)``` that fulfill the following equation:\n```python\na² + b² = c³\n```\nThe first triple with the lowest values that satisfies the equation we have above is (2, 2 ,2).\nIn effect:\n```python\n2² + 2² = 2³\n4  + 4  = 8\n```\nThe first pair of triples that \"shares\" the same value of ```c``` is: ```(2, 11, 5)``` and ```(5, 10, 5)```. \n\nBoth triples share the same value of ```c```  is ```c = 5```. \n```python\nTriple (2, 11, 5)                  Triple(5, 10, 5)\n2² + 11² =  5³                      5² +  10²  =  5³\n4  + 121 = 125                     25  + 100   = 125\n```\nSo, we say that the value ```c``` has two solutions because there are two triples sharing the same value of ```c```.\n\nThere are some values of ```c``` with no solutions.\n\nThe first value of ```c``` that have a surprising number of solutions is ```65``` with ```8``` different triples.\n\nIn order to avoid duplications you will consider that ```a <= b``` always.\n\nMake the function ```find_abc_sumsqcube()```, that may give us the values of c for an specific number of solutions.\n\nFor that purpose the above required function will receive two arguments, ```c_max``` and ```num_sol```. It is understandable that ```c_max``` will give to our function the upper limit of ```c``` and ```num_sol```, the specific number of solutions.\n\nThe function will output a sorted list with the values of ```c``` that have a number of solutions equals to ```num_sol```\n\nLet's see some cases: \n```python\nfind_abc_sumsqcube(5, 1) == [2] # below or equal to c_max = 5 we have triple the (2, 2, 2) (see above)\n\nfind_abc_sumsqcube(5, 2) == [5] # now we want the values of ```c ≤ c_max``` with two solutions (see above again)\n\nfind_abc_sumsqcube(10, 2) == [5, 10]\n\nfind_abc_sumsqcube(20, 8) == [] # There are no values of c equal and bellow 20 having 8 solutions.\n```\n\nOur tests will have the following ranges for our two arguments:\n```python\n5 ≤ c_max ≤ 1000\n1 ≤ num_sol ≤ 10\n```\nHappy coding!!\n\nStarter code / required signature:\ndef find_abc_sumsqcube(c_max, num_sol):\n\t\n\nUse the required function/method named find_abc_sumsqcube. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "52029fa1-7c7c-473f-808f-9e1518965e15",
+  "created": 1792432086,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1179,
+    "completion_tokens": 9944,
+    "total_tokens": 11123,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 9447
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 155
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    it = iter(map(int, sys.stdin.buffer.read().split()))\n    nxt = it.__next__\n\n    N = nxt()\n    D = N + 1\n    D2 = D * D\n\n    P = [0] * (D * D * D)\n\n    for x in range(1, N + 1):\n        x_base = x * D2\n        for y in range(1, N + 1):\n            base = x_base + y * D\n            base_x = base - D2\n            base_y = base - D\n            base_xy = base - D2 - D\n\n            for z in range(1, D):\n                a = nxt()\n                idx = base + z\n                P[idx] = (\n                    a\n                    + P[base_x + z]\n                    + P[base_y + z]\n                    + P[idx - 1]\n                    - P[base_xy + z]\n                    - P[base_x + z - 1]\n                    - P[base_y + z - 1]\n                    + P[base_xy + z - 1]\n                )\n\n    Q = nxt()\n    answers = []\n    append = answers.append\n\n    for _ in range(Q):\n        lx = nxt()\n        rx = nxt()\n        ly = nxt()\n        ry = nxt()\n        lz = nxt()\n        rz = nxt()\n\n        xl = (lx - 1) * D2\n        xr = rx * D2\n        yl = (ly - 1) * D\n        yr = ry * D\n        zl = lz - 1\n\n        ans = (\n            P[xr + yr + rz]\n            - P[xl + yr + rz]\n            - P[xr + yl + rz]\n            - P[xr + yr + zl]\n            + P[xl + yl + rz]\n            + P[xl + yr + zl]\n            + P[xr + yl + zl]\n            - P[xl + yl + zl]\n        )\n        append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n    if answers:\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 40.01,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a positive integer N, and an integer A_{x,y,z} for each triple of integers (x, y, z) such that 1 \\leq x, y, z \\leq N.\nYou will be given Q queries in the following format, which must be processed in order.\nFor the i-th query (1 \\leq i \\leq Q), you are given a tuple of integers (Lx_i, Rx_i, Ly_i, Ry_i, Lz_i, Rz_i) such that 1 \\leq Lx_i \\leq Rx_i \\leq N, 1 \\leq Ly_i \\leq Ry_i \\leq N, and 1 \\leq Lz_i \\leq Rz_i \\leq N. Find:\n\\displaystyle{\\sum_{x=Lx_i}^{Rx_i} \\sum_{y=Ly_i}^{Ry_i} \\sum_{z=Lz_i}^{Rz_i} A_{x,y,z}}.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nA_{1,1,1} A_{1,1,2} \\ldots A_{1,1,N}\r\nA_{1,2,1} A_{1,2,2} \\ldots A_{1,2,N}\r\n\\vdots\r\nA_{1,N,1} A_{1,N,2} \\ldots A_{1,N,N}\r\nA_{2,1,1} A_{2,1,2} \\ldots A_{2,1,N}\r\nA_{2,2,1} A_{2,2,2} \\ldots A_{2,2,N}\r\n\\vdots\r\nA_{2,N,1} A_{2,N,2} \\ldots A_{2,N,N}\r\n\\vdots\r\nA_{N,1,1} A_{N,1,2} \\ldots A_{N,1,N}\r\nA_{N,2,1} A_{N,2,2} \\ldots A_{N,2,N}\r\n\\vdots\r\nA_{N,N,1} A_{N,N,2} \\ldots A_{N,N,N}\r\nQ\r\nLx_1 Rx_1 Ly_1 Ry_1 Lz_1 Rz_1\r\nLx_2 Rx_2 Ly_2 Ry_2 Lz_2 Rz_2\r\n\\vdots\r\nLx_Q Rx_Q Ly_Q Ry_Q Lz_Q Rz_Q\n\nOutput\n\nPrint Q lines.\r\nThe i-th line should contain the answer to the i-th query.\n\nConstraints\n\n\n- 1 \\leq N \\leq 100\n- 1 \\leq Q \\leq 2 \\times 10^{5}\n- 0 \\leq A_{x,y,z} \\leq 999 (1 \\leq x, y, z \\leq N)\n- 1 \\leq Lx_i \\leq Rx_i \\leq N (1 \\leq i \\leq Q)\n- 1 \\leq Ly_i \\leq Ry_i \\leq N (1 \\leq i \\leq Q)\n- 1 \\leq Lz_i \\leq Rz_i \\leq N (1 \\leq i \\leq Q)\n- All input values are integers.\n\nSample Input 1\n\n2\r\n1 2\r\n3 4\r\n5 6\r\n7 8\r\n2\r\n1 2 2 2 1 1\r\n2 2 1 2 1 2\n\nSample Output 1\n\n10\r\n26\r\n\nFor the 1st query, the sought value is A_{1,2,1} + A_{2,2,1} = 3 + 7 = 10. Thus, print 10.\nFor the 2nd query, the sought value is A_{2,1,1} + A_{2,1,2} + A_{2,2,1} + A_{2,2,2} = 5 + 6 + 7 + 8 = 26. Thus, print 26.\n\nSample Input 2\n\n3\r\n733 857 714\r\n956 208 257\r\n123 719 648\r\n840 881 245\r\n245 112 746\r\n306 942 694\r\n58 870 849\r\n13 208 789\r\n687 906 783\r\n8\r\n3 3 3 3 1 1\r\n1 3 2 3 3 3\r\n2 2 2 3 1 1\r\n1 3 1 1 1 1\r\n2 3 2 3 2 3\r\n1 2 1 1 1 2\r\n3 3 2 2 1 3\r\n1 2 2 3 2 3\n\nSample Output 2\n\n687\r\n3917\r\n551\r\n1631\r\n5180\r\n3311\r\n1010\r\n4326\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c294bba6-7b2f-4882-8809-072a09e8560d",
+  "created": 1792444561,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 426,
+    "completion_tokens": 15953,
+    "total_tokens": 16379,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15346
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 426
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import gcd\n\n\ndef solve_congruence(a, b, mod):\n    \"\"\"\n    Returns x such that a * x == b (mod mod).\n    It is guaranteed that a solution exists.\n    \"\"\"\n    g = gcd(a, mod)\n    m1 = mod // g\n\n    if m1 == 1:\n        return 0\n\n    a1 = (a // g) % m1\n    b1 = (b // g) % m1\n\n    inv = pow(a1, -1, m1)\n    return (b1 * inv) % m1\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n\n    forbidden = bytearray(m)\n    for x in data[2:2 + n]:\n        forbidden[x] = 1\n\n    # residues[d] = allowed residues x with gcd(x, m) = d\n    residues = {}\n\n    for x in range(m):\n        if not forbidden[x]:\n            d = gcd(x, m)\n            residues.setdefault(d, []).append(x)\n\n    keys = sorted(residues.keys())\n\n    # Find the maximum-weight chain of gcd classes under divisibility.\n    dp = {}\n    parent = {}\n    best_end = None\n    best_value = -1\n\n    for d in keys:\n        best_prev_value = 0\n        best_prev = None\n\n        for e in keys:\n            if e >= d:\n                break\n            if d % e == 0 and dp[e] > best_prev_value:\n                best_prev_value = dp[e]\n                best_prev = e\n\n        value = best_prev_value + len(residues[d])\n        dp[d] = value\n        parent[d] = best_prev\n\n        if value > best_value:\n            best_value = value\n            best_end = d\n\n    chain = []\n    d = best_end\n    while d is not None:\n        chain.append(d)\n        d = parent[d]\n    chain.reverse()\n\n    # Desired prefix products.\n    prefix_products = []\n    for d in chain:\n        prefix_products.extend(residues[d])\n\n    # Convert desired prefix products into the actual sequence elements.\n    answer = []\n    if prefix_products:\n        answer.append(prefix_products[0] % m)\n\n        for i in range(1, len(prefix_products)):\n            prev_p = prefix_products[i - 1]\n            cur_p = prefix_products[i]\n            answer.append(solve_congruence(prev_p, cur_p, m))\n\n    k = len(answer)\n    sys.stdout.write(str(k) + \"\\n\")\n    sys.stdout.write(\" \".join(map(str, answer)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 76.405,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer m, and a list of n distinct integers between 0 and m - 1.\n\nYou would like to construct a sequence satisfying the properties:  Each element is an integer between 0 and m - 1, inclusive.  All prefix products of the sequence modulo m are distinct.  No prefix product modulo m appears as an element of the input list.  The length of the sequence is maximized. \n\nConstruct any sequence satisfying the properties above.\n\n\n-----Input-----\n\nThe first line of input contains two integers n and m (0 ≤ n < m ≤ 200 000) — the number of forbidden prefix products and the modulus.\n\nIf n is non-zero, the next line of input contains n distinct integers between 0 and m - 1, the forbidden prefix products. If n is zero, this line doesn't exist.\n\n\n-----Output-----\n\nOn the first line, print the number k, denoting the length of your sequence.\n\nOn the second line, print k space separated integers, denoting your sequence.\n\n\n-----Examples-----\nInput\n0 5\n\nOutput\n5\n1 2 4 3 0\n\nInput\n3 10\n2 9 1\n\nOutput\n6\n3 9 2 9 8 0\n\n\n\n-----Note-----\n\nFor the first case, the prefix products of this sequence modulo m are [1, 2, 3, 4, 0].\n\nFor the second case, the prefix products of this sequence modulo m are [3, 7, 4, 6, 8, 0].\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

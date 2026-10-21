@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7a607893-38b3-4565-a59d-b58da6314906",
+  "created": 1792456633,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 822,
+    "completion_tokens": 24961,
+    "total_tokens": 25783,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 24211
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 310
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    t = next(it)\n    output = []\n\n    for _ in range(t):\n        n = next(it)\n        adj = [[] for _ in range(n)]\n\n        for _ in range(n - 1):\n            a = next(it) - 1\n            b = next(it) - 1\n            adj[a].append(b)\n            adj[b].append(a)\n\n        parent = [-1] * n\n        order = [0]\n\n        for v in order:\n            for u in adj[v]:\n                if u == parent[v]:\n                    continue\n                parent[u] = v\n                order.append(u)\n\n        dp0 = [0] * n  # parent edge is not selected\n        dp1 = [0] * n  # parent edge is selected\n\n        for v in reversed(order):\n            base = 0\n            good = 0\n\n            for u in adj[v]:\n                if parent[u] == v:\n                    base += dp0[u]\n                    if dp0[u] == dp1[u]:\n                        good += 1\n\n            dp0[v] = base + min(2, good)\n            dp1[v] = base + min(1, good)\n\n        selected_child = [False] * n\n\n        for v in order:\n            parent_selected = 1 if selected_child[v] else 0\n            capacity = 2 - parent_selected\n            taken = 0\n\n            for u in adj[v]:\n                if parent[u] == v:\n                    if dp0[u] == dp1[u] and taken < capacity:\n                        selected_child[u] = True\n                        taken += 1\n                    else:\n                        selected_child[u] = False\n\n        selected_adj = [[] for _ in range(n)]\n        removed = []\n\n        for v in range(1, n):\n            p = parent[v]\n            if selected_child[v]:\n                selected_adj[v].append(p)\n                selected_adj[p].append(v)\n            else:\n                removed.append((p, v))\n\n        visited = [False] * n\n        components = []\n\n        for start_vertex in range(n):\n            if visited[start_vertex]:\n                continue\n\n            stack = [start_vertex]\n            visited[start_vertex] = True\n            comp = []\n\n            while stack:\n                v = stack.pop()\n                comp.append(v)\n\n                for u in selected_adj[v]:\n                    if not visited[u]:\n                        visited[u] = True\n                        stack.append(u)\n\n            if len(comp) == 1:\n                components.append((start_vertex, start_vertex))\n            else:\n                endpoints = []\n                for v in comp:\n                    if len(selected_adj[v]) <= 1:\n                        endpoints.append(v)\n                components.append((endpoints[0], endpoints[1]))\n\n        added = []\n        for i in range(len(components) - 1):\n            added.append((components[i][1], components[i + 1][0]))\n\n        k = len(removed)\n        output.append(str(k))\n\n        for i in range(k):\n            x1, y1 = removed[i]\n            x2, y2 = added[i]\n            output.append(f\"{x1 + 1} {y1 + 1} {x2 + 1} {y2 + 1}\")\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 120.614,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNastia has an unweighted tree with n vertices and wants to play with it!\n\nThe girl will perform the following operation with her tree, as long as she needs:\n\n  1. Remove any existing edge. \n  2. Add an edge between any pair of vertices. \n\n\n\nWhat is the minimum number of operations Nastia needs to get a bamboo from a tree? A bamboo is a tree in which no node has a degree greater than 2.\n\nInput\n\nThe first line contains a single integer t (1 ≤ t ≤ 10 000) — the number of test cases.\n\nThe first line of each test case contains a single integer n (2 ≤ n ≤ 10^5) — the number of vertices in the tree.\n\nNext n - 1 lines of each test cases describe the edges of the tree in form a_i, b_i (1 ≤ a_i, b_i ≤ n, a_i ≠ b_i).\n\nIt's guaranteed the given graph is a tree and the sum of n in one test doesn't exceed 2 ⋅ 10^5.\n\nOutput\n\nFor each test case in the first line print a single integer k — the minimum number of operations required to obtain a bamboo from the initial tree.\n\nIn the next k lines print 4 integers x_1, y_1, x_2, y_2 (1 ≤ x_1, y_1, x_2, y_{2} ≤ n, x_1 ≠ y_1, x_2 ≠ y_2) — this way you remove the edge (x_1, y_1) and add an undirected edge (x_2, y_2).\n\nNote that the edge (x_1, y_1) must be present in the graph at the moment of removing.\n\nExample\n\nInput\n\n\n2\n7\n1 2\n1 3\n2 4\n2 5\n3 6\n3 7\n4\n1 2\n1 3\n3 4\n\n\nOutput\n\n\n2\n2 5 6 7\n3 6 4 5\n0\n\nNote\n\nNote the graph can be unconnected after a certain operation.\n\nConsider the first test case of the example: \n\n<image> The red edges are removed, and the green ones are added.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

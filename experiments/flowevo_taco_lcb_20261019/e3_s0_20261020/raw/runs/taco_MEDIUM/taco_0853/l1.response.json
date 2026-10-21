@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "dfe6b235-b7ac-4bc9-b65c-84b62fe34e8a",
+  "created": 1792442613,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 786,
+    "completion_tokens": 2804,
+    "total_tokens": 3590,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2508
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 786
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    a = [[0] * m for _ in range(n)]\n    for i in range(n):\n        for j in range(m):\n            a[i][j] = next(it)\n\n    low = [[0] * m for _ in range(n)]\n    high = [[0] * m for _ in range(n)]\n\n    for i in range(n):\n        for j in range(m):\n            b = next(it)\n            x = a[i][j]\n            low[i][j] = min(x, b)\n            high[i][j] = max(x, b)\n\n    for i in range(n):\n        for j in range(m - 1):\n            if not (low[i][j] < low[i][j + 1] and high[i][j] < high[i][j + 1]):\n                print(\"Impossible\")\n                return\n\n    for i in range(n - 1):\n        for j in range(m):\n            if not (low[i][j] < low[i + 1][j] and high[i][j] < high[i + 1][j]):\n                print(\"Impossible\")\n                return\n\n    print(\"Possible\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 12.306,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two $n \\times m$ matrices containing integers. A sequence of integers is strictly increasing if each next number is greater than the previous one. A row is strictly increasing if all numbers from left to right are strictly increasing. A column is strictly increasing if all numbers from top to bottom are strictly increasing. A matrix is increasing if all rows are strictly increasing and all columns are strictly increasing. \n\nFor example, the matrix $\\begin{bmatrix} 9&10&11\\\\ 11&12&14\\\\ \\end{bmatrix}$ is increasing because each individual row and column is strictly increasing. On the other hand, the matrix $\\begin{bmatrix} 1&1\\\\ 2&3\\\\ \\end{bmatrix}$ is not increasing because the first row is not strictly increasing.\n\nLet a position in the $i$-th row (from top) and $j$-th column (from left) in a matrix be denoted as $(i, j)$. \n\nIn one operation, you can choose any two numbers $i$ and $j$ and swap the number located in $(i, j)$ in the first matrix with the number in $(i, j)$ in the second matrix. In other words, you can swap two numbers in different matrices if they are located in the corresponding positions.\n\nYou would like to make both matrices increasing by performing some number of operations (possibly none). Determine if it is possible to do this. If it is, print \"Possible\", otherwise, print \"Impossible\".\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $m$ ($1 \\leq n,m \\leq 50$) — the dimensions of each matrix.\n\nEach of the next $n$ lines contains $m$ integers $a_{i1}, a_{i2}, \\ldots, a_{im}$ ($1 \\leq a_{ij} \\leq 10^9$) — the number located in position $(i, j)$ in the first matrix.\n\nEach of the next $n$ lines contains $m$ integers $b_{i1}, b_{i2}, \\ldots, b_{im}$ ($1 \\leq b_{ij} \\leq 10^9$) — the number located in position $(i, j)$ in the second matrix.\n\n\n-----Output-----\n\nPrint a string \"Impossible\" or \"Possible\".\n\n\n-----Examples-----\nInput\n2 2\n2 10\n11 5\n9 4\n3 12\n\nOutput\nPossible\n\nInput\n2 3\n2 4 5\n4 5 6\n3 6 7\n8 10 11\n\nOutput\nPossible\n\nInput\n3 2\n1 3\n2 4\n5 10\n3 1\n3 6\n4 8\n\nOutput\nImpossible\n\n\n\n-----Note-----\n\nThe first example, we can do an operation on the top left and bottom right cells of the matrices. The resulting matrices will be $\\begin{bmatrix} 9&10\\\\ 11&12\\\\ \\end{bmatrix}$ and $\\begin{bmatrix} 2&4\\\\ 3&5\\\\ \\end{bmatrix}$.\n\nIn the second example, we don't need to do any operations.\n\nIn the third example, no matter what we swap, we can't fix the first row to be strictly increasing in both matrices.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

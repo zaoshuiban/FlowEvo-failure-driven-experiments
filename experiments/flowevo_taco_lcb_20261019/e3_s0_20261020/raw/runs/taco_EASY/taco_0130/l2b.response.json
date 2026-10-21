@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d75019ee-b550-475c-a46a-803d8cea3184",
+  "created": 1792431416,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 623,
+    "completion_tokens": 8532,
+    "total_tokens": 9155,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8361
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 239
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        a1 = data[idx]\n        idx += 1\n\n        min_other = 10**18\n        for _ in range(n - 1):\n            value = data[idx]\n            idx += 1\n            if value < min_other:\n                min_other = value\n\n        if a1 > min_other:\n            answers.append(\"Alice\")\n        else:\n            answers.append(\"Bob\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 44.126,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAlice and Bob are playing a game on an array $a$ of $n$ positive integers. Alice and Bob make alternating moves with Alice going first.\n\nIn his/her turn, the player makes the following move:\n\nIf $a_1 = 0$, the player loses the game, otherwise:\n\nPlayer chooses some $i$ with $2\\le i \\le n$. Then player decreases the value of $a_1$ by $1$ and swaps $a_1$ with $a_i$.\n\nDetermine the winner of the game if both players play optimally.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains a single integer $t$ $(1 \\leq t \\leq 2 \\cdot 10^4)$  — the number of test cases. The description of the test cases follows.\n\nThe first line of each test case contains a single integer $n$ $(2 \\leq n \\leq 10^5)$  — the length of the array $a$.\n\nThe second line of each test case contains $n$ integers $a_1,a_2 \\ldots a_n$ $(1 \\leq a_i \\leq 10^9)$  — the elements of the array $a$.\n\nIt is guaranteed that sum of $n$ over all test cases does not exceed $2 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, if Alice will win the game, output \"Alice\". Otherwise, output \"Bob\".\n\nYou can output each letter in any case. For example, \"alIcE\", \"Alice\", \"alice\" will all be considered identical.\n\n\n-----Examples-----\n\nInput\n3\n2\n1 1\n2\n2 1\n3\n5 4 4\nOutput\nBob\nAlice\nAlice\n\n\n-----Note-----\n\nIn the first testcase, in her turn, Alice can only choose $i = 2$, making the array equal $[1, 0]$. Then Bob, in his turn, will also choose $i = 2$ and make the array equal $[0, 0]$. As $a_1 = 0$, Alice loses.\n\nIn the second testcase, once again, players can only choose $i = 2$. Then the array will change as follows: $[2, 1] \\to [1, 1] \\to [1, 0] \\to [0, 0]$, and Bob loses.\n\nIn the third testcase, we can show that Alice has a winning strategy.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

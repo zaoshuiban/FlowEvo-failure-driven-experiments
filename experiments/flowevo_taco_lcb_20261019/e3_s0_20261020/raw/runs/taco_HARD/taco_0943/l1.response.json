@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7eb0724a-43ab-44c5-99df-20843206c1fd",
+  "created": 1792432480,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 587,
+    "completion_tokens": 9529,
+    "total_tokens": 10116,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 9036
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 587
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_left\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    idx = 1\n\n    a = [0] * (n + 1)\n    for i in range(1, n + 1):\n        a[i] = data[idx]\n        idx += 1\n\n    children = [[] for _ in range(n + 1)]\n    parent = [0] * (n + 1)\n    edge_weight = [0] * (n + 1)\n\n    for child in range(2, n + 1):\n        p = data[idx]\n        w = data[idx + 1]\n        idx += 2\n\n        parent[child] = p\n        edge_weight[child] = w\n        children[p].append(child)\n\n    diff = [0] * (n + 1)\n    order = []\n\n    path_nodes = []\n    path_dists = []\n\n    stack = [(1, 0)]\n\n    while stack:\n        u, state = stack.pop()\n\n        if state == 0:\n            if u == 1:\n                dist_u = 0\n            else:\n                dist_u = path_dists[-1] + edge_weight[u]\n\n            path_nodes.append(u)\n            path_dists.append(dist_u)\n\n            depth = len(path_nodes) - 1\n\n            if u != 1:\n                pos = bisect_left(path_dists, dist_u - a[u])\n\n                if pos < depth:\n                    diff[path_nodes[depth - 1]] += 1\n\n                    if pos > 0:\n                        diff[path_nodes[pos - 1]] -= 1\n\n            order.append(u)\n\n            stack.append((u, 1))\n\n            ch = children[u]\n            for i in range(len(ch) - 1, -1, -1):\n                stack.append((ch[i], 0))\n\n        else:\n            path_nodes.pop()\n            path_dists.pop()\n\n    for u in reversed(order):\n        if u != 1:\n            diff[parent[u]] += diff[u]\n\n    sys.stdout.write(\" \".join(str(diff[i]) for i in range(1, n + 1)))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 43.358,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAlyona has a tree with n vertices. The root of the tree is the vertex 1. In each vertex Alyona wrote an positive integer, in the vertex i she wrote a_{i}. Moreover, the girl wrote a positive integer to every edge of the tree (possibly, different integers on different edges).\n\nLet's define dist(v, u) as the sum of the integers written on the edges of the simple path from v to u.\n\nThe vertex v controls the vertex u (v ≠ u) if and only if u is in the subtree of v and dist(v, u) ≤ a_{u}.\n\nAlyona wants to settle in some vertex. In order to do this, she wants to know for each vertex v what is the number of vertices u such that v controls u.\n\n\n-----Input-----\n\nThe first line contains single integer n (1 ≤ n ≤ 2·10^5).\n\nThe second line contains n integers a_1, a_2, ..., a_{n} (1 ≤ a_{i} ≤ 10^9) — the integers written in the vertices.\n\nThe next (n - 1) lines contain two integers each. The i-th of these lines contains integers p_{i} and w_{i} (1 ≤ p_{i} ≤ n, 1 ≤ w_{i} ≤ 10^9) — the parent of the (i + 1)-th vertex in the tree and the number written on the edge between p_{i} and (i + 1).\n\nIt is guaranteed that the given graph is a tree.\n\n\n-----Output-----\n\nPrint n integers — the i-th of these numbers should be equal to the number of vertices that the i-th vertex controls.\n\n\n-----Examples-----\nInput\n5\n2 5 1 4 6\n1 7\n1 1\n3 5\n3 6\n\nOutput\n1 0 1 0 0\n\nInput\n5\n9 7 8 6 5\n1 1\n2 1\n3 1\n4 1\n\nOutput\n4 3 2 1 0\n\n\n\n-----Note-----\n\nIn the example test case the vertex 1 controls the vertex 3, the vertex 3 controls the vertex 5 (note that is doesn't mean the vertex 1 controls the vertex 5).\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

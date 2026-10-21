@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "25cac836-3d18-4c56-8d55-f5827814feb9",
+  "created": 1792454779,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 641,
+    "completion_tokens": 15994,
+    "total_tokens": 16635,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 15257
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 385
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef clip_polygon(poly, a, b):\n    if not poly:\n        return []\n\n    ax, ay = a\n    bx, by = b\n    ex = bx - ax\n    ey = by - ay\n    eps = 1e-12\n\n    def inside(p):\n        px, py = p\n        return ex * (py - ay) - ey * (px - ax) >= -eps\n\n    result = []\n    n = len(poly)\n\n    for i in range(n):\n        cur = poly[i]\n        prev = poly[i - 1]\n\n        cur_in = inside(cur)\n        prev_in = inside(prev)\n\n        if cur_in:\n            if not prev_in:\n                dx = cur[0] - prev[0]\n                dy = cur[1] - prev[1]\n                den = dx * ey - dy * ex\n\n                if abs(den) > 1e-30:\n                    num = (ax - prev[0]) * ey - (ay - prev[1]) * ex\n                    t = num / den\n                    result.append((prev[0] + t * dx, prev[1] + t * dy))\n                else:\n                    result.append(cur)\n\n            result.append(cur)\n\n        elif prev_in:\n            dx = cur[0] - prev[0]\n            dy = cur[1] - prev[1]\n            den = dx * ey - dy * ex\n\n            if abs(den) > 1e-30:\n                num = (ax - prev[0]) * ey - (ay - prev[1]) * ex\n                t = num / den\n                result.append((prev[0] + t * dx, prev[1] + t * dy))\n\n    return result\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    w, h, alpha = map(int, data[:3])\n\n    if alpha % 180 == 0:\n        print(f\"{float(w * h):.15f}\")\n        return\n\n    if alpha == 90:\n        c, s = 0.0, 1.0\n    else:\n        angle = math.radians(alpha)\n        c = math.cos(angle)\n        s = math.sin(angle)\n\n    a = w / 2.0\n    b = h / 2.0\n\n    first = [(-a, -b), (a, -b), (a, b), (-a, b)]\n\n    second = []\n    for x, y in first:\n        second.append((x * c - y * s, x * s + y * c))\n\n    polygon = first[:]\n\n    for i in range(4):\n        polygon = clip_polygon(polygon, second[i], second[(i + 1) % 4])\n        if not polygon:\n            break\n\n    area = 0.0\n    m = len(polygon)\n\n    if m >= 3:\n        area2 = 0.0\n        for i in range(m):\n            x1, y1 = polygon[i]\n            x2, y2 = polygon[(i + 1) % m]\n            area2 += x1 * y2 - y1 * x2\n        area = abs(area2) * 0.5\n\n    print(f\"{area:.15f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 72.775,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two rectangles on a plane. The centers of both rectangles are located in the origin of coordinates (meaning the center of the rectangle's symmetry). The first rectangle's sides are parallel to the coordinate axes: the length of the side that is parallel to the Ox axis, equals w, the length of the side that is parallel to the Oy axis, equals h. The second rectangle can be obtained by rotating the first rectangle relative to the origin of coordinates by angle α.\n\n<image>\n\nYour task is to find the area of the region which belongs to both given rectangles. This region is shaded in the picture.\n\nInput\n\nThe first line contains three integers w, h, α (1 ≤ w, h ≤ 106; 0 ≤ α ≤ 180). Angle α is given in degrees.\n\nOutput\n\nIn a single line print a real number — the area of the region which belongs to both given rectangles.\n\nThe answer will be considered correct if its relative or absolute error doesn't exceed 10 - 6.\n\nExamples\n\nInput\n\n1 1 45\n\n\nOutput\n\n0.828427125\n\n\nInput\n\n6 4 30\n\n\nOutput\n\n19.668384925\n\nNote\n\nThe second sample has been drawn on the picture above.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

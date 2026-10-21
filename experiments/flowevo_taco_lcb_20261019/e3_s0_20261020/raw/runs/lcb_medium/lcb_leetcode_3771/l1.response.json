@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "e3df3774-434b-476a-a25b-d425e8253b72",
+  "created": 1792431278,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 422,
+    "completion_tokens": 10544,
+    "total_tokens": 10966,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10203
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 422
+  },
+  "finish_reason": "stop",
+  "text": "```python\nclass Solution:\n    def maxSubstringLength(self, s: str, k: int) -> bool:\n        if k == 0:\n            return True\n\n        n = len(s)\n        nums = [ord(ch) - ord('a') for ch in s]\n\n        first = [n] * 26\n        last = [-1] * 26\n\n        for i, x in enumerate(nums):\n            if first[x] == n:\n                first[x] = i\n            last[x] = i\n\n        intervals = []\n\n        # Every valid special substring must start at the first occurrence\n        # of the character at its left endpoint.\n        for c in range(26):\n            l = first[c]\n            if l == n:\n                continue\n\n            r = last[c]\n            i = l\n            valid = True\n\n            while i <= r:\n                x = nums[i]\n\n                if first[x] < l:\n                    valid = False\n                    break\n\n                if last[x] > r:\n                    r = last[x]\n\n                i += 1\n\n            if not valid:\n                continue\n\n            # The whole string is not allowed.\n            if l == 0 and r == n - 1:\n                continue\n\n            intervals.append((r, l))\n\n        # Maximum number of non-overlapping intervals: greedy by ending position.\n        intervals.sort()\n        count = 0\n        last_end = -1\n\n        for r, l in intervals:\n            if l > last_end:\n                count += 1\n                last_end = r\n\n                if count >= k:\n                    return True\n\n        return False\n```",
+  "latency_s": 53.517,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven a string s of length n and an integer k, determine whether it is possible to select k disjoint special substrings.\nA special substring is a substring where:\n\nAny character present inside the substring should not appear outside it in the string.\nThe substring is not the entire string s.\n\nNote that all k substrings must be disjoint, meaning they cannot overlap.\nReturn true if it is possible to select k such disjoint special substrings; otherwise, return false.\n \nExample 1:\n\nInput: s = \"abcdbaefab\", k = 2\nOutput: true\nExplanation:\n\nWe can select two disjoint special substrings: \"cd\" and \"ef\".\n\"cd\" contains the characters 'c' and 'd', which do not appear elsewhere in s.\n\"ef\" contains the characters 'e' and 'f', which do not appear elsewhere in s.\n\n\nExample 2:\n\nInput: s = \"cdefdc\", k = 3\nOutput: false\nExplanation:\nThere can be at most 2 disjoint special substrings: \"e\" and \"f\". Since k = 3, the output is false.\n\nExample 3:\n\nInput: s = \"abeabe\", k = 0\nOutput: true\n\n \nConstraints:\n\n2 <= n == s.length <= 5 * 10^4\n0 <= k <= 26\ns consists only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def maxSubstringLength(self, s: str, k: int) -> bool:\n        \n\nUse the required function/method named maxSubstringLength. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

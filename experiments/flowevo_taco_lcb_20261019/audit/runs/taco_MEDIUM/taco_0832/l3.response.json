@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7c4488a7-de8d-45db-8d2b-cebfbf950b2e",
+  "created": 1792434104,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1156,
+    "completion_tokens": 16683,
+    "total_tokens": 17839,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16289
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 644
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    adj = [[] for _ in range(n)]\n\n    idx = 2\n    for _ in range(m):\n        u = data[idx] - 1\n        v = data[idx + 1] - 1\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    color = [-1] * n\n\n    for start in range(n):\n        if color[start] != -1:\n            continue\n\n        color[start] = 0\n        stack = [start]\n\n        while stack:\n            u = stack.pop()\n            cu = color[u]\n\n            for v in adj[u]:\n                if color[v] == -1:\n                    color[v] = cu ^ 1\n                    stack.append(v)\n                elif color[v] == cu:\n                    sys.stdout.write(\"-1\\n\")\n                    return\n\n    if m == 0:\n        # For an edgeless graph, any disjoint non-empty sets are vertex covers.\n        A = [1] if n >= 1 else []\n        B = [2] if n >= 2 else []\n    else:\n        # Only vertices incident to edges need to be assigned.\n        A = [i + 1 for i in range(n) if adj[i] and color[i] == 0]\n        B = [i + 1 for i in range(n) if adj[i] and color[i] == 1]\n\n    out = [\n        str(len(A)),\n        \" \".join(map(str, A)),\n        str(len(B)),\n        \" \".join(map(str, B))\n    ]\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 75.826,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRecently, Pari and Arya did some research about NP-Hard problems and they found the minimum vertex cover problem very interesting.\n\nSuppose the graph G is given. Subset A of its vertices is called a vertex cover of this graph, if for each edge uv there is at least one endpoint of it in this set, i.e. <image> or <image> (or both).\n\nPari and Arya have won a great undirected graph as an award in a team contest. Now they have to split it in two parts, but both of them want their parts of the graph to be a vertex cover.\n\nThey have agreed to give you their graph and you need to find two disjoint subsets of its vertices A and B, such that both A and B are vertex cover or claim it's impossible. Each vertex should be given to no more than one of the friends (or you can even keep it for yourself).\n\nInput\n\nThe first line of the input contains two integers n and m (2 ≤ n ≤ 100 000, 1 ≤ m ≤ 100 000) — the number of vertices and the number of edges in the prize graph, respectively.\n\nEach of the next m lines contains a pair of integers ui and vi (1 ≤ ui, vi ≤ n), denoting an undirected edge between ui and vi. It's guaranteed the graph won't contain any self-loops or multiple edges.\n\nOutput\n\nIf it's impossible to split the graph between Pari and Arya as they expect, print \"-1\" (without quotes).\n\nIf there are two disjoint sets of vertices, such that both sets are vertex cover, print their descriptions. Each description must contain two lines. The first line contains a single integer k denoting the number of vertices in that vertex cover, and the second line contains k integers — the indices of vertices. Note that because of m ≥ 1, vertex cover cannot be empty.\n\nExamples\n\nInput\n\n4 2\n1 2\n2 3\n\n\nOutput\n\n1\n2 \n2\n1 3 \n\n\nInput\n\n3 3\n1 2\n2 3\n1 3\n\n\nOutput\n\n-1\n\nNote\n\nIn the first sample, you can give the vertex number 2 to Arya and vertices numbered 1 and 3 to Pari and keep vertex number 4 for yourself (or give it someone, if you wish).\n\nIn the second sample, there is no way to satisfy both Pari and Arya.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    adj = [[] for _ in range(n)]\n\n    idx = 2\n    for _ in range(m):\n        u = data[idx] - 1\n        v = data[idx + 1] - 1\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    color = [-1] * n\n\n    for start in range(n):\n        if color[start] != -1:\n            continue\n\n        color[start] = 0\n        q = deque([start])\n\n        while q:\n            u = q.popleft()\n            for v in adj[u]:\n                if color[v] == -1:\n                    color[v] = color[u] ^ 1\n                    q.append(v)\n                elif color[v] == color[u]:\n                    print(-1)\n                    return\n\n    a = [i + 1 for i in range(n) if color[i] == 0]\n    b = [i + 1 for i in range(n) if color[i] == 1]\n\n    out = []\n    out.append(str(len(a)))\n    out.append(\" \".join(map(str, a)))\n    out.append(str(len(b)))\n    out.append(\" \".join(map(str, b)))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a tree (a connected undirected graph without cycles) of $n$ vertices. Each of the $n - 1$ edges of the tree is colored in either black or red.\n\nYou are also given an integer $k$. Conside\nSolution:\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    k = next(it)\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n        if size[ra] < size["
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

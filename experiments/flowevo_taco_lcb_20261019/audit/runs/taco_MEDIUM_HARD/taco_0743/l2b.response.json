@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "355b5e73-2901-4f08-be3c-87c9f0475b55",
+  "created": 1792446467,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 471,
+    "completion_tokens": 1733,
+    "total_tokens": 2204,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1525
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 215
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main() -> None:\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    p = float(data[1])\n    t = int(data[2])\n\n    dp = [0.0] * (n + 1)\n    dp[0] = 1.0\n\n    q = 1.0 - p\n\n    for _ in range(t):\n        ndp = [0.0] * (n + 1)\n\n        for i in range(n):\n            if dp[i] == 0.0:\n                continue\n            ndp[i] += dp[i] * q\n            ndp[i + 1] += dp[i] * p\n\n        ndp[n] += dp[n]\n        dp = ndp\n\n    expected = sum(i * dp[i] for i in range(n + 1))\n    print(f\"{expected:.10f}\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 7.94,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nIlya got tired of sports programming, left university and got a job in the subway. He was given the task to determine the escalator load factor. \n\nLet's assume that n people stand in the queue for the escalator. At each second one of the two following possibilities takes place: either the first person in the queue enters the escalator with probability p, or the first person in the queue doesn't move with probability (1 - p), paralyzed by his fear of escalators and making the whole queue wait behind him.\n\nFormally speaking, the i-th person in the queue cannot enter the escalator until people with indices from 1 to i - 1 inclusive enter it. In one second only one person can enter the escalator. The escalator is infinite, so if a person enters it, he never leaves it, that is he will be standing on the escalator at any following second. Ilya needs to count the expected value of the number of people standing on the escalator after t seconds. \n\nYour task is to help him solve this complicated task.\n\n\n-----Input-----\n\nThe first line of the input contains three numbers n, p, t (1 ≤ n, t ≤ 2000, 0 ≤ p ≤ 1). Numbers n and t are integers, number p is real, given with exactly two digits after the decimal point.\n\n\n-----Output-----\n\nPrint a single real number — the expected number of people who will be standing on the escalator after t seconds. The absolute or relative error mustn't exceed 10^{ - 6}.\n\n\n-----Examples-----\nInput\n1 0.50 1\n\nOutput\n0.5\n\nInput\n1 0.50 4\n\nOutput\n0.9375\n\nInput\n4 0.20 2\n\nOutput\n0.4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

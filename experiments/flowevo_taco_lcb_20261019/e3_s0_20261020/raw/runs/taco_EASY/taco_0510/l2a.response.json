@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7ae2eb93-f739-4b69-9859-005784375c56",
+  "created": 1792435705,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 423,
+    "completion_tokens": 590,
+    "total_tokens": 1013,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 497
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 167
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\na = int(sys.stdin.readline().strip())\n\nif a % 2 == 1:\n    b = (a * a - 1) // 2\n    c = (a * a + 1) // 2\nelse:\n    m = a // 2\n    b = m * m - 1\n    c = m * m + 1\n\nprint(a, b, c)\n```",
+  "latency_s": 2.729,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nA Pythagorean triple consists of three positive integers $\\boldsymbol{a}$, $\\boldsymbol{b}$, and $\\textbf{c}$, such that $a^2+b^2=c^2$. Such a triple is commonly written as $(a,b,c)$. This term comes from the Pythagorean theorem, which says that a Pythagorean Triple will be the lengths of the sides of a right-angled triangle.  \n\nYou have been given an integer $\\boldsymbol{a}$ which represents the length of one of cathetus of a right-angle triangle.  \n\nYou need to find the lengths of the remaining sides. There may be multiple possible answers; any one will be accepted.\n\nHints: \n\nEvery odd number $2k+1$ can be represented as $(k+1)^2-k^2$.  \nIf $m$ and $n$ are integers and $m>n$, then $(m^2-n^2)^2+(2mn)^2=(m^2+n^2)^2$. \n\nInput Format\n\nThe first line contains an integer $\\boldsymbol{a}$ denoting the length of one of cathetus of the right-angled triangle.  \n\nConstraints\n\n$5\\leq a<10^9$\n\nOutput Format\n\nA single line containing the possible values of $\\boldsymbol{a}$, $\\boldsymbol{b}$ and $\\textbf{c}$. You may print them in any order. \n\nSample Input 0\n5\n\nSample Output 0\n5 12 13\n\nExplanation 0\n\nWe can see that the triple $(5,12,13)$ is a pythagorean triple: \n\n$5^2+12^2=13^2$\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

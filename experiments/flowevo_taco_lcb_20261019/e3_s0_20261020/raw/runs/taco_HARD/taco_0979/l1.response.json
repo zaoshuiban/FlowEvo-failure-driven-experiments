@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "99bdf78c-9573-49b0-991f-21ec60d5cc1d",
+  "created": 1792431442,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 827,
+    "completion_tokens": 8556,
+    "total_tokens": 9383,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8017
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 827
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_right\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    t = int(next(it))\n    answers = []\n\n    for _ in range(t):\n        n = int(next(it))\n        k = int(next(it))\n        q = int(next(it))\n        s = next(it)\n\n        # e[i] = maximum valid ending position (1-indexed) for a substring\n        # starting at i, using at most k zeroes and at most k ones.\n        e = [0] * (n + 1)\n\n        right = 0\n        cnt0 = 0\n        cnt1 = 0\n\n        for left in range(n):\n            while right < n:\n                ch = s[right]\n                if ch == 48:  # '0'\n                    if cnt0 + 1 > k:\n                        break\n                    cnt0 += 1\n                else:\n                    if cnt1 + 1 > k:\n                        break\n                    cnt1 += 1\n                right += 1\n\n            e[left + 1] = right\n\n            if left < right:\n                ch = s[left]\n                if ch == 48:\n                    cnt0 -= 1\n                else:\n                    cnt1 -= 1\n\n        pref_e = [0] * (n + 1)\n        for i in range(1, n + 1):\n            pref_e[i] = pref_e[i - 1] + e[i]\n\n        for _ in range(q):\n            L = int(next(it))\n            R = int(next(it))\n\n            # Last position p in [L, R] such that e[p] <= R.\n            p = bisect_right(e, R, L, R + 1) - 1\n\n            ans = 0\n\n            if p >= L:\n                count = p - L + 1\n                sum_e = pref_e[p] - pref_e[L - 1]\n                sum_i = (L + p) * count // 2\n                ans += sum_e - sum_i + count\n\n            if p < R:\n                count = R - p\n                a = p + 1\n                b = R\n                sum_i = (a + b) * count // 2\n                ans += count * (R + 1) - sum_i\n\n            answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 36.957,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \n\nYou are given a string S of length N consisting only of 0s and 1s. You are also given an integer K.\n\nYou have to answer Q queries. In the i^{th} query, two integers L_{i} and R_{i} are given. Then you should print the number of substrings of S[L, R] which contain at most K 0s and at most K 1s where S[L, R] denotes the substring from L^{th} to R^{th} characters of the string S. \nIn other words, you have to count number of pairs (i, j) of integers such that L ≤ i ≤ j ≤ R such that no character in substring S[i, j] occurs more than K times.\n\n------ Input ------ \n\nThe first line of input contains an integer T, denoting the number of test cases. Then T test cases follow.\nThe first line of each test case contains three space-separated integers N, K and Q as described in the problem. The second line contains a string S of length N. Then the next Q lines describe the query, where the i^{th} line of them contains two space-separated integers L_{i} and R_{i}.\n\n------ Output ------ \n\nFor each query, print the required answer in a single line.\n\n------ \n------ Constraints -----\n$1 ≤ T ≤ 10^{5}$\n$1 ≤ K ≤ N ≤ 10^{5}$\n$1 ≤ Q ≤ 10^{5}$\n$1 ≤ L_{i} ≤ R_{i} ≤ N$\n$Sum of N over all test cases in one test file does not exceed 10^{5}$\n$Sum of Q over all test cases in one test file does not exceed 10^{5}$\n$S consists only of 0s and 1s.$\nSubtask 1: 10 points\n$Sum of N over all test cases in one test file does not exceed 100$\nSubtask 2: 10 points\n$Q = 1$\n$1 ≤ K ≤ min(5, N)$\nSubtask 3: 20 points\n$1 ≤ Q ≤ 10$\nSubtask 4: 60 points\n$Original constraints.$\n\n----- Sample Input 1 ------ \n1\n8 2 3\n01110000\n1 4\n2 4\n5 8\n----- Sample Output 1 ------ \n8\n5\n7\n----- explanation 1 ------ \nQuery 1: Consider substring P = S[1, 4] = \"0111\".Out of 10 total substrings of P, substrings P[1, 4] and P[2, 4] are not valid because both contain more than two 1s. Other substrings contains at most two 0s and at most two 1s, thus the answer is 8.\n\nQuery 2: Consider substring P = S[2, 4] = \"111\".Out of 6 total substrings of P, substrings P[1, 3] is  not valid because it contains more than two 1s.\n\nQuery 3: Consider substring P = S[5, 8] = \"0000\".Out of 10 total substrings of P, substrings P[1, 3], P[1, 4] and P[2, 4] are not valid because all contain more than two 0s.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f0becbc1-bf84-4f37-854e-81cc265df250",
+  "created": 1792430763,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 904,
+    "completion_tokens": 28942,
+    "total_tokens": 29846,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 27816
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 136
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    sys.setrecursionlimit(1_000_000)\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n\n    N = data[idx]\n    idx += 1\n\n    X = data[idx:idx + N]\n    idx += N\n\n    Q = data[idx]\n    idx += 1\n\n    # z_i = position_i - i (0-indexed)\n    A = [X[i] - i for i in range(N)]\n\n    INF = 10**18\n    size = 4 * N + 5\n    seg_sum = [0] * size\n    seg_max = [0] * size\n    lazy = [INF] * size\n\n    def build(node: int, left: int, right: int) -> None:\n        if left == right:\n            v = A[left]\n            seg_sum[node] = v\n            seg_max[node] = v\n            return\n\n        mid = (left + right) // 2\n        lc = node * 2\n        build(lc, left, mid)\n        build(lc + 1, mid + 1, right)\n\n        seg_sum[node] = seg_sum[lc] + seg_sum[lc + 1]\n        seg_max[node] = max(seg_max[lc], seg_max[lc + 1])\n\n    def push(node: int, left: int, right: int) -> None:\n        v = lazy[node]\n        if v == INF:\n            return\n\n        lc = node * 2\n        mid = (left + right) // 2\n\n        if left != right:\n            seg_sum[lc] = v * (mid - left + 1)\n            seg_max[lc] = v\n            lazy[lc] = v\n\n            rc = lc + 1\n            seg_sum[rc] = v * (right - mid)\n            seg_max[rc] = v\n            lazy[rc] = v\n\n        lazy[node] = INF\n\n    def range_assign(node: int, left: int, right: int,\n                     ql: int, qr: int, value: int) -> int:\n        if ql <= left and right <= qr:\n            old_sum = seg_sum[node]\n            seg_sum[node] = value * (right - left + 1)\n            seg_max[node] = value\n            lazy[node] = value\n            return old_sum\n\n        push(node, left, right)\n\n        mid = (left + right) // 2\n        lc = node * 2\n        old_sum = 0\n\n        if ql <= mid:\n            old_sum += range_assign(lc, left, mid, ql, qr, value)\n        if qr > mid:\n            old_sum += range_assign(lc + 1, mid + 1, right, ql, qr, value)\n\n        seg_sum[node] = seg_sum[lc] + seg_sum[lc + 1]\n        seg_max[node] = max(seg_max[lc], seg_max[lc + 1])\n        return old_sum\n\n    def point_value(node: int, left: int, right: int, pos: int) -> int:\n        if left == right:\n            return seg_sum[node]\n\n        push(node, left, right)\n        mid = (left + right) // 2\n\n        if pos <= mid:\n            return point_value(node * 2, left, mid, pos)\n        else:\n            return point_value(node * 2 + 1, mid + 1, right, pos)\n\n    def lower_bound_ge(threshold: int) -> int:\n        if seg_max[1] < threshold:\n            return N\n\n        node = 1\n        left = 0\n        right = N - 1\n\n        while left < right:\n            push(node, left, right)\n            mid = (left + right) // 2\n            lc = node * 2\n\n            if seg_max[lc] >= threshold:\n                node = lc\n                right = mid\n            else:\n                node = lc + 1\n                left = mid + 1\n\n        return left\n\n    build(1, 0, N - 1)\n\n    answer = 0\n\n    for _ in range(Q):\n        T = data[idx]\n        G = data[idx + 1]\n        idx += 2\n\n        pos = T - 1\n        target = G - pos\n\n        current = point_value(1, 0, N - 1, pos)\n\n        if current < target:\n            first_ge = lower_bound_ge(target)\n            right = first_ge - 1\n\n            old_sum = range_assign(1, 0, N - 1, pos, right, target)\n            answer += target * (right - pos + 1) - old_sum\n\n        elif current > target:\n            left = lower_bound_ge(target + 1)\n\n            old_sum = range_assign(1, 0, N - 1, left, pos, target)\n            answer += old_sum - target * (pos - left + 1)\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 137.238,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a road extending east and west, and N persons are on the road.\nThe road extends infinitely long to the east and west from a point called the origin.\nThe i-th person (1\\leq i\\leq N) is initially at a position X_i meters east from the origin.\nThe persons can move along the road to the east or west.\nSpecifically, they can perform the following movement any number of times.\n\n- Choose one person. If there is no other person at the destination, move the chosen person 1 meter east or west.\n\nThey have Q tasks in total, and the i-th task (1\\leq i\\leq Q) is as follows.\n\n- The T_i-th person arrives at coordinate G_i.\n\nFind the minimum total number of movements required to complete all Q tasks in order.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\nX_1 X_2 \\ldots X_N\nQ\nT_1 G_1\nT_2 G_2\n\\vdots\nT_Q G_Q\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 1\\leq N\\leq2\\times10^5\n- 0\\leq X_1 < X_2 < \\dotsb < X_N \\leq10^8\n- 1\\leq Q\\leq2\\times10^5\n- 1\\leq T_i\\leq N\\ (1\\leq i\\leq Q)\n- 0\\leq G_i\\leq10^8\\ (1\\leq i\\leq Q)\n- All input values are integers.\n\nSample Input 1\n\n5\n10 20 30 40 50\n4\n3 45\n4 20\n1 35\n2 60\n\nSample Output 1\n\n239\n\nAn optimal sequence of movements for the persons is as follows (the positions of the persons are not necessarily drawn to scale):\n\nFor each task, the persons move as follows.\n\n- The 4th person moves 6 steps east, and the 3rd person moves 15 steps east.\n- The 2nd person moves 2 steps west, the 3rd person moves 26 steps west, and the 4th person moves 26 steps west.\n- The 4th person moves 18 steps east, the 3rd person moves 18 steps east, the 2nd person moves 18 steps east, and the 1st person moves 25 steps east.\n- The 5th person moves 13 steps east, the 4th person moves 24 steps east, the 3rd person moves 24 steps east, and the 2nd person moves 24 steps east.\n\nThe total number of movements is 21+54+79+85=239.\nYou cannot complete all tasks with a total movement count of 238 or less, so print 239.\n\nSample Input 2\n\n8\n0 1 2 3 4 5 6 100000000\n6\n1 100000000\n8 0\n1 100000000\n8 4\n1 100000000\n5 21006578\n\nSample Output 2\n\n4294967297\n\nNote that some persons may need to move to the west of the origin or more than 10^8 meters to the east of it.\nAlso, note that the answer may exceed 2^{32}.\n\nSample Input 3\n\n12\n1558 3536 3755 3881 4042 4657 5062 7558 7721 8330 8542 9845\n8\n9 1694\n7 3296\n12 5299\n5 5195\n5 5871\n1 2491\n8 1149\n8 2996\n\nSample Output 3\n\n89644\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0a2008be-cf45-4229-9c7d-687dd8cfe27e",
+  "created": 1792430382,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 720,
+    "completion_tokens": 339,
+    "total_tokens": 1059,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 243
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 720
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    n = data[0]\n    p = data[1:1 + n]\n\n    result = []\n    for score in p:\n        rank = 1 + sum(1 for other in p if other > score)\n        result.append(str(rank))\n\n    print(\"\\n\".join(result))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 2.331,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nN people labeled from 1 to N participated in a certain contest. The score of person i (1 \\leq i \\leq N) was P_i.\nIn this contest, the rank of each of the N people is determined by the following procedure:\n\n- Prepare a variable r, and initialize r = 1. Initially, the ranks of the N people are all undetermined.\n- Repeat the following operation until the ranks of all N people are determined:\n- Let x be the maximum score among the people whose ranks are currently undetermined, and let k be the number of people whose score is x. Determine the rank of those k people with score x to be r, and then add k to r.\n\n\n\nPrint the rank of each of the N people.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nP_1 P_2 \\dots P_N\n\nOutput\n\nPrint N lines. The i-th line (1 \\leq i \\leq N) should contain the rank of person i as an integer.\n\nConstraints\n\n\n- 1\\leq N \\leq 100\n- 1\\leq P_i \\leq 100\n- All input values are integers.\n\nSample Input 1\n\n4\r\n3 12 9 9\n\nSample Output 1\n\n4\r\n1\r\n2\r\n2\r\n\nThe ranks of the N\\ (=4) people are determined as follows:\n\n- Prepare a variable r and initialize r=1. At first, the ranks of all 4 people are undetermined.\n- Currently, persons 1, 2, 3, 4 have undetermined ranks. The maximum score among them is P_2\\ (=12). Therefore, determine the rank of person 2 to be r\\ (=1), and then add 1 to r, making r=2.\n- Currently, persons 1, 3, 4 have undetermined ranks. The maximum score among them is P_3=P_4\\ (=9). Therefore, determine the ranks of persons 3 and 4 to be r\\ (=2), and then add 2 to r, making r=4.\n- Currently, person 1 has an undetermined rank. The maximum score among them is P_1\\ (=3). Therefore, determine the rank of person 1 to be r\\ (=4), and then add 1 to r, making r=5.\n- The ranks of all 4 people are now determined, so the process ends.\n\nSample Input 2\n\n3\r\n3 9 6\n\nSample Output 2\n\n3\r\n1\r\n2\n\nSample Input 3\n\n4\r\n100 100 100 100\n\nSample Output 3\n\n1\r\n1\r\n1\r\n1\n\nSample Input 4\n\n8\r\n87 87 87 88 41 38 41 38\n\nSample Output 4\n\n2\r\n2\r\n2\r\n1\r\n5\r\n7\r\n5\r\n7\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

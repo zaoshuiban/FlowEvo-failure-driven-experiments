@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a971a621-a14a-4f76-b948-2c8da7ddab0d",
+  "created": 1792434340,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1403,
+    "completion_tokens": 22772,
+    "total_tokens": 24175,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 22107
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 251
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.buffer.readline\n    H, W, N = map(int, input().split())\n\n    R = [0] * N\n    C = [0] * N\n    L = [0] * N\n\n    for i in range(N):\n        r, c, l = map(int, input().split())\n        R[i] = r\n        C[i] = c - 1\n        L[i] = l\n\n    order = list(range(N))\n    order.sort(key=lambda i: R[i], reverse=True)\n\n    INF = 10**18\n    tree = [INF] * (4 * W + 5)\n    lazy = [-1] * (4 * W + 5)\n\n    def assign(node, left, right, ql, qr, val):\n        if ql <= left and right <= qr:\n            tree[node] = val\n            lazy[node] = val\n            return\n\n        lc = node * 2\n        rc = lc + 1\n\n        if lazy[node] != -1:\n            v = lazy[node]\n            tree[lc] = tree[rc] = v\n            lazy[lc] = lazy[rc] = v\n            lazy[node] = -1\n\n        mid = (left + right) // 2\n        if ql <= mid:\n            assign(lc, left, mid, ql, qr, val)\n        if mid < qr:\n            assign(rc, mid + 1, right, ql, qr, val)\n\n        tree[node] = min(tree[lc], tree[rc])\n\n    def query(node, left, right, ql, qr):\n        if ql <= left and right <= qr:\n            return tree[node]\n\n        lc = node * 2\n        rc = lc + 1\n\n        if lazy[node] != -1:\n            v = lazy[node]\n            tree[lc] = tree[rc] = v\n            lazy[lc] = lazy[rc] = v\n            lazy[node] = -1\n\n        mid = (left + right) // 2\n        res = INF\n\n        if ql <= mid:\n            res = query(lc, left, mid, ql, qr)\n        if mid < qr:\n            res = min(res, query(rc, mid + 1, right, ql, qr))\n\n        return res\n\n    ans = [0] * N\n\n    for i in order:\n        ql = C[i]\n        qr = C[i] + L[i] - 1\n\n        mn = query(1, 0, W - 1, ql, qr)\n\n        if mn == INF:\n            final_row = H\n        else:\n            final_row = mn - 1\n\n        ans[i] = final_row\n        assign(1, 0, W - 1, ql, qr, final_row)\n\n    sys.stdout.write(\"\\n\".join(map(str, ans)))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 113.091,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a grid with H rows and W columns.\r\nLet (i,j) denote the cell at the i-th row from the top and the j-th column from the left.\nThere are N horizontal bars numbered from 1 to N placed on the grid.\r\nBar i consists of L_i blocks of size 1 \\times 1 connected horizontally, and its leftmost block is initially at cell (R_i, C_i).\r\nThat is, initially, bar i occupies the cells (R_i, C_i), (R_i, C_i + 1), \\dots, (R_i, C_i + L_i - 1).\r\nIt is guaranteed that there is no cell occupied by two different bars.\nThe current time is t = 0.\r\nAt every time t = 0.5 + n for some non-negative integer n, the following occurs in order of i = 1, 2, \\dots, N:\n\n- If bar i is not on the bottom row (the H-th row), and none of the cells directly below the cells occupied by bar i is occupied by any bar, then bar i moves down by one cell. That is, if at that time bar i occupies the cells (r,C_i),(r,C_i+1),\\dots,(r,C_i+L_i-1)\\ (r < H), and the cell (r + 1, C_i + j) is not occupied by any bar for all j (0 \\leq j \\leq L_i - 1), then bar i now occupies (r + 1, C_i), (r + 1, C_i + 1), \\dots, (r + 1, C_i + L_i - 1).\n- Otherwise, nothing happens.\n\nLet (R'_i, C_i), (R'_i, C_i + 1), \\dots, (R'_i, C_i + L_i - 1) be the cells occupied by bar i at time t = 10^{100}. Find R'_1, R'_2, \\dots, R'_N.\n\nInput\n\nThe input is given from Standard Input in the following format:\nH W N\r\nR_1 C_1 L_1\r\nR_2 C_2 L_2\r\n\\vdots\r\nR_N C_N L_N\n\nOutput\n\nPrint N lines.\r\nThe i-th line (1 \\leq i \\leq N) should contain R'_i.\n\nConstraints\n\n\n- 1 \\leq H, W \\leq 2 \\times 10^5\n- 1 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq R_i \\leq H\n- 1 \\leq C_i \\leq W\n- 1 \\leq L_i \\leq W - C_i + 1\n- In the initial state, there is no cell occupied by two different bars.\n- All input values are integers.\n\nSample Input 1\n\n4 4 4\r\n1 2 3\r\n3 2 2\r\n2 1 2\r\n2 4 1\n\nSample Output 1\n\n2\r\n4\r\n3\r\n4\r\n\nThe following three diagrams represent the grid at times t = 0, 1, and 2 from left to right.\r\nColored rectangles represent the bars, and the number inside each rectangle indicates its bar number.\n\nThe changes in the grid state are explained as follows:\n\n- At t = 0.5:\n- i = 1: The cells directly below bar 1 are (2,2),(2,3),(2,4). Among these, (2,2) is occupied by bar 3 and (2,4) is occupied by bar 4, so nothing happens.\n- i = 2: The cells directly below bar 2 are (4,2),(4,3), which are not occupied by any other bar, so bar 2 moves down by one cell.\n- i = 3: The cells directly below bar 3 are (3,1),(3,2), which are not occupied by any other bar, so bar 3 moves down by one cell.\n- i = 4: The cell directly below bar 4 is (3,4), which is not occupied by any other bar, so bar 4 moves down by one cell.\n\n\n- At t = 1.5:\n- i = 1: The cells directly below bar 1 are (2,2),(2,3),(2,4), which are not occupied by any other bar, so bar 1 moves down by one cell.\n- i = 2: Bar 2 is on the bottom row, so nothing happens.\n- i = 3: The cells directly below bar 3 are (4,1),(4,2). Among these, (4,2) is occupied by bar 2, so nothing happens.\n- i = 4: The cell directly below bar 4 is (4,4), which is not occupied by any other bar, so bar 4 moves down by one cell.\n\n\n\nAt times t = 2.5, 3.5, \\dots, there is no bar such that the cells directly below it are all unoccupied, so nothing happens. Thus, the grid at time t = 10^{100} is the same as at t = 2 (the rightmost diagram above).\nTherefore, R'_1 = 2, R'_2 = 4, R'_3 = 3, R'_4 = 4.\n\nSample Input 2\n\n382 382 3\r\n3 3 3\r\n8 8 8\r\n2 2 2\n\nSample Output 2\n\n382\r\n382\r\n381\n\nSample Input 3\n\n5 10 8\r\n2 2 1\r\n4 3 1\r\n4 8 2\r\n1 2 2\r\n2 5 3\r\n5 4 3\r\n4 5 2\r\n1 5 2\n\nSample Output 3\n\n5\r\n5\r\n5\r\n4\r\n3\r\n5\r\n4\r\n2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

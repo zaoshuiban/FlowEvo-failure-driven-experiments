@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c6dcf907-b426-4961-9890-e570d20812eb",
+  "created": 1792432651,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 603,
+    "completion_tokens": 19790,
+    "total_tokens": 20393,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 19041
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 603
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.buffer.readline\n\n    H, W = map(int, input().split())\n    grid = [input().strip() for _ in range(H)]\n\n    row_cnt = [[0] * 26 for _ in range(H)]\n    col_cnt = [[0] * 26 for _ in range(W)]\n\n    for i in range(H):\n        line = grid[i]\n        rc = row_cnt[i]\n        for j, ch in enumerate(line):\n            k = ch - ord('a')\n            rc[k] += 1\n            col_cnt[j][k] += 1\n\n    row_distinct = [0] * H\n    for i in range(H):\n        row_distinct[i] = sum(1 for x in row_cnt[i] if x > 0)\n\n    col_distinct = [0] * W\n    for j in range(W):\n        col_distinct[j] = sum(1 for x in col_cnt[j] if x > 0)\n\n    active_row = [True] * H\n    active_col = [True] * W\n\n    row_queued = [False] * H\n    col_queued = [False] * W\n\n    row_q = []\n    col_q = []\n\n    active_rows_num = H\n    active_cols_num = W\n\n    if active_cols_num >= 2:\n        for r in range(H):\n            if row_distinct[r] == 1:\n                row_q.append(r)\n                row_queued[r] = True\n\n    if active_rows_num >= 2:\n        for c in range(W):\n            if col_distinct[c] == 1:\n                col_q.append(c)\n                col_queued[c] = True\n\n    while row_q or col_q:\n        remove_rows = row_q\n        remove_cols = col_q\n        row_q = []\n        col_q = []\n\n        for r in remove_rows:\n            if active_row[r]:\n                active_row[r] = False\n                active_rows_num -= 1\n\n        for c in remove_cols:\n            if active_col[c]:\n                active_col[c] = False\n                active_cols_num -= 1\n\n        # Remove marked rows and update remaining active columns.\n        for r in remove_rows:\n            line = grid[r]\n            for c in range(W):\n                if active_col[c]:\n                    k = line[c] - ord('a')\n                    cnt = col_cnt[c]\n                    cnt[k] -= 1\n\n                    if cnt[k] == 0:\n                        col_distinct[c] -= 1\n\n                    if (\n                        col_distinct[c] == 1\n                        and active_rows_num >= 2\n                        and not col_queued[c]\n                    ):\n                        col_queued[c] = True\n                        col_q.append(c)\n\n        # Remove marked columns and update remaining active rows.\n        for c in remove_cols:\n            for r in range(H):\n                if active_row[r]:\n                    k = grid[r][c] - ord('a')\n                    cnt = row_cnt[r]\n                    cnt[k] -= 1\n\n                    if cnt[k] == 0:\n                        row_distinct[r] -= 1\n\n                    if (\n                        row_distinct[r] == 1\n                        and active_cols_num >= 2\n                        and not row_queued[r]\n                    ):\n                        row_queued[r] = True\n                        row_q.append(r)\n\n    print(active_rows_num * active_cols_num)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 94.968,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are H \\times W cookies in H rows and W columns.\nThe color of the cookie at the i-row from the top and j-th column from the left is represented by a lowercase English letter c_{i,j}.  \nWe will perform the following procedure.\n1. For each row, perform the following operation: if there are two or more cookies remaining in the row and they all have the same color, mark them.  \n2. For each column, perform the following operation: if there are two or more cookies remaining in the column and they all have the same color, mark them.  \n3. If there are any marked cookies, remove them all and return to 1; otherwise, terminate the procedure.\nFind the number of cookies remaining at the end of the procedure.\n\nInput\n\nThe input is given from Standard Input in the following format:\nH W\nc_{1,1}c_{1,2} \\ldots c_{1,W}\nc_{2,1}c_{2,2} \\ldots c_{2,W}\n\\vdots\nc_{H,1}c_{H,2} \\ldots c_{H,W}\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 2 \\leq H, W \\leq 2000\n- c_{i,j} is a lowercase English letter.\n\nSample Input 1\n\n4 3\naaa\naaa\nabc\nabd\n\nSample Output 1\n\n2\n\nThe procedure is performed as follows.\n\n- 1. Mark the cookies in the first and second rows.\n- 2. Mark the cookies in the first column.\n- 3. Remove the marked cookies.\n\nAt this point, the cookies look like the following, where  . indicates a position where the cookie has been removed.\n...\n...\n.bc\n.bd\n\n\n- 1. Do nothing.\n- 2. Mark the cookies in the second column.\n- 3. Remove the marked cookies.\n\nAt this point, the cookies look like the following, where  . indicates a position where the cookie has been removed.\n...\n...\n..c\n..d\n\n\n- 1. Do nothing.\n- 2. Do nothing.\n- 3. No cookies are marked, so terminate the procedure.\n\nThe final number of cookies remaining is 2.\n\nSample Input 2\n\n2 5\naaaaa\nabcde\n\nSample Output 2\n\n4\n\nSample Input 3\n\n3 3\nooo\nooo\nooo\n\nSample Output 3\n\n0\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

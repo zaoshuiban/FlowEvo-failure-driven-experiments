@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a3fb3bd2-fb00-48e6-ab84-28beb1cd460c",
+  "created": 1792438279,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 744,
+    "completion_tokens": 11093,
+    "total_tokens": 11837,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10858
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 744
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        idx += 1\n\n        enemy = bytearray(data[idx])\n        idx += 1\n\n        gregor = data[idx]\n        idx += 1\n\n        ans = 0\n\n        for i in range(n):\n            if gregor[i] != ord('1'):\n                continue\n\n            if i > 0 and enemy[i - 1] == ord('1'):\n                ans += 1\n                enemy[i - 1] = ord('0')\n            elif enemy[i] == ord('0'):\n                ans += 1\n            elif i + 1 < n and enemy[i + 1] == ord('1'):\n                ans += 1\n                enemy[i + 1] = ord('0')\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 53.002,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere is a chessboard of size $n$ by $n$. The square in the $i$-th row from top and $j$-th column from the left is labelled $(i,j)$.\n\nCurrently, Gregor has some pawns in the $n$-th row. There are also enemy pawns in the $1$-st row. On one turn, Gregor moves one of his pawns. A pawn can move one square up (from $(i,j)$ to $(i-1,j)$) if there is no pawn in the destination square. Additionally, a pawn can move one square diagonally up (from $(i,j)$ to either $(i-1,j-1)$ or $(i-1,j+1)$) if and only if there is an enemy pawn in that square. The enemy pawn is also removed.\n\nGregor wants to know what is the maximum number of his pawns that can reach row $1$?\n\nNote that only Gregor takes turns in this game, and the enemy pawns never move. Also, when Gregor's pawn reaches row $1$, it is stuck and cannot make any further moves.\n\n\n-----Input-----\n\nThe first line of the input contains one integer $t$ ($1\\le t\\le 2\\cdot 10^4$) — the number of test cases. Then $t$ test cases follow.\n\nEach test case consists of three lines. The first line contains a single integer $n$ ($2\\le n\\le 2\\cdot{10}^{5}$) — the size of the chessboard.\n\nThe second line consists of a string of binary digits of length $n$, where a $1$ in the $i$-th position corresponds to an enemy pawn in the $i$-th cell from the left, and $0$ corresponds to an empty cell.\n\nThe third line consists of a string of binary digits of length $n$, where a $1$ in the $i$-th position corresponds to a Gregor's pawn in the $i$-th cell from the left, and $0$ corresponds to an empty cell.\n\nIt is guaranteed that the sum of $n$ across all test cases is less than $2\\cdot{10}^{5}$.\n\n\n-----Output-----\n\nFor each test case, print one integer: the maximum number of Gregor's pawns which can reach the $1$-st row.\n\n\n-----Examples-----\n\nInput\n4\n3\n000\n111\n4\n1111\n1111\n3\n010\n010\n5\n11001\n00000\nOutput\n3\n4\n0\n0\n\n\n-----Note-----\n\nIn the first example, Gregor can simply advance all $3$ of his pawns forward. Thus, the answer is $3$.\n\nIn the second example, Gregor can guarantee that all $4$ of his pawns reach the enemy row, by following the colored paths as demonstrated in the diagram below. Remember, only Gregor takes turns in this \"game\"!\n\nIn the third example, Gregor's only pawn is stuck behind the enemy pawn, and cannot reach the end.\n\nIn the fourth example, Gregor has no pawns, so the answer is clearly $0$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

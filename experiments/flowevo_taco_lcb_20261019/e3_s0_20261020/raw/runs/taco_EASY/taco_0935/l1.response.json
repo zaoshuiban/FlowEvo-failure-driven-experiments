@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0e29b057-9614-4aae-9d1e-53917edc24c3",
+  "created": 1792429699,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 399,
+    "completion_tokens": 10599,
+    "total_tokens": 10998,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10521
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 399
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    mirror_letters = set(\"AHIMOTUVWXY\")\n    if s == s[::-1] and all(ch in mirror_letters for ch in s):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 48.996,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRecently, a start up by two students of a state university of city F gained incredible popularity. Now it's time to start a new company. But what do we call it?\n\nThe market analysts came up with a very smart plan: the name of the company should be identical to its reflection in a mirror! In other words, if we write out the name of the company on a piece of paper in a line (horizontally, from left to right) with large English letters, then put this piece of paper in front of the mirror, then the reflection of the name in the mirror should perfectly match the line written on the piece of paper.\n\nThere are many suggestions for the company name, so coming up to the mirror with a piece of paper for each name wouldn't be sensible. The founders of the company decided to automatize this process. They asked you to write a program that can, given a word, determine whether the word is a 'mirror' word or not.\n\nInput\n\nThe first line contains a non-empty name that needs to be checked. The name contains at most 105 large English letters. The name will be written with the next sans serif font: \n\n<image>\n\nOutput\n\nPrint 'YES' (without the quotes), if the given name matches its mirror reflection. Otherwise, print 'NO' (without the quotes).\n\nExamples\n\nInput\n\nAHA\n\n\nOutput\n\nYES\n\n\nInput\n\nZ\n\n\nOutput\n\nNO\n\n\nInput\n\nXO\n\n\nOutput\n\nNO\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

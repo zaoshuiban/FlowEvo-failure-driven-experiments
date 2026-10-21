@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "367f661f-0195-4c24-bef6-5b4c6ad5ba03",
+  "created": 1792434746,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 238,
+    "completion_tokens": 1743,
+    "total_tokens": 1981,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1685
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 238
+  },
+  "finish_reason": "stop",
+  "text": "```python\n_VALID_SIGNED_8_BIT = {str(i) for i in range(-128, 128)}\n\ndef signed_eight_bit_number(number):\n    return isinstance(number, str) and number in _VALID_SIGNED_8_BIT\n```",
+  "latency_s": 8.528,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nImplement `String.eight_bit_signed_number?` (Ruby), `String.eightBitSignedNumber()` (Python), `eight_bit_signed_number()` (JS) or `StringUtils.isSignedEightBitNumber(String)` (Java) which should return `true/True` if given object is a number representable by 8 bit signed integer (-128 to -1 or 0 to 127), `false/False` otherwise.\n\nIt should only accept numbers in canonical representation, so no leading `+`, extra `0`s, spaces etc.\n\nStarter code / required signature:\ndef signed_eight_bit_number(number):\n\t\n\nUse the required function/method named signed_eight_bit_number. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

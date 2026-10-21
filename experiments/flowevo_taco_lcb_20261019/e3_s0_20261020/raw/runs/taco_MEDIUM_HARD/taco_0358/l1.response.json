@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "358e7290-0cd5-4985-8e4e-e78bbbd8fde2",
+  "created": 1792429640,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 706,
+    "completion_tokens": 3913,
+    "total_tokens": 4619,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3679
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 706
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = iter(map(int, sys.stdin.buffer.read().split()))\n    n = next(data)\n    m = next(data)\n\n    first = [next(data) for _ in range(n)]\n\n    if n == 1:\n        print(1)\n        return\n\n    good = bytearray([1]) * (n - 1)\n\n    for _ in range(m - 1):\n        pos = [0] * (n + 1)\n\n        for i in range(1, n + 1):\n            pos[next(data)] = i\n\n        for i in range(n - 1):\n            if good[i]:\n                a = first[i]\n                b = first[i + 1]\n                if pos[a] + 1 != pos[b]:\n                    good[i] = 0\n\n    answer = n\n    run = 0\n\n    for value in good:\n        if value:\n            run += 1\n            answer += run\n        else:\n            run = 0\n\n    print(answer)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 18.155,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAcingel is a small town. There was only one doctor here — Miss Ada. She was very friendly and nobody has ever said something bad about her, so who could've expected that Ada will be found dead in her house? Mr Gawry, world-famous detective, is appointed to find the criminal. He asked $m$ neighbours of Ada about clients who have visited her in that unlucky day. Let's number the clients from $1$ to $n$. Each neighbour's testimony is a permutation of these numbers, which describes the order in which clients have been seen by the asked neighbour.\n\nHowever, some facts are very suspicious – how it is that, according to some of given permutations, some client has been seen in the morning, while in others he has been seen in the evening? \"In the morning some of neighbours must have been sleeping!\" — thinks Gawry — \"and in the evening there's been too dark to see somebody's face...\". Now he wants to delete some prefix and some suffix (both prefix and suffix can be empty) in each permutation, so that they'll be non-empty and equal to each other after that — some of the potential criminals may disappear, but the testimony won't stand in contradiction to each other.\n\nIn how many ways he can do it? Two ways are called different if the remaining common part is different.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $m$ ($1 \\le n \\le 100\\,000$, $1 \\le m \\le 10$) — the number of suspects and the number of asked neighbors.\n\nEach of the next $m$ lines contains $n$ integers $a_1, a_2, \\ldots, a_n$ ($1 \\le a_i \\le n$). It is guaranteed that these integers form a correct permutation (that is, each number from $1$ to $n$ appears exactly once).\n\n\n-----Output-----\n\nOutput a single integer denoting the number of ways to delete some prefix and some suffix of each permutation (possibly empty), such that the remaining parts will be equal and non-empty.\n\n\n-----Examples-----\nInput\n3 2\n1 2 3\n2 3 1\n\nOutput\n4\n\nInput\n5 6\n1 2 3 4 5\n2 3 1 4 5\n3 4 5 1 2\n3 5 4 2 1\n2 3 5 4 1\n1 2 3 4 5\n\nOutput\n5\n\nInput\n2 2\n1 2\n2 1\n\nOutput\n2\n\n\n\n-----Note-----\n\nIn the first example, all possible common parts are $[1]$, $[2]$, $[3]$ and $[2, 3]$.\n\nIn the second and third examples, you can only leave common parts of length $1$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

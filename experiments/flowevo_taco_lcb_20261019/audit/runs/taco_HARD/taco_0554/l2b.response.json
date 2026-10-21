@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "12dd9e9b-9761-4d74-823d-58c6148abf1c",
+  "created": 1792453736,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 883,
+    "completion_tokens": 7724,
+    "total_tokens": 8607,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7038
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 243
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\n\nclass Dinic:\n    def __init__(self, n):\n        self.n = n\n        self.g = [[] for _ in range(n)]\n\n    def add_edge(self, u, v, cap):\n        self.g[u].append([v, len(self.g[v]), cap])\n        self.g[v].append([u, len(self.g[u]) - 1, 0])\n\n    def max_flow(self, s, t, limit):\n        n = self.n\n        g = self.g\n        flow = 0\n\n        while flow < limit:\n            level = [-1] * n\n            level[s] = 0\n            q = deque([s])\n\n            while q:\n                v = q.popleft()\n                for to, rev, cap in g[v]:\n                    if cap > 0 and level[to] == -1:\n                        level[to] = level[v] + 1\n                        q.append(to)\n\n            if level[t] == -1:\n                break\n\n            it = [0] * n\n\n            def dfs(v, pushed):\n                if v == t:\n                    return pushed\n\n                while it[v] < len(g[v]):\n                    e = g[v][it[v]]\n                    to, rev, cap = e\n\n                    if cap > 0 and level[to] == level[v] + 1:\n                        pushed_next = min(pushed, cap)\n                        got = dfs(to, pushed_next)\n\n                        if got:\n                            e[2] -= got\n                            g[to][rev][2] += got\n                            return got\n\n                    it[v] += 1\n\n                return 0\n\n            while flow < limit:\n                pushed = dfs(s, limit - flow)\n                if pushed == 0:\n                    break\n                flow += pushed\n\n        return flow\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n    x = next(it)\n\n    edges = []\n    max_capacity = 0\n\n    for _ in range(m):\n        a = next(it) - 1\n        b = next(it) - 1\n        c = next(it)\n        edges.append((a, b, c))\n        max_capacity = max(max_capacity, c)\n\n    def feasible(weight):\n        dinic = Dinic(n)\n\n        for u, v, c in edges:\n            q = c / weight\n\n            if q >= x:\n                cap = x\n            else:\n                cap = int(q + 1e-12)\n\n            if cap > 0:\n                dinic.add_edge(u, v, cap)\n\n        return dinic.max_flow(0, n - 1, x) >= x\n\n    lo = 0.0\n    hi = float(max_capacity)\n\n    for _ in range(80):\n        mid = (lo + hi) / 2.0\n\n        if feasible(mid):\n            lo = mid\n        else:\n            hi = mid\n\n    answer = lo * x\n    print(f\"{answer:.10f}\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 35.826,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNiwel is a little golden bear. As everyone knows, bears live in forests, but Niwel got tired of seeing all the trees so he decided to move to the city.\n\nIn the city, Niwel took on a job managing bears to deliver goods. The city that he lives in can be represented as a directed graph with n nodes and m edges. Each edge has a weight capacity. A delivery consists of a bear carrying weights with their bear hands on a simple path from node 1 to node n. The total weight that travels across a particular edge must not exceed the weight capacity of that edge.\n\nNiwel has exactly x bears. In the interest of fairness, no bear can rest, and the weight that each bear carries must be exactly the same. However, each bear may take different paths if they like.\n\nNiwel would like to determine, what is the maximum amount of weight he can deliver (it's the sum of weights carried by bears). Find the maximum weight.\n\n\n-----Input-----\n\nThe first line contains three integers n, m and x (2 ≤ n ≤ 50, 1 ≤ m ≤ 500, 1 ≤ x ≤ 100 000) — the number of nodes, the number of directed edges and the number of bears, respectively.\n\nEach of the following m lines contains three integers a_{i}, b_{i} and c_{i} (1 ≤ a_{i}, b_{i} ≤ n, a_{i} ≠ b_{i}, 1 ≤ c_{i} ≤ 1 000 000). This represents a directed edge from node a_{i} to b_{i} with weight capacity c_{i}. There are no self loops and no multiple edges from one city to the other city. More formally, for each i and j that i ≠ j it's guaranteed that a_{i} ≠ a_{j} or b_{i} ≠ b_{j}. It is also guaranteed that there is at least one path from node 1 to node n.\n\n\n-----Output-----\n\nPrint one real value on a single line — the maximum amount of weight Niwel can deliver if he uses exactly x bears. Your answer will be considered correct if its absolute or relative error does not exceed 10^{ - 6}.\n\nNamely: let's assume that your answer is a, and the answer of the jury is b. The checker program will consider your answer correct if $\\frac{|a - b|}{\\operatorname{max}(1, b)} \\leq 10^{-6}$.\n\n\n-----Examples-----\nInput\n4 4 3\n1 2 2\n2 4 1\n1 3 1\n3 4 2\n\nOutput\n1.5000000000\n\nInput\n5 11 23\n1 2 3\n2 3 4\n3 4 5\n4 5 6\n1 3 4\n2 4 5\n3 5 6\n1 4 2\n2 5 3\n1 5 2\n3 2 30\n\nOutput\n10.2222222222\n\n\n\n-----Note-----\n\nIn the first sample, Niwel has three bears. Two bears can choose the path $1 \\rightarrow 3 \\rightarrow 4$, while one bear can choose the path $1 \\rightarrow 2 \\rightarrow 4$. Even though the bear that goes on the path $1 \\rightarrow 2 \\rightarrow 4$ can carry one unit of weight, in the interest of fairness, he is restricted to carry 0.5 units of weight. Thus, the total weight is 1.5 units overall. Note that even though Niwel can deliver more weight with just 2 bears, he must use exactly 3 bears on this day.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

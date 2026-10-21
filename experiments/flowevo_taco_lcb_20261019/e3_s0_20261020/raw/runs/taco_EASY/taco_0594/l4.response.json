@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "a74b370a-2faf-4a4f-8d2c-906d0681eba6",
+  "created": 1792428512,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 891,
+    "completion_tokens": 12846,
+    "total_tokens": 13737,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12733
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 507
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ans = []\n    idx = 1\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n        ans.append(\" \".join(map(str, range(n, 0, -1))))\n\n    sys.stdout.write(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 61.733,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an integer N.\n\nPrint a permutation P of [1,2, \\ldots, N] such that the following condition holds:\nFor any index i\\ (1 ≤ i < N),  P_{i} \\times P_{i+1} is not a perfect square.\n\nIf there are multiple correct answers, you may print any of them.\n\nNote: A permutation of [1, 2, \\ldots, N] is a rearrangement of those numbers.\n\n------ Input Format ------ \n\n- The first line of input contains a single integer T, denoting the number of test cases. The description of T test cases follows.\n- The first line of each test case contains an integer N - the length of the required permutation.\n\n------ Output Format ------ \n\nFor each test case, print N space-separated integers representing the valid permutation on a single line.\n\nIf there are multiple correct answers, you may print any of them.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 500$\n$2 ≤ N ≤ 500$\n\n----- Sample Input 1 ------ \n3\n2\n3\n4\n\n----- Sample Output 1 ------ \n2 1\n3 1 2\n4 2 3 1\n\n----- explanation 1 ------ \nTest case $1$: $2\\times 1 = 2$ is not a perfect square. Note that $[1, 2]$ is also a valid answer for this case, and will be accepted.\n\nTest case $2$: $3\\times 1 = 3$ and $1\\times 2 = 2$ are not perfect squares.\n\nTest case $3$: $4\\times 2 = 8, 2\\times 3 = 6, 3\\times 1 = 3$ are all not perfect squares.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nimport heapq\nfrom collections import defaultdict\n\n\ndef squarefree_part(x: int) -> int:\n    res = 1\n    p = 2\n\n    while p * p <= x:\n        parity = 0\n        while x % p == 0:\n            x //= p\n            parity ^= 1\n        if parity:\n            res *= p\n        p += 1\n\n    if x > 1:\n        res *= x\n\n    return res\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ns = data[1:1 + t]\n\n    max_n = max(ns) if ns else 0\n\n    sf = [0] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        sf[i] = squarefree_part(i)\n\n    answers = []\n\n    for n in ns:\n        groups = defaultdict(list)\n\n        for value in range(1, n + 1):\n            groups[sf[value]].append(value)\n\n        heap = [(-len(values), key) for key, values in groups.items()]\n        heapq.heapify(heap)\n\n        ans = []\n        prev_key = None\n        prev_remaining = 0\n\n        for _ in range(n):\n            neg_count, key = heapq.heappop(heap)\n\n            ans.append(groups[key].pop())\n            remaining = -neg_count - 1\n\n            if prev_key is not None and prev_remaining > 0:\n                heapq.heappush(heap, (-prev_remaining, prev_key))\n\n            prev_key = key\n            prev_remaining = remaining\n\n        answers.append(\" \".join(map(str, ans)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

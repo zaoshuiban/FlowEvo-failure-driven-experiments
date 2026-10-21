@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "275e5156-461b-4877-9918-b67edd22b027",
+  "created": 1792454549,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 350,
+    "completion_tokens": 7797,
+    "total_tokens": 8147,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7124
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 350
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    w, h, alpha = map(int, data[:3])\n\n    a = w / 2.0\n    b = h / 2.0\n\n    theta = math.radians(alpha)\n    cos_t = math.cos(theta)\n    sin_t = math.sin(theta)\n\n    # First rectangle, counter-clockwise\n    poly = [\n        (-a, -b),\n        (a, -b),\n        (a, b),\n        (-a, b)\n    ]\n\n    # Second rectangle: rotate the first one around the origin\n    rotated = []\n    for x, y in poly:\n        rotated.append((\n            x * cos_t - y * sin_t,\n            x * sin_t + y * cos_t\n        ))\n\n    def clip(polygon, A, B):\n        if not polygon:\n            return []\n\n        ax, ay = A\n        bx, by = B\n        ex = bx - ax\n        ey = by - ay\n\n        eps = 1e-10\n        result = []\n\n        def inside(p):\n            px, py = p\n            return ex * (py - ay) - ey * (px - ax) >= -eps\n\n        def intersection(p, q):\n            px, py = p\n            qx, qy = q\n\n            f0 = ex * (py - ay) - ey * (px - ax)\n            f1 = ex * (qy - ay) - ey * (qx - ax)\n\n            den = f0 - f1\n            if abs(den) < 1e-30:\n                return q\n\n            t = f0 / den\n            return (\n                px + (qx - px) * t,\n                py + (qy - py) * t\n            )\n\n        prev = polygon[-1]\n        prev_inside = inside(prev)\n\n        for cur in polygon:\n            cur_inside = inside(cur)\n\n            if cur_inside:\n                if not prev_inside:\n                    result.append(intersection(prev, cur))\n                result.append(cur)\n            elif prev_inside:\n                result.append(intersection(prev, cur))\n\n            prev = cur\n            prev_inside = cur_inside\n\n        return result\n\n    # Intersect the first rectangle with the second rectangle\n    for i in range(4):\n        poly = clip(poly, rotated[i], rotated[(i + 1) % 4])\n        if not poly:\n            break\n\n    if len(poly) < 3:\n        area = 0.0\n    else:\n        twice_area = 0.0\n        n = len(poly)\n\n        for i in range(n):\n            x1, y1 = poly[i]\n            x2, y2 = poly[(i + 1) % n]\n            twice_area += x1 * y2 - y1 * x2\n\n        area = abs(twice_area) / 2.0\n\n    print(\"{:.12f}\".format(area))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 35.063,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given two rectangles on a plane. The centers of both rectangles are located in the origin of coordinates (meaning the center of the rectangle's symmetry). The first rectangle's sides are parallel to the coordinate axes: the length of the side that is parallel to the Ox axis, equals w, the length of the side that is parallel to the Oy axis, equals h. The second rectangle can be obtained by rotating the first rectangle relative to the origin of coordinates by angle α.\n\n<image>\n\nYour task is to find the area of the region which belongs to both given rectangles. This region is shaded in the picture.\n\nInput\n\nThe first line contains three integers w, h, α (1 ≤ w, h ≤ 106; 0 ≤ α ≤ 180). Angle α is given in degrees.\n\nOutput\n\nIn a single line print a real number — the area of the region which belongs to both given rectangles.\n\nThe answer will be considered correct if its relative or absolute error doesn't exceed 10 - 6.\n\nExamples\n\nInput\n\n1 1 45\n\n\nOutput\n\n0.828427125\n\n\nInput\n\n6 4 30\n\n\nOutput\n\n19.668384925\n\nNote\n\nThe second sample has been drawn on the picture above.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

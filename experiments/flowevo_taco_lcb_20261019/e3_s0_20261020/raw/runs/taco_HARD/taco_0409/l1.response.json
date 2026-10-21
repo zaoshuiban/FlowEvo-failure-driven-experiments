@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "52cd92de-9c99-4090-afcd-4789357edb38",
+  "created": 1792433015,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1008,
+    "completion_tokens": 4723,
+    "total_tokens": 5731,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4219
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1008
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nOFFSETS = []\nfor K in range(11):\n    offsets = []\n    for dr in range(-K, K + 1):\n        rem = K - abs(dr)\n        for dc in range(-rem, rem + 1):\n            if dr != 0 or dc != 0:\n                offsets.append((dr, dc))\n    OFFSETS.append(offsets)\n\n\ndef bfs(start, K, allowed, N, M):\n    V = N * M\n    dist = [-1] * V\n    dist[start] = 0\n\n    queue = [start]\n    head = 0\n    offsets = OFFSETS[K]\n\n    while head < len(queue):\n        u = queue[head]\n        head += 1\n\n        r = u // M\n        c = u - r * M\n        nd = dist[u] + 1\n\n        for dr, dc in offsets:\n            nr = r + dr\n            if 0 <= nr < N:\n                nc = c + dc\n                if 0 <= nc < M:\n                    v = nr * M + nc\n                    if allowed[v] and dist[v] == -1:\n                        dist[v] = nd\n                        queue.append(v)\n\n    return dist\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    T = next(it)\n    answers = []\n\n    for _ in range(T):\n        N = next(it)\n        M = next(it)\n        K1 = next(it)\n        K2 = next(it)\n\n        allowed = [next(it) == 0 for _ in range(N * M)]\n\n        start1 = 0\n        start2 = M - 1\n\n        dist1 = bfs(start1, K1, allowed, N, M)\n        dist2 = bfs(start2, K2, allowed, N, M)\n\n        ans = 10**9\n\n        for i in range(N * M):\n            if allowed[i] and dist1[i] != -1 and dist2[i] != -1:\n                ans = min(ans, max(dist1[i], dist2[i]))\n\n        if ans == 10**9:\n            answers.append(\"-1\")\n        else:\n            answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 21.603,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nIn Chefland, there is a monthly robots competition. In the competition, a grid table of N rows and M columns will be used to place robots. A cell at row i and column j in the table is called cell (i, j). To join this competition, each player will bring two robots to compete and each robot will be placed at a cell in the grid table. Both robots will move at the same time from one cell to another until they meet at the same cell in the table. Of course they can not move outside the table. Each robot has a movable range. If a robot has movable range K, then in a single move, it can move from cell (x, y) to cell (i, j) provided (|i-x| + |j-y| ≤ K). However, there are some cells in the table that the robots can not stand at, and because of that, they can not move to these cells. The two robots with the minimum number of moves to be at the same cell will win the competition.\n\nChef plans to join the competition and has two robots with the movable range K1 and K2, respectively. Chef does not know which cells in the table will be used to placed his 2 robots, but he knows that there are 2 cells (1, 1) and (1, M) that robots always can stand at. Therefore, he assumes that the first robot is at cell (1, 1) and the other is at cell (1, M). Chef wants you to help him to find the minimum number of moves that his two robots needed to be at the same cell and promises to give you a gift if he wins the competition. \n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows.\n\nThe first line of each test case contains 4 space-separated integers N M K1 K2 denoting the number of rows and columns in the table and the movable ranges of the first and second robot of Chef.\nThe next N lines, each line contains M space-separated numbers either 0 or 1 denoting whether the robots can move to this cell or not (0 means robots can move to this cell, 1 otherwise). It makes sure that values in cell (1, 1) and cell (1, M) are 0.\n\n------ Output ------ \n\nFor each test case, output a single line containing the minimum number of moves that Chef’s 2 robots needed to be at the same cell. If they can not be at the same cell, print -1.\n\n------ Constraints ------ \n\n1 ≤ T ≤ 10\n1 ≤ N, M ≤ 100\n0 ≤ K1, K2 ≤ 10\n\n------  Subtasks  ------ \n\nSubtask #1 : (25 points) \n\nK1 = K2 = 1 \n\nSubtask # 2 : (75 points) \n\nOriginal Constraints\n\n----- Sample Input 1 ------ \n2\n\n4 4 1 1\n\n0 1 1 0\n\n0 1 1 0\n\n0 1 1 0\n\n0 0 0 0\n\n4 4 1 1\n\n0 1 1 0\n\n0 1 1 0\n\n0 1 1 0\n\n1 0 0 1\n----- Sample Output 1 ------ \n5\n\n-1\n----- explanation 1 ------ \nExample case 1. Robot 1 can move (1, 1) -> (2, 1) -> (3, 1) -> (4, 1) -> (4, 2) -> (4, 3), and robot 2 can move (1, 4) -> (2, 4) -> (3, 4) -> (4, 4) -> (4, 3) -> (4, 3), they meet at cell (4, 3) after 5 moves.\nExample case 2. Because the movable range of both robots is 1, robot 1 can not move from (3, 1) to (4, 2), and robot 2 can not move from (3, 4) to (4, 3. Hence, they can not meet each other.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

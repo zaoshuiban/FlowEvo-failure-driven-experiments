@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "30a4fc6a-2976-4ed8-ab70-12a0a82a79ed",
+  "created": 1792436887,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 409,
+    "completion_tokens": 1936,
+    "total_tokens": 2345,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1771
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 409
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\ndef count_divisors(x: int) -> int:\n    count = 0\n    root = math.isqrt(x)\n\n    for i in range(1, root + 1):\n        if x % i == 0:\n            if i * i == x:\n                count += 1\n            else:\n                count += 2\n\n    return count\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    answers = []\n\n    for i in range(1, t + 1):\n        n = int(data[i])\n        answers.append(str(count_divisors(n - 1)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 8.531,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are N friends who decided to play the game of musical chairs one day.\n\nInitially they decide a number K and with each passing round they remove exactly K chairs. Hence, in each round exactly K players are eliminated. The game stops when less than or exactly K players remain in the game.\n\nNow, Chef wants to figure out for how many possible values of K there will be exactly one winner in the game.\n\n------ Input Format ------ \n\n- The first line contains T - the number of test cases. Then the test cases follow.\n- The first line of each test case contain N - the number of friends in the game.\n\n------ Output Format ------ \n\nFor each test case, output in a single line a integer that denotes the number of values of K for which there will be exactly one winner.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 100$\n$2 ≤ N ≤ 10^{9}$\n\n----- Sample Input 1 ------ \n3\n2\n3\n4\n\n----- Sample Output 1 ------ \n1\n2\n2\n\n----- explanation 1 ------ \n- Test case $1$: There will be only one winner if the friends remove exactly $1$ chair each round.\n- Test case $2$: There will be only one winner if the friends remove $1$ or $2$ chairs each round. \n- Test case $3$: There will be only one winner if the friends remove $1$ or $3$ chairs each round. If they remove $2$ chairs then there will be two winners.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

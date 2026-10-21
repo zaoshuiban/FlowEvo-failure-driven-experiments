@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ffd90f2a-15b3-4c85-8dfa-763008e55670",
+  "created": 1792429416,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1144,
+    "completion_tokens": 7007,
+    "total_tokens": 8151,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6696
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 504
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    adj = [[] for _ in range(n)]\n\n    idx = 1\n    for _ in range(n - 1):\n        u = data[idx] - 1\n        v = data[idx + 1] - 1\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    parent = [-1] * n\n    order = [0]\n    i = 0\n\n    while i < len(order):\n        u = order[i]\n        i += 1\n\n        for v in adj[u]:\n            if v != parent[u]:\n                parent[v] = u\n                order.append(v)\n\n    probability = [0.0] * n\n    probability[0] = 1.0\n    answer = 0.0\n\n    for u in order:\n        if u == 0:\n            choices = len(adj[u])\n        else:\n            choices = len(adj[u]) - 1\n\n        if choices > 0:\n            next_probability = probability[u] / choices\n\n            for v in adj[u]:\n                if v != parent[u]:\n                    probability[v] = next_probability\n                    answer += next_probability\n\n    print(f\"{answer:.15f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 33.763,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThere are n cities and n - 1 roads in the Seven Kingdoms, each road connects two cities and we can reach any city from any other by the roads.\n\nTheon and Yara Greyjoy are on a horse in the first city, they are starting traveling through the roads. But the weather is foggy, so they can’t see where the horse brings them. When the horse reaches a city (including the first one), it goes to one of the cities connected to the current city. But it is a strange horse, it only goes to cities in which they weren't before. In each such city, the horse goes with equal probabilities and it stops when there are no such cities. \n\nLet the length of each road be 1. The journey starts in the city 1. What is the expected length (expected value of length) of their journey? You can read about expected (average) value by the link https://en.wikipedia.org/wiki/Expected_value.\n\n\n-----Input-----\n\nThe first line contains a single integer n (1 ≤ n ≤ 100000) — number of cities.\n\nThen n - 1 lines follow. The i-th line of these lines contains two integers u_{i} and v_{i} (1 ≤ u_{i}, v_{i} ≤ n, u_{i} ≠ v_{i}) — the cities connected by the i-th road.\n\nIt is guaranteed that one can reach any city from any other by the roads.\n\n\n-----Output-----\n\nPrint a number — the expected length of their journey. The journey starts in the city 1.\n\nYour answer will be considered correct if its absolute or relative error does not exceed 10^{ - 6}.\n\nNamely: let's assume that your answer is a, and the answer of the jury is b. The checker program will consider your answer correct, if $\\frac{|a - b|}{\\operatorname{max}(1, b)} \\leq 10^{-6}$.\n\n\n-----Examples-----\nInput\n4\n1 2\n1 3\n2 4\n\nOutput\n1.500000000000000\n\nInput\n5\n1 2\n1 3\n3 4\n2 5\n\nOutput\n2.000000000000000\n\n\n\n-----Note-----\n\nIn the first sample, their journey may end in cities 3 or 4 with equal probability. The distance to city 3 is 1 and to city 4 is 2, so the expected length is 1.5.\n\nIn the second sample, their journey may end in city 4 or 5. The distance to the both cities is 2, so the expected length is 2.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    adj = [[] for _ in range(n)]\n\n    idx = 1\n    for _ in range(n - 1):\n        u = data[idx] - 1\n        v = data[idx + 1] - 1\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    parent = [-1] * n\n    order = [0]\n\n    for u in order:\n        for v in adj[u]:\n            if v != parent[u]:\n                parent[v] = u\n                order.append(v)\n\n    expected = [0.0] * n\n\n    for u in reversed(order):\n        child_count = 0\n        total = 0.0\n\n        for v in adj[u]:\n            if v != parent[u]:\n                child_count += 1\n                total += expected[v]\n\n        if child_count > 0:\n            expected[u] = 1.0 + total / child_count\n\n    print(f\"{expected[0]:.15f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: Kefa decided to celebrate his first big salary by going to the restaurant. \n\nHe lives by an unusual park. The park is a rooted tree consisting of n vertices with the root at vertex 1. Vertex 1 also co\nSolution:\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    cats = [0] + [next(it) for _ in range(n)]\n\n    graph = [[] for _ in range(n + 1)]\n\n    for _ in range(n - 1):\n        x = next(it)\n        y = next(it)\n        graph[x].append(y)\n        graph[y].append(x)\n\n    answer = 0\n\n    stack = [(1, 0, cats[1])]\n\n    while stack:\n        node, parent, consecutive_cats = stack.pop()\n\n        if consecutive_cats > m:"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

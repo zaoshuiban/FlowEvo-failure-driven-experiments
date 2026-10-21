@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6940edc3-1447-4545-b362-d2632bfef568",
+  "created": 1792434751,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 438,
+    "completion_tokens": 28432,
+    "total_tokens": 28870,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 27368
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 182
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def minDifference(self, nums: List[int]) -> int:\n        n = len(nums)\n\n        # Minimum possible maximum difference for intervals to be stabbed\n        # by two points whose distance is at most D.\n        def distance_two_ok(intervals, D):\n            if not intervals:\n                return True\n\n            min_r = 10**30\n            max_l = -10**30\n\n            for l, r in intervals:\n                if r < min_r:\n                    min_r = r\n                if l > max_l:\n                    max_l = l\n\n            # One point can hit all intervals.\n            if max_l <= min_r:\n                return True\n\n            # We need p <= q, q - p <= D, and q can be chosen as max_l.\n            need_left = -10**30\n            for l, r in intervals:\n                if r < max_l and l > need_left:\n                    need_left = l\n\n            lower = max(1, max_l - D, need_left)\n            upper = min(min_r, max_l - 1)\n            return lower <= upper\n\n        # Whether all intervals can be stabbed by at most two points.\n        def two_stab_ok(intervals):\n            if not intervals:\n                return True\n\n            # Greedily choose the smallest right endpoint.\n            p = 10**30\n            for l, r in intervals:\n                if r < p:\n                    p = r\n\n            max_l = -10**30\n            min_r = 10**30\n            exists = False\n\n            for l, r in intervals:\n                if l > p:\n                    exists = True\n                    if l > max_l:\n                        max_l = l\n                    if r < min_r:\n                        min_r = r\n\n            if not exists:\n                return True\n\n            return max_l <= min_r\n\n        def feasible(D):\n            # Fixed adjacent pairs must already satisfy D.\n            for i in range(n - 1):\n                if nums[i] != -1 and nums[i + 1] != -1:\n                    if abs(nums[i] - nums[i + 1]) > D:\n                        return False\n\n            intervals_a = []\n            intervals_b = []\n            core_bad = False\n\n            i = 0\n            while i < n:\n                if nums[i] != -1:\n                    i += 1\n                    continue\n\n                j = i\n                while j < n and nums[j] == -1:\n                    j += 1\n\n                length = j - i\n                left = nums[i - 1] if i > 0 else -1\n                right = nums[j] if j < n else -1\n\n                if left == -1 and right == -1:\n                    pass\n\n                elif left == -1:\n                    l = max(1, right - D)\n                    r = right + D\n                    intervals_a.append((l, r))\n                    intervals_b.append((l, r))\n\n                elif right == -1:\n                    l = max(1, left - D)\n                    r = left + D\n                    intervals_a.append((l, r))\n                    intervals_b.append((l, r))\n\n                else:\n                    if length == 1:\n                        l = max(left, right) - D\n                        r = min(left, right) + D\n\n                        if l > r:\n                            return False\n\n                        l = max(1, l)\n                        intervals_a.append((l, r))\n                        intervals_b.append((l, r))\n\n                    else:\n                        l1 = max(1, left - D)\n                        r1 = left + D\n                        intervals_a.append((l1, r1))\n\n                        l2 = max(1, right - D)\n                        r2 = right + D\n                        intervals_a.append((l2, r2))\n\n                        l = max(left, right) - D\n                        r = min(left, right) + D\n\n                        if l <= r:\n                            l = max(1, l)\n                            intervals_b.append((l, r))\n                        else:\n                            core_bad = True\n\n                i = j\n\n            # Case 1: the two chosen values are within distance D.\n            if distance_two_ok(intervals_a, D):\n                return True\n\n            # Case 2: each missing segment can be filled using one common value.\n            if not core_bad and two_stab_ok(intervals_b):\n                return True\n\n            return False\n\n        max_fixed = 0\n        for i in range(n - 1):\n            if nums[i] != -1 and nums[i + 1] != -1:\n                max_fixed = max(max_fixed, abs(nums[i] - nums[i + 1]))\n\n        lo = max_fixed - 1\n        hi = 10**9\n\n        while hi - lo > 1:\n            mid = (lo + hi) // 2\n            if feasible(mid):\n                hi = mid\n            else:\n                lo = mid\n\n        return hi\n```",
+  "latency_s": 133.803,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array of integers nums. Some values in nums are missing and are denoted by -1.\nYou can choose a pair of positive integers (x, y) exactly once and replace each missing element with either x or y.\nYou need to minimize the maximum absolute difference between adjacent elements of nums after replacements.\nReturn the minimum possible difference.\n \nExample 1:\n\nInput: nums = [1,2,-1,10,8]\nOutput: 4\nExplanation:\nBy choosing the pair as (6, 7), nums can be changed to [1, 2, 6, 10, 8].\nThe absolute differences between adjacent elements are:\n\n|1 - 2| == 1\n|2 - 6| == 4\n|6 - 10| == 4\n|10 - 8| == 2\n\n\nExample 2:\n\nInput: nums = [-1,-1,-1]\nOutput: 0\nExplanation:\nBy choosing the pair as (4, 4), nums can be changed to [4, 4, 4].\n\nExample 3:\n\nInput: nums = [-1,10,-1,8]\nOutput: 1\nExplanation:\nBy choosing the pair as (11, 9), nums can be changed to [11, 10, 9, 8].\n\n \nConstraints:\n\n2 <= nums.length <= 10^5\nnums[i] is either -1 or in the range [1, 10^9].\n\nStarter code / required signature:\nclass Solution:\n    def minDifference(self, nums: List[int]) -> int:\n        \n\nUse the required function/method named minDifference. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

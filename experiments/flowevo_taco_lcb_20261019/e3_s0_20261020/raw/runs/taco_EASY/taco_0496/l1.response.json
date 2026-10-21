@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f074531e-59cb-45bf-9b35-703a8537c78d",
+  "created": 1792431297,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 843,
+    "completion_tokens": 1262,
+    "total_tokens": 2105,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1083
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 843
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        current = 0\n        best_red = 0\n        for _ in range(n):\n            current += next(it)\n            best_red = max(best_red, current)\n\n        m = next(it)\n\n        current = 0\n        best_blue = 0\n        for _ in range(m):\n            current += next(it)\n            best_blue = max(best_blue, current)\n\n        answers.append(str(best_red + best_blue))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 5.751,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nMonocarp had a sequence $a$ consisting of $n + m$ integers $a_1, a_2, \\dots, a_{n + m}$. He painted the elements into two colors, red and blue; $n$ elements were painted red, all other $m$ elements were painted blue.\n\nAfter painting the elements, he has written two sequences $r_1, r_2, \\dots, r_n$ and $b_1, b_2, \\dots, b_m$. The sequence $r$ consisted of all red elements of $a$ in the order they appeared in $a$; similarly, the sequence $b$ consisted of all blue elements of $a$ in the order they appeared in $a$ as well.\n\nUnfortunately, the original sequence was lost, and Monocarp only has the sequences $r$ and $b$. He wants to restore the original sequence. In case there are multiple ways to restore it, he wants to choose a way to restore that maximizes the value of\n\n$$f(a) = \\max(0, a_1, (a_1 + a_2), (a_1 + a_2 + a_3), \\dots, (a_1 + a_2 + a_3 + \\dots + a_{n + m}))$$\n\nHelp Monocarp to calculate the maximum possible value of $f(a)$.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 1000$) — the number of test cases. Then the test cases follow. Each test case consists of four lines.\n\nThe first line of each test case contains one integer $n$ ($1 \\le n \\le 100$).\n\nThe second line contains $n$ integers $r_1, r_2, \\dots, r_n$ ($-100 \\le r_i \\le 100$).\n\nThe third line contains one integer $m$ ($1 \\le m \\le 100$).\n\nThe fourth line contains $m$ integers $b_1, b_2, \\dots, b_m$ ($-100 \\le b_i \\le 100$).\n\n\n-----Output-----\n\nFor each test case, print one integer — the maximum possible value of $f(a)$.\n\n\n-----Examples-----\n\nInput\n4\n4\n6 -5 7 -3\n3\n2 3 -4\n2\n1 1\n4\n10 -3 2 2\n5\n-1 -2 -3 -4 -5\n5\n-1 -2 -3 -4 -5\n1\n0\n1\n0\nOutput\n13\n13\n0\n0\n\n\n-----Note-----\n\nIn the explanations for the sample test cases, red elements are marked as bold.\n\nIn the first test case, one of the possible sequences $a$ is $[\\mathbf{6}, 2, \\mathbf{-5}, 3, \\mathbf{7}, \\mathbf{-3}, -4]$.\n\nIn the second test case, one of the possible sequences $a$ is $[10, \\mathbf{1}, -3, \\mathbf{1}, 2, 2]$.\n\nIn the third test case, one of the possible sequences $a$ is $[\\mathbf{-1}, -1, -2, -3, \\mathbf{-2}, -4, -5, \\mathbf{-3}, \\mathbf{-4}, \\mathbf{-5}]$.\n\nIn the fourth test case, one of the possible sequences $a$ is $[0, \\mathbf{0}]$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

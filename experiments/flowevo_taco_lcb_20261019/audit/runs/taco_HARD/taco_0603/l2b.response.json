@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "c0516df8-d1ad-4e2f-a40e-26cf478a6244",
+  "created": 1792452660,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 457,
+    "completion_tokens": 12470,
+    "total_tokens": 12927,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 11686
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 201
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef cross_vec(ax, ay, bx, by):\n    return ax * by - ay * bx\n\n\ndef dist2(p, q):\n    dx = p[0] - q[0]\n    dy = p[1] - q[1]\n    return dx * dx + dy * dy\n\n\ndef on_segment(a, b, p):\n    vx = b[0] - a[0]\n    vy = b[1] - a[1]\n    wx = p[0] - a[0]\n    wy = p[1] - a[1]\n\n    if vx * wy - vy * wx != 0:\n        return False\n\n    dot = vx * wx + vy * wy\n    if dot < 0:\n        return False\n\n    len2 = vx * vx + vy * vy\n    return dot <= len2\n\n\ndef ratio_ok(a, b, p):\n    ap2 = dist2(a, p)\n    pb2 = dist2(p, b)\n\n    if ap2 == 0 or pb2 == 0:\n        return False\n\n    return 16 * ap2 >= pb2 and 16 * pb2 >= ap2\n\n\ndef on_leg_ok(a, b, p):\n    return on_segment(a, b, p) and ratio_ok(a, b, p)\n\n\ndef angle_ok(a, b, c):\n    vx = b[0] - a[0]\n    vy = b[1] - a[1]\n    wx = c[0] - a[0]\n    wy = c[1] - a[1]\n\n    dot = vx * wx + vy * wy\n    cr = vx * wy - vy * wx\n\n    return dot >= 0 and cr != 0\n\n\ndef pair_ok(leg1, leg2, crossbar):\n    for a in (leg1[0], leg1[1]):\n        if a == leg2[0] or a == leg2[1]:\n            b = leg1[1] if a == leg1[0] else leg1[0]\n            c = leg2[1] if a == leg2[0] else leg2[0]\n\n            if not angle_ok(a, b, c):\n                continue\n\n            p, q = crossbar\n\n            if (on_leg_ok(a, b, p) and on_leg_ok(a, c, q)) or \\\n               (on_leg_ok(a, b, q) and on_leg_ok(a, c, p)):\n                return True\n\n    return False\n\n\ndef check(segments):\n    for i in range(3):\n        for j in range(3):\n            if i == j:\n                continue\n            k = 3 - i - j\n            if pair_ok(segments[i], segments[j], segments[k]):\n                return True\n    return False\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        segments = []\n        for _ in range(3):\n            x1, y1, x2, y2 = data[idx], data[idx + 1], data[idx + 2], data[idx + 3]\n            idx += 4\n            segments.append(((x1, y1), (x2, y2)))\n\n        answers.append(\"YES\" if check(segments) else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 54.912,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nLittle Petya learns how to write. The teacher gave pupils the task to write the letter A on the sheet of paper. It is required to check whether Petya really had written the letter A.\n\nYou are given three segments on the plane. They form the letter A if the following conditions hold:\n\n  * Two segments have common endpoint (lets call these segments first and second), while the third segment connects two points on the different segments. \n  * The angle between the first and the second segments is greater than 0 and do not exceed 90 degrees. \n  * The third segment divides each of the first two segments in proportion not less than 1 / 4 (i.e. the ratio of the length of the shortest part to the length of the longest part is not less than 1 / 4). \n\nInput\n\nThe first line contains one integer t (1 ≤ t ≤ 10000) — the number of test cases to solve. Each case consists of three lines. Each of these three lines contains four space-separated integers — coordinates of the endpoints of one of the segments. All coordinates do not exceed 108 by absolute value. All segments have positive length.\n\nOutput\n\nOutput one line for each test case. Print «YES» (without quotes), if the segments form the letter A and «NO» otherwise.\n\nExamples\n\nInput\n\n3\n4 4 6 0\n4 1 5 2\n4 0 4 4\n0 0 0 6\n0 6 2 -4\n1 1 0 1\n0 0 0 5\n0 5 2 -1\n1 2 0 1\n\n\nOutput\n\nYES\nNO\nYES\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

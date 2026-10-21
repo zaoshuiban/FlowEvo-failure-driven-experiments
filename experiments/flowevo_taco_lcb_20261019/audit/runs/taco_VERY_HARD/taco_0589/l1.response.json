@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "5aeefa10-8602-446a-afdc-23bb84de5521",
+  "created": 1792429773,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1185,
+    "completion_tokens": 13405,
+    "total_tokens": 14590,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12529
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1185
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_left\n\n\ndef int_iter(data):\n    i = 0\n    n = len(data)\n    while i < n:\n        while i < n and data[i] <= 32:\n            i += 1\n        if i >= n:\n            break\n        num = 0\n        while i < n and data[i] > 32:\n            num = num * 10 + (data[i] - 48)\n            i += 1\n        yield num\n\n\ndef find_root(parent, x):\n    while parent[x] != x:\n        parent[x] = parent[parent[x]]\n        x = parent[x]\n    return x\n\n\ndef solve():\n    data = sys.stdin.buffer.read()\n    it = int_iter(data)\n\n    try:\n        t = next(it)\n    except StopIteration:\n        return\n\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n\n        adj = [[] for _ in range(n + 1)]\n        for _ in range(n - 1):\n            u = next(it)\n            v = next(it)\n            adj[u].append(v)\n            adj[v].append(u)\n\n        p = [0] * n\n        pos = [0] * (n + 1)\n\n        for i in range(n):\n            x = next(it)\n            p[i] = x\n            pos[x] = i + 1\n\n        a = [0] * (n + 1)\n        for i in range(1, n + 1):\n            a[i] = next(it)\n\n        b = [0] * (n + 1)\n        for i in range(1, n + 1):\n            b[i] = next(it)\n\n        # Build the elimination tree by adding vertices in reverse removal order.\n        children = [[] for _ in range(n + 1)]\n        active = bytearray(n + 1)\n\n        dsu_parent = [0] * (n + 1)\n        dsu_size = [0] * (n + 1)\n        comp_top = [0] * (n + 1)\n\n        for idx in range(n - 1, -1, -1):\n            x = p[idx]\n            active[x] = 1\n            dsu_parent[x] = x\n            dsu_size[x] = 1\n            comp_top[x] = x\n\n            for y in adj[x]:\n                if not active[y]:\n                    continue\n\n                rx = find_root(dsu_parent, x)\n                ry = find_root(dsu_parent, y)\n\n                if rx == ry:\n                    continue\n\n                top_y = comp_top[ry]\n                children[x].append(top_y)\n\n                if dsu_size[rx] < dsu_size[ry]:\n                    dsu_parent[rx] = ry\n                    dsu_size[ry] += dsu_size[rx]\n                    comp_top[ry] = x\n                else:\n                    dsu_parent[ry] = rx\n                    dsu_size[rx] += dsu_size[ry]\n                    comp_top[rx] = x\n\n        root = p[0]\n\n        ans = [0] * (n + 1)\n\n        path_nodes = []\n        prefix_sum = []\n        stack = [(root, 0)]\n\n        while stack:\n            u, state = stack.pop()\n\n            if state == 0:\n                current_sum = a[u] + (prefix_sum[-1] if prefix_sum else 0)\n                prefix_sum.append(current_sum)\n                path_nodes.append(u)\n\n                idx = bisect_left(prefix_sum, b[u])\n                if idx < len(prefix_sum):\n                    ans[u] = pos[path_nodes[idx]]\n                else:\n                    ans[u] = -1\n\n                stack.append((u, 1))\n\n                for v in reversed(children[u]):\n                    stack.append((v, 0))\n\n            else:\n                prefix_sum.pop()\n                path_nodes.pop()\n\n        answers.append(\" \".join(str(ans[i]) for i in range(1, n + 1)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 64.937,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese].\n\nIn Chefland, there are $N$ cities (numbered $1$ through $N$) connected by $N-1$ bidirectional roads. Each city has exactly one garden. For each valid $i$, let's denote the population of the $i$-th city by $A_{i}$ and the initial number of fruits in its garden by $B_{i}$; also, at any time, let's denote the current number of fruits in its garden by $F_{i}$ ($F_{i} = B_{i}$ initially).\n\nYou are given a permutation $P$ of the integers $1$ through $N$. For each $i$ ($1 ≤ i ≤ N$), during the $i$-th of the next $N$ days, the people of the city $P_{i}$ do the following:\n1. For each city $j$ which is reachable from the city $P_{i}$ (including the city $P_{i}$ itself), visit the city $j$ and consume $\\mathrm{min}(A_{P_{i}}, F_{j})$ fruits from the garden of the city $j$; afterwards, $F_{j}$ decreases by $\\mathrm{min}(A_{P_{i}}, F_{j})$.\n2. Return to the city $P_{i}$ and cut off all the roads that are connecting it to other cities, so that nobody can visit the city $P_{i}$ or visit any other city from their city if it requires passing through the city $P_{i}$.\n\nFor each valid $i$, let $D_{i}$ be the first day when the number of fruits in the $i$-th city's garden becomes zero, or $-1$ if the fruits in its garden never end up all eaten. Find $D_{1}, D_{2}, \\ldots, D_{N}$.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nEach of the next $N-1$ lines contains two space-separated integers $u$ and $v$ denoting that vertices $u$ and $v$ are connected by an edge.\nThe next line contains $N$ space-separated integers $P_{1}, P_{2}, \\ldots, P_{N}$.\nThe next line contains $N$ space-separated integers $A_{1}, A_{2}, \\ldots, A_{N}$.\nThe last line contains $N$ space-separated integers $B_{1}, B_{2}, \\ldots, B_{N}$.\n\n------  Output ------\nFor each test case, print a single line containing $N$ space-separated integers $D_{1}, D_{2}, \\ldots, D_{N}$.\n\n------  Constraints ------\n$1 ≤ T ≤ 10^{5}$\n$1 ≤ N ≤ 2 \\cdot 10^{5}$\n$1 ≤ u, v ≤ N$\n$1 ≤ P_{i} ≤ N$ for each valid $i$\n$1 ≤ A_{i}, B_{i} ≤ 10^{9}$ for each valid $i$\nthe sum of $N$ over all test cases does not exceed $5 \\cdot 10^{5}$\n\n------  Subtasks ------\nSubtask #1 (30 points):\n$N ≤ 10^{3}$\nthe sum of $N$ over all test cases does not exceed $5 \\cdot 10^{3}$\n\nSubtask #2 (70 points): original constraints\n\n----- Sample Input 1 ------ \n2\n\n3\n\n1 2\n\n2 3\n\n1 2 3\n\n1 2 3\n\n1 3 6\n\n3\n\n1 2\n\n1 3\n\n1 2 3\n\n5 6 3\n\n4 10 12\n----- Sample Output 1 ------ \n1 2 3\n\n1 2 -1\n----- explanation 1 ------ \nExample case 1: The process is as follows:\n- On day $1$, people from city $1$ eat $1$ fruit from each garden. Afterwards, there are $[0, 2, 5]$ fruits in the gardens of cities $[1, 2, 3]$ respectively, so the answer for city $1$ is $1$, since the number of fruits in this garden becomes zero on day $1$.\n- Then, on day $2$, people from city $2$ eat $2$ fruits from each of the gardens in cities $2$ and $3$. Afterwards, there are $0$ fruits in the garden of city $2$ (so the answer for city $2$ is $2$, since the number of fruits in this garden becomes zero on this day) and $3$ fruits in the garden of city $3$.\n- Finally, on day $3$, people from city $3$ eat $3$ fruits from the garden of city $3$, so the answer for city $3$ is $3$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

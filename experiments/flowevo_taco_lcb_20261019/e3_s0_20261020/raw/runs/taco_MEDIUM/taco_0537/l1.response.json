@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bd30bd33-73a6-403e-8ca5-1197c0896d52",
+  "created": 1792436911,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 609,
+    "completion_tokens": 1154,
+    "total_tokens": 1763,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 942
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 609
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.buffer.readline\n    n, m = map(int, input().split())\n\n    adj = [[] for _ in range(n)]\n\n    for _ in range(m):\n        x, y = map(int, input().split())\n        x -= 1\n        y -= 1\n        adj[x].append(y)\n        adj[y].append(x)\n\n    if n != m:\n        print(\"NO\")\n        return\n\n    visited = [False] * n\n    queue = deque([0])\n    visited[0] = True\n    count = 0\n\n    while queue:\n        v = queue.popleft()\n        count += 1\n\n        for u in adj[v]:\n            if not visited[u]:\n                visited[u] = True\n                queue.append(u)\n\n    if count == n:\n        print(\"FHTAGN!\")\n    else:\n        print(\"NO\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 5.356,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\n...Once upon a time a man came to the sea. The sea was stormy and dark. The man started to call for the little mermaid to appear but alas, he only woke up Cthulhu...\n\nWhereas on the other end of the world Pentagon is actively collecting information trying to predict the monster's behavior and preparing the secret super weapon. Due to high seismic activity and poor weather conditions the satellites haven't yet been able to make clear shots of the monster. The analysis of the first shot resulted in an undirected graph with n vertices and m edges. Now the world's best minds are about to determine whether this graph can be regarded as Cthulhu or not.\n\nTo add simplicity, let's suppose that Cthulhu looks from the space like some spherical body with tentacles attached to it. Formally, we shall regard as Cthulhu such an undirected graph that can be represented as a set of three or more rooted trees, whose roots are connected by a simple cycle.\n\nIt is guaranteed that the graph contains no multiple edges and self-loops.\n\n<image>\n\nInput\n\nThe first line contains two integers — the number of vertices n and the number of edges m of the graph (1 ≤ n ≤ 100, 0 ≤ m ≤ <image>).\n\nEach of the following m lines contains a pair of integers x and y, that show that an edge exists between vertices x and y (1 ≤ x, y ≤ n, x ≠ y). For each pair of vertices there will be at most one edge between them, no edge connects a vertex to itself.\n\nOutput\n\nPrint \"NO\", if the graph is not Cthulhu and \"FHTAGN!\" if it is.\n\nExamples\n\nInput\n\n6 6\n6 3\n6 4\n5 1\n2 5\n1 4\n5 4\n\n\nOutput\n\nFHTAGN!\n\nInput\n\n6 5\n5 6\n4 6\n3 1\n5 1\n1 2\n\n\nOutput\n\nNO\n\nNote\n\nLet us denote as a simple cycle a set of v vertices that can be numbered so that the edges will only exist between vertices number 1 and 2, 2 and 3, ..., v - 1 and v, v and 1.\n\nA tree is a connected undirected graph consisting of n vertices and n - 1 edges (n > 0).\n\nA rooted tree is a tree where one vertex is selected to be the root.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

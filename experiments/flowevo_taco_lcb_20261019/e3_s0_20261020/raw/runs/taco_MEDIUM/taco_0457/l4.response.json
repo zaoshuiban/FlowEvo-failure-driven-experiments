@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "bc8b38a4-5a5e-4c12-8b2c-2d03fdf7828f",
+  "created": 1792432772,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1301,
+    "completion_tokens": 10511,
+    "total_tokens": 11812,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 10257
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 789
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    ans = []\n\n    for _ in range(t):\n        m, n, p, q = data[idx], data[idx + 1], data[idx + 2], data[idx + 3]\n        idx += 4\n\n        x = m - p\n        y = n - q\n\n        a = min(x, y)\n        b = max(x, y)\n        d = b - a\n\n        # Wythoff Nim P-position condition:\n        # (a, b) is losing iff a == floor(d * phi),\n        # where d = b - a and phi = (1 + sqrt(5)) / 2.\n        floor_d_phi = (d + math.isqrt(5 * d * d)) // 2\n\n        if a == floor_d_phi:\n            ans.append(\"Bob\")\n        else:\n            ans.append(\"Alice\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 48.562,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAfter a long period of relaxation Alice and Bob decided to play a game.\nThis time of course not a number game. The rules of the game are as follows:\n\nThere is a vehicle situated at the point (m, n) of a rectangular grid.\nOnly one corner of the rectangular grid is defined, i.e. the left-top point (0, 0),\nwhich is also known as the origin. The grid extends infinitely towards east and infinitely towards south.\nAlice and Bob are both sitting in a vehicle, initially situated at the point (m, n).\nThe game they are playing ends as soon as one of them reaches (p, q).\n\nNow, Alice and Bob have to drive the vehicle in their respective turn.\nIn their own turn they can move the vehicle, from (x, y) to (x', y)\nor (x, y'); where p ≤ x' < x and q ≤ y' < y.\nThey can also move the vehicle to the point (x-a, y-a), where 0 < a ≤ min(x-p, y-q).\nAlso, 0 ≤ p < m and 0 ≤ q < n.\nThe winner is the game is the one who drives the vehicle to (p, q).\n\nCunning Alice uses a biased coin for tossing purpose and always plays first.\nIt is assumed that both Alice and Bob play optimally in their respective turns.\n\n------ Input ------ \n\nThe first line contains a single integer T denoting the number of test cases.\nT test cases follow. Each test case consists of a single line consisting of four space separated integers m, n, p, q\nrespectively.\n\n------ Output ------ \n\nFor each test case print a string - either \"Alice\" or \"Bob\" (without the quotes), denoting the winner.\n\n------ Constraints ------ \n\n1 ≤ T ≤ 1000\n\n1  ≤ m, n  ≤ 1000\n\n0 ≤ p < m\n\n0 ≤ q < n\n\n----- Sample Input 1 ------ \n2\n1 1 0 0\n2 4 1 2\n----- Sample Output 1 ------ \nAlice\nBob\n----- explanation 1 ------ \nIn the second test case, initially the vehicle is at co-ordinate (2, 4).\nAlice now has four possible moves. Alice can move the vehicle to position (1, 4), (1, 3), (2, 3) and (2, 2).\nFor all moves that Alice can do, Bob can move the vehicle to the position (1, 2), winning the game.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    cases = []\n    max_x = max_y = 0\n\n    for _ in range(t):\n        m, n, p, q = data[idx:idx + 4]\n        idx += 4\n\n        x = m - p\n        y = n - q\n        cases.append((x, y))\n\n        if x > max_x:\n            max_x = x\n        if y > max_y:\n            max_y = y\n\n    # Precompute all losing positions (P-positions) up to max_x, max_y.\n    losing = set()\n\n    # col_losing[j] is True if there is a losing position in column j\n    # with a smaller first coordinate.\n    col_losing = bytearray(max_y + 1)\n\n    # diag_losing[d] is True if there is a losing position on diagonal\n    # first - second = d with a smaller first coordinate.\n    offset = max_y\n    diag_losing = bytearray(max_x + max_y + 3)\n\n    for i in range(max_x + 1):\n        row_has_losing = False\n\n        for j in range(max_y + 1):\n            d = i - j + offset\n\n            if row_has_losing or col_losing[j] or diag_losing[d]:\n                continue\n\n            # No move can reach a previous losing position, so this is losing.\n            losing.add((i, j))\n            row_has_losing = True\n            col_losing[j] = 1\n            diag_losing[d] = 1\n\n    ans = []\n    for x, y in cases:\n        if (x, y) in losing:\n            ans.append(\"Bob\")\n        else:\n            ans.append(\"Alice\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given arrays A and B of length N each. Determine the number of *good* pairs.\n\nA pair (i,j) (1≤ i,j ≤ N) is said to be *good* if all of the following conditions are satisfied:\ni < j;\nA_{i} = B_\nSolution:\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        A = [next(it) for _ in range(n)]\n        B = [next(it) for _ in range(n)]\n\n        freq = {}\n        ans = 0\n\n        for a, b in zip(A, B):\n            # Need previous i such that:\n            # A[i] = B[j] = b\n            # B[i] = A[j] = a\n            ans += freq.get((b, a), 0)\n\n            # Insert curre"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

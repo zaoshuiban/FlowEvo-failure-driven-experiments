@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7263082e-3462-4dac-b7a4-a6ea51e06ee7",
+  "created": 1792438733,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1170,
+    "completion_tokens": 13155,
+    "total_tokens": 14325,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12766
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 658
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    tc = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(tc):\n        T1, T2, t1, t2 = data[idx], data[idx + 1], data[idx + 2], data[idx + 3]\n        idx += 4\n\n        # Work with doubled areas to keep computations exact.\n        total_twice = 2 * T1 * T2\n        non_meeting_twice = 0\n\n        # Region where Yurii arrives more than t1 seconds after Chef:\n        # y - x > t1\n        if t1 < T2:\n            L = T2 - t1\n            m = min(T1, L)\n            non_meeting_twice += 2 * L * m - m * m\n\n        # Region where Chef arrives more than t2 seconds after Yurii:\n        # x - y > t2\n        if t2 < T1:\n            L = T1 - t2\n            m = min(T2, L)\n            non_meeting_twice += 2 * L * m - m * m\n\n        meeting_twice = total_twice - non_meeting_twice\n        if meeting_twice < 0:\n            meeting_twice = 0\n        elif meeting_twice > total_twice:\n            meeting_twice = total_twice\n\n        probability = meeting_twice / total_twice\n        answers.append(f\"{probability:.10f}\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 57.065,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese  and Russian. \nChef and his friend Yurii decided to meet in the cafe. As they are very busy one would not wait for another too long. Namely, after arriving, Chef will spend at most  t_{1} seconds waiting for Yurii while Yurii will wait no more than t_{2} seconds.\nChef can arrive at any moment within [0..T_{1}] with equal probability. Similarly Yurii can arrive at any moment within [0..T_{2}].\nArrival time may be any real number from the interval.\nChef asks you to calculate the probability of meeting his friend Yurii in the cafe.\n\n------ Input ------ \n\nFirst line of the input contains an integer T denoting the number of test cases. First and the only line of each test case contains four space-separated integers – T_{1}, T_{2}, t_{1} and t_{2}.\n\n------ Output ------ \n\nFor each test case, output one the single real number - probability of meeting Chef and his friend Yurii. The answer will be considered correct if its absolute or relative error doesn't exceed 10^{-6}.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10^{5}$\n$1 ≤ T_{1}, T_{2}  ≤ 10^{9} $\n$0 ≤ t_{1}, t_{2}  ≤ 10^{9} $\n\nSubtask 1: (5 points)\n\n$t_{1} = 0 and t_{2} = 0$\n\nSubtask 2: (15 points)\n\n$t_{1} = 0 or t_{2} = 0$\n\nSubtask 3: (25 points)\n\n$1 ≤ T ≤ 5$\n$1 ≤ T_{1}, T_{2} ≤ 10$\n$The answer will be considered correct if its absolute or relative error doesn't exceed 10^{-2}$\n\nSubtask 4: (55 points)\n\n$Original constraints$\n\n----- Sample Input 1 ------ \n2\n2 2 1 1\n1 1 1 1\n----- Sample Output 1 ------ \n0.750000\n1.000000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef area_above(T1, T2, t1):\n    # Area where y - x > t1: Chef arrives too early for Yurii.\n    L = T2 - t1\n    if L <= 0:\n        return 0.0\n    m = min(T1, L)\n    return L * m - m * m * 0.5\n\n\ndef area_below(T1, T2, t2):\n    # Area where x - y > t2: Yurii arrives too early for Chef.\n    L = T1 - t2\n    if L <= 0:\n        return 0.0\n    m = min(T2, L)\n    return L * m - m * m * 0.5\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    cases = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(cases):\n        T1 = data[idx]\n        T2 = data[idx + 1]\n        t1 = data[idx + 2]\n        t2 = data[idx + 3]\n        idx += 4\n\n        total_area = float(T1) * float(T2)\n\n        non_meeting_area = area_above(T1, T2, t1) + area_below(T1, T2, t2)\n        probability = 1.0 - non_meeting_area / total_area\n\n        if probability < 0.0:\n            probability = 0.0\n        elif probability > 1.0:\n            probability = 1.0\n\n        answers.append(f\"{probability:.10f}\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

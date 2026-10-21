@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f462653a-cb83-4965-9fa4-b8e9da69b3ec",
+  "created": 1792434808,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 372,
+    "completion_tokens": 376,
+    "total_tokens": 748,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 285
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 372
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom collections import deque\n\ndef tree_by_levels(node):\n    if node is None:\n        return []\n    \n    result = []\n    queue = deque([node])\n    \n    while queue:\n        current = queue.popleft()\n        result.append(current.value)\n        \n        if current.left is not None:\n            queue.append(current.left)\n        if current.right is not None:\n            queue.append(current.right)\n    \n    return result\n```",
+  "latency_s": 2.182,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a binary tree:\n\n```python\nclass Node:\n    def __init__(self, L, R, n):\n        self.left = L\n        self.right = R\n        self.value = n\n```\n\nYour task is to return the list with elements from tree sorted by levels, which means the root element goes first, then root children (from left to right) are second and third, and so on.\n```if:ruby\nReturn empty array if root is `nil`.\n```\n```if:haskell\nReturn empty list if root is `Nothing`.\n```\n```if:python\nReturn empty list if root is `None`.\n```\n```if:csharp\nReturn empty list if root is 'null'.\n```\n```if:java\nReturn empty list is root is 'null'.\n```\n\nExample 1 - following tree:\n\n                     2\n                8        9\n              1  3     4   5\n\nShould return following list:\n\n    [2,8,9,1,3,4,5]\n\nExample 2 - following tree:\n\n                     1\n                8        4\n                  3        5\n                             7\nShould return following list:\n\n    [1,8,4,3,5,7]\n\nStarter code / required signature:\ndef tree_by_levels(node):\n\t\n\nUse the required function/method named tree_by_levels. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

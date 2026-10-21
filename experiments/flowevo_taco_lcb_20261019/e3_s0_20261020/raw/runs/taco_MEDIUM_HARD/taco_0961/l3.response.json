@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0b36d301-ae56-4d70-aa69-734906104b7b",
+  "created": 1792433961,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1516,
+    "completion_tokens": 27361,
+    "total_tokens": 28877,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 26906
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 748
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    T = data[idx]\n    idx += 1\n\n    outputs = []\n\n    for _ in range(T):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        commands = [None] * (m + 1)\n        for i in range(1, m + 1):\n            t = data[idx]\n            l = data[idx + 1]\n            r = data[idx + 2]\n            idx += 3\n            commands[i] = (t, l, r)\n\n        count = [0] * (m + 2)\n        events = [0] * (m + 2)\n\n        active = 0\n\n        for i in range(m, 0, -1):\n            active = (active + events[i]) % MOD\n\n            cnt = active + 1\n            if cnt >= MOD:\n                cnt -= MOD\n            count[i] = cnt\n\n            t, l, r = commands[i]\n            if t == 2:\n                events[r] = (events[r] + cnt) % MOD\n                events[l - 1] = (events[l - 1] - cnt) % MOD\n\n        diff = [0] * (n + 3)\n\n        for i in range(1, m + 1):\n            t, l, r = commands[i]\n            if t == 1:\n                val = count[i]\n                diff[l] = (diff[l] + val) % MOD\n                diff[r + 1] = (diff[r + 1] - val) % MOD\n\n        ans = []\n        cur = 0\n\n        for i in range(1, n + 1):\n            cur = (cur + diff[i]) % MOD\n            ans.append(str(cur))\n\n        outputs.append(\" \".join(ans))\n\n    sys.stdout.write(\"\\n\".join(outputs))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 120.797,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in mandarin chinese, russian and vietnamese as well. \n\nSereja has an array A consisting of n integers. Initially, all the elements of array are zero.\n\nSereja writes down m commands on a piece of a paper. The commands are enumerated from 1 to m. These commands can be of the following two types of commands: \nl r (1 ≤ l ≤ r ≤ n) — Increase all elements of the array by one, whose indices belongs to the range [l, r] \nl r (1 ≤ l ≤ r ≤ m) — Execute all the commands whose indices are in the range [l, r]. It's guaranteed that r is strictly less than the enumeration/number of the current command. \nCan you please help Sereja in executing all the commands written on this piece of paper.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows.\nThe first line contains integers n and m. Next m lines contain Sereja's commands in the format, described in statement: t, l, r, where t - number of type (1 or 2).\n\n------ Output ------ \n\nFor each test case on different lines print an array a, after executing all the commands. The numbers have to be separated by spaces. As the numbers can be quite large, print them modulo 10^{9} + 7.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 3$\n$1 ≤ n, m ≤ 10^{5}$\n\n------ Subtasks ------ \n\n$Subtask #1 (20 points): 1 ≤ n, m ≤ 10 $\n$Subtask #2 (30 points): 1 ≤ n, m ≤ 1000 $\n$Subtask #3 (50 points): original constraints $\n\n----- Sample Input 1 ------ \n3\n5 5\n1 1 2\n1 4 5\n2 1 2\n2 1 3\n2 3 4\n1 2\n1 1 1\n1 1 1\n10 10\n1 1 10\n2 1 1\n2 1 2\n2 1 3\n2 1 4\n2 1 5\n2 1 6\n2 1 7\n2 1 8\n2 1 9\n----- Sample Output 1 ------ \n7 7 0 7 7\n2\n512 512 512 512 512 512 512 512 512 512\n\n----- explanation 1 ------ \n\nExample case 1..\nAfter the first command, the resulting array is [1 1 0 0 0], after second [1 1 0 1 1]. \nOn third command, we repeat the 1'st and the 2'nd command, so that resulting array is [2 2 0 2 2]. \nAfter fourth command, the array will looks like [4 4 0 4 4]. \nLast command will apply 3'rd and 4'th commands, \nwhich by themselves will apply 1'st, 2'nd, 1'st, 2'nd, 3'rd(1'st, 2'nd), so resulting arrays is [7 7 0 7 7].\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\nMOD = 1_000_000_007\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n    T = data[idx]\n    idx += 1\n\n    outputs = []\n\n    for _ in range(T):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        commands = [None] * (m + 1)\n\n        for i in range(1, m + 1):\n            t = data[idx]\n            l = data[idx + 1]\n            r = data[idx + 2]\n            idx += 3\n            commands[i] = (t, l, r)\n\n        count = [0] * (m + 2)\n        events = [0] * (m + 2)\n\n        active = 0\n\n        for i in range(m, 0, -1):\n            active = (active + events[i]) % MOD\n            count[i] = (active + 1) % MOD\n\n            t, l, r = commands[i]\n            if t == 2:\n                val = count[i]\n                events[r] = (events[r] + val) % MOD\n                events[l - 1] = (events[l - 1] - val) % MOD\n\n        diff = [0] * (n + 3)\n\n        for i in range(1, m + 1):\n            t, l, r = commands[i]\n            if t == 1:\n                val = count[i]\n                diff[l] = (diff[l] + val) % MOD\n                diff[r + 1] = (diff[r + 1] - val) % MOD\n\n        ans = []\n        cur = 0\n\n        for i in range(1, n + 1):\n            cur = (cur + diff[i]) % MOD\n            ans.append(str(cur))\n\n        outputs.append(\" \".join(ans))\n\n    sys.stdout.write(\"\\n\".join(outputs))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given an array a consisting of n integers, and additionally an integer m. You have to choose some sequence of indices b_1, b_2, ..., b_{k} (1 ≤ b_1 < b_2 < ... < b_{k} ≤ n) in such a way that \nSolution:\nimport sys\nimport bisect\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, m = data[0], data[1]\n    a = data[2:2 + n]\n\n    mid = n // 2\n    left = a[:mid]\n    right = a[mid:]\n\n    def subset_sums(arr):\n        sums = [0]\n        for value in arr:\n            value %= m\n            sums += [(x + value) % m for x in sums]\n        return sums\n\n    left_sums = subset_sums(left)\n    right_sums = subset_sums(right)\n\n    left_sums.sort()\n\n    ans = 0\n    max_left = left_sum"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

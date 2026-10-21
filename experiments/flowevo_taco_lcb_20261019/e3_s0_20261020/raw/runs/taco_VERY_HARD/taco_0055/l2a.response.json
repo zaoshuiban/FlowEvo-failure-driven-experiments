@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cf4c6b8d-8887-4e13-bb8b-746e190ef963",
+  "created": 1792454860,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 968,
+    "completion_tokens": 24038,
+    "total_tokens": 25006,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 23434
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 200
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport heapq\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n\n    t = int(next(it))\n    answers = []\n\n    heappush = heapq.heappush\n    heappop = heapq.heappop\n    heapify = heapq.heapify\n\n    for _ in range(t):\n        n = int(next(it))\n        m = int(next(it))\n\n        v1 = [int(next(it)) for _ in range(n)]\n        d1 = next(it)\n\n        v2 = [int(next(it)) for _ in range(m)]\n        d2 = next(it)\n\n        total1 = sum(v1)\n        total2 = sum(v2)\n\n        attack1 = []\n        defense1 = []\n\n        attack2 = []\n        defense2 = []\n\n        for val, mode in zip(v1, d1):\n            if mode == ord('A'):\n                attack1.append(val)\n            else:\n                defense1.append(-val)\n\n        for val, mode in zip(v2, d2):\n            if mode == ord('A'):\n                attack2.append(val)\n            else:\n                defense2.append(-val)\n\n        attack1.sort()\n        attack2.sort()\n\n        heapify(defense1)\n        heapify(defense2)\n\n        delta = total1 - total2\n        deltas = [delta]\n\n        i = 0\n        j = 0\n        turn = 0  # 0 -> Chef, 1 -> Chefina\n\n        len_attack1 = len(attack1)\n        len_attack2 = len(attack2)\n\n        while True:\n            if turn == 0:\n                if i >= len_attack1 or not defense2:\n                    break\n\n                used_attack = attack1[i]\n                i += 1\n\n                heappush(defense1, -used_attack)\n                killed_defense = -heappop(defense2)\n\n                delta += killed_defense\n                deltas.append(delta)\n                turn = 1\n\n            else:\n                if j >= len_attack2 or not defense1:\n                    break\n\n                used_attack = attack2[j]\n                j += 1\n\n                heappush(defense2, -used_attack)\n                killed_defense = -heappop(defense1)\n\n                delta -= killed_defense\n                deltas.append(delta)\n                turn = 0\n\n        value = deltas[-1]\n\n        for k in range(len(deltas) - 2, -1, -1):\n            if k & 1:\n                if deltas[k] < value:\n                    value = deltas[k]\n            else:\n                if deltas[k] > value:\n                    value = deltas[k]\n\n        answers.append(str(value))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 132.288,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nChef and Chefina are playing a game.\n\nChef has $N$ monsters (numbered $1$ through $N$). For each valid $i$, the $i$-th monster has a value $V_{1,i}$ and it is either in attack mode or defense mode. The initial states of the monsters are described by a string $D_{1}$: for each valid $i$, the $i$-th monster is in attack mode if the $i$-th character of $D_{1}$ is 'A' or in defense mode if the $i$-th character is 'D'.\n\nChefina has $M$ monsters (numbered $1$ through $M$). Their values are $V_{2,1}, V_{2,2}, \\ldots, V_{2,M}$ and their initial states are described by a string $D_{2}$ in the same way.\n\nIn the game, the players alternate turns; Chef plays first. During each turn, the current player may either end the game immediately or do the following: choose one of their own living monsters in attack mode, choose a monster of the other player in defense mode, attack and kill this defending monster and change the attacking monster to defense mode. Note that once a monster is in defense mode, it never changes to attack mode.\n\nEach player is trying to maximise the difference $X-Y$, where $X$ is the sum of values of this player's living monsters (in both modes, but only if they are alive) and $Y$ is the sum of values of the opponent's living monsters. Assuming that both players are playing optimally, calculate the sum of values of Chef's living monsters minus the sum of values of Chefina's living monsters after the game ends.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $M$.\nThe second line contains $N$ space-separated integers $V_{1,1}, V_{1,2}, \\ldots, V_{1,N}$.\nThe third line contains a single string $D_{1}$ with length $N$.\nThe fourth line contains $M$ space-separated integers $V_{2,1}, V_{2,2}, \\ldots, V_{2,M}$.\nThe fifth line contains a single string $D_{2}$ with length $M$.\n\n------  Output ------\nFor each test case, print a single line containing one integer ― the sum of values of Chef's living monsters minus the sum of values of Chefina's living monsters after the game ends.\n\n------  Constraints ------\n$1 ≤ T ≤ 100$\n$1 ≤ N, M ≤ 10^{5}$\ninitially, Chefina has at least one monster in defense mode\n$D_{1}$ and $D_{2}$ contain only characters 'A' and 'D'\n$1 ≤ V_{i,j} ≤ 10^{9}$ for each valid $i, j$\nthe sum of $N$ over all test cases does not exceed $10^{6}$\nthe sum of $M$ over all test cases does not exceed $10^{6}$\n\n------  Subtasks ------\nSubtask #1 (50 points):\n$N, M ≤ 10^{3}$\ninitially, Chefina has exactly one monster in defense mode and Chef has no monsters in defense mode\nthe sum of $N$ over all test cases does not exceed $10^{4}$\nthe sum of $M$ over all test cases does not exceed $10^{4}$\n\nSubtask #2 (50 points): original constraints\n\n----- Sample Input 1 ------ \n1\n\n3 3\n\n5 4 60\n\nAAA\n\n2 15 16\n\nDAA\n----- Sample Output 1 ------ \n38\n----- explanation 1 ------ \nExample case 1: Chef attacks Chefina's first monster with his second monster. On the next turn, Chefina decides to end the game.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

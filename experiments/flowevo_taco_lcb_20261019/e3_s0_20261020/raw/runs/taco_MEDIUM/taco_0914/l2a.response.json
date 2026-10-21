@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "d39d11cd-5a3f-4507-adbf-e7d265089254",
+  "created": 1792435287,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 835,
+    "completion_tokens": 2986,
+    "total_tokens": 3821,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2801
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 195
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        freq = {}\n        for _ in range(n):\n            x = data[idx]\n            idx += 1\n            freq[x] = freq.get(x, 0) + 1\n\n        single = 0\n        multiple = 0\n\n        for count in freq.values():\n            if count == 1:\n                single += 1\n            else:\n                multiple += 1\n\n        ans = multiple + (single + 1) // 2\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 13.179,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array $a$ of $n$ positive integers.\n\nLet $\\text{LIS}(a)$ denote the length of longest strictly increasing subsequence of $a$. For example,\n\n$\\text{LIS}([2, \\underline{1}, 1, \\underline{3}])$ = $2$.\n\n$\\text{LIS}([\\underline{3}, \\underline{5}, \\underline{10}, \\underline{20}])$ = $4$.\n\n$\\text{LIS}([3, \\underline{1}, \\underline{2}, \\underline{4}])$ = $3$.\n\nWe define array $a'$ as the array obtained after reversing the array $a$ i.e. $a' = [a_n, a_{n-1}, \\ldots , a_1]$.\n\nThe beauty of array $a$ is defined as $min(\\text{LIS}(a),\\text{LIS}(a'))$.\n\nYour task is to determine the maximum possible beauty of the array $a$ if you can rearrange the array $a$ arbitrarily.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains a single integer $t$ $(1 \\leq t \\leq 10^4)$  — the number of test cases. Description of the test cases follows.\n\nThe first line of each test case contains a single integer $n$ $(1 \\leq n \\leq 2\\cdot 10^5)$  — the length of array $a$.\n\nThe second line of each test case contains $n$ integers $a_1,a_2, \\ldots ,a_n$ $(1 \\leq a_i \\leq 10^9)$  — the elements of the array $a$.\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $2\\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, output a single integer  — the maximum possible beauty of $a$ after rearranging its elements arbitrarily.\n\n\n-----Examples-----\n\nInput\n3\n3\n6 6 6\n6\n2 5 4 5 2 4\n4\n1 3 2 2\nOutput\n1\n3\n2\n\n\n-----Note-----\n\nIn the first test case, $a$ = $[6, 6, 6]$ and $a'$ = $[6, 6, 6]$. $\\text{LIS}(a) = \\text{LIS}(a')$ = $1$. Hence the beauty is $min(1, 1) = 1$.\n\nIn the second test case, $a$ can be rearranged to $[2, 5, 4, 5, 4, 2]$. Then $a'$ = $[2, 4, 5, 4, 5, 2]$. $\\text{LIS}(a) = \\text{LIS}(a') = 3$. Hence the beauty is $3$ and it can be shown that this is the maximum possible beauty.\n\nIn the third test case, $a$ can be rearranged to $[1, 2, 3, 2]$. Then $a'$ = $[2, 3, 2, 1]$. $\\text{LIS}(a) = 3$, $\\text{LIS}(a') = 2$. Hence the beauty is $min(3, 2) = 2$ and it can be shown that $2$ is the maximum possible beauty.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

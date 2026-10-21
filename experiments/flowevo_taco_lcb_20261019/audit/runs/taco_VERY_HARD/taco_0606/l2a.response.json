@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0ff6ef5b-0066-4acc-bc74-6605445418c2",
+  "created": 1792462829,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 646,
+    "completion_tokens": 13161,
+    "total_tokens": 13807,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12325
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 134
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef factorize(m):\n    factors = []\n\n    if m % 2 == 0:\n        a = 0\n        pk = 1\n        while m % 2 == 0:\n            m //= 2\n            a += 1\n            pk *= 2\n        factors.append((2, a, pk))\n\n    d = 3\n    while d * d <= m:\n        if m % d == 0:\n            a = 0\n            pk = 1\n            while m % d == 0:\n                m //= d\n                a += 1\n                pk *= d\n            factors.append((d, a, pk))\n        d += 2\n\n    if m > 1:\n        factors.append((m, 1, m))\n\n    return factors\n\n\ndef vp_fact(n, p):\n    result = 0\n    while n:\n        n //= p\n        result += n\n    return result\n\n\ndef comb_mod_prime_power(n, k, p, a, pk):\n    if pk == 1:\n        return 0\n\n    e = vp_fact(n, p) - vp_fact(k, p) - vp_fact(n - k, p)\n    if e >= a:\n        return 0\n\n    # f[i] = product of numbers <= i that are not divisible by p, modulo pk\n    f = [1] * (pk + 1)\n    prod = 1\n    for i in range(1, pk + 1):\n        if i % p != 0:\n            prod = (prod * i) % pk\n        f[i] = prod\n\n    def factorial_without_p(x):\n        res = 1\n        while x:\n            res = (res * pow(f[pk], x // pk, pk)) % pk\n            res = (res * f[x % pk]) % pk\n            x //= p\n        return res\n\n    num = factorial_without_p(n)\n    den = factorial_without_p(k) * factorial_without_p(n - k) % pk\n\n    res = num * pow(den, -1, pk) % pk\n    res = res * pow(p, e, pk) % pk\n    return res\n\n\ndef comb_mod(n, k, mod):\n    if k < 0 or k > n:\n        return 0\n    if mod == 1:\n        return 0\n\n    k = min(k, n - k)\n    if k == 0:\n        return 1 % mod\n\n    factors = factorize(mod)\n    residues = []\n\n    for p, a, pk in factors:\n        residues.append((comb_mod_prime_power(n, k, p, a, pk), pk))\n\n    # Chinese Remainder Theorem\n    x = 0\n    current = 1\n\n    for r, mi in residues:\n        inv = pow(current % mi, -1, mi)\n        t = ((r - x) % mi) * inv % mi\n        x += current * t\n        current *= mi\n        x %= current\n\n    return x % mod\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n_len = data[idx]\n        k_len = data[idx + 1]\n        mod = data[idx + 2]\n        idx += 3\n\n        pieces = (n_len + k_len - 1) // k_len\n        deficit = pieces * k_len - n_len\n\n        total = pieces + deficit - 1\n        ways = comb_mod(total, deficit, mod)\n\n        answers.append(f\"{pieces} {ways}\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 57.146,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in mandarin chinese, russian and vietnamese as well. \n\nChef has finally entered Guinness world records as a maker of longest sandwich in the world by breaking the previous record by making a sandwich of length N meters.\n\nCelebrating this achievement, Chef decided to have a sandwich party with his friends, and of course no need to make more sandwiches, he will just cut his sandwich of length N meters into parts such that each part has positive integer length, and that too of at most K meters, otherwise it will be too long and it will be hard to be finished. \n\nHelp Chef by telling him what's the minimum number of sandwiches (since he does not have many friends) the big sandwich has to be cut into, and in how many ways this can be done. Since the number of ways can be large output it modulo M\n\nTwo ways are said to be different if the positions of the cuts of first way is different from the positions of cuts of the second way.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follow.\nEach line of the next T describes a test-case and contains three integers N, K and M.\n\n------ Output ------ \n\nFor each test case, output a single line containing two space separated integers, minimum number of sandwiches and number of ways to cut the large sandwich into minimum number of sandwiches modulo M.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 5$\n$1 ≤ N ≤ 10^{18}$\n$1 ≤ K ≤ 10^{18}$\n$2 ≤ M ≤ 10^{6}$\n\n------ Subtasks ------ \n\n$Subtask #1 (10 points) 1 ≤ N, K ≤ 50 $\n$Subtask #2 (20 points) 1 ≤ N, K ≤ 1,000,000$\n$Subtask #3 (20 points) M is prime$\n$Subtask #4 (50 points) original constraints$\n\n----- Sample Input 1 ------ \n2\n\n7 3 500\n\n10 2 1000\n----- Sample Output 1 ------ \n3 6\n\n5 1\n----- explanation 1 ------ \nExample case 1. The minimum number of sandwiches is 3, and there are 6 ways to make 2 cuts:\n\npositions: 1 4\npositions: 3 4\npositions: 3 6\npositions: 2 4\npositions: 2 5\npositions: 3 5\n\nExample case 2. The minimum number of sandwiches is 5, and the only way is to make all the 5 sandwiches have length 2\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

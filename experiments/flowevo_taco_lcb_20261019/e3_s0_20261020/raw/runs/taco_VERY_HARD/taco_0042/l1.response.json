@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "58201d80-b678-457c-aeab-4cdc2b8286ae",
+  "created": 1792441587,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 743,
+    "completion_tokens": 23996,
+    "total_tokens": 24739,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 23287
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 743
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n    t = data[idx]\n    idx += 1\n\n    out = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        k = data[idx + 2]\n        idx += 3\n\n        # Any single vertex is a clique of size 1.\n        if k == 1:\n            idx += 2 * m\n            out.append(\"2\")\n            out.append(\"1\")\n            continue\n\n        # Any edge is a clique of size 2.\n        if k == 2:\n            first_u = -1\n            first_v = -1\n            for _ in range(m):\n                u = data[idx] - 1\n                v = data[idx + 1] - 1\n                idx += 2\n                if first_u == -1:\n                    first_u = u\n                    first_v = v\n\n            if first_u == -1:\n                out.append(\"-1\")\n            else:\n                out.append(\"2\")\n                out.append(f\"{first_u + 1} {first_v + 1}\")\n            continue\n\n        adj = [set() for _ in range(n)]\n\n        for _ in range(m):\n            u = data[idx] - 1\n            v = data[idx + 1] - 1\n            idx += 2\n            adj[u].add(v)\n            adj[v].add(u)\n\n        # If k * (k - 1) / 2 > m, a k-clique cannot exist.\n        check_clique = (k * (k - 1) // 2 <= m)\n\n        queue = []\n        for v in range(n):\n            if len(adj[v]) < k:\n                queue.append(v)\n\n        removed = [False] * n\n        active = n\n        head = 0\n        found_clique = None\n\n        target_inside = k - 2\n\n        while head < len(queue):\n            v = queue[head]\n            head += 1\n\n            if removed[v]:\n                continue\n\n            neighbors = adj[v]\n\n            if check_clique and len(neighbors) == k - 1:\n                ok = True\n\n                for u in neighbors:\n                    if len(adj[u].intersection(neighbors)) != target_inside:\n                        ok = False\n                        break\n\n                if ok:\n                    found_clique = [v]\n                    found_clique.extend(neighbors)\n                    break\n\n            removed[v] = True\n            active -= 1\n\n            for u in neighbors:\n                adj[u].remove(v)\n\n                if len(adj[u]) == k - 1:\n                    queue.append(u)\n\n            neighbors.clear()\n\n        if found_clique is not None:\n            out.append(\"2\")\n            out.append(\" \".join(str(v + 1) for v in found_clique))\n        else:\n            if active > 0:\n                vertices = [str(v + 1) for v in range(n) if not removed[v]]\n                out.append(f\"1 {len(vertices)}\")\n                out.append(\" \".join(vertices))\n            else:\n                out.append(\"-1\")\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 115.038,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an undirected graph with n vertices and m edges. Also, you are given an integer k.\n\nFind either a clique of size k or a non-empty subset of vertices such that each vertex of this subset has at least k neighbors in the subset. If there are no such cliques and subsets report about it.\n\nA subset of vertices is called a clique of size k if its size is k and there exists an edge between every two vertices from the subset. A vertex is called a neighbor of the other vertex if there exists an edge between them.\n\nInput\n\nThe first line contains a single integer t (1 ≤ t ≤ 10^5) — the number of test cases. The next lines contain descriptions of test cases.\n\nThe first line of the description of each test case contains three integers n, m, k (1 ≤ n, m, k ≤ 10^5, k ≤ n).\n\nEach of the next m lines contains two integers u, v (1 ≤ u, v ≤ n, u ≠ v), denoting an edge between vertices u and v.\n\nIt is guaranteed that there are no self-loops or multiple edges. It is guaranteed that the sum of n for all test cases and the sum of m for all test cases does not exceed 2 ⋅ 10^5.\n\nOutput\n\nFor each test case: \n\nIf you found a subset of vertices such that each vertex of this subset has at least k neighbors in the subset in the first line output 1 and the size of the subset. On the second line output the vertices of the subset in any order.\n\nIf you found a clique of size k then in the first line output 2 and in the second line output the vertices of the clique in any order.\n\nIf there are no required subsets and cliques print -1.\n\nIf there exists multiple possible answers you can print any of them.\n\nExample\n\nInput\n\n\n3\n5 9 4\n1 2\n1 3\n1 4\n1 5\n2 3\n2 4\n2 5\n3 4\n3 5\n10 15 3\n1 2\n2 3\n3 4\n4 5\n5 1\n1 7\n2 8\n3 9\n4 10\n5 6\n7 10\n10 8\n8 6\n6 9\n9 7\n4 5 4\n1 2\n2 3\n3 4\n4 1\n1 3\n\n\nOutput\n\n\n2\n4 1 2 3 \n1 10\n1 2 3 4 5 6 7 8 9 10 \n-1\n\nNote\n\nIn the first test case: the subset \\{1, 2, 3, 4\\} is a clique of size 4.\n\nIn the second test case: degree of each vertex in the original graph is at least 3. So the set of all vertices is a correct answer.\n\nIn the third test case: there are no cliques of size 4 or required subsets, so the answer is -1.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

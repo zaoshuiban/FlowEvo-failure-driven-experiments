@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "54cf0141-1eb8-49bb-bdab-b748adb10626",
+  "created": 1792440436,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 585,
+    "completion_tokens": 2661,
+    "total_tokens": 3246,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2530
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 201
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    p = data[1:1 + n]\n\n    inversions = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            if p[i] > p[j]:\n                inversions += 1\n\n    answer = 2 * inversions - (inversions & 1)\n    print(f\"{answer:.6f}\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 12.259,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nJeff has become friends with Furik. Now these two are going to play one quite amusing game.\n\nAt the beginning of the game Jeff takes a piece of paper and writes down a permutation consisting of n numbers: p_1, p_2, ..., p_{n}. Then the guys take turns to make moves, Jeff moves first. During his move, Jeff chooses two adjacent permutation elements and then the boy swaps them. During his move, Furic tosses a coin and if the coin shows \"heads\" he chooses a random pair of adjacent elements with indexes i and i + 1, for which an inequality p_{i} > p_{i} + 1 holds, and swaps them. But if the coin shows \"tails\", Furik chooses a random pair of adjacent elements with indexes i and i + 1, for which the inequality p_{i} < p_{i} + 1 holds, and swaps them. If the coin shows \"heads\" or \"tails\" and Furik has multiple ways of adjacent pairs to take, then he uniformly takes one of the pairs. If Furik doesn't have any pair to take, he tosses a coin one more time. The game ends when the permutation is sorted in the increasing order.\n\nJeff wants the game to finish as quickly as possible (that is, he wants both players to make as few moves as possible). Help Jeff find the minimum mathematical expectation of the number of moves in the game if he moves optimally well.\n\nYou can consider that the coin shows the heads (or tails) with the probability of 50 percent.\n\n\n-----Input-----\n\nThe first line contains integer n (1 ≤ n ≤ 3000). The next line contains n distinct integers p_1, p_2, ..., p_{n} (1 ≤ p_{i} ≤ n) — the permutation p. The numbers are separated by spaces.\n\n\n-----Output-----\n\nIn a single line print a single real value — the answer to the problem. The answer will be considered correct if the absolute or relative error doesn't exceed 10^{ - 6}.\n\n\n-----Examples-----\nInput\n2\n1 2\n\nOutput\n0.000000\n\nInput\n5\n3 5 2 4 1\n\nOutput\n13.000000\n\n\n\n-----Note-----\n\nIn the first test the sequence is already sorted, so the answer is 0.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

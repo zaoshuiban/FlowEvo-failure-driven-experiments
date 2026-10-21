@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f6fac7b0-a07c-4e9d-b33a-1885480c461b",
+  "created": 1792444821,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1236,
+    "completion_tokens": 20127,
+    "total_tokens": 21363,
+    "prompt_tokens_details": {
+      "cached_tokens": 896
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 19640
+    },
+    "prompt_cache_hit_tokens": 896,
+    "prompt_cache_miss_tokens": 340
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        idx += 1\n\n        a = list(map(int, data[idx:idx + n]))\n        idx += n\n\n        s = data[idx]\n        idx += 1\n\n        blocks = []\n        current_fixed = -1\n        ok = True\n\n        for i in range(n):\n            if i == 0 or s[i - 1] != ord('='):\n                if i > 0:\n                    blocks.append(current_fixed)\n                current_fixed = -1\n\n            value = a[i]\n            if value != -1:\n                if current_fixed == -1:\n                    current_fixed = value\n                elif current_fixed != value:\n                    ok = False\n\n        blocks.append(current_fixed)\n\n        if not ok:\n            answers.append(\"NO\")\n            continue\n\n        relations = s.replace(b'=', b'')\n        m = len(blocks)\n\n        left = [0] * m\n\n        for i in range(m):\n            base = 0 if blocks[i] == -1 else blocks[i]\n\n            if i > 0 and relations[i - 1] == ord('<'):\n                candidate = left[i - 1] + 1\n                if candidate > base:\n                    base = candidate\n\n            left[i] = base\n\n        right_next = 0\n\n        for i in range(m - 1, -1, -1):\n            base = 0 if blocks[i] == -1 else blocks[i]\n            right = base\n\n            if i + 1 < m and relations[i] == ord('>'):\n                candidate = right_next + 1\n                if candidate > right:\n                    right = candidate\n\n            final_value = left[i] if left[i] > right else right\n\n            if blocks[i] != -1 and final_value != blocks[i]:\n                ok = False\n                break\n\n            right_next = right\n\n        answers.append(\"YES\" if ok else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 94.889,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRecently, Chef has noticed that he is becoming fatter than ever. It is not surprising, as Chef is eating a lot of the food he is cooking. Therefore, he has been doing exercises for the last $N$ days (numbered $1$ through $N$). For some of these days, Chef remembers for how many minutes he exercised. You are given a sequence $A_{1}, A_{2}, \\ldots, A_{N}$. For each valid $i$, if $A_{i} ≥ 0$, then Chef exercised for $A_{i}$ minutes on the $i$-th day; otherwise, Chef forgot how long he exercised on the $i$-th day and $A_{i} = -1$. Note that Chef could only have exercised for an integer non-negative number of minutes on each day, including the days he does not remember.\n\nChef can also compare how long he exercised on each two consecutive days. You are given a string $S$ with length $N-1$. For each valid $i$, the $i$-th character of $S$ is one of the following:\n'>' if Chef exercised for strictly more minutes on the $i$-th day than on the $(i+1)$-th day\n'=' if Chef exercised for an equally long time on the $i$-th day and on the $(i+1)$-th day\n'<' if Chef exercised for strictly more minutes on the $(i+1)$-th day than on the $i$-th day\n\nChef is doubting his memory, so he wants you to check if the information is consistent, i.e. if there is a way to determine for how many minutes Chef exercised on each day he does not remember such that the string $S$ describes the correct comparison operators.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains a single integer $N$.\nThe second line contains $N$ space-separated integers $A_{1}, A_{2}, \\ldots, A_{N}$.\nThe third line contains a single string $S$.\n\n------  Output ------\nFor each test case, if the information on the input is inconsistent, print a single line containing the string \"NO\", otherwise output  \"YES\"\n\n------  Constraints  ------\n$1 ≤ T ≤ 1,000$\n$2 ≤ N ≤ 10^{5}$\n$-1 ≤ A_{i} ≤ 10^{6}$ for each valid $i$\n$|S| = N-1$\n$S$ contains only characters '' and '='\nfor each valid $i$, if $A_{i} \\neq -1$ and $A_{i+1} \\neq -1$, then the $i$-th character of $S$ is consistent with $A_{i}$ and $A_{i+1}$\nthe sum of $N$ over all test cases does not exceed $10^{6}$\n\n----- Sample Input 1 ------ \n5\n\n6\n\n7 5 -1 -1 -1 10\n\n>≥>>\n\n6\n\n7 5 -1 -1 -1 10\n\n>≥\n\n2\n\n0 -1\n\n>\n\n5\n\n5 -1 -1 -1 10\n\n<<<<\n\n5\n\n5 -1 -1 -1 8\n\n<<<<\n----- Sample Output 1 ------ \nNO\n\nYES\n\nNO\n\nYES\n\nNO\n----- explanation 1 ------ \nExample case 1: The number of minutes Chef spent exercising on day $5$ must be bigger than $10$ and smaller than $5$, which is impossible.\n\nExample case 3: Chef must have exercised for a negative number of minutes on day $2$, which is not allowed.\n\nExample case 5: The information is inconsistent because Chef only exercises for an integer number of minutes on each day. Since the number of minutes he spent exercising on each day must be increasing, he must have spent at least $6$ minutes on day $2$, at least $7$ minutes on day $3$, at least $8$ on day $4$ and at least $9$ on day $5$, but $A_{5} = 8$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\n\n```\n\nVerifier feedback: Generation ended without final code.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

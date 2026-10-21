@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "8467d5de-1c2f-415f-a3a6-59e0c34c5f85",
+  "created": 1792429924,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1292,
+    "completion_tokens": 7711,
+    "total_tokens": 9003,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7299
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 652
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 998244353\nMAXN = 300000 + 5\n\npow2 = [1] * MAXN\nfor i in range(1, MAXN):\n    pow2[i] = (pow2[i - 1] * 2) % MOD\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        graph = [[] for _ in range(n)]\n\n        for _ in range(m):\n            u = data[idx] - 1\n            v = data[idx + 1] - 1\n            idx += 2\n            graph[u].append(v)\n            graph[v].append(u)\n\n        color = [-1] * n\n        answer = 1\n        possible = True\n\n        for start in range(n):\n            if color[start] != -1:\n                continue\n\n            color[start] = 0\n            count = [1, 0]\n            stack = [start]\n\n            while stack and possible:\n                u = stack.pop()\n                current_color = color[u]\n\n                for v in graph[u]:\n                    if color[v] == -1:\n                        color[v] = current_color ^ 1\n                        count[color[v]] += 1\n                        stack.append(v)\n                    elif color[v] == current_color:\n                        possible = False\n                        break\n\n            if not possible:\n                answer = 0\n                break\n\n            ways = (pow2[count[0]] + pow2[count[1]]) % MOD\n            answer = (answer * ways) % MOD\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 35.005,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an undirected unweighted graph consisting of $n$ vertices and $m$ edges.\n\nYou have to write a number on each vertex of the graph. Each number should be $1$, $2$ or $3$. The graph becomes beautiful if for each edge the sum of numbers on vertices connected by this edge is odd.\n\nCalculate the number of possible ways to write numbers $1$, $2$ and $3$ on vertices so the graph becomes beautiful. Since this number may be large, print it modulo $998244353$.\n\nNote that you have to write exactly one number on each vertex.\n\nThe graph does not have any self-loops or multiple edges.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 3 \\cdot 10^5$) — the number of tests in the input.\n\nThe first line of each test contains two integers $n$ and $m$ ($1 \\le n \\le 3 \\cdot 10^5, 0 \\le m \\le 3 \\cdot 10^5$) — the number of vertices and the number of edges, respectively. Next $m$ lines describe edges: $i$-th line contains two integers $u_i$, $ v_i$ ($1 \\le u_i, v_i \\le n; u_i \\neq v_i$) — indices of vertices connected by $i$-th edge.\n\nIt is guaranteed that $\\sum\\limits_{i=1}^{t} n \\le 3 \\cdot 10^5$ and $\\sum\\limits_{i=1}^{t} m \\le 3 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test print one line, containing one integer — the number of possible ways to write numbers $1$, $2$, $3$ on the vertices of given graph so it becomes beautiful. Since answers may be large, print them modulo $998244353$.\n\n\n-----Example-----\nInput\n2\n2 1\n1 2\n4 6\n1 2\n1 3\n1 4\n2 3\n2 4\n3 4\n\nOutput\n4\n0\n\n\n\n-----Note-----\n\nPossible ways to distribute numbers in the first test:   the vertex $1$ should contain $1$, and $2$ should contain $2$;  the vertex $1$ should contain $3$, and $2$ should contain $2$;  the vertex $1$ should contain $2$, and $2$ should contain $1$;  the vertex $1$ should contain $2$, and $2$ should contain $3$. \n\nIn the second test there is no way to distribute numbers.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\nMOD = 998244353\nMAXN = 300000\n\npow2 = [1] * (MAXN + 5)\nfor i in range(1, MAXN + 5):\n    pow2[i] = (pow2[i - 1] * 2) % MOD\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    t = data[idx]\n    idx += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        graph = [[] for _ in range(n)]\n\n        for _ in range(m):\n            u = data[idx] - 1\n            v = data[idx + 1] - 1\n            idx += 2\n            graph[u].append(v)\n            graph[v].append(u)\n\n        color = [-1] * n\n        answer = 1\n        possible = True\n\n        for start in range(n):\n            if color[start] != -1:\n                continue\n\n            color[start] = 0\n            stack = [start]\n            count = [1, 0]\n\n            while stack:\n                u = stack.pop()\n\n                for v in graph[u]:\n                    if color[v] == -1:\n                        color[v] = color[u] ^ 1\n                        count[color[v]] += 1\n                        stack.append(v)\n                    elif color[v] == color[u]:\n                        possible = False\n\n            if not possible:\n                answer = 0\n                break\n\n            ways = (pow2[count[0]] + pow2[count[1]]) % MOD\n            answer = (answer * ways) % MOD\n\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Runtime error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

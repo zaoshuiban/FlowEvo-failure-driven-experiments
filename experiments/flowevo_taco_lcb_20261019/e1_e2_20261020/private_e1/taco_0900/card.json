@@ -1,0 +1,57 @@
+{
+  "task_id": "taco_0900",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "old_first_pass": false,
+  "old_final_pass": false,
+  "new_first_status": "WRONG_ANSWER",
+  "new_original_final_status": "WRONG_ANSWER",
+  "any_saved_candidate_pass": false,
+  "first_passing_saved_stage": null,
+  "attempts": 5,
+  "invalid_cases": 0,
+  "reference_corrections": 0,
+  "input_coverage": "structural_and_signature_only",
+  "preflight_status": "READY",
+  "evaluation_epoch": "repair_v2_20261020",
+  "timing_unstable": false,
+  "reported_final_status": "WRONG_ANSWER",
+  "family": "sequence_query",
+  "sampling_group": "persistent_wa",
+  "label": "VERIFIED_EVALUATION_PROBLEM",
+  "root_subtype": "wrong_reference",
+  "finding": "第一查询覆盖全数组并含偶数，AND 为偶数；第二查询全奇数，AND 为奇数；参考相反。",
+  "static_syntax": "OK",
+  "independent_evidence": {
+    "kind": "independent_oracle",
+    "oracle_result": [
+      "EVEN",
+      "ODD",
+      "EVEN"
+    ],
+    "matches_candidate": true,
+    "reference_result": [
+      "ODD",
+      "EVEN",
+      "EVEN"
+    ]
+  },
+  "review_scope": "task statement, original final code, test/expected contract, replay actual output/exception, old feedback and full candidate history; unknown retained where evidence insufficient",
+  "candidate_universally_correct": null,
+  "program_defect_excluded": false,
+  "new_status_observed": "WRONG_ANSWER",
+  "source_code_sha256": "29fb72a9b19ec842ddb53e744ffe0e3b61c0ba5aed3880670ac6ee47ee0f6fd1",
+  "task_sha256": "579d19e900ba84403e8d5a759ece6d35f600f2b1308b32684f0987067d562673",
+  "evidence_file_hashes": {
+    "private_failure_case.json": "bade1021557aa7ca4ca6b1891e710b003f9edf3ad5b8d7b2bb842fd9a8c73008",
+    "isolated_failure_execution.json": "a8379e031fd22ae054d7b41ff2f21123ca11e0ca4a8037c99d70b7705db2d424",
+    "history.json": "082bf1c2ddd9ff177c882d8cb5636c35e89495225c85bf1aaa1ae5e274bfabf4",
+    "replay.json": "c1e7331a5e3dd3e63b6ef2c530b2e6c09c6905e2f9664cc576968b1bc45cfe31",
+    "original.py": "29fb72a9b19ec842ddb53e744ffe0e3b61c0ba5aed3880670ac6ee47ee0f6fd1",
+    "old_evaluator_trace.json": "9d6aa793c56bb5e0fd81dde203fd4a712f73c5cecae289865fc7775c6caaef48",
+    "preflight.json": "ee96c7c8615cf8c093ab82da1f869171820e56c21d5cad657f3bf1cf91c8157f",
+    "statement.txt": "93607c2e4ceb2403394cf49f66f075f90c9792f04fa69198afe0f46c71703762"
+  },
+  "reproduction": "cd /opt/flowevo-benchmark-20261019 && venv/bin/python repair_v2d_20261020/code/adapter.py --task data/tasks/taco_0900.json --candidate e1_e2_20261020/private_e1/taco_0900/original.py --policies repair_v2d_20261020/policies.json --out /tmp/e1_taco_0900.json",
+  "root_cause_certainty": "confirmed specific defect"
+}

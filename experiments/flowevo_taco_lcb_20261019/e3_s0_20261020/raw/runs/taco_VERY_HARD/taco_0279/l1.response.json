@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9cf04020-a760-4930-8f2e-d5fbd2a81398",
+  "created": 1792454609,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 564,
+    "completion_tokens": 1458,
+    "total_tokens": 2022,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1289
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 564
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    t = data[0]\n    idx = 1\n    ans = []\n\n    for _ in range(t):\n        n = data[idx]\n        idx += 1\n\n        xor_sum = 0\n\n        for i in range(1, n + 1):\n            a = data[idx]\n            idx += 1\n\n            if i % 2 == 1:\n                xor_sum ^= (a & 1)\n            else:\n                xor_sum ^= (a // 2)\n\n        ans.append(\"CHEF\" if xor_sum != 0 else \"CHEFINA\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 6.298,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef and Chefina are playing a game involving N piles where the i^{th} pile (1≤ i ≤ N) has A_{i} stones initially.\n\nThey take alternate turns with Chef starting the game.\n\nIn his/her turn a player can choose any non-empty pile (say i^{th} pile) and remove X stones from it iff:\n\n[Parity] of X is same as parity of i.\n1 ≤ X ≤ A_{i}.\n\nThe player who cannot make a move loses. Determine the winner of the game if both players play optimally.\n\n------ Input Format ------ \n\n- The first line of input will contain a single integer T, denoting the number of test cases.\n- Each test case consists of multiple lines of input.\n- The first line of each test case contains a single integer N — the number of piles.\n- Next line contains N space-separated integers A_{1}, A_{2}, A_{3}, \\dots, A_{N} - denoting the number of stones in each pile initially.\n\n------ Output Format ------ \n\nFor each test case, output CHEF if Chef wins the game, CHEFINA otherwise.\n\nThe output is case-insensitive. Thus, the strings Chef, CHEF, chef, and cheF are all considered identical.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 4000$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i} ≤ 10^{9}$\n- Sum of $N$ over all test cases does not exceed $2 \\cdot 10^{5}$\n\n----- Sample Input 1 ------ \n2\n1\n2\n3\n2 1 3\n\n----- Sample Output 1 ------ \nCHEFINA\nCHEF\n\n----- explanation 1 ------ \nTest case $1$: Chef makes the first move and can only remove $X = 1$ stone from the pile. Thus, the pile has $1$ stone left which Chefina can remove. Chef has no possible move left and thus Chefina wins.  \nNote that Chef cannot remove $X = 2$ stones in the first turn as $X$ should have the same parity as $i = 1$.\n\nTest case $2$: It can be shown that if both players play optimally, Chef wins the game.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

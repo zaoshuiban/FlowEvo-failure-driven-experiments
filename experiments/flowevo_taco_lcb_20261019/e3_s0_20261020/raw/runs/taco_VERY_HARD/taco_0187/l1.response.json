@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "ed909703-bc52-4429-a121-89df08b28134",
+  "created": 1792451921,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 377,
+    "completion_tokens": 14100,
+    "total_tokens": 14477,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13867
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 377
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\nALPHABET = 26\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = int(data[idx])\n        s = data[idx + 1]\n        idx += 2\n\n        m = len(s)\n\n        if n <= m:\n            answers.append(\"0\")\n            continue\n\n        k = n - m  # length of the deleted substring\n\n        # Answer = 26^(k-1) * (26 + 25*m) mod MOD\n        factor = (ALPHABET + (m % MOD) * (ALPHABET - 1)) % MOD\n        ans = pow(ALPHABET, k - 1, MOD) * factor % MOD\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 68.182,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nDustin, is the head of an Intelligence agency. He wants to send a secret message S$S$ to his colleague.The message is a single word consisting of only lowercase english letters but he decides to encrypt the message for security reasons. He makes a string M$M$ of length N$N$, such that after deleting a substring of non-zero length from M$M$, the remaining string is S$S$.\nCalculate the number of all such possible strings he can form.\n\n-----Input:-----\n- First line will contain T$T$, number of testcases. Then the testcases follow.\n- For each testcase the there is a single line which contains an integer, N$N$ and then a string S$S$.\n\n-----Output:-----\nFor each testcase, output the number of possible strings modulo 109+7$10^9+7$.\n\n-----Constraints-----\n- 1≤T≤50$1 \\leq T \\leq 50$\n- 1≤N≤1018$1 \\leq N \\leq 10^{18}$\n- 1≤|S|≤105$1 \\leq |S| \\leq 10^5$\n- S$S$ can contain only lowercase English letters.\n\n-----Sample Input:-----\n2\n\n3 a\n\n3 ab     \n\n-----Sample Output:-----\n1326\n\n76\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

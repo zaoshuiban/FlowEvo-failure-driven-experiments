@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "17e67e5c-6adc-4ba2-b563-97a9529bd6be",
+  "created": 1792456466,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1851,
+    "completion_tokens": 32768,
+    "total_tokens": 34619,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 1339
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 167.189,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nNastia has an unweighted tree with n vertices and wants to play with it!\n\nThe girl will perform the following operation with her tree, as long as she needs:\n\n  1. Remove any existing edge. \n  2. Add an edge between any pair of vertices. \n\n\n\nWhat is the minimum number of operations Nastia needs to get a bamboo from a tree? A bamboo is a tree in which no node has a degree greater than 2.\n\nInput\n\nThe first line contains a single integer t (1 ≤ t ≤ 10 000) — the number of test cases.\n\nThe first line of each test case contains a single integer n (2 ≤ n ≤ 10^5) — the number of vertices in the tree.\n\nNext n - 1 lines of each test cases describe the edges of the tree in form a_i, b_i (1 ≤ a_i, b_i ≤ n, a_i ≠ b_i).\n\nIt's guaranteed the given graph is a tree and the sum of n in one test doesn't exceed 2 ⋅ 10^5.\n\nOutput\n\nFor each test case in the first line print a single integer k — the minimum number of operations required to obtain a bamboo from the initial tree.\n\nIn the next k lines print 4 integers x_1, y_1, x_2, y_2 (1 ≤ x_1, y_1, x_2, y_{2} ≤ n, x_1 ≠ y_1, x_2 ≠ y_2) — this way you remove the edge (x_1, y_1) and add an undirected edge (x_2, y_2).\n\nNote that the edge (x_1, y_1) must be present in the graph at the moment of removing.\n\nExample\n\nInput\n\n\n2\n7\n1 2\n1 3\n2 4\n2 5\n3 6\n3 7\n4\n1 2\n1 3\n3 4\n\n\nOutput\n\n\n2\n2 5 6 7\n3 6 4 5\n0\n\nNote\n\nNote the graph can be unconnected after a certain operation.\n\nConsider the first test case of the example: \n\n<image> The red edges are removed, and the green ones are added.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ptr = 1\n    output = []\n\n    for _ in range(t):\n        n = data[ptr]\n        ptr += 1\n\n        adj = [[] for _ in range(n)]\n        for _ in range(n - 1):\n            a = data[ptr] - 1\n            b = data[ptr + 1] - 1\n            ptr += 2\n            adj[a].append(b)\n            adj[b].append(a)\n\n        # Root the tree at vertex 0.\n        parent = [-1] * n\n        parent[0] = -2\n        order = [0]\n        qi = 0\n        while qi < len(order):\n            v = order[qi]\n            qi += 1\n            for u in adj[v]:\n                if parent[u] == -1:\n                    parent[u] = v\n                    order.append(u)\n        parent[0] = -1\n\n        # dp0[v]: best in subtree if edge to parent is NOT kept.\n        # dp1[v]: best in subtree if edge to parent IS kept.\n        dp0 = [0] * n\n        dp1 = [0] * n\n        best1 = [-1] * n\n        best2 = [-1] * n\n\n        for v in reversed(order):\n            base = 0\n            b1 = -1\n            b2 = -1\n            g1 = 0\n            g2 = 0\n\n            for u in adj[v]:\n                if parent[u] == v:\n                    base += dp0[u]\n                    gain = 1 + dp1[u] - dp0[u]\n\n                    if gain > g1:\n                        g2, g1 = g1, gain\n                        b2, b1 = b1, u\n                    elif gain > g2:\n                        g2 = gain\n                        b2 = u\n\n            dp0[v] = base + (g1 if g1 > 0 else 0) + (g2 if g2 > 0 else 0)\n            dp1[v] = base + (g1 if g1 > 0 else 0)\n\n            if g1 > 0:\n                best1[v] = b1\n                if g2 > 0:\n                    best2[v] = b2\n\n        # Reconstruct which edges are kept in a maximum linear forest.\n        kept_parent = [False] * n\n        parent_kept = [False] * n\n\n        for v in order:\n            capacity = 2 - (1 if parent_kept[v] else 0)\n\n            if capacity >= 1:\n                u = best1[v]\n                if u != -1:\n                    kept_parent[u] = True\n                    parent_kept[u] = True\n\n            if capacity >= 2:\n                u = best2[v]\n                if u != -1:\n                    kept_parent[u] = True\n                    parent_kept[u] = True\n\n        kept_adj = [[] for _ in range(n)]\n        deleted = []\n\n        for v in range(1, n):\n            if kept_parent[v]:\n                u = parent[v]\n                kept_adj[v].append(u)\n                kept_adj[u].append(v)\n            else:\n                deleted.append((v, parent[v]))\n\n        # Find path components of the kept forest.\n        visited = [False] * n\n        components = []\n\n        for start in range(n):\n            if visited[start]:\n                continue\n\n            stack = [start]\n            visited[start] = True\n            endpoints = []\n\n            while stack:\n                v = stack.pop()\n\n                if len(kept_adj[v]) <= 1:\n                    endpoints.append(v)\n\n                for u in kept_adj[v]:\n                    if not visited[u]:\n                        visited[u] = True\n                        stack.append(u)\n\n            if len(endpoints) == 1:\n                components.append((endpoints[0], endpoints[0]))\n            else:\n                components.append((endpoints[0], endpoints[-1]))\n\n        # Connect all components into one bamboo.\n        connections = []\n        if components:\n            current = components[0][1]\n\n            for i in range(1, len(components)):\n                left, right = components[i]\n                connections.append((current, left))\n                current = right\n\n        k = len(deleted)\n        output.append(str(k))\n\n        for i in range(k):\n            x1, y1 = deleted[i]\n            x2, y2 = connections[i]\n            output.append(f\"{x1 + 1} {y1 + 1} {x2 + 1} {y2 + 1}\")\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string S, each character of which is either \\verb+N+ or \\verb+P+. In one move, you can perform the following operation:\n\nPick an index 1 ≤ i ≤ |S| and flip S_{i}, i.e, if S_{i} = \\verb\nSolution:\nimport sys\n\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    out = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n\n        n = len(s)\n        k = n // 3\n        total_n = s.count(b'N')\n\n        # Maximum number of original 'N' characters among positions 1..n-1\n        # that can be kept as 'N' without having two adjacent 'N's.\n        alpha = 0\n        prev_selected = False\n\n        for i in "
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,378 @@
+[
+  {
+    "task_id": "lcb_atcoder_abc399_e",
+    "condition": "R0",
+    "repeat": 2,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a positive integer N and two strings S and T, each of length N and consisting of lowercase English letters.\nDetermine whether it is possible to make S identical to T by repeating the operation below any number of times (possibly zero). If it is possible, also find the minimum number of operations required.\n\n- Choose two lowercase English letters x, y and replace every occurrence of x in S with y.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\r\nT\n\nOutput\n\nIf it is possible to make S identical to T, print the minimum number of operations required. Otherwise, print -1.\n\nConstraints\n\n\n- 1\\leq N \\leq 2\\times 10^5\n- N is an integer.\n- Each of S and T is a string of length N, consisting of lowercase English letters.\n\nSample Input 1\n\n6\r\nafbfda\r\nbkckbb\n\nSample Output 1\n\n4\r\n\nBy performing the operation four times in the following way, you can make S identical to T:\n\n- Choose x= b and y= c. S becomes afcfda.\n- Choose x= a and y= b. S becomes bfcfdb.\n- Choose x= f and y= k. S becomes bkckdb.\n- Choose x= d and y= b. S becomes bkckbb, which is identical to T.\n\nIt cannot be done with fewer than four operations, so the minimum number of operations required is 4.\n\nSample Input 2\n\n4\r\nabac\r\nabac\n\nSample Output 2\n\n0\r\n\nS and T are already identical, so no operations are required.\n\nSample Input 3\n\n4\r\nabac\r\nabrc\n\nSample Output 3\n\n-1\r\n\nNo matter how you repeat the operation, it is impossible to make S identical to T.\n\nSample Input 4\n\n4\r\nabac\r\nbcba\n\nSample Output 4\n\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\n\\ndef main() -> None:\\n    input = sys.stdin.readline\\n\\n    N = int(input())\\n    S = input().strip()\\n    T = input().strip()\\n\\n    g = [-1] * 26\\n\\n    for a, b in zip(S, T):\\n        u = ord(a) - ord('a')\\n        v = ord(b) - ord('a')\\n\\n        if g[u] == -1:\\n            g[u] = v\\n        elif g[u] != v:\\n            print(-1)\\n            return\"\n\nVerifier feedback: Compilation or testing error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string word and an array of strings forbidden.\nA string is called valid if none of its substrings are present in forbidden.\nReturn the length of the longest valid substring of the stri\nSolution:\nfrom typing import List\n\nclass Solution:\n    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:\n        forbidden_set = set(forbidden)\n        left = 0\n        answer = 0\n\n        for right in range(len(word)):\n            max_len = min(10, right - left + 1)\n\n            for length in range(1, max_len + 1):\n                if word[right - length + 1:right + 1] in forbidden_set:\n                    left = right - length + 2\n                    break\n\n            answer = max"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "9add9b1865a973ea8c82bd1c9c02ceb482e77c61a30c42aa9be42a12e8931207",
+    "original_request_sha256": "3ff79d21ed149b53bd2c7d5fd4175a80b86c5b477996b2bf5a7958c3fc867183",
+    "public_witness": null,
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "01_lcb_atcoder_abc399_e_R0_2"
+  },
+  {
+    "task_id": "lcb_atcoder_abc399_e",
+    "condition": "R1",
+    "repeat": 1,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a positive integer N and two strings S and T, each of length N and consisting of lowercase English letters.\nDetermine whether it is possible to make S identical to T by repeating the operation below any number of times (possibly zero). If it is possible, also find the minimum number of operations required.\n\n- Choose two lowercase English letters x, y and replace every occurrence of x in S with y.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\r\nT\n\nOutput\n\nIf it is possible to make S identical to T, print the minimum number of operations required. Otherwise, print -1.\n\nConstraints\n\n\n- 1\\leq N \\leq 2\\times 10^5\n- N is an integer.\n- Each of S and T is a string of length N, consisting of lowercase English letters.\n\nSample Input 1\n\n6\r\nafbfda\r\nbkckbb\n\nSample Output 1\n\n4\r\n\nBy performing the operation four times in the following way, you can make S identical to T:\n\n- Choose x= b and y= c. S becomes afcfda.\n- Choose x= a and y= b. S becomes bfcfdb.\n- Choose x= f and y= k. S becomes bkckdb.\n- Choose x= d and y= b. S becomes bkckbb, which is identical to T.\n\nIt cannot be done with fewer than four operations, so the minimum number of operations required is 4.\n\nSample Input 2\n\n4\r\nabac\r\nabac\n\nSample Output 2\n\n0\r\n\nS and T are already identical, so no operations are required.\n\nSample Input 3\n\n4\r\nabac\r\nabrc\n\nSample Output 3\n\n-1\r\n\nNo matter how you repeat the operation, it is impossible to make S identical to T.\n\nSample Input 4\n\n4\r\nabac\r\nbcba\n\nSample Output 4\n\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\n\\ndef main() -> None:\\n    input = sys.stdin.readline\\n\\n    N = int(input())\\n    S = input().strip()\\n    T = input().strip()\\n\\n    g = [-1] * 26\\n\\n    for a, b in zip(S, T):\\n        u = ord(a) - ord('a')\\n        v = ord(b) - ord('a')\\n\\n        if g[u] == -1:\\n            g[u] = v\\n        elif g[u] != v:\\n            print(-1)\\n            return\"\n\nVerifier feedback: Compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string word and an array of strings forbidden.\nA string is called valid if none of its substrings are present in forbidden.\nReturn the length of the longest valid substring of the stri\nSolution:\nfrom typing import List\n\nclass Solution:\n    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:\n        forbidden_set = set(forbidden)\n        left = 0\n        answer = 0\n\n        for right in range(len(word)):\n            max_len = min(10, right - left + 1)\n\n            for length in range(1, max_len + 1):\n                if word[right - length + 1:right + 1] in forbidden_set:\n                    left = right - length + 2\n                    break\n\n            answer = max"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "9add9b1865a973ea8c82bd1c9c02ceb482e77c61a30c42aa9be42a12e8931207",
+    "original_request_sha256": "3ff79d21ed149b53bd2c7d5fd4175a80b86c5b477996b2bf5a7958c3fc867183",
+    "public_witness": null,
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "02_lcb_atcoder_abc399_e_R1_1"
+  },
+  {
+    "task_id": "lcb_atcoder_abc399_e",
+    "condition": "R2",
+    "repeat": 1,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a positive integer N and two strings S and T, each of length N and consisting of lowercase English letters.\nDetermine whether it is possible to make S identical to T by repeating the operation below any number of times (possibly zero). If it is possible, also find the minimum number of operations required.\n\n- Choose two lowercase English letters x, y and replace every occurrence of x in S with y.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\r\nT\n\nOutput\n\nIf it is possible to make S identical to T, print the minimum number of operations required. Otherwise, print -1.\n\nConstraints\n\n\n- 1\\leq N \\leq 2\\times 10^5\n- N is an integer.\n- Each of S and T is a string of length N, consisting of lowercase English letters.\n\nSample Input 1\n\n6\r\nafbfda\r\nbkckbb\n\nSample Output 1\n\n4\r\n\nBy performing the operation four times in the following way, you can make S identical to T:\n\n- Choose x= b and y= c. S becomes afcfda.\n- Choose x= a and y= b. S becomes bfcfdb.\n- Choose x= f and y= k. S becomes bkckdb.\n- Choose x= d and y= b. S becomes bkckbb, which is identical to T.\n\nIt cannot be done with fewer than four operations, so the minimum number of operations required is 4.\n\nSample Input 2\n\n4\r\nabac\r\nabac\n\nSample Output 2\n\n0\r\n\nS and T are already identical, so no operations are required.\n\nSample Input 3\n\n4\r\nabac\r\nabrc\n\nSample Output 3\n\n-1\r\n\nNo matter how you repeat the operation, it is impossible to make S identical to T.\n\nSample Input 4\n\n4\r\nabac\r\nbcba\n\nSample Output 4\n\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\n\\ndef main() -> None:\\n    input = sys.stdin.readline\\n\\n    N = int(input())\\n    S = input().strip()\\n    T = input().strip()\\n\\n    g = [-1] * 26\\n\\n    for a, b in zip(S, T):\\n        u = ord(a) - ord('a')\\n        v = ord(b) - ord('a')\\n\\n        if g[u] == -1:\\n            g[u] = v\\n        elif g[u] != v:\\n            print(-1)\\n            return\"\n\nVerifier feedback: Compilation error.\nIndependently generated PUBLIC test:\nInput:\n1\na\nb\nExpected output:\n1\nPublic compilation observation: the frozen candidate fails Python syntax compilation before executing this test. One global replacement a->b suffices; zero operations cannot change a to b.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string word and an array of strings forbidden.\nA string is called valid if none of its substrings are present in forbidden.\nReturn the length of the longest valid substring of the stri\nSolution:\nfrom typing import List\n\nclass Solution:\n    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:\n        forbidden_set = set(forbidden)\n        left = 0\n        answer = 0\n\n        for right in range(len(word)):\n            max_len = min(10, right - left + 1)\n\n            for length in range(1, max_len + 1):\n                if word[right - length + 1:right + 1] in forbidden_set:\n                    left = right - length + 2\n                    break\n\n            answer = max"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "9add9b1865a973ea8c82bd1c9c02ceb482e77c61a30c42aa9be42a12e8931207",
+    "original_request_sha256": "3ff79d21ed149b53bd2c7d5fd4175a80b86c5b477996b2bf5a7958c3fc867183",
+    "public_witness": {
+      "input": "1\na\nb\n",
+      "expected": "1",
+      "proof": "One global replacement a->b suffices; zero operations cannot change a to b."
+    },
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "03_lcb_atcoder_abc399_e_R2_1"
+  },
+  {
+    "task_id": "taco_0291",
+    "condition": "R0",
+    "repeat": 1,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTaru likes reading. Every month he gets a copy of the magazine \"BIT\". The magazine contains information about the latest advancements in technology.  Taru \n\nreads the book at night and writes the page number to which he has read on a piece of paper so that he can continue from there the next day. But sometimes \n\nthe page number is not printed or is so dull that it is unreadable.  To make matters worse Taru's brother who is really naughty tears of some of the pages of \n\nthe Magazine and throws them in the dustbin. He remembers the number of leaves he had torn but he does not remember which page numbers got removed. When Taru \n\nfinds this out he is furious and wants to beat him up. His brother apologizes, and says he won't ever do this again. But Taru did not want to be easy on him \n\nand he says \"I will leave you only if you help me find the answer to this. I will tell you how many pages (Printed sides) were there in the Magazine plus the \n\npages on which the page numbers were not printed. You already know the number of leaves you tore (T). Can you tell me the expected sum of the page numbers \n\nleft in the Magazine?\" Taru's brother replied \"huh!! This is a coding problem\". Please help Taru's brother.\n\nNote: The magazine is like a standard book with all odd page numbers in front and the successive even page number on its back. If the book contains 6 pages, \n\nPage number 1 and Page number 2 are front and back respectively. Tearing a leaf removes both the front and back page numbers.\n\n------ Input ------ \n\nThe first line contains the number of test cases t. 3t lines follow. The first line of each test case contains the number of pages (printed sides) in the \n\nbook. The second line's first integer is F, F integers follow which tell us the numbers of the page numbers not printed. The third line contains a single integer telling us the number of leaves Taru's brother tore.\n\n------ Output ------ \n\nOutput one real number correct up to 4 decimal digits which is equal to the expected sum of the page numbers left in the book.\n\n------ Constraints ------ \n\nNumber of printed Sides≤2000. All other values abide by the number of printed sides.\n\n----- Sample Input 1 ------ \n2\n10\n2 1 2\n2\n10\n1 8\n0\n----- Sample Output 1 ------ \n31.2000\n47.0000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\ndef solve() -> None:\\n    data = list(map(int, sys.stdin.buffer.read().split()))\\n    if not data:\\n        return\\n\\n    idx = 0\\n    t = data[idx]\\n    idx += 1\\n\\n    answers = []\\n\\n    for _ in range(t):\\n        n = data[idx]\\n        idx += 1\\n\\n        f = data[idx]\\n        idx += 1\\n\\n        unprinted = set()\\n        for _ in range(f):\\n            unprinted.add(data[idx])\\n            idx += 1\\n\\n        torn = data[idx]\\n        idx += 1\\n\\n        total_sum = n * (n + 1) // 2\\n        unprinted_sum = sum(p for p in unprinted if 1 <= p <= n)\\n        total_printed = total_sum - unprinted_sum\\n\\n        # Number of physical leaves in a book with n printed sides.\\n        leaves = (n + 1) // 2\\n\\n        if leaves == 0:\\n            expected = 0.0\\n        else:\\n            effective_torn = min(max(torn,\"\n\nVerifier feedback: Runtime or compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: DZY loves chemistry, and he enjoys mixing chemicals.\n\nDZY has n chemicals, and m pairs of them will react. He wants to pour these chemicals into a test tube, and he needs to pour them in one by one, i\nSolution:\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a: int, b: int) -> None:\n        ra = find(a)\n        rb = find(b)\n\n        if ra == rb:\n            return\n\n        if size[ra] < size[rb]"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "00376b59d52c0170b9ba066f06627ae691b17d04695c40ff617c6401e5e4852e",
+    "original_request_sha256": "5686b8f9168ce4dec96af7d793cbfc1b1b68d456779965163296de0f2adaa50c",
+    "public_witness": null,
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "04_taco_0291_R0_1"
+  },
+  {
+    "task_id": "taco_0291",
+    "condition": "R1",
+    "repeat": 1,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTaru likes reading. Every month he gets a copy of the magazine \"BIT\". The magazine contains information about the latest advancements in technology.  Taru \n\nreads the book at night and writes the page number to which he has read on a piece of paper so that he can continue from there the next day. But sometimes \n\nthe page number is not printed or is so dull that it is unreadable.  To make matters worse Taru's brother who is really naughty tears of some of the pages of \n\nthe Magazine and throws them in the dustbin. He remembers the number of leaves he had torn but he does not remember which page numbers got removed. When Taru \n\nfinds this out he is furious and wants to beat him up. His brother apologizes, and says he won't ever do this again. But Taru did not want to be easy on him \n\nand he says \"I will leave you only if you help me find the answer to this. I will tell you how many pages (Printed sides) were there in the Magazine plus the \n\npages on which the page numbers were not printed. You already know the number of leaves you tore (T). Can you tell me the expected sum of the page numbers \n\nleft in the Magazine?\" Taru's brother replied \"huh!! This is a coding problem\". Please help Taru's brother.\n\nNote: The magazine is like a standard book with all odd page numbers in front and the successive even page number on its back. If the book contains 6 pages, \n\nPage number 1 and Page number 2 are front and back respectively. Tearing a leaf removes both the front and back page numbers.\n\n------ Input ------ \n\nThe first line contains the number of test cases t. 3t lines follow. The first line of each test case contains the number of pages (printed sides) in the \n\nbook. The second line's first integer is F, F integers follow which tell us the numbers of the page numbers not printed. The third line contains a single integer telling us the number of leaves Taru's brother tore.\n\n------ Output ------ \n\nOutput one real number correct up to 4 decimal digits which is equal to the expected sum of the page numbers left in the book.\n\n------ Constraints ------ \n\nNumber of printed Sides≤2000. All other values abide by the number of printed sides.\n\n----- Sample Input 1 ------ \n2\n10\n2 1 2\n2\n10\n1 8\n0\n----- Sample Output 1 ------ \n31.2000\n47.0000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\ndef solve() -> None:\\n    data = list(map(int, sys.stdin.buffer.read().split()))\\n    if not data:\\n        return\\n\\n    idx = 0\\n    t = data[idx]\\n    idx += 1\\n\\n    answers = []\\n\\n    for _ in range(t):\\n        n = data[idx]\\n        idx += 1\\n\\n        f = data[idx]\\n        idx += 1\\n\\n        unprinted = set()\\n        for _ in range(f):\\n            unprinted.add(data[idx])\\n            idx += 1\\n\\n        torn = data[idx]\\n        idx += 1\\n\\n        total_sum = n * (n + 1) // 2\\n        unprinted_sum = sum(p for p in unprinted if 1 <= p <= n)\\n        total_printed = total_sum - unprinted_sum\\n\\n        # Number of physical leaves in a book with n printed sides.\\n        leaves = (n + 1) // 2\\n\\n        if leaves == 0:\\n            expected = 0.0\\n        else:\\n            effective_torn = min(max(torn,\"\n\nVerifier feedback: Compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: DZY loves chemistry, and he enjoys mixing chemicals.\n\nDZY has n chemicals, and m pairs of them will react. He wants to pour these chemicals into a test tube, and he needs to pour them in one by one, i\nSolution:\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a: int, b: int) -> None:\n        ra = find(a)\n        rb = find(b)\n\n        if ra == rb:\n            return\n\n        if size[ra] < size[rb]"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "00376b59d52c0170b9ba066f06627ae691b17d04695c40ff617c6401e5e4852e",
+    "original_request_sha256": "5686b8f9168ce4dec96af7d793cbfc1b1b68d456779965163296de0f2adaa50c",
+    "public_witness": null,
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "05_taco_0291_R1_1"
+  },
+  {
+    "task_id": "taco_0291",
+    "condition": "R1",
+    "repeat": 2,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTaru likes reading. Every month he gets a copy of the magazine \"BIT\". The magazine contains information about the latest advancements in technology.  Taru \n\nreads the book at night and writes the page number to which he has read on a piece of paper so that he can continue from there the next day. But sometimes \n\nthe page number is not printed or is so dull that it is unreadable.  To make matters worse Taru's brother who is really naughty tears of some of the pages of \n\nthe Magazine and throws them in the dustbin. He remembers the number of leaves he had torn but he does not remember which page numbers got removed. When Taru \n\nfinds this out he is furious and wants to beat him up. His brother apologizes, and says he won't ever do this again. But Taru did not want to be easy on him \n\nand he says \"I will leave you only if you help me find the answer to this. I will tell you how many pages (Printed sides) were there in the Magazine plus the \n\npages on which the page numbers were not printed. You already know the number of leaves you tore (T). Can you tell me the expected sum of the page numbers \n\nleft in the Magazine?\" Taru's brother replied \"huh!! This is a coding problem\". Please help Taru's brother.\n\nNote: The magazine is like a standard book with all odd page numbers in front and the successive even page number on its back. If the book contains 6 pages, \n\nPage number 1 and Page number 2 are front and back respectively. Tearing a leaf removes both the front and back page numbers.\n\n------ Input ------ \n\nThe first line contains the number of test cases t. 3t lines follow. The first line of each test case contains the number of pages (printed sides) in the \n\nbook. The second line's first integer is F, F integers follow which tell us the numbers of the page numbers not printed. The third line contains a single integer telling us the number of leaves Taru's brother tore.\n\n------ Output ------ \n\nOutput one real number correct up to 4 decimal digits which is equal to the expected sum of the page numbers left in the book.\n\n------ Constraints ------ \n\nNumber of printed Sides≤2000. All other values abide by the number of printed sides.\n\n----- Sample Input 1 ------ \n2\n10\n2 1 2\n2\n10\n1 8\n0\n----- Sample Output 1 ------ \n31.2000\n47.0000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\ndef solve() -> None:\\n    data = list(map(int, sys.stdin.buffer.read().split()))\\n    if not data:\\n        return\\n\\n    idx = 0\\n    t = data[idx]\\n    idx += 1\\n\\n    answers = []\\n\\n    for _ in range(t):\\n        n = data[idx]\\n        idx += 1\\n\\n        f = data[idx]\\n        idx += 1\\n\\n        unprinted = set()\\n        for _ in range(f):\\n            unprinted.add(data[idx])\\n            idx += 1\\n\\n        torn = data[idx]\\n        idx += 1\\n\\n        total_sum = n * (n + 1) // 2\\n        unprinted_sum = sum(p for p in unprinted if 1 <= p <= n)\\n        total_printed = total_sum - unprinted_sum\\n\\n        # Number of physical leaves in a book with n printed sides.\\n        leaves = (n + 1) // 2\\n\\n        if leaves == 0:\\n            expected = 0.0\\n        else:\\n            effective_torn = min(max(torn,\"\n\nVerifier feedback: Compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: DZY loves chemistry, and he enjoys mixing chemicals.\n\nDZY has n chemicals, and m pairs of them will react. He wants to pour these chemicals into a test tube, and he needs to pour them in one by one, i\nSolution:\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a: int, b: int) -> None:\n        ra = find(a)\n        rb = find(b)\n\n        if ra == rb:\n            return\n\n        if size[ra] < size[rb]"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "00376b59d52c0170b9ba066f06627ae691b17d04695c40ff617c6401e5e4852e",
+    "original_request_sha256": "5686b8f9168ce4dec96af7d793cbfc1b1b68d456779965163296de0f2adaa50c",
+    "public_witness": null,
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "06_taco_0291_R1_2"
+  },
+  {
+    "task_id": "lcb_atcoder_abc399_e",
+    "condition": "R0",
+    "repeat": 1,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a positive integer N and two strings S and T, each of length N and consisting of lowercase English letters.\nDetermine whether it is possible to make S identical to T by repeating the operation below any number of times (possibly zero). If it is possible, also find the minimum number of operations required.\n\n- Choose two lowercase English letters x, y and replace every occurrence of x in S with y.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\r\nT\n\nOutput\n\nIf it is possible to make S identical to T, print the minimum number of operations required. Otherwise, print -1.\n\nConstraints\n\n\n- 1\\leq N \\leq 2\\times 10^5\n- N is an integer.\n- Each of S and T is a string of length N, consisting of lowercase English letters.\n\nSample Input 1\n\n6\r\nafbfda\r\nbkckbb\n\nSample Output 1\n\n4\r\n\nBy performing the operation four times in the following way, you can make S identical to T:\n\n- Choose x= b and y= c. S becomes afcfda.\n- Choose x= a and y= b. S becomes bfcfdb.\n- Choose x= f and y= k. S becomes bkckdb.\n- Choose x= d and y= b. S becomes bkckbb, which is identical to T.\n\nIt cannot be done with fewer than four operations, so the minimum number of operations required is 4.\n\nSample Input 2\n\n4\r\nabac\r\nabac\n\nSample Output 2\n\n0\r\n\nS and T are already identical, so no operations are required.\n\nSample Input 3\n\n4\r\nabac\r\nabrc\n\nSample Output 3\n\n-1\r\n\nNo matter how you repeat the operation, it is impossible to make S identical to T.\n\nSample Input 4\n\n4\r\nabac\r\nbcba\n\nSample Output 4\n\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\n\\ndef main() -> None:\\n    input = sys.stdin.readline\\n\\n    N = int(input())\\n    S = input().strip()\\n    T = input().strip()\\n\\n    g = [-1] * 26\\n\\n    for a, b in zip(S, T):\\n        u = ord(a) - ord('a')\\n        v = ord(b) - ord('a')\\n\\n        if g[u] == -1:\\n            g[u] = v\\n        elif g[u] != v:\\n            print(-1)\\n            return\"\n\nVerifier feedback: Compilation or testing error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string word and an array of strings forbidden.\nA string is called valid if none of its substrings are present in forbidden.\nReturn the length of the longest valid substring of the stri\nSolution:\nfrom typing import List\n\nclass Solution:\n    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:\n        forbidden_set = set(forbidden)\n        left = 0\n        answer = 0\n\n        for right in range(len(word)):\n            max_len = min(10, right - left + 1)\n\n            for length in range(1, max_len + 1):\n                if word[right - length + 1:right + 1] in forbidden_set:\n                    left = right - length + 2\n                    break\n\n            answer = max"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "9add9b1865a973ea8c82bd1c9c02ceb482e77c61a30c42aa9be42a12e8931207",
+    "original_request_sha256": "3ff79d21ed149b53bd2c7d5fd4175a80b86c5b477996b2bf5a7958c3fc867183",
+    "public_witness": null,
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "07_lcb_atcoder_abc399_e_R0_1"
+  },
+  {
+    "task_id": "taco_0291",
+    "condition": "R2",
+    "repeat": 2,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTaru likes reading. Every month he gets a copy of the magazine \"BIT\". The magazine contains information about the latest advancements in technology.  Taru \n\nreads the book at night and writes the page number to which he has read on a piece of paper so that he can continue from there the next day. But sometimes \n\nthe page number is not printed or is so dull that it is unreadable.  To make matters worse Taru's brother who is really naughty tears of some of the pages of \n\nthe Magazine and throws them in the dustbin. He remembers the number of leaves he had torn but he does not remember which page numbers got removed. When Taru \n\nfinds this out he is furious and wants to beat him up. His brother apologizes, and says he won't ever do this again. But Taru did not want to be easy on him \n\nand he says \"I will leave you only if you help me find the answer to this. I will tell you how many pages (Printed sides) were there in the Magazine plus the \n\npages on which the page numbers were not printed. You already know the number of leaves you tore (T). Can you tell me the expected sum of the page numbers \n\nleft in the Magazine?\" Taru's brother replied \"huh!! This is a coding problem\". Please help Taru's brother.\n\nNote: The magazine is like a standard book with all odd page numbers in front and the successive even page number on its back. If the book contains 6 pages, \n\nPage number 1 and Page number 2 are front and back respectively. Tearing a leaf removes both the front and back page numbers.\n\n------ Input ------ \n\nThe first line contains the number of test cases t. 3t lines follow. The first line of each test case contains the number of pages (printed sides) in the \n\nbook. The second line's first integer is F, F integers follow which tell us the numbers of the page numbers not printed. The third line contains a single integer telling us the number of leaves Taru's brother tore.\n\n------ Output ------ \n\nOutput one real number correct up to 4 decimal digits which is equal to the expected sum of the page numbers left in the book.\n\n------ Constraints ------ \n\nNumber of printed Sides≤2000. All other values abide by the number of printed sides.\n\n----- Sample Input 1 ------ \n2\n10\n2 1 2\n2\n10\n1 8\n0\n----- Sample Output 1 ------ \n31.2000\n47.0000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\ndef solve() -> None:\\n    data = list(map(int, sys.stdin.buffer.read().split()))\\n    if not data:\\n        return\\n\\n    idx = 0\\n    t = data[idx]\\n    idx += 1\\n\\n    answers = []\\n\\n    for _ in range(t):\\n        n = data[idx]\\n        idx += 1\\n\\n        f = data[idx]\\n        idx += 1\\n\\n        unprinted = set()\\n        for _ in range(f):\\n            unprinted.add(data[idx])\\n            idx += 1\\n\\n        torn = data[idx]\\n        idx += 1\\n\\n        total_sum = n * (n + 1) // 2\\n        unprinted_sum = sum(p for p in unprinted if 1 <= p <= n)\\n        total_printed = total_sum - unprinted_sum\\n\\n        # Number of physical leaves in a book with n printed sides.\\n        leaves = (n + 1) // 2\\n\\n        if leaves == 0:\\n            expected = 0.0\\n        else:\\n            effective_torn = min(max(torn,\"\n\nVerifier feedback: Compilation error.\nIndependently generated PUBLIC test:\nInput:\n1\n2\n0\n0\nExpected output:\n3.0000\nPublic compilation observation: the frozen candidate fails Python syntax compilation before executing this test. There is one intact physical leaf containing labels 1 and 2, no missing labels and no tearing; sum=3.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: DZY loves chemistry, and he enjoys mixing chemicals.\n\nDZY has n chemicals, and m pairs of them will react. He wants to pour these chemicals into a test tube, and he needs to pour them in one by one, i\nSolution:\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a: int, b: int) -> None:\n        ra = find(a)\n        rb = find(b)\n\n        if ra == rb:\n            return\n\n        if size[ra] < size[rb]"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "00376b59d52c0170b9ba066f06627ae691b17d04695c40ff617c6401e5e4852e",
+    "original_request_sha256": "5686b8f9168ce4dec96af7d793cbfc1b1b68d456779965163296de0f2adaa50c",
+    "public_witness": {
+      "input": "1\n2\n0\n0\n",
+      "expected": "3.0000",
+      "proof": "There is one intact physical leaf containing labels 1 and 2, no missing labels and no tearing; sum=3."
+    },
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "08_taco_0291_R2_2"
+  },
+  {
+    "task_id": "lcb_atcoder_abc399_e",
+    "condition": "R1",
+    "repeat": 2,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a positive integer N and two strings S and T, each of length N and consisting of lowercase English letters.\nDetermine whether it is possible to make S identical to T by repeating the operation below any number of times (possibly zero). If it is possible, also find the minimum number of operations required.\n\n- Choose two lowercase English letters x, y and replace every occurrence of x in S with y.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\r\nT\n\nOutput\n\nIf it is possible to make S identical to T, print the minimum number of operations required. Otherwise, print -1.\n\nConstraints\n\n\n- 1\\leq N \\leq 2\\times 10^5\n- N is an integer.\n- Each of S and T is a string of length N, consisting of lowercase English letters.\n\nSample Input 1\n\n6\r\nafbfda\r\nbkckbb\n\nSample Output 1\n\n4\r\n\nBy performing the operation four times in the following way, you can make S identical to T:\n\n- Choose x= b and y= c. S becomes afcfda.\n- Choose x= a and y= b. S becomes bfcfdb.\n- Choose x= f and y= k. S becomes bkckdb.\n- Choose x= d and y= b. S becomes bkckbb, which is identical to T.\n\nIt cannot be done with fewer than four operations, so the minimum number of operations required is 4.\n\nSample Input 2\n\n4\r\nabac\r\nabac\n\nSample Output 2\n\n0\r\n\nS and T are already identical, so no operations are required.\n\nSample Input 3\n\n4\r\nabac\r\nabrc\n\nSample Output 3\n\n-1\r\n\nNo matter how you repeat the operation, it is impossible to make S identical to T.\n\nSample Input 4\n\n4\r\nabac\r\nbcba\n\nSample Output 4\n\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\n\\ndef main() -> None:\\n    input = sys.stdin.readline\\n\\n    N = int(input())\\n    S = input().strip()\\n    T = input().strip()\\n\\n    g = [-1] * 26\\n\\n    for a, b in zip(S, T):\\n        u = ord(a) - ord('a')\\n        v = ord(b) - ord('a')\\n\\n        if g[u] == -1:\\n            g[u] = v\\n        elif g[u] != v:\\n            print(-1)\\n            return\"\n\nVerifier feedback: Compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string word and an array of strings forbidden.\nA string is called valid if none of its substrings are present in forbidden.\nReturn the length of the longest valid substring of the stri\nSolution:\nfrom typing import List\n\nclass Solution:\n    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:\n        forbidden_set = set(forbidden)\n        left = 0\n        answer = 0\n\n        for right in range(len(word)):\n            max_len = min(10, right - left + 1)\n\n            for length in range(1, max_len + 1):\n                if word[right - length + 1:right + 1] in forbidden_set:\n                    left = right - length + 2\n                    break\n\n            answer = max"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "9add9b1865a973ea8c82bd1c9c02ceb482e77c61a30c42aa9be42a12e8931207",
+    "original_request_sha256": "3ff79d21ed149b53bd2c7d5fd4175a80b86c5b477996b2bf5a7958c3fc867183",
+    "public_witness": null,
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "09_lcb_atcoder_abc399_e_R1_2"
+  },
+  {
+    "task_id": "lcb_atcoder_abc399_e",
+    "condition": "R2",
+    "repeat": 2,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a positive integer N and two strings S and T, each of length N and consisting of lowercase English letters.\nDetermine whether it is possible to make S identical to T by repeating the operation below any number of times (possibly zero). If it is possible, also find the minimum number of operations required.\n\n- Choose two lowercase English letters x, y and replace every occurrence of x in S with y.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nS\r\nT\n\nOutput\n\nIf it is possible to make S identical to T, print the minimum number of operations required. Otherwise, print -1.\n\nConstraints\n\n\n- 1\\leq N \\leq 2\\times 10^5\n- N is an integer.\n- Each of S and T is a string of length N, consisting of lowercase English letters.\n\nSample Input 1\n\n6\r\nafbfda\r\nbkckbb\n\nSample Output 1\n\n4\r\n\nBy performing the operation four times in the following way, you can make S identical to T:\n\n- Choose x= b and y= c. S becomes afcfda.\n- Choose x= a and y= b. S becomes bfcfdb.\n- Choose x= f and y= k. S becomes bkckdb.\n- Choose x= d and y= b. S becomes bkckbb, which is identical to T.\n\nIt cannot be done with fewer than four operations, so the minimum number of operations required is 4.\n\nSample Input 2\n\n4\r\nabac\r\nabac\n\nSample Output 2\n\n0\r\n\nS and T are already identical, so no operations are required.\n\nSample Input 3\n\n4\r\nabac\r\nabrc\n\nSample Output 3\n\n-1\r\n\nNo matter how you repeat the operation, it is impossible to make S identical to T.\n\nSample Input 4\n\n4\r\nabac\r\nbcba\n\nSample Output 4\n\n4\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\n\\ndef main() -> None:\\n    input = sys.stdin.readline\\n\\n    N = int(input())\\n    S = input().strip()\\n    T = input().strip()\\n\\n    g = [-1] * 26\\n\\n    for a, b in zip(S, T):\\n        u = ord(a) - ord('a')\\n        v = ord(b) - ord('a')\\n\\n        if g[u] == -1:\\n            g[u] = v\\n        elif g[u] != v:\\n            print(-1)\\n            return\"\n\nVerifier feedback: Compilation error.\nIndependently generated PUBLIC test:\nInput:\n1\na\nb\nExpected output:\n1\nPublic compilation observation: the frozen candidate fails Python syntax compilation before executing this test. One global replacement a->b suffices; zero operations cannot change a to b.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given a string word and an array of strings forbidden.\nA string is called valid if none of its substrings are present in forbidden.\nReturn the length of the longest valid substring of the stri\nSolution:\nfrom typing import List\n\nclass Solution:\n    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:\n        forbidden_set = set(forbidden)\n        left = 0\n        answer = 0\n\n        for right in range(len(word)):\n            max_len = min(10, right - left + 1)\n\n            for length in range(1, max_len + 1):\n                if word[right - length + 1:right + 1] in forbidden_set:\n                    left = right - length + 2\n                    break\n\n            answer = max"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "9add9b1865a973ea8c82bd1c9c02ceb482e77c61a30c42aa9be42a12e8931207",
+    "original_request_sha256": "3ff79d21ed149b53bd2c7d5fd4175a80b86c5b477996b2bf5a7958c3fc867183",
+    "public_witness": {
+      "input": "1\na\nb\n",
+      "expected": "1",
+      "proof": "One global replacement a->b suffices; zero operations cannot change a to b."
+    },
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "10_lcb_atcoder_abc399_e_R2_2"
+  },
+  {
+    "task_id": "taco_0291",
+    "condition": "R2",
+    "repeat": 1,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTaru likes reading. Every month he gets a copy of the magazine \"BIT\". The magazine contains information about the latest advancements in technology.  Taru \n\nreads the book at night and writes the page number to which he has read on a piece of paper so that he can continue from there the next day. But sometimes \n\nthe page number is not printed or is so dull that it is unreadable.  To make matters worse Taru's brother who is really naughty tears of some of the pages of \n\nthe Magazine and throws them in the dustbin. He remembers the number of leaves he had torn but he does not remember which page numbers got removed. When Taru \n\nfinds this out he is furious and wants to beat him up. His brother apologizes, and says he won't ever do this again. But Taru did not want to be easy on him \n\nand he says \"I will leave you only if you help me find the answer to this. I will tell you how many pages (Printed sides) were there in the Magazine plus the \n\npages on which the page numbers were not printed. You already know the number of leaves you tore (T). Can you tell me the expected sum of the page numbers \n\nleft in the Magazine?\" Taru's brother replied \"huh!! This is a coding problem\". Please help Taru's brother.\n\nNote: The magazine is like a standard book with all odd page numbers in front and the successive even page number on its back. If the book contains 6 pages, \n\nPage number 1 and Page number 2 are front and back respectively. Tearing a leaf removes both the front and back page numbers.\n\n------ Input ------ \n\nThe first line contains the number of test cases t. 3t lines follow. The first line of each test case contains the number of pages (printed sides) in the \n\nbook. The second line's first integer is F, F integers follow which tell us the numbers of the page numbers not printed. The third line contains a single integer telling us the number of leaves Taru's brother tore.\n\n------ Output ------ \n\nOutput one real number correct up to 4 decimal digits which is equal to the expected sum of the page numbers left in the book.\n\n------ Constraints ------ \n\nNumber of printed Sides≤2000. All other values abide by the number of printed sides.\n\n----- Sample Input 1 ------ \n2\n10\n2 1 2\n2\n10\n1 8\n0\n----- Sample Output 1 ------ \n31.2000\n47.0000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\ndef solve() -> None:\\n    data = list(map(int, sys.stdin.buffer.read().split()))\\n    if not data:\\n        return\\n\\n    idx = 0\\n    t = data[idx]\\n    idx += 1\\n\\n    answers = []\\n\\n    for _ in range(t):\\n        n = data[idx]\\n        idx += 1\\n\\n        f = data[idx]\\n        idx += 1\\n\\n        unprinted = set()\\n        for _ in range(f):\\n            unprinted.add(data[idx])\\n            idx += 1\\n\\n        torn = data[idx]\\n        idx += 1\\n\\n        total_sum = n * (n + 1) // 2\\n        unprinted_sum = sum(p for p in unprinted if 1 <= p <= n)\\n        total_printed = total_sum - unprinted_sum\\n\\n        # Number of physical leaves in a book with n printed sides.\\n        leaves = (n + 1) // 2\\n\\n        if leaves == 0:\\n            expected = 0.0\\n        else:\\n            effective_torn = min(max(torn,\"\n\nVerifier feedback: Compilation error.\nIndependently generated PUBLIC test:\nInput:\n1\n2\n0\n0\nExpected output:\n3.0000\nPublic compilation observation: the frozen candidate fails Python syntax compilation before executing this test. There is one intact physical leaf containing labels 1 and 2, no missing labels and no tearing; sum=3.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: DZY loves chemistry, and he enjoys mixing chemicals.\n\nDZY has n chemicals, and m pairs of them will react. He wants to pour these chemicals into a test tube, and he needs to pour them in one by one, i\nSolution:\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a: int, b: int) -> None:\n        ra = find(a)\n        rb = find(b)\n\n        if ra == rb:\n            return\n\n        if size[ra] < size[rb]"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "00376b59d52c0170b9ba066f06627ae691b17d04695c40ff617c6401e5e4852e",
+    "original_request_sha256": "5686b8f9168ce4dec96af7d793cbfc1b1b68d456779965163296de0f2adaa50c",
+    "public_witness": {
+      "input": "1\n2\n0\n0\n",
+      "expected": "3.0000",
+      "proof": "There is one intact physical leaf containing labels 1 and 2, no missing labels and no tearing; sum=3."
+    },
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "11_taco_0291_R2_1"
+  },
+  {
+    "task_id": "taco_0291",
+    "condition": "R0",
+    "repeat": 2,
+    "request": {
+      "model": "deepseek-reasoner",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+        },
+        {
+          "role": "user",
+          "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nTaru likes reading. Every month he gets a copy of the magazine \"BIT\". The magazine contains information about the latest advancements in technology.  Taru \n\nreads the book at night and writes the page number to which he has read on a piece of paper so that he can continue from there the next day. But sometimes \n\nthe page number is not printed or is so dull that it is unreadable.  To make matters worse Taru's brother who is really naughty tears of some of the pages of \n\nthe Magazine and throws them in the dustbin. He remembers the number of leaves he had torn but he does not remember which page numbers got removed. When Taru \n\nfinds this out he is furious and wants to beat him up. His brother apologizes, and says he won't ever do this again. But Taru did not want to be easy on him \n\nand he says \"I will leave you only if you help me find the answer to this. I will tell you how many pages (Printed sides) were there in the Magazine plus the \n\npages on which the page numbers were not printed. You already know the number of leaves you tore (T). Can you tell me the expected sum of the page numbers \n\nleft in the Magazine?\" Taru's brother replied \"huh!! This is a coding problem\". Please help Taru's brother.\n\nNote: The magazine is like a standard book with all odd page numbers in front and the successive even page number on its back. If the book contains 6 pages, \n\nPage number 1 and Page number 2 are front and back respectively. Tearing a leaf removes both the front and back page numbers.\n\n------ Input ------ \n\nThe first line contains the number of test cases t. 3t lines follow. The first line of each test case contains the number of pages (printed sides) in the \n\nbook. The second line's first integer is F, F integers follow which tell us the numbers of the page numbers not printed. The third line contains a single integer telling us the number of leaves Taru's brother tore.\n\n------ Output ------ \n\nOutput one real number correct up to 4 decimal digits which is equal to the expected sum of the page numbers left in the book.\n\n------ Constraints ------ \n\nNumber of printed Sides≤2000. All other values abide by the number of printed sides.\n\n----- Sample Input 1 ------ \n2\n10\n2 1 2\n2\n10\n1 8\n0\n----- Sample Output 1 ------ \n31.2000\n47.0000\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nFrozen previous candidate source (JSON-encoded string, including any accidental Markdown):\n\"```python\\nimport sys\\n\\ndef solve() -> None:\\n    data = list(map(int, sys.stdin.buffer.read().split()))\\n    if not data:\\n        return\\n\\n    idx = 0\\n    t = data[idx]\\n    idx += 1\\n\\n    answers = []\\n\\n    for _ in range(t):\\n        n = data[idx]\\n        idx += 1\\n\\n        f = data[idx]\\n        idx += 1\\n\\n        unprinted = set()\\n        for _ in range(f):\\n            unprinted.add(data[idx])\\n            idx += 1\\n\\n        torn = data[idx]\\n        idx += 1\\n\\n        total_sum = n * (n + 1) // 2\\n        unprinted_sum = sum(p for p in unprinted if 1 <= p <= n)\\n        total_printed = total_sum - unprinted_sum\\n\\n        # Number of physical leaves in a book with n printed sides.\\n        leaves = (n + 1) // 2\\n\\n        if leaves == 0:\\n            expected = 0.0\\n        else:\\n            effective_torn = min(max(torn,\"\n\nVerifier feedback: Runtime or compilation error.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: DZY loves chemistry, and he enjoys mixing chemicals.\n\nDZY has n chemicals, and m pairs of them will react. He wants to pour these chemicals into a test tube, and he needs to pour them in one by one, i\nSolution:\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n\n    parent = list(range(n))\n    size = [1] * n\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a: int, b: int) -> None:\n        ra = find(a)\n        rb = find(b)\n\n        if ra == rb:\n            return\n\n        if size[ra] < size[rb]"
+        }
+      ],
+      "max_tokens": 32768,
+      "temperature": 0.2,
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high"
+    },
+    "expected_actual_model": "deepseek-flash",
+    "source_sha256": "00376b59d52c0170b9ba066f06627ae691b17d04695c40ff617c6401e5e4852e",
+    "original_request_sha256": "5686b8f9168ce4dec96af7d793cbfc1b1b68d456779965163296de0f2adaa50c",
+    "public_witness": null,
+    "feedback_relation": "broad category includes correct compilation diagnosis; auxiliary specificity cohort",
+    "call_id": "12_taco_0291_R0_2"
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "07f609e5-3b31-49ac-a122-1f890de4e8c7",
+  "created": 1792441659,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 674,
+    "completion_tokens": 5731,
+    "total_tokens": 6405,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5461
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 674
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom math import gcd\n\ndef solve():\n    it = iter(map(int, sys.stdin.buffer.read().split()))\n    t = next(it)\n    answers = []\n\n    for _ in range(t):\n        n = next(it)\n        arr = [next(it) for _ in range(n)]\n\n        if n == 1:\n            answers.append(\"1\")\n            continue\n\n        total = sum(arr)\n\n        pref = [0] * (n + 1)\n        g = 0\n        for i, x in enumerate(arr):\n            g = gcd(g, x)\n            pref[i + 1] = g\n\n        # Case where no salary is changed\n        ans = total // g\n\n        # Try changing each employee's salary\n        suffix_gcd = 0\n        for i in range(n - 1, -1, -1):\n            gcd_except_i = gcd(pref[i], suffix_gcd)\n            notes = 1 + (total - arr[i]) // gcd_except_i\n            if notes < ans:\n                ans = notes\n            suffix_gcd = gcd(suffix_gcd, arr[i])\n\n        answers.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 27.283,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are the owner of a big company. You are so rich, that the government has allowed you to print as many notes as you want of any single value that you like. You also have peculiar behavioral traits and you often do things that look weird to a third person. \n\nYou have N employees, where the i-th employee has salary A_{i}. You want to pay them using a denomination that you create. You are also eco-friendly and wish to save paper. So, you wish to pay them using as few notes as possible. Find out the minimum number of notes required if you can alter the salary of at most one employee to any positive integer that you like, and choose the positive integer value that each note is worth (called its denomination).\n\nEach employee must receive the exact value of his/her salary and no more.\n\n------  Subtasks ------\nSubtask #1 (100 points): Original constraints\n\n------ Input Format ------ \n\n- The first line contains an integer T, the number of test cases. Then the test cases follow.\n- The first line of each test case contains a single integer N.\n- The second line contains N integers A_{1}, A_{2}, \\ldots, A_{N}, where A_{i} is the salary of the i-th employee.\n\n------ Output Format ------ \n\nFor each test case, output in a single line the answer to the problem.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 12\\cdot 10^{4}$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i} ≤ 10^{9}$\n- The sum of $N$ over all test cases is at most $10^{6}$.\n\n----- Sample Input 1 ------ \n3\n3\n1 2 3\n3\n8 4 2\n2\n2 2 \n\n----- Sample Output 1 ------ \n4\n4\n2\n\n----- explanation 1 ------ \nTest Case $1$: We can change the salary of the third person to $1$ and use $1$ as the denomination. So in total we need $\\frac{1}{1} + \\frac{2}{1} + \\frac{1}{1}$ = $1 + 2 + 1$ = $4$ notes.\n\nTest Case $2$: We can change the salary of the first person to $2$ and use $2$ as the denomination. So in total we need $1 + 2 + 1$ = $4$ notes.\n\nTest Case $3$: We can use $2$ as the denomination and we need not change the salary of any person. So in total we need $1 + 1$ = $2$ notes.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

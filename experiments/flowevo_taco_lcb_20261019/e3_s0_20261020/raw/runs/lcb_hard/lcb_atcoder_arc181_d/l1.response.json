@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "25d3b51d-f36b-4360-8fe4-447c858eceb0",
+  "created": 1792442506,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 770,
+    "completion_tokens": 23162,
+    "total_tokens": 23932,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 22739
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 770
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_left\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    P = [next(it) for _ in range(N)]\n\n    M = next(it)\n    A = [next(it) for _ in range(M)]\n\n    bit = [0] * (N + 2)\n\n    def add(i):\n        while i <= N:\n            bit[i] += 1\n            i += i & -i\n\n    def prefix_sum(i):\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n\n    pos = [0] * (N + 1)\n    larger_left = [0] * (N + 1)\n\n    initial_inv = 0\n\n    for i, v in enumerate(P, 1):\n        pos[v] = i\n        less_count = prefix_sum(v)\n        greater_count = (i - 1) - less_count\n        larger_left[v] = greater_count\n        initial_inv += greater_count\n        add(v)\n\n    diff = [0] * (M + 3)\n\n    for v in range(1, N + 1):\n        cnt = larger_left[v]\n        if cnt == 0:\n            continue\n\n        idx = bisect_left(A, pos[v])\n        if idx == M:\n            continue\n\n        start = idx + 1\n        diff[start] += 1\n\n        end = start + cnt\n        if end <= M:\n            diff[end] -= 1\n\n    active = 0\n    removed = 0\n    answers = []\n\n    for t in range(1, M + 1):\n        active += diff[t]\n        removed += active\n        answers.append(str(initial_inv - removed))\n\n    print(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 112.825,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a permutation P=(P_1,P_2,\\dots,P_N) of (1,2,\\dots,N).\nConsider the following operations k\\ (k=2,3,\\dots,N) on this permutation.\n\n- Operation k: For i=1,2,\\dots,k-1 in this order, if P_i > P_{i+1}, swap the values of the i-th and (i+1)-th elements of P.\n\nYou are also given a non-decreasing sequence A=(A_1,A_2,\\dots,A_M)\\ (2 \\leq A_i \\leq N) of length M.\nFor each i=1,2,\\dots,M, find the inversion number of P after applying the operations A_1, A_2, \\dots, A_i in this order.\n\n What is the inversion number of a sequence?\r\n\r\nThe inversion number of a sequence x=(x_1,x_2,\\dots,x_n) of length n is the number of pairs of integers (i,j)\\ (1\\leq i < j \\leq n) such that x_i > x_j.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nP_1 P_2 \\dots P_N\r\nM\r\nA_1 A_2 \\dots A_M\n\nOutput\n\nPrint M lines. The k-th line should contain the answer to the problem for i=k.\n\nConstraints\n\n\n- 2 \\leq N \\leq 2 \\times 10^5\n- 1 \\leq M \\leq 2 \\times 10^5\n- 2 \\leq A_i \\leq N\n- P is a permutation of (1,2,\\dots,N).\n- A_i \\leq A_{i+1} for i=1,2,\\dots,M-1.\n- All input values are integers.\n\nSample Input 1\n\n6\r\n3 2 4 1 6 5\r\n2\r\n4 6\n\nSample Output 1\n\n3\r\n1\r\n\nFirst, operation 4 is performed. During this, P changes as follows: (3,2,4,1,6,5) \\rightarrow (2,3,4,1,6,5) \\rightarrow (2,3,4,1,6,5) \\rightarrow (2,3,1,4,6,5). The inversion number of P afterward is 3.\nNext, operation 6 is performed, where P eventually becomes (2,1,3,4,5,6), whose inversion number is 1.\n\nSample Input 2\n\n20\r\n12 14 16 8 7 15 19 6 18 5 13 9 10 17 4 1 11 20 2 3\r\n15\r\n3 4 6 8 8 9 10 12 13 15 18 18 19 19 20\n\nSample Output 2\n\n117\r\n116\r\n113\r\n110\r\n108\r\n105\r\n103\r\n99\r\n94\r\n87\r\n79\r\n72\r\n65\r\n58\r\n51\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

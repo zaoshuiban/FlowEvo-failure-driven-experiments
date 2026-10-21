@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6cdaff64-a6fb-4072-8d4e-7cce037a6a81",
+  "created": 1792467974,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 659,
+    "completion_tokens": 8229,
+    "total_tokens": 8888,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7848
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 147
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nimport math\nimport io\n\n\ndef main():\n    data = sys.stdin.buffer.read()\n\n    def integers():\n        num = 0\n        inside = False\n        for ch in data:\n            if 48 <= ch <= 57:\n                num = num * 10 + (ch - 48)\n                inside = True\n            else:\n                if inside:\n                    yield num\n                    num = 0\n                    inside = False\n        if inside:\n            yield num\n\n    it = integers()\n    t = next(it)\n    output = io.StringIO()\n\n    for _ in range(t):\n        n = next(it)\n        e = next(it)\n        o = next(it)\n\n        total = n * (n + 1) // 2\n\n        if e + o != total:\n            output.write(\"-1\\n\")\n            continue\n\n        m = n + 1\n        d = m * m - 4 * o\n\n        if d < 0:\n            output.write(\"-1\\n\")\n            continue\n\n        s = math.isqrt(d)\n\n        if s * s != d:\n            output.write(\"-1\\n\")\n            continue\n\n        c = (m + s) // 2\n\n        if c < 1 or c > m or c * (m - c) != o:\n            c = (m - s) // 2\n            if c < 1 or c > m or c * (m - c) != o:\n                output.write(\"-1\\n\")\n                continue\n\n        arr = ['2'] * n\n\n        if c <= n:\n            arr[c - 1] = '1'\n\n        output.write(' '.join(arr))\n        output.write('\\n')\n\n    sys.stdout.write(output.getvalue())\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 36.332,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese , Russian and Vietnamese as well. \nAkhil has an array consisting of N positive integers. As we know that there are (N*(N+1))/2 non-empty contiguous subarrays in an array of size N. Akhil found that exactly E of the contiguous subarrays had even sum and remaining O = (N*(N+1))/2 - E have odd sum.\n\nNext day, he lost the original array. But he still remembered the E and O values correctly. Now, he wants to recreate any such array which has exactly E even sum continuous subarrays and O odd ones. If there are many such possible arrays, printing any one of them will make him happy.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows:\nFirst line of each test case contains an integer N denoting the length of lost array.\nSecond line of each test case contains two space separated integers E and O, denoting number of contiguous subarrays with even and odd sums, respectively. \n\n------ Output ------ \n\nFor each test case, output a single line containing all the integers of an array separated by a space.\nEach integer should lie between 0 and 100(both inclusive).\nIf there is no such possible array, print -1 in a single line.\n\n------ Constraints ------ \n\n$0 ≤ E, O ≤ N*(N+1)/2$\n$E + O = N*(N+1)/2$\n\n------ Subtasks ------ \n\nSubtask #1 (20 points) : 1 ≤ sum of N over all test cases ≤ 15\nSubtask #2 (20 points) : 1 ≤ sum of N over all test cases ≤ 2 * 10^{3}\nSubtask #3 (60 points) : 1 ≤  sum of N over all test cases  ≤ 10^{6}\n\n------ Example ------ \n\nInput:\n3\n3\n2 4\n3\n3 3\n3\n0 6\n\nOutput:\n2 1 2\n1 2 2\n-1\n\n------ Explanation ------ \n\nExample case 1. There are total 6 subarrays : {2},{1},{2},{2,1},{1,2},{2,1,2}. Their sums {2, 1, 2, 3, 3, 5} are respectively. As 2 of them are even and 4 of them are odd. So, this is one possible answer which satisfies Akhil's requirements.\nExample case 3. There is no array of length 3 whose all the subarrays have odd sum. Akhil might have remembered something incorrectly. Hence, you should print -1.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

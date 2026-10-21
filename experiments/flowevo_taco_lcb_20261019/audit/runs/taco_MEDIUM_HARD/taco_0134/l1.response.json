@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "415c9f73-3e5e-409a-9a59-7b5d959ef37e",
+  "created": 1792438886,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 621,
+    "completion_tokens": 6270,
+    "total_tokens": 6891,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5928
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 621
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom bisect import bisect_left, bisect_right\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    T = data[idx]\n    idx += 1\n\n    answers = []\n\n    for _ in range(T):\n        N = data[idx]\n        idx += 1\n\n        A = data[idx:idx + N]\n        idx += N\n\n        B = data[idx:idx + N]\n        idx += N\n\n        B.sort()\n\n        count_1 = bisect_right(B, 1) - bisect_left(B, 1)\n        count_3 = bisect_right(B, 3) - bisect_left(B, 3)\n        count_ge_5 = N - bisect_left(B, 5)\n\n        good_pairs = 0\n\n        for a in A:\n            if a == 1:\n                continue\n            elif a == 3:\n                good_pairs += N - count_3\n            elif a == 2 or a == 4:\n                good_pairs += count_1 + count_ge_5\n            else:\n                # For a >= 5, a^b > b^a iff b > a, and also b = 1.\n                good_pairs += count_1 + (N - bisect_right(B, a))\n\n        expected = good_pairs / N\n        answers.append(f\"{expected:.10f}\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 28.86,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problems statements in Mandarin Chinese here \n\n------ Problem Statement ------ \n\nLittle Chef doesn't love math anymore. He loves Aleksandra.\n\nSashen'ka is nice. They spend all the time together. Even their birthdays they are celebrating together, because they were born on the same day :)\n\nAnd now, this day is coming...\n\nChef know that most of all Sasha loves numbers, that's why he bought N positive numbers to a girl.\nFrom her side, Sasha as all girls, thought that if she likes something, then all people like that too. And bought to a boy N numbers too. xD\nAfter all greeting young people decide to play a game with their gifts. The game will be continued for N turns, in each turn the following will be done:\nChef randomly choose some number x from his gift.\nSasha randomly choose some number y form her gift.\nIf x^{y} > y^{x} then girl will kiss fellow.\nNumbers x,y will be discarded from gifts.\nNow chef is wondering what is the expected number of times he will be kissed by Sasha ?\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows.\nThe first line of each test case contains a single integer N denoting the number of numbers in each gift. The second line contains N space-separated integers A_{1}, A_{2}, ..., A_{N} denoting the numbers Sasha gave to Chef. Next line describe B_{1}, B_{2}, ..., B_{N} numbers boy gave to girl in the same way. \n\n------ Output ------ \n\nFor each test case, output a single line containing answer for corresponding test. Your answer will be considered as correct if it will have absolute error not more then 10^{-6}.\n \n------ Constraints ------ \n\n1 ≤ T ≤ 5\n1 ≤ N ≤ 10^{5}\n1 ≤ A_{i} ≤ 10^{9}\n1 ≤ B_{i} ≤ 10^{9}\n\n----- Sample Input 1 ------ \n3\n1\n3\n4\n2\n2 3\n1 4\n2\n2 4\n2 2\n----- Sample Output 1 ------ \n1.000000\n1.500000\n0.000000\n----- explanation 1 ------ \nExample case 1. Game will have only 1 turn. Chef will choose 3, while Sasha will choose 4. Since 34>43 girl will kiss boy. Hence answer is 1.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

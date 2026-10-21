@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "1fceef7b-3165-4005-9756-ed1c890e2fa3",
+  "created": 1792444077,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 823,
+    "completion_tokens": 32748,
+    "total_tokens": 33571,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32411
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 823
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef canonical(seq, m):\n    n = len(seq)\n    h = [0] * n\n    h[0] = seq[0]\n    for i in range(1, n):\n        d = (seq[i] - seq[i - 1]) % m\n        h[i] = h[i - 1] + d\n    return h\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    a = [next(it) for _ in range(n)]\n    b = [next(it) for _ in range(n)]\n\n    if m == 2:\n        print(0 if a == b else -1)\n        return\n\n    ha = canonical(a, m)\n    hb = canonical(b, m)\n\n    c = [ha[i] - hb[i] for i in range(n)]\n    c.sort()\n\n    candidates = set()\n    for idx in (n // 2, (n - 1) // 2):\n        base = c[idx] // m\n        for d in range(-5, 6):\n            candidates.add(base + d)\n\n    ans = None\n    for q in candidates:\n        shift = q * m\n        cost = 0\n        for x in c:\n            cost += abs(x - shift)\n        if ans is None or cost < ans:\n            ans = cost\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 162.87,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAn integer sequence where no two adjacent elements are the same is called a good sequence.\nYou are given two good sequences of length N: A=(A_1,A_2,\\dots,A_N) and B=(B_1,B_2,\\dots,B_N). Each element of A and B is between 0 and M-1, inclusive.\nYou can perform the following operations on A any number of times, possibly zero:\n\n- Choose an integer i between 1  and N, inclusive, and perform one of the following:\n- Set A_i \\leftarrow (A_i + 1) \\bmod M.\n- Set A_i \\leftarrow (A_i - 1) \\bmod M. Here, (-1) \\bmod M = M - 1.\n\n\n\nHowever, you cannot perform an operation that makes A no longer a good sequence.\nDetermine if it is possible to make A equal to B, and if it is possible, find the minimum number of operations required to do so.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M\nA_1 A_2 \\dots A_N\nB_1 B_2 \\dots B_N\n\nOutput\n\nIf the goal is unachievable, print -1.\nOtherwise, print the minimum number of operations required as an integer.\n\nConstraints\n\n\n- 2 \\leq N \\leq 2 \\times 10^5\n- 2 \\leq M \\leq 10^6\n- 0\\leq A_i,B_i< M(1\\leq i\\leq N)\n- A_i\\ne A_{i+1}(1\\leq i\\leq N-1)\n- B_i\\ne B_{i+1}(1\\leq i\\leq N-1)\n- All input values are integers.\n\nSample Input 1\n\n3 9\n2 0 1\n4 8 1\n\nSample Output 1\n\n3\n\nYou can achieve the goal in three operations as follows:\n\n- Set A_1 \\leftarrow (A_1 + 1) \\bmod M. Now A = (3, 0, 1).\n- Set A_2 \\leftarrow (A_2 - 1) \\bmod M. Now A = (3, 8, 1).\n- Set A_1 \\leftarrow (A_1 + 1) \\bmod M. Now A = (4, 8, 1).\n\nIt is impossible to achieve the goal in two or fewer operations, so the answer is 3.\nFor example, you cannot set A_2 \\leftarrow (A_2 + 1) \\bmod M in the first operation, because it would make A = (2, 1, 1), which is not a good sequence.\n\nSample Input 2\n\n3 9\n1 8 2\n1 8 2\n\nSample Output 2\n\n0\n\nA and B might be equal from the beginning.\n\nSample Input 3\n\n24 182\n128 115 133 52 166 92 164 119 143 99 54 162 86 2 59 166 24 78 81 5 109 67 172 99\n136 103 136 28 16 52 2 85 134 64 123 74 64 28 85 161 19 74 14 110 125 104 180 75\n\nSample Output 3\n\n811\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

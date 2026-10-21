@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "6f0b9569-c9b0-44da-ad8b-be46b9861ee9",
+  "created": 1792446184,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 573,
+    "completion_tokens": 7835,
+    "total_tokens": 8408,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 7593
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 189
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    ans = []\n\n    for n in data[1:1 + t]:\n        if n & 1:  # n is odd\n            # Odd positions are winning only for 1 or Mersenne numbers: 2^k - 1\n            if n == 1 or (n & (n + 1)) == 0:\n                ans.append(\"Alice\")\n            else:\n                ans.append(\"Bob\")\n        else:\n            if n % 4 == 0:\n                # v2(n) >= 2, always winning\n                ans.append(\"Alice\")\n            else:\n                # v2(n) == 1, losing iff n/2 is Mersenne\n                m = n // 2\n                if (m & (m + 1)) == 0:\n                    ans.append(\"Bob\")\n                else:\n                    ans.append(\"Alice\")\n\n    sys.stdout.write(\"\\n\".join(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 36.486,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Mandarin], [Bengali], [Russian], and [Vietnamese] as well.\n\nAlice and Bob have got an integer N. They decide to play a game. Alice and Bob make alternating moves: Alice makes the first move, Bob makes the second move, Alice makes the third one, and so on. The game continues until N becomes 0. The player who is unable to make a move loses.\n\nDuring each turn a player can make one of the following moves:\n\n1. Choose an integer X such that X can be expressed as 2^{Y}, Y ≥ 1. The chosen X must also be a factor of N. After choosing an integer X which satisfies the mentioned criteria, the player will divide N by X. \n\n2. If Move 1 is not possible , the player will subtract 1 from N.\n\nPredict the winner of the game if the game is played optimally by both the players.\n\n------ Input Format ------ \n\n- The first line of input contains a single integer T denoting the number of test cases. The description of T test cases follows.\n\n- The first line of each test case contains an integer N.\n\n------ Output Format ------ \n\nFor each test case, print \"Alice\" if Alice wins the game else print \"Bob\". Print the output without quotes.\n\n------ Constraints ------ \n\n$1 ≤T ≤2*10^{5}$\n\n$1 ≤N ≤10^{18} $\n\n------ subtasks ------ \n\n10 points : $1 ≤ N ≤ 20$ ,  $1 ≤ T ≤ 20$\n30 points : $1 ≤ N ≤ 10^{5}$,  $1 ≤ T ≤ 10^{5}$\n60 points : $1 ≤ N ≤ 10^{18}$\n\n----- Sample Input 1 ------ \n2\n1\n2\n\n----- Sample Output 1 ------ \nAlice\nBob\n----- explanation 1 ------ \nTest case $1$: Alice can't perform the first move, hence she subtracts 1 from $N$ and $N$ becomes $0$. Bob can't make a move now.\n\nTest case $1$: Alice first divides $N$ by $2$ , after which $N$ becomes $1$. Bob, in the next move decrements $N$ by $1$ after which $N$ becomes $0$ and Alice loses.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

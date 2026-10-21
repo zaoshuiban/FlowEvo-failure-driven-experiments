@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "51ceb85d-b171-46b8-81df-aa09b60a86b8",
+  "created": 1792439656,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 524,
+    "completion_tokens": 2586,
+    "total_tokens": 3110,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2082
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 140
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def minimumDistance(self, points: List[List[int]]) -> int:\n        n = len(points)\n        u = [0] * n\n        v = [0] * n\n\n        for i, (x, y) in enumerate(points):\n            u[i] = x + y\n            v[i] = x - y\n\n        INF = 10**30\n\n        pre_min_u = [INF] * (n + 1)\n        pre_max_u = [-INF] * (n + 1)\n        pre_min_v = [INF] * (n + 1)\n        pre_max_v = [-INF] * (n + 1)\n\n        for i in range(n):\n            pre_min_u[i + 1] = min(pre_min_u[i], u[i])\n            pre_max_u[i + 1] = max(pre_max_u[i], u[i])\n            pre_min_v[i + 1] = min(pre_min_v[i], v[i])\n            pre_max_v[i + 1] = max(pre_max_v[i], v[i])\n\n        suf_min_u = [INF] * (n + 1)\n        suf_max_u = [-INF] * (n + 1)\n        suf_min_v = [INF] * (n + 1)\n        suf_max_v = [-INF] * (n + 1)\n\n        for i in range(n - 1, -1, -1):\n            suf_min_u[i] = min(suf_min_u[i + 1], u[i])\n            suf_max_u[i] = max(suf_max_u[i + 1], u[i])\n            suf_min_v[i] = min(suf_min_v[i + 1], v[i])\n            suf_max_v[i] = max(suf_max_v[i + 1], v[i])\n\n        answer = INF\n\n        for i in range(n):\n            min_u = min(pre_min_u[i], suf_min_u[i + 1])\n            max_u = max(pre_max_u[i], suf_max_u[i + 1])\n            min_v = min(pre_min_v[i], suf_min_v[i + 1])\n            max_v = max(pre_max_v[i], suf_max_v[i + 1])\n\n            current = max(max_u - min_u, max_v - min_v)\n            answer = min(answer, current)\n\n        return answer\n```",
+  "latency_s": 9.932,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a array points representing integer coordinates of some points on a 2D plane, where points[i] = [x_i, y_i].\nThe distance between two points is defined as their Manhattan distance.\nReturn the minimum possible value for maximum distance between any two points by removing exactly one point.\n \nExample 1:\n\nInput: points = [[3,10],[5,15],[10,2],[4,4]]\nOutput: 12\nExplanation:\nThe maximum distance after removing each point is the following:\n\nAfter removing the 0^th point the maximum distance is between points (5, 15) and (10, 2), which is |5 - 10| + |15 - 2| = 18.\nAfter removing the 1^st point the maximum distance is between points (3, 10) and (10, 2), which is |3 - 10| + |10 - 2| = 15.\nAfter removing the 2^nd point the maximum distance is between points (5, 15) and (4, 4), which is |5 - 4| + |15 - 4| = 12.\nAfter removing the 3^rd point the maximum distance is between points (5, 15) and (10, 2), which is |5 - 10| + |15 - 2| = 18.\n\n12 is the minimum possible maximum distance between any two points after removing exactly one point.\n\nExample 2:\n\nInput: points = [[1,1],[1,1],[1,1]]\nOutput: 0\nExplanation:\nRemoving any of the points results in the maximum distance between any two points of 0.\n\n \nConstraints:\n\n3 <= points.length <= 10^5\npoints[i].length == 2\n1 <= points[i][0], points[i][1] <= 10^8\n\nStarter code / required signature:\nclass Solution:\n    def minimumDistance(self, points: List[List[int]]) -> int:\n        \n\nUse the required function/method named minimumDistance. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

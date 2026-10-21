@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "962efe72-1740-42cf-832e-9b84910b8e53",
+  "created": 1792443956,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1016,
+    "completion_tokens": 22504,
+    "total_tokens": 23520,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 22148
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 248
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nMOD = 1_000_000_007\nMAX = 60_005\n\n# Precompute modular inverses\ninv = [0] * MAX\ninv[1] = 1\nfor i in range(2, MAX):\n    inv[i] = MOD - (MOD // i) * inv[MOD % i] % MOD\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        k = data[idx + 1]\n        m = data[idx + 2]\n        idx += 3\n\n        # Failure probability of one guess from n boxes:\n        # (n - 1) / n\n        fail_once = (n - 1) * inv[n] % MOD\n\n        # Number of guesses at the initial n boxes, with resets between them\n        guesses = (m + 1) // 2\n\n        failure_prob = pow(fail_once, guesses, MOD)\n\n        # If m is even, one final additional guess is made after n has become n + k\n        if m % 2 == 0:\n            nk = n + k\n            extra_fail = (nk - 1) * inv[nk] % MOD\n            failure_prob = failure_prob * extra_fail % MOD\n\n        answer = (1 - failure_prob) % MOD\n        answers.append(str(answer))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 104.093,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nRead problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nChef is playing a game against a magician. In this game, there are initially $N$ identical boxes in front of Chef and one of them contains a magic pill ― after eating this pill, you would never get compilation errors ever again.\n\nChef has to determine which box contains the pill. He is allowed to perform at most $M$ moves. In each move, Chef may do one of the following:\nChoose one of the boxes that are in front of him uniformly randomly and guess that this box contains the pill. If the guess is correct, the game ends and Chef gets the pill. Otherwise, after this guess, the magician adds $K$ empty boxes in front of Chef in such a way that Chef cannot determine which boxes were added; the box Chef guessed also remains in front of him and Chef cannot distinguish this box from the other boxes in subsequent moves either.\nChoose a number $X$ such that $X$ is a positive multiple of $K$, but strictly less than the current number of boxes in front of Chef. The magician then removes $X$ empty boxes. Of course, Chef must not perform this move if the current number of boxes is $≤ K$.\n\nWhat is the probability that Chef gets the pill, assuming that he plays optimally ― in a way that maximises this probability? It can be proven that the maximum probability may be expressed as a fraction $P/Q$, where $P$ and $Q$ are coprime positive integers. You should compute $P \\cdot Q^{-1}$ modulo $10^{9}+7$, where $Q^{-1}$ denotes the multiplicative inverse of $Q$ modulo $10^{9}+7$.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first and only line of each test case contains three space-separated integers $N$, $K$ and $M$.\n\n------  Output ------\nFor each test case, print a single line containing one integer ― $P \\cdot Q^{-1}$ modulo $10^{9}+7$, where $P/Q$ is the probability that Chef gets the pill.\n\n------  Constraints  ------\n$1 ≤ T ≤ 10^{5}$\n$1 ≤ N < K ≤ 3 \\cdot 10^{4}$\n$1 ≤ M ≤ 3 \\cdot 10^{4}$\n\n------  Subtasks ------\nSubtask #1 (20 points): \n$1 ≤ T ≤ 100$\n$1 ≤ N < K ≤ 50$\n$1 ≤ M ≤ 50$\n\nSubtask #2 (20 points): \n$1 ≤ T ≤ 1,000$\n$1 ≤ N < K ≤ 100$\n$1 ≤ M ≤ 100$\n\nSubtask #3 (60 points): original constraints\n\n----- Sample Input 1 ------ \n3\n5 9 1\n7 9 2\n3 20 3\n----- Sample Output 1 ------ \n400000003\n196428573\n555555560\n----- explanation 1 ------ \nExample case 1: Chef has only one move, so he should make a guess, which is correct with probability $1/5$. Note that if the guess was incorrect, there would be $14$ boxes in front of Chef afterwards.\n\nExample case 2: In his first move, Chef should make a guess. With probability $1/7$, this guess is correct. With probability $6/7$, it is incorrect and there are $16$ boxes in front of Chef afterwards.\n\nIn his second move, Chef should again make a guess, which is correct with probability $1/16$. The probability that at least one of Chef's guesses was correct is $\\frac{1}{7} + \\frac{6}{7} \\cdot \\frac{1}{16} = 22/112 = 11/56$.\n\nExample case 3: In the first move, Chef should make a guess, which is correct with probability $1/3$. In the second move, Chef should ask the magician to remove $X = 20$ boxes, leaving him with $3$ boxes again. In the third move, he should make a guess, which is again correct with probability $1/3$. The resulting probability is $5/9$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

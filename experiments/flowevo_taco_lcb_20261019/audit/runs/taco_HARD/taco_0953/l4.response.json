@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "23f0170f-29c5-4a86-8c9b-7dd3e8b1d5c1",
+  "created": 1792440534,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1094,
+    "completion_tokens": 21550,
+    "total_tokens": 22644,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 21324
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 582
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    p = data[1:1 + n]\n\n    # Count inversions using a Fenwick tree.\n    bit = [0] * (n + 2)\n\n    def add(idx: int) -> None:\n        while idx <= n:\n            bit[idx] += 1\n            idx += idx & -idx\n\n    def query(idx: int) -> int:\n        result = 0\n        while idx > 0:\n            result += bit[idx]\n            idx -= idx & -idx\n        return result\n\n    inversions = 0\n    for i, x in enumerate(p):\n        # Previous elements greater than x.\n        inversions += i - query(x)\n        add(x)\n\n    answer = 2 * inversions - (inversions & 1)\n    print(f\"{answer:.10f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 102.797,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nJeff has become friends with Furik. Now these two are going to play one quite amusing game.\n\nAt the beginning of the game Jeff takes a piece of paper and writes down a permutation consisting of n numbers: p_1, p_2, ..., p_{n}. Then the guys take turns to make moves, Jeff moves first. During his move, Jeff chooses two adjacent permutation elements and then the boy swaps them. During his move, Furic tosses a coin and if the coin shows \"heads\" he chooses a random pair of adjacent elements with indexes i and i + 1, for which an inequality p_{i} > p_{i} + 1 holds, and swaps them. But if the coin shows \"tails\", Furik chooses a random pair of adjacent elements with indexes i and i + 1, for which the inequality p_{i} < p_{i} + 1 holds, and swaps them. If the coin shows \"heads\" or \"tails\" and Furik has multiple ways of adjacent pairs to take, then he uniformly takes one of the pairs. If Furik doesn't have any pair to take, he tosses a coin one more time. The game ends when the permutation is sorted in the increasing order.\n\nJeff wants the game to finish as quickly as possible (that is, he wants both players to make as few moves as possible). Help Jeff find the minimum mathematical expectation of the number of moves in the game if he moves optimally well.\n\nYou can consider that the coin shows the heads (or tails) with the probability of 50 percent.\n\n\n-----Input-----\n\nThe first line contains integer n (1 ≤ n ≤ 3000). The next line contains n distinct integers p_1, p_2, ..., p_{n} (1 ≤ p_{i} ≤ n) — the permutation p. The numbers are separated by spaces.\n\n\n-----Output-----\n\nIn a single line print a single real value — the answer to the problem. The answer will be considered correct if the absolute or relative error doesn't exceed 10^{ - 6}.\n\n\n-----Examples-----\nInput\n2\n1 2\n\nOutput\n0.000000\n\nInput\n5\n3 5 2 4 1\n\nOutput\n13.000000\n\n\n\n-----Note-----\n\nIn the first test the sequence is already sorted, so the answer is 0.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    p = data[1:1 + n]\n\n    # Count inversions using a Fenwick tree.\n    bit = [0] * (n + 2)\n\n    def add(i: int) -> None:\n        while i <= n:\n            bit[i] += 1\n            i += i & -i\n\n    def query(i: int) -> int:\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n\n    inversions = 0\n    for i, x in enumerate(p):\n        # Previous elements greater than x.\n        inversions += i - query(x)\n        add(x)\n\n    answer = 2 * inversions - (inversions & 1)\n    print(f\"{answer:.10f}\")\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n integers a_1, a_2, ..., a_n.\n\nFor each a_i find its two divisors d_1 > 1 and d_2 > 1 such that \\gcd(d_1 + d_2, a_i) = 1 (where \\gcd(a, b) is the greatest common divisor of a and b) or \nSolution:\nimport sys\nfrom math import isqrt\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    max_a = max(a)\n    size = (max_a >> 1) + 1\n\n    # spf_odd[k] stores some prime divisor of the odd number 2*k + 1.\n    # 0 means the odd number is prime.\n    spf_odd = [0] * size\n\n    limit = isqrt(max_a)\n    for p in range(3, limit + 1, 2):\n        if spf_odd[p >> 1] == 0:  # p is prime\n            start = ("
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

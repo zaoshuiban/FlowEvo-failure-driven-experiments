@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "0d61064a-5929-43e7-8090-dd5f18c1fed6",
+  "created": 1792440703,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 492,
+    "completion_tokens": 6163,
+    "total_tokens": 6655,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5763
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 492
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    A = data[1:1 + n]\n\n    m = max(A)\n\n    freq = [0] * (m + 2)\n    for x in A:\n        freq[x] += 1\n\n    prefix = [0] * (m + 2)\n    total_count = 0\n    for i in range(1, m + 1):\n        total_count += freq[i]\n        prefix[i] = total_count\n\n    ans = 0\n\n    # Pairs with equal values\n    for x in range(1, m + 1):\n        c = freq[x]\n        if c >= 2:\n            ans += c * (c - 1) // 2\n\n    # Pairs with different values: count floor(larger / smaller)\n    for a in range(1, m + 1):\n        c = freq[a]\n        if c == 0:\n            continue\n\n        total = 0\n\n        # Quotient 1: b in [a + 1, 2a - 1]\n        left = a + 1\n        right = min(m, 2 * a - 1)\n        if left <= right:\n            total += prefix[right] - prefix[left - 1]\n\n        # Quotients >= 2\n        qmax = m // a\n        left = 2 * a\n\n        for q in range(2, qmax + 1):\n            right = min(m, (q + 1) * a - 1)\n            if left <= right:\n                total += q * (prefix[right] - prefix[left - 1])\n            left += a\n\n        ans += c * total\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 27.096,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given a sequence A=(A_1,\\ldots,A_N) of length N.\nFind \\displaystyle \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N}\\left\\lfloor\\frac{\\max(A_i,A_j)}{\\min(A_i,A_j)}\\right\\rfloor.\nHere, \\lfloor x \\rfloor represents the greatest integer not greater than x. For example, \\lfloor 3.14 \\rfloor=3 and \\lfloor 2 \\rfloor=2.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN\r\nA_1 \\ldots A_N\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- 2 \\leq N \\leq 2\\times 10^5\n- 1 \\leq A_i \\leq 10^6\n- All input values are integers.\n\nSample Input 1\n\n3\r\n3 1 4\n\nSample Output 1\n\n8\r\n\nThe sought value is\n\\left\\lfloor\\frac{\\max(3,1)}{\\min(3,1)}\\right\\rfloor + \\left\\lfloor\\frac{\\max(3,4)}{\\min(3,4)}\\right\\rfloor + \\left\\lfloor\\frac{\\max(1,4)}{\\min(1,4)}\\right\\rfloor\\\\ =\\left\\lfloor\\frac{3}{1}\\right\\rfloor + \\left\\lfloor\\frac{4}{3}\\right\\rfloor + \\left\\lfloor\\frac{4}{1}\\right\\rfloor\\\\ =3+1+4\\\\ =8.\n\nSample Input 2\n\n6\r\n2 7 1 8 2 8\n\nSample Output 2\n\n53\n\nSample Input 3\n\n12\r\n3 31 314 3141 31415 314159 2 27 271 2718 27182 271828\n\nSample Output 3\n\n592622\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

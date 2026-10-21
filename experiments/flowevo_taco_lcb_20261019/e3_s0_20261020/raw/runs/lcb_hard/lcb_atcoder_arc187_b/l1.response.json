@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "949b7f35-9706-452f-b5af-96341f0432aa",
+  "created": 1792441337,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 610,
+    "completion_tokens": 17517,
+    "total_tokens": 18127,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 16880
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 610
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\nfrom array import array\n\nMOD = 998244353\n\n\ndef main() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    N, M = data[0], data[1]\n    B = data[2:2 + N]\n\n    # Prefix information\n    pre_unk = [0] * N\n    pre_min = [0] * N\n\n    unknown = 0\n    minimum_fixed = M + 1\n\n    for i, x in enumerate(B):\n        if x == -1:\n            unknown += 1\n        else:\n            if x < minimum_fixed:\n                minimum_fixed = x\n        pre_unk[i] = unknown\n        pre_min[i] = minimum_fixed\n\n    # Suffix information\n    suf_unk = [0] * N\n    suf_max = [0] * N\n\n    unknown = 0\n    maximum_fixed = 0\n\n    for i in range(N - 1, -1, -1):\n        x = B[i]\n        if x == -1:\n            unknown += 1\n        else:\n            if x > maximum_fixed:\n                maximum_fixed = x\n        suf_unk[i] = unknown\n        suf_max[i] = maximum_fixed\n\n    q = pre_unk[-1]\n\n    # pow_table[base][exp] = base^exp mod MOD\n    pow_table = []\n    for base in range(M + 1):\n        row = array('I', [1]) * (N + 1)\n        value = 1\n        for exp in range(1, N + 1):\n            value = value * base % MOD\n            row[exp] = value\n        pow_table.append(row)\n\n    # Every assignment contributes at least 1 connected component.\n    ans = pow(M, q, MOD)\n\n    # Add the contribution of every possible separating cut.\n    for k in range(1, N):\n        uL = pre_unk[k - 1]\n        a = pre_min[k - 1]\n\n        uR = suf_unk[k]\n        b = suf_max[k]\n\n        start = b if b > 0 else 1\n        limit = a - 1\n\n        if start > limit:\n            continue\n\n        cur = pow_table[start][uR]\n        exact = cur  # max on right is exactly start\n        cnt = exact * pow_table[M - start][uL] % MOD\n\n        prev_cur = cur\n\n        for t in range(start + 1, limit + 1):\n            cur = pow_table[t][uR]\n            exact = cur - prev_cur\n            if exact < 0:\n                exact += MOD\n\n            cnt = (cnt + exact * pow_table[M - t][uL]) % MOD\n            prev_cur = cur\n\n        ans += cnt\n        ans %= MOD\n\n    print(ans % MOD)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 79.966,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFor a sequence A = (A_1, \\ldots, A_N) of length N, define f(A) as follows.\n\n- Prepare a graph with N vertices labeled 1 to N and zero edges. For every integer pair (i, j) satisfying 1 \\leq i < j \\leq N, if A_i \\leq A_j, draw a bidirectional edge connecting vertices i and j. Define f(A) as the number of connected components in the resulting graph.\n\nYou are given a sequence B = (B_1, \\ldots, B_N) of length N. Each element of B is -1 or an integer between 1 and M, inclusive.\nBy replacing every occurrence of -1 in B with an integer between 1 and M, one can obtain M^q sequences B', where q is the number of -1 in B.\nFind the sum, modulo 998244353, of f(B') over all possible B'.\n\nInput\n\nThe input is given from Standard Input in the following format:\nN M\nB_1 \\ldots B_N\n\nOutput\n\nPrint the answer.\n\nConstraints\n\n\n- All input numbers are integers.\n- 2 \\leq N \\leq 2000\n- 1 \\leq M \\leq 2000\n- Each B_i is -1 or an integer between 1 and M, inclusive.\n\nSample Input 1\n\n3 3\n2 -1 1\n\nSample Output 1\n\n6\n\nThere are three possible sequences B': (2,1,1), (2,2,1), and (2,3,1).\nWhen B' = (2,1,1), an edge is drawn only between vertices 2 and 3, so the number of connected components is 2. Thus, f(B') = 2.\nSimilarly, f(B') = 2 for B' = (2,2,1) and f(B') = 2 for B' = (2,3,1), so the answer is 2 + 2 + 2 = 6.\n\nSample Input 2\n\n10 8\n-1 7 -1 -1 -1 2 -1 1 -1 2\n\nSample Output 2\n\n329785\n\nSample Input 3\n\n11 12\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n\nSample Output 3\n\n529513150\n\nRemember to find the sum modulo 998244353.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

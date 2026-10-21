@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "4fd01c18-cdf4-4268-9c6f-852158bc69f6",
+  "created": 1792432922,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 460,
+    "completion_tokens": 5278,
+    "total_tokens": 5738,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 5001
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 460
+  },
+  "finish_reason": "stop",
+  "text": "```python\nfrom typing import List\n\nclass Solution:\n    def minValidStrings(self, words: List[str], target: str) -> int:\n        trie = [{}]\n\n        for word in words:\n            node = 0\n            for ch in word:\n                nxt = trie[node].get(ch)\n                if nxt is None:\n                    nxt = len(trie)\n                    trie[node][ch] = nxt\n                    trie.append({})\n                node = nxt\n\n        n = len(target)\n        max_len = [0] * n\n\n        for i in range(n):\n            node = 0\n            j = i\n            while j < n:\n                nxt = trie[node].get(target[j])\n                if nxt is None:\n                    break\n                node = nxt\n                j += 1\n            max_len[i] = j - i\n\n        jumps = 0\n        cur_end = 0\n        farthest = 0\n\n        for i in range(n):\n            if i > cur_end:\n                return -1\n\n            farthest = max(farthest, i + max_len[i])\n\n            if i == cur_end:\n                jumps += 1\n                cur_end = farthest\n                if cur_end >= n:\n                    return jumps\n\n        return -1\n```",
+  "latency_s": 23.459,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given an array of strings words and a string target.\nA string x is called valid if x is a prefix of any string in words.\nReturn the minimum number of valid strings that can be concatenated to form target. If it is not possible to form target, return -1.\n \nExample 1:\n\nInput: words = [\"abc\",\"aaaaa\",\"bcdef\"], target = \"aabcdabc\"\nOutput: 3\nExplanation:\nThe target string can be formed by concatenating:\n\nPrefix of length 2 of words[1], i.e. \"aa\".\nPrefix of length 3 of words[2], i.e. \"bcd\".\nPrefix of length 3 of words[0], i.e. \"abc\".\n\n\nExample 2:\n\nInput: words = [\"abababab\",\"ab\"], target = \"ababaababa\"\nOutput: 2\nExplanation:\nThe target string can be formed by concatenating:\n\nPrefix of length 5 of words[0], i.e. \"ababa\".\nPrefix of length 5 of words[0], i.e. \"ababa\".\n\n\nExample 3:\n\nInput: words = [\"abcdef\"], target = \"xyz\"\nOutput: -1\n\n \nConstraints:\n\n1 <= words.length <= 100\n1 <= words[i].length <= 5 * 10^3\nThe input is generated such that sum(words[i].length) <= 10^5.\nwords[i] consists only of lowercase English letters.\n1 <= target.length <= 5 * 10^3\ntarget consists only of lowercase English letters.\n\nStarter code / required signature:\nclass Solution:\n    def minValidStrings(self, words: List[str], target: str) -> int:\n        \n\nUse the required function/method named minValidStrings. Preserve the required class and signature; do not read stdin.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

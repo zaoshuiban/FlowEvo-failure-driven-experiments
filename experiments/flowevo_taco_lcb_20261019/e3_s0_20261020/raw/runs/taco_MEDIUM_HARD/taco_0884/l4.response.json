@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "b79effff-f240-460a-9fbe-00a763c9a2d8",
+  "created": 1792443749,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 944,
+    "completion_tokens": 8683,
+    "total_tokens": 9627,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8481
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 432
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        x = data[idx + 1]\n        idx += 2\n\n        degree = [0] * (n + 1)\n\n        for _ in range(n - 1):\n            u = data[idx]\n            v = data[idx + 1]\n            idx += 2\n            degree[u] += 1\n            degree[v] += 1\n\n        if degree[x] <= 1 or n % 2 == 0:\n            answers.append(\"Ayush\")\n        else:\n            answers.append(\"Ashish\")\n\n    sys.stdout.write(\"\\n\".join(answers) + \"\\n\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 41.994,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nAyush and Ashish play a game on an unrooted tree consisting of $n$ nodes numbered $1$ to $n$. Players make the following move in turns:   Select any leaf node in the tree and remove it together with any edge which has this node as one of its endpoints. A leaf node is a node with degree less than or equal to $1$. \n\nA tree is a connected undirected graph without cycles.\n\nThere is a special node numbered $x$. The player who removes this node wins the game. \n\nAyush moves first. Determine the winner of the game if each player plays optimally.\n\n\n-----Input-----\n\nThe first line of the input contains a single integer $t$ $(1 \\leq t \\leq 10)$ — the number of testcases. The description of the test cases follows.\n\nThe first line of each testcase contains two integers $n$ and $x$ $(1\\leq n \\leq 1000, 1 \\leq x \\leq n)$ — the number of nodes in the tree and the special node respectively.\n\nEach of the next $n-1$ lines contain two integers $u$, $v$ $(1 \\leq u, v \\leq n, \\text{ } u \\ne v)$, meaning that there is an edge between nodes $u$ and $v$ in the tree.\n\n\n-----Output-----\n\nFor every test case, if Ayush wins the game, print \"Ayush\", otherwise print \"Ashish\" (without quotes).\n\n\n-----Examples-----\nInput\n1\n3 1\n2 1\n3 1\n\nOutput\nAshish\n\nInput\n1\n3 2\n1 2\n1 3\n\nOutput\nAyush\n\n\n\n-----Note-----\n\nFor the $1$st test case, Ayush can only remove node $2$ or $3$, after which node $1$ becomes a leaf node and Ashish can remove it in his turn.\n\nFor the $2$nd test case, Ayush can remove node $2$ in the first move itself.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    t = data[0]\n    idx = 1\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        x = data[idx + 1]\n        idx += 2\n\n        degree = [0] * (n + 1)\n\n        for _ in range(n - 1):\n            u = data[idx]\n            v = data[idx + 1]\n            idx += 2\n            degree[u] += 1\n            degree[v] += 1\n\n        if degree[x] <= 1 or n % 2 == 0:\n            answers.append(\"Ayush\")\n        else:\n            answers.append(\"Ashish\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.2,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "65292bee-ac2b-43b4-bfa6-f1e20813085f",
+  "created": 1792442820,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 631,
+    "completion_tokens": 6917,
+    "total_tokens": 7548,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6473
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 631
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\nclass DSU:\n    __slots__ = (\"parent\", \"size\")\n\n    def __init__(self, n):\n        self.parent = list(range(n + 1))\n        self.size = [1] * (n + 1)\n\n    def find(self, x):\n        parent = self.parent\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(self, a, b):\n        ra = self.find(a)\n        rb = self.find(b)\n        if ra == rb:\n            return False\n        if self.size[ra] < self.size[rb]:\n            ra, rb = rb, ra\n        self.parent[rb] = ra\n        self.size[ra] += self.size[rb]\n        return True\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m1 = next(it)\n    m2 = next(it)\n\n    dsu1 = DSU(n)\n    dsu2 = DSU(n)\n\n    for _ in range(m1):\n        u = next(it)\n        v = next(it)\n        dsu1.union(u, v)\n\n    for _ in range(m2):\n        u = next(it)\n        v = next(it)\n        dsu2.union(u, v)\n\n    answer = []\n\n    for u in range(1, n + 1):\n        for v in range(u + 1, n + 1):\n            if dsu1.find(u) != dsu1.find(v) and dsu2.find(u) != dsu2.find(v):\n                answer.append((u, v))\n                dsu1.union(u, v)\n                dsu2.union(u, v)\n\n    output = [str(len(answer))]\n    output.extend(f\"{u} {v}\" for u, v in answer)\n\n    sys.stdout.write(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 31.534,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThis is the easy version of the problem. The only difference between the two versions is the constraint on n. You can make hacks only if all versions of the problem are solved.\n\nA forest is an undirected graph without cycles (not necessarily connected).\n\nMocha and Diana are friends in Zhijiang, both of them have a forest with nodes numbered from 1 to n, and they would like to add edges to their forests such that: \n\n  * After adding edges, both of their graphs are still forests. \n  * They add the same edges. That is, if an edge (u, v) is added to Mocha's forest, then an edge (u, v) is added to Diana's forest, and vice versa. \n\n\n\nMocha and Diana want to know the maximum number of edges they can add, and which edges to add.\n\nInput\n\nThe first line contains three integers n, m_1 and m_2 (1 ≤ n ≤ 1000, 0 ≤ m_1, m_2 < n) — the number of nodes and the number of initial edges in Mocha's forest and Diana's forest.\n\nEach of the next m_1 lines contains two integers u and v (1 ≤ u, v ≤ n, u ≠ v) — the edges in Mocha's forest.\n\nEach of the next m_2 lines contains two integers u and v (1 ≤ u, v ≤ n, u ≠ v) — the edges in Diana's forest.\n\nOutput\n\nThe first line contains only one integer h, the maximum number of edges Mocha and Diana can add (in each forest).\n\nEach of the next h lines contains two integers u and v (1 ≤ u, v ≤ n, u ≠ v) — the edge you add each time.\n\nIf there are multiple correct answers, you can print any one of them.\n\nExamples\n\nInput\n\n\n3 2 2\n1 2\n2 3\n1 2\n1 3\n\n\nOutput\n\n\n0\n\n\nInput\n\n\n5 3 2\n5 4\n2 1\n4 3\n4 3\n1 4\n\n\nOutput\n\n\n1\n2 4\n\n\nInput\n\n\n8 1 2\n1 7\n2 6\n1 5\n\n\nOutput\n\n\n5\n5 2\n2 3\n3 4\n4 7\n6 8\n\nNote\n\nIn the first example, we cannot add any edge.\n\nIn the second example, the initial forests are as follows.\n\n<image>\n\nWe can add an edge (2, 4).\n\n<image>\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

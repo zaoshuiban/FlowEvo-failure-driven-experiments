@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "9a36708c-985e-4af4-bfdd-31a9cd24d536",
+  "created": 1792454306,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1022,
+    "completion_tokens": 29330,
+    "total_tokens": 30352,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 28925
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1022
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer\n    n, t = map(int, data.readline().split())\n    s = data.readline().strip()\n\n    total_houses = s.count(b'H')\n    total_shops = s.count(b'S')\n    rightmost_house = s.rfind(b'H') + 1  # 1-indexed position\n\n    # Even with all needed candies, we must reach the rightmost house.\n    if t < rightmost_house:\n        print(-1)\n        return\n\n    H = total_houses\n    S_total = total_shops\n    R = rightmost_house\n\n    def feasible(k: int) -> bool:\n        if k + S_total < H:\n            return False\n\n        balance = k\n        deficit_count = 0\n        best_f = 0\n        shops = 0\n\n        for idx, ch in enumerate(s, 1):\n            # Prefix of length idx-1 is before the edge (idx-1, idx).\n            if balance < 0:\n                deficit_count += 1\n\n            f = -idx + 2 * deficit_count\n            if f < best_f:\n                best_f = f\n\n            if ch == 72:       # 'H'\n                balance -= 1\n            elif ch == 83:     # 'S'\n                balance += 1\n                shops += 1\n\n            if idx >= R and k + shops >= H:\n                minimum_time = 2 * idx + best_f\n                return minimum_time <= t\n\n        return False\n\n    lo = -1\n    hi = H\n\n    while hi - lo > 1:\n        mid = (lo + hi) // 2\n        if feasible(mid):\n            hi = mid\n        else:\n            lo = mid\n\n    print(hi)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 151.255,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nFor he knew every Who down in Whoville beneath, Was busy now, hanging a mistletoe wreath. \"And they're hanging their stockings!\" he snarled with a sneer, \"Tomorrow is Christmas! It's practically here!\"Dr. Suess, How The Grinch Stole Christmas\n\nChristmas celebrations are coming to Whoville. Cindy Lou Who and her parents Lou Lou Who and Betty Lou Who decided to give sweets to all people in their street. They decided to give the residents of each house on the street, one kilogram of sweets. So they need as many kilos of sweets as there are homes on their street.\n\nThe street, where the Lou Who family lives can be represented as n consecutive sections of equal length. You can go from any section to a neighbouring one in one unit of time. Each of the sections is one of three types: an empty piece of land, a house or a shop. Cindy Lou and her family can buy sweets in a shop, but no more than one kilogram of sweets in one shop (the vendors care about the residents of Whoville not to overeat on sweets).\n\nAfter the Lou Who family leave their home, they will be on the first section of the road. To get to this section of the road, they also require one unit of time. We can assume that Cindy and her mom and dad can carry an unlimited number of kilograms of sweets. Every time they are on a house section, they can give a kilogram of sweets to the inhabitants of the house, or they can simply move to another section. If the family have already given sweets to the residents of a house, they can't do it again. Similarly, if they are on the shop section, they can either buy a kilo of sweets in it or skip this shop. If they've bought a kilo of sweets in a shop, the seller of the shop remembered them and the won't sell them a single candy if they come again. The time to buy and give sweets can be neglected. The Lou Whos do not want the people of any house to remain without food.\n\nThe Lou Whos want to spend no more than t time units of time to give out sweets, as they really want to have enough time to prepare for the Christmas celebration. In order to have time to give all the sweets, they may have to initially bring additional k kilos of sweets.\n\nCindy Lou wants to know the minimum number of k kilos of sweets they need to take with them, to have time to give sweets to the residents of each house in their street.\n\nYour task is to write a program that will determine the minimum possible value of k.\n\n\n-----Input-----\n\nThe first line of the input contains two space-separated integers n and t (2 ≤ n ≤ 5·10^5, 1 ≤ t ≤ 10^9). The second line of the input contains n characters, the i-th of them equals \"H\" (if the i-th segment contains a house), \"S\" (if the i-th segment contains a shop) or \".\" (if the i-th segment doesn't contain a house or a shop). \n\nIt is guaranteed that there is at least one segment with a house.\n\n\n-----Output-----\n\nIf there isn't a single value of k that makes it possible to give sweets to everybody in at most t units of time, print in a single line \"-1\" (without the quotes). Otherwise, print on a single line the minimum possible value of k.\n\n\n-----Examples-----\nInput\n6 6\nHSHSHS\n\nOutput\n1\n\nInput\n14 100\n...HHHSSS...SH\n\nOutput\n0\n\nInput\n23 50\nHHSS.......SSHHHHHHHHHH\n\nOutput\n8\n\n\n\n-----Note-----\n\nIn the first example, there are as many stores, as houses. If the family do not take a single kilo of sweets from home, in order to treat the inhabitants of the first house, they will need to make at least one step back, and they have absolutely no time for it. If they take one kilogram of sweets, they won't need to go back.\n\nIn the second example, the number of shops is equal to the number of houses and plenty of time. Available at all stores passing out candy in one direction and give them when passing in the opposite direction.\n\nIn the third example, the shops on the street are fewer than houses. The Lou Whos have to take the missing number of kilograms of sweets with them from home.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

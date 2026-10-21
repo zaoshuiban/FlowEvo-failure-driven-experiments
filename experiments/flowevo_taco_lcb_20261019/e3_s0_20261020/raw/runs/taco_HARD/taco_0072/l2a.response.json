@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "376b7b33-9cdb-4d0b-8ad8-3d7a8c333547",
+  "created": 1792436722,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 714,
+    "completion_tokens": 15761,
+    "total_tokens": 16475,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14995
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 202
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\nFULL = 3\n\n\ndef advance_free(S, g):\n    \"\"\"Advance through g consecutive completely free columns.\"\"\"\n    if g <= 0 or S == 0:\n        return S\n\n    p0 = S & 1   # state 0 is possible\n    p1 = S & 2   # state 1 is possible\n    p2 = S & 4   # state 2 is possible\n    p3 = S & 8   # state 3 is possible\n\n    if g == 1:\n        res = 0\n        if p0 or p3:\n            res |= 1 << 0\n        if p2:\n            res |= 1 << 1\n        if p1:\n            res |= 1 << 2\n        if p0:\n            res |= 1 << 3\n        return res\n\n    both03 = bool(p0 or p3)\n    res = 0\n\n    if both03:\n        res |= (1 << 0) | (1 << 3)\n\n    if g & 1:\n        # Odd g >= 3\n        if p2:\n            res |= 1 << 1\n        if p1:\n            res |= 1 << 2\n    else:\n        # Even g >= 2\n        if p1:\n            res |= 1 << 1\n        if p2:\n            res |= 1 << 2\n\n    return res\n\n\ndef advance_block(S, blocked):\n    \"\"\"Advance through one column with blocked cells mask.\"\"\"\n    res = 0\n\n    for prev in range(4):\n        if (S & (1 << prev)) == 0:\n            continue\n        if prev & blocked:\n            continue\n\n        remaining = FULL ^ (blocked | prev)\n\n        if remaining == 0:\n            res |= 1 << 0\n        elif remaining == 1:\n            res |= 1 << 1\n        elif remaining == 2:\n            res |= 1 << 2\n        else:  # remaining == 3\n            res |= (1 << 0) | (1 << 3)\n\n    return res\n\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    t = data[idx]\n    idx += 1\n\n    answers = []\n\n    for _ in range(t):\n        n = data[idx]\n        m = data[idx + 1]\n        idx += 2\n\n        blocks = []\n\n        for _ in range(m):\n            r = data[idx]\n            c = data[idx + 1]\n            idx += 2\n            blocks.append((c, 1 << (r - 1)))\n\n        blocks.sort()\n\n        # Bit i means frontier mask i is reachable.\n        S = 1  # initially frontier mask 0\n        prev_col = 0\n\n        i = 0\n        while i < m:\n            c = blocks[i][0]\n            blocked = 0\n\n            while i < m and blocks[i][0] == c:\n                blocked |= blocks[i][1]\n                i += 1\n\n            gap = c - prev_col - 1\n            if gap > 0:\n                S = advance_free(S, gap)\n\n            S = advance_block(S, blocked)\n            prev_col = c\n\n        S = advance_free(S, n - prev_col)\n\n        answers.append(\"YES\" if (S & 1) else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 68.206,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nEvery year Santa Claus gives gifts to all children. However, each country has its own traditions, and this process takes place in different ways. For example, in Berland you need to solve the New Year's puzzle.\n\nPolycarp got the following problem: given a grid strip of size $2 \\times n$, some cells of it are blocked. You need to check if it is possible to tile all free cells using the $2 \\times 1$ and $1 \\times 2$ tiles (dominoes).\n\nFor example, if $n = 5$ and the strip looks like this (black cells are blocked):\n\nThen it can be tiled, for example, using two vertical and two horizontal tiles, as in the picture below (different tiles are marked by different colors).\n\nAnd if $n = 3$ and the strip looks like this:\n\nIt is impossible to tile free cells.\n\nPolycarp easily solved this task and received his New Year's gift. Can you solve it?\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\leq t \\leq 10^4$) — the number of test cases. Then $t$ test cases follow.\n\nEach test case is preceded by an empty line.\n\nThe first line of each test case contains two integers $n$ and $m$ ($1 \\le n \\le 10^9$, $1 \\le m \\le 2 \\cdot 10^5$) — the length of the strip and the number of blocked cells on it.\n\nEach of the next $m$ lines contains two integers $r_i, c_i$ ($1 \\le r_i \\le 2, 1 \\le c_i \\le n$) — numbers of rows and columns of blocked cells. It is guaranteed that all blocked cells are different, i.e. $(r_i, c_i) \\ne (r_j, c_j), i \\ne j$.\n\nIt is guaranteed that the sum of $m$ over all test cases does not exceed $2 \\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, print on a separate line:\n\n\"YES\", if it is possible to tile all unblocked squares with the $2 \\times 1$ and $1 \\times 2$ tiles;\n\n\"NO\" otherwise.\n\nYou can output \"YES\" and \"NO\" in any case (for example, the strings yEs, yes, Yes and YES will be recognized as positive).\n\n\n-----Examples-----\n\nInput\n3\n\n5 2\n2 2\n1 4\n\n3 2\n2 1\n2 3\n\n6 4\n2 1\n2 3\n2 4\n2 6\nOutput\nYES\nNO\nNO\n\n\n-----Note-----\n\nThe first two test cases are explained in the statement.\n\nIn the third test case the strip looks like this:\n\nIt is easy to check that the unblocked squares on it can not be tiled.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.5,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

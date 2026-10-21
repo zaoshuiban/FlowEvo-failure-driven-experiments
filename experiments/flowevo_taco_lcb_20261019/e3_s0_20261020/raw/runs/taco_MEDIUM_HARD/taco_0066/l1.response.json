@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "f607ee60-deda-4858-af66-eaf94735c037",
+  "created": 1792439942,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 663,
+    "completion_tokens": 6379,
+    "total_tokens": 7042,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6155
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 663
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    speeds = sorted(data[1:1 + n])\n\n    # prev[l] stores the minimum sum of discrepancies for the interval\n    # speeds[l ... l + length - 1], where 'length' is the current length.\n    prev = [0] * n\n\n    for length in range(2, n + 1):\n        count = n - length + 1\n        cur = [0] * count\n\n        for left in range(count):\n            right = left + length - 1\n            best_previous = prev[left]\n            if prev[left + 1] < best_previous:\n                best_previous = prev[left + 1]\n\n            cur[left] = best_previous + (speeds[right] - speeds[left])\n\n        prev = cur\n\n    print(prev[0])\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 27.802,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nThe student council is preparing for the relay race at the sports festival.\n\nThe council consists of n members. They will run one after the other in the race, the speed of member i is s_i. The discrepancy d_i of the i-th stage is the difference between the maximum and the minimum running speed among the first i members who ran. Formally, if a_i denotes the speed of the i-th member who participated in the race, then d_i = max(a_1, a_2, ..., a_i) - min(a_1, a_2, ..., a_i).\n\nYou want to minimize the sum of the discrepancies d_1 + d_2 + ... + d_n. To do this, you are allowed to change the order in which the members run. What is the minimum possible sum that can be achieved?\n\nInput\n\nThe first line contains a single integer n (1 ≤ n ≤ 2000) — the number of members of the student council.\n\nThe second line contains n integers s_1, s_2, ..., s_n (1 ≤ s_i ≤ 10^9) – the running speeds of the members.\n\nOutput\n\nPrint a single integer — the minimum possible value of d_1 + d_2 + ... + d_n after choosing the order of the members.\n\nExamples\n\nInput\n\n\n3\n3 1 2\n\n\nOutput\n\n\n3\n\n\nInput\n\n\n1\n5\n\n\nOutput\n\n\n0\n\n\nInput\n\n\n6\n1 6 3 3 6 3\n\n\nOutput\n\n\n11\n\n\nInput\n\n\n6\n104 943872923 6589 889921234 1000000000 69\n\n\nOutput\n\n\n2833800505\n\nNote\n\nIn the first test case, we may choose to make the third member run first, followed by the first member, and finally the second. Thus a_1 = 2, a_2 = 3, and a_3 = 1. We have:\n\n  * d_1 = max(2) - min(2) = 2 - 2 = 0. \n  * d_2 = max(2, 3) - min(2, 3) = 3 - 2 = 1. \n  * d_3 = max(2, 3, 1) - min(2, 3, 1) = 3 - 1 = 2. \n\n\n\nThe resulting sum is d_1 + d_2 + d_3 = 0 + 1 + 2 = 3. It can be shown that it is impossible to achieve a smaller value.\n\nIn the second test case, the only possible rearrangement gives d_1 = 0, so the minimum possible result is 0.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

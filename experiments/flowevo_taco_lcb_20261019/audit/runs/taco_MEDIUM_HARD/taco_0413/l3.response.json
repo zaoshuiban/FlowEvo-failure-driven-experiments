@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "cdf8bd7d-140e-437e-b0c7-69bd5637592b",
+  "created": 1792439578,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 926,
+    "completion_tokens": 13662,
+    "total_tokens": 14588,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13321
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 542
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\n\ndef can_make_palindrome(s: bytes) -> bool:\n    n = len(s)\n    left, right = 0, n - 1\n\n    # Skip already matching pairs.\n    while left < right and s[left] == s[right]:\n        left += 1\n        right -= 1\n\n    # The original string is already a palindrome.\n    # For n >= 2, deleting a middle character always keeps it a palindrome.\n    if left >= right:\n        return n >= 1\n\n    # First mismatch: we must delete either s[left] or s[right].\n    # Try deleting s[left].\n    l, r = left + 1, right\n    while l < r and s[l] == s[r]:\n        l += 1\n        r -= 1\n    if l >= r:\n        return True\n\n    # Try deleting s[right].\n    l, r = left, right - 1\n    while l < r and s[l] == s[r]:\n        l += 1\n        r -= 1\n\n    return l >= r\n\n\ndef main() -> None:\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    t = int(data[0])\n    answers = []\n    idx = 1\n\n    for _ in range(t):\n        s = data[idx]\n        idx += 1\n        answers.append(\"YES\" if can_make_palindrome(s) else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "latency_s": 65.845,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nGiven a string s. Can you make it a palindrome by deleting exactly one character? Note that size of the string after deletion would be one less than it was before. \n\n-----Input-----\nFirst line of the input contains a single integer T denoting number of test cases.\nFor each test case, you are given a single line containing string  s. \n\n-----Output-----\nFor each test case, print YES or NO depending on the answer of the problem. \n\n-----Constraints-----\nSubtask 1, 35 points \n-  1 ≤ T ≤ 100\n- 2 ≤  size of string s ≤ 1000\n-  String s contains lowercase English alphabets (ie. from 'a' to 'z').\n\nSubtask 2, 65 points \n- 2 ≤  size of string s ≤ 10^5\n-  Sum of size of string s over all the input test cases won't exceed 10^6\n-  String s contains lowercase English alphabets (ie. from 'a' to 'z').\n\n-----Example-----\nInput:\n4\naaa\nabc\nabdbca\nabba\n\nOutput:\nYES\nNO\nYES\nYES\n\n-----Explanation-----\nExample case 1. Delete any one 'a', resulting string is \"aa\" which is a palindrome.\nExample case 2. It is not possible to delete exactly one character and having a palindrome.\nExample case 3. Delete 'c', resulting string is \"abdba\" which is a palindrome. \nExample case 4. Delete 'b', resulting string is \"aba\" which is a palindrome.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\n\n\ndef can_make_palindrome(s):\n    n = len(s)\n    left, right = 0, n - 1\n\n    while left < right and s[left] == s[right]:\n        left += 1\n        right -= 1\n\n    # The original string is already a palindrome.\n    if left >= right:\n        return True\n\n    # Try deleting s[left].\n    l, r = left + 1, right\n    while l < r and s[l] == s[r]:\n        l += 1\n        r -= 1\n\n    if l >= r:\n        return True\n\n    # Try deleting s[right].\n    l, r = left, right - 1\n    while l < r and s[l] == s[r]:\n        l += 1\n        r -= 1\n\n    return l >= r\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    t = int(data[0])\n    answers = []\n\n    for i in range(1, t + 1):\n        s = data[i]\n        answers.append(\"YES\" if can_make_palindrome(s) else \"NO\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: You are given n segments on a line. There are no ends of some segments that coincide. For each segment find the number of segments it contains.\n\nInput\n\nThe first line contains a single integer n (1 ≤ \nSolution:\nimport sys\nfrom bisect import bisect_left\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def add(self, idx, val):\n        while idx <= self.n:\n            self.bit[idx] += val\n            idx += idx & -idx\n\n    def sum(self, idx):\n        res = 0\n        while idx > 0:\n            res += self.bit[idx]\n            idx -= idx & -idx\n        return res\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n\n    s"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

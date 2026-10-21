@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "7fd95b1e-8627-498b-9224-2b338404261a",
+  "created": 1792438278,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 1891,
+    "completion_tokens": 32768,
+    "total_tokens": 34659,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 32768
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 867
+  },
+  "finish_reason": "length",
+  "text": "",
+  "latency_s": 173.443,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nChef's robot starts from the coordinate (0, 0) and wishes to reach to the coordinate (N, M).  \n\nThe initial energy of the robot is 0. There are K batteries kept at some of the coordinates such that picking up the i^{th} battery costs C_{i} units, and, on picking the i^{th} battery, the current energy of the robot becomes E_{i}.\n\nNote that one coordinate can have multiple batteries but the robot can pick at most one battery out of those.\n\nFor example, if the robot reaches a certain coordinate with energy A and there are two batteries with energy B_{1} and B_{2} on that coordinate, the robot may choose at most one battery out of these. On choosing the first battery, the energy of the robot becomes B_{1} (not A+B_{1}).\n\nThe robot can walk in all the four directions as follows:\nMove up:  Moving from coordinate (X, Y) to (X, Y+1), the robot loses 1 unit of energy.\nMove down: Moving from coordinate (X, Y) to (X, Y-1), the robot gains 1 unit of energy.\nMove right: Moving from coordinate (X, Y) to (X+1, Y), the robot loses 1 unit of energy.\nMove left: Moving from coordinate (X, Y) to (X-1, Y), the robot gains 1 unit of energy.\n\nFind the minimum cost to reach (N, M) if the robot maintains a non-negative energy throughout the journey (including the destination). \n\n------ Input Format ------ \n\n- The first line of input contains a single integer T, the number of test cases. The description of the test cases follows.\n- Each test cases consists of two lines of input.\n- The first line contains three positive integers N, M, and K, the coordinates of the destination and the number of batteries.\n- Next K lines have four space-separated integers each: X_{i}, Y_{i}, C_{i}, E_{i}. The i^{th} line indicates that the coordinate (X_{i}, Y_{i}) has a battery with cost C_{i} and energy E_{i}.\n- The input data guarantees that the robot can reach the destination.\n\n------ Output Format ------ \n\nFor each test case, output a single integer, the minimum cost from (0,0) to (N, M).\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$1 ≤ K ≤ 10^{5}$\n$0 ≤ X_{i},Y_{i} ≤ 2*10^{9}$\n$1 ≤ N,M,C_{i},E_{i} ≤ 2*10^{9}$\n- The sum of $K$ over all test cases won't exceed $10^{5}$.\n\n----- Sample Input 1 ------ \n2\n5 5 3\n0 0 10 10\n0 0 2 4\n2 2 1 1\n5 5 4\n0 0 10 10\n0 0 2 4\n2 2 1 1\n4 1 3 5\n\n----- Sample Output 1 ------ \n10\n6\n----- explanation 1 ------ \nTest case $1$: Use the first battery with cost $10$. Thus, at coordinate $(0, 0)$, the energy of the robot becomes $10$ units. The robot can traverse the path :$(0,0) - (0, 1) - \\ldots - (0, 5) - (1, 5) - \\ldots - (5,5)$. It can be shown that the robot cannot reach the destination in less than $10$ units cost.\n\nTest case $2$: \n- Use the $2^{nd}$ battery: At coordinate $(0, 0)$, robot picks the $2^{nd}$ battery and the energy of the robot becomes $4$ units. The robot can move to coordinate $(2, 2)$ using this energy. On reaching $(2, 2)$, robot's energy is $0$.\n- Use the $3^{rd}$ battery: At coordinate $(2, 2)$, robot picks the $3^{rd}$ battery and the energy of the robot becomes $1$ unit. The robot can move from $(2, 2)$ to $(2, 1)$ and gain $1$ unit of energy. Thus, it has $2$ units of energy now. It can now move from $(2, 1)$ to $(4, 1)$ using this energy.\n- Use the $4^{th}$ battery: At coordinate $(4, 1)$, robot picks the $4^{th}$ battery and the energy of the robot becomes $5$ units. The robot can now move from $(4, 1)$ to $(5, 5)$.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity.\n\nPrevious candidate:\n```python\nimport sys\nfrom bisect import bisect_left\n\nINF = 10**30\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    T = next(it)\n    answers = []\n\n    for _ in range(T):\n        N = next(it)\n        M = next(it)\n        K = next(it)\n\n        batteries = []\n        reach_values = [0]\n\n        for _ in range(K):\n            x = next(it)\n            y = next(it)\n            c = next(it)\n            e = next(it)\n\n            s = x + y\n            reach = s + e\n            batteries.append((s, reach, c))\n            reach_values.append(reach)\n\n        target_sum = N + M\n\n        batteries.sort(key=lambda item: item[0])\n\n        values = sorted(set(reach_values))\n        nvals = len(values)\n\n        size = 1\n        while size < nvals:\n            size <<= 1\n\n        seg = [INF] * (2 * size)\n\n        def update(pos: int, val: int) -> None:\n            idx = pos + size\n            if val >= seg[idx]:\n                return\n            seg[idx] = val\n            idx >>= 1\n            while idx:\n                seg[idx] = min(seg[idx << 1], seg[idx << 1 | 1])\n                idx >>= 1\n\n        def query_from(left: int) -> int:\n            if left >= nvals:\n                return INF\n\n            l = left + size\n            r = nvals + size\n            res = INF\n\n            while l < r:\n                if l & 1:\n                    res = min(res, seg[l])\n                    l += 1\n                if r & 1:\n                    r -= 1\n                    res = min(res, seg[r])\n                l >>= 1\n                r >>= 1\n\n            return res\n\n        source_pos = bisect_left(values, 0)\n        update(source_pos, 0)\n\n        for s, reach, cost in batteries:\n            left = bisect_left(values, s)\n            base_cost = query_from(left)\n\n            if base_cost < INF:\n                new_cost = base_cost + cost\n                pos = bisect_left(values, reach)\n                update(pos, new_cost)\n\n        target_pos = bisect_left(values, target_sum)\n        answers.append(str(query_from(target_pos)))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```\n\nVerifier feedback: Wrong answer.\nFix the solution and return the corrected complete Python program/function.\n\nReference from a previously solved problem:\nExample:\nProblem: There are n lamps on a line, numbered from 1 to n. Each one has an initial state off (0) or on (1).\n\nYou're given k subsets A_1, …, A_k of \\{1, 2, ..., n\\}, such that the intersection of any three sub\nSolution:\nimport sys\n\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n    k = int(next(it))\n    s = next(it)\n\n    first = [-1] * n\n    second = [-1] * n\n\n    for j in range(k):\n        c = int(next(it))\n        for _ in range(c):\n            x = int(next(it)) - 1\n            if first[x] == -1:\n                first[x] = j\n            else:\n                second[x] = j\n\n    del data, it\n\n    parent = list(range(k))\n    par"
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}

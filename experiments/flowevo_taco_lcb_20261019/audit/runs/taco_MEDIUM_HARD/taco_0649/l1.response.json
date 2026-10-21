@@ -1,0 +1,41 @@
+{
+  "model": "deepseek-flash",
+  "id": "067f3676-5281-4fad-ab1f-cd5f850d6c5c",
+  "created": 1792437143,
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+  "usage": {
+    "prompt_tokens": 560,
+    "completion_tokens": 923,
+    "total_tokens": 1483,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 661
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 560
+  },
+  "finish_reason": "stop",
+  "text": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    t = int(next(it))\n    answers = []\n\n    for _ in range(t):\n        n = int(next(it))\n        m = int(next(it))\n        strings = [next(it) for _ in range(n)]\n\n        base = strings[0]\n        candidates = {base}\n\n        for pos in range(m):\n            for c in \"abcdefghijklmnopqrstuvwxyz\":\n                if c != base[pos]:\n                    candidates.add(base[:pos] + c + base[pos + 1:])\n\n        answer = None\n\n        for candidate in candidates:\n            valid = True\n\n            for s in strings:\n                diff = 0\n                for j in range(m):\n                    if s[j] != candidate[j]:\n                        diff += 1\n                        if diff > 1:\n                            break\n\n                if diff > 1:\n                    valid = False\n                    break\n\n            if valid:\n                answer = candidate\n                break\n\n        answers.append(answer if answer is not None else \"-1\")\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+  "latency_s": 3.953,
+  "request": {
+    "model": "deepseek-reasoner",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution."
+      },
+      {
+        "role": "user",
+        "content": "Solve this competitive programming problem in Python 3.10. Return the complete solution in one ```python``` block.\n\nProblem:\nYou are given $n$ strings $a_1, a_2, \\ldots, a_n$: all of them have the same length $m$. The strings consist of lowercase English letters.\n\nFind any string $s$ of length $m$ such that each of the given $n$ strings differs from $s$ in at most one position. Formally, for each given string $a_i$, there is no more than one position $j$ such that $a_i[j] \\ne s[j]$.\n\nNote that the desired string $s$ may be equal to one of the given strings $a_i$, or it may differ from all the given strings.\n\nFor example, if you have the strings abac and zbab, then the answer to the problem might be the string abab, which differs from the first only by the last character, and from the second only by the first.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 100$) — the number of test cases. Then $t$ test cases follow.\n\nEach test case starts with a line containing two positive integers $n$ ($1 \\le n \\le 10$) and $m$ ($1 \\le m \\le 10$) — the number of strings and their length.\n\nThen follow $n$ strings $a_i$, one per line. Each of them has length $m$ and consists of lowercase English letters.\n\n\n-----Output-----\n\nPrint $t$ answers to the test cases. Each answer (if it exists) is a string of length $m$ consisting of lowercase English letters. If there are several answers, print any of them. If the answer does not exist, print \"-1\" (\"minus one\", without quotes).\n\n\n-----Example-----\nInput\n5\n2 4\nabac\nzbab\n2 4\naaaa\nbbbb\n3 3\nbaa\naaa\naab\n2 2\nab\nbb\n3 1\na\nb\nc\n\nOutput\nabab\n-1\naaa\nab\nz\n\n\n-----Note-----\n\nThe first test case was explained in the statement.\n\nIn the second test case, the answer does not exist.\n\nWrite a complete program that reads standard input and prints the required output.\n\nThink carefully about correctness, edge cases and time/memory complexity."
+      }
+    ],
+    "max_tokens": 32768,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high"
+  }
+}
