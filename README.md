@@ -33,3 +33,19 @@ python3 experiments/flowevo_taco_lcb_20261019/e3_s1_20261020/code/verify_deliver
 原始历史失败标签、修正评分、公开有限测试结果是不同证据层级。有限 PASS 不等于全域正确；被废弃的 stress_v1 已在 exclusions.json 标记，不能用于结论。工程错误夹具不计入机制支持。
 
 来源：TACO https://huggingface.co/datasets/BAAI/TACO；LiveCodeBench https://huggingface.co/datasets/livecodebench/code_generation_lite 。本仓库收录的是原实验使用的冻结文件，具体来源字段以任务 JSON 和原始实验配置为准。
+
+
+## v2 本地开发：S1.1 零 API 插件
+
+当前可编辑实现增加证据触发、题间发布、双 Hook、实验授权及独立学习预算。历史归档保持不变；尚未运行真实生成或 B/G/M/F 实验。
+
+```sh
+python3 -m unittest discover -s FlowEvo/tests -p 'test_failure_evo*.py' -v
+python3 scripts/smoke_failure_evo_v2.py
+```
+
+48题回放需要先按上文恢复数据；输出写入忽略的 `smoke-results/`。
+
+- [机制设计 v2](docs/FlowEvo失败驱动系统设计v2.md)
+- [实施、验收与限制](docs/FlowEvo_v2_S1.1实现与验收.md)
+- [当前实验协议](docs/FlowEvo_E3下一步实验计划.md)
