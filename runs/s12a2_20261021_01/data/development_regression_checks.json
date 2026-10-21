@@ -1,0 +1,103 @@
+{
+  "role": "design_only_not_independent_regression",
+  "checkpoints": [
+    {
+      "checkpoint_id": "taco_0226:l1",
+      "task_public": {
+        "task_id": "taco_0226",
+        "prompt": "Read problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a rooted tree with $N$ nodes (numbered $1$ through $N$; node $1$ is the root). For each $i$ ($1 ≤ i ≤ N-1$), the parent of the node $i+1$ is $p_{i}$.\n\nYou need to answer $Q$ queries. (Sounds quite familiar!) For each query, first, $W$ tasks are given to node $V$. These tasks are processed in the tree in the following way:\nWhen a node receives $a$ tasks and it has no children, all $a$ tasks are executed by this node.\nOtherwise, i.e. if the node has $K > 0$ children, where $K$ is a divisor of $a$, then this node gives $a/K$ of these tasks to each of its children. This process is performed recursively by each child on the tasks it receives.\nOtherwise, i.e. if the node has $K > 0$ children, but $K$ is not a divisor of $a$, all $a$ tasks are ignored and none of this node's children receive any tasks.\n\nFor each query, find the number of tasks that are not executed, i.e. end up ignored, possibly after passing down the tree.\n\n------  Input ------\nThe first line of the input contains a single integer $N$.\nThe second line contains $N-1$ space-separated integers $p_{1}, p_{2}, \\ldots, p_{N-1}$.\nThe third line contains a single integer $Q$.\n$Q$ lines follow. Each of these lines contains two space-separated integers $V$ and $W$ describing a query.\n\n------  Output ------\nFor each query, print a single line containing one integer ― the number of tasks that are not executed.\n\n------  Constraints ------\n$1 ≤ N, Q ≤ 10^{5}$\n$1 ≤ p_{i} ≤ N$ for each valid $i$\nthe graph described on the input is a tree\n$1 ≤ V ≤ N$\n$1 ≤ W ≤ 10^{6}$\n\n------  Subtasks ------\nSubtask #1 (20 points): $N ≤ 100$\n\nSubtask #2 (80 points): original constraints\n\n----- Sample Input 1 ------ \n5\n\n1 1 2 2\n\n2\n\n1 10\n\n1 20\n----- Sample Output 1 ------ \n5\n\n0",
+        "starter_code": "",
+        "function_name": null
+      },
+      "current": {
+        "event_id": "taco_0226:l1",
+        "stage": "l1",
+        "source_path": "experiments/flowevo_taco_lcb_20261019/e3_s0_20261020/raw/runs/taco_VERY_HARD/taco_0226/l1.py",
+        "sha256": "3ce7d7636f03d2dd137b761f6efd8defc165a9d11379b7a471aa83dab23f4349",
+        "structural_status": "OK",
+        "observed_at": "2026-10-19T18:49:05.965692+00:00",
+        "public_validation": "unavailable",
+        "historical_feedback": "not projected: legacy all-tests protocol"
+      },
+      "candidate_ledger": [
+        {
+          "event_id": "taco_0226:l1",
+          "stage": "l1",
+          "source_path": "experiments/flowevo_taco_lcb_20261019/e3_s0_20261020/raw/runs/taco_VERY_HARD/taco_0226/l1.py",
+          "sha256": "3ce7d7636f03d2dd137b761f6efd8defc165a9d11379b7a471aa83dab23f4349",
+          "structural_status": "OK",
+          "observed_at": "2026-10-19T18:49:05.965692+00:00",
+          "public_validation": "unavailable",
+          "historical_feedback": "not projected: legacy all-tests protocol"
+        }
+      ],
+      "public_cases": [
+        {
+          "case_id": "taco_0226:public-sample:1",
+          "visibility": "public",
+          "input": "5\n1 1 2 2\n2\n1 10\n1 20\n",
+          "expected": "5\n0\n",
+          "comparison": "whitespace_token_exact",
+          "reference": "original public problem statement sample",
+          "legality": "statement-provided sample",
+          "synthetic_fault": false
+        }
+      ],
+      "independent_cases": [],
+      "expected_behavior": "decline",
+      "historical_checkpoint": true,
+      "public_feedback_reconstruction": "NOT_EXECUTED",
+      "baseline_comparison": "checkpoint_artifact_only_not_full_native_continuation",
+      "limitation": "If earlier candidate passed newly reconstructed public tests, native public-feedback execution would have stopped earlier; do not resume the original saved trajectory as if unchanged."
+    },
+    {
+      "checkpoint_id": "engineering:no-public-checker",
+      "task_public": {
+        "task_id": "taco_0226",
+        "prompt": "Read problem statements in [Hindi], [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a rooted tree with $N$ nodes (numbered $1$ through $N$; node $1$ is the root). For each $i$ ($1 ≤ i ≤ N-1$), the parent of the node $i+1$ is $p_{i}$.\n\nYou need to answer $Q$ queries. (Sounds quite familiar!) For each query, first, $W$ tasks are given to node $V$. These tasks are processed in the tree in the following way:\nWhen a node receives $a$ tasks and it has no children, all $a$ tasks are executed by this node.\nOtherwise, i.e. if the node has $K > 0$ children, where $K$ is a divisor of $a$, then this node gives $a/K$ of these tasks to each of its children. This process is performed recursively by each child on the tasks it receives.\nOtherwise, i.e. if the node has $K > 0$ children, but $K$ is not a divisor of $a$, all $a$ tasks are ignored and none of this node's children receive any tasks.\n\nFor each query, find the number of tasks that are not executed, i.e. end up ignored, possibly after passing down the tree.\n\n------  Input ------\nThe first line of the input contains a single integer $N$.\nThe second line contains $N-1$ space-separated integers $p_{1}, p_{2}, \\ldots, p_{N-1}$.\nThe third line contains a single integer $Q$.\n$Q$ lines follow. Each of these lines contains two space-separated integers $V$ and $W$ describing a query.\n\n------  Output ------\nFor each query, print a single line containing one integer ― the number of tasks that are not executed.\n\n------  Constraints ------\n$1 ≤ N, Q ≤ 10^{5}$\n$1 ≤ p_{i} ≤ N$ for each valid $i$\nthe graph described on the input is a tree\n$1 ≤ V ≤ N$\n$1 ≤ W ≤ 10^{6}$\n\n------  Subtasks ------\nSubtask #1 (20 points): $N ≤ 100$\n\nSubtask #2 (80 points): original constraints\n\n----- Sample Input 1 ------ \n5\n\n1 1 2 2\n\n2\n\n1 10\n\n1 20\n----- Sample Output 1 ------ \n5\n\n0",
+        "starter_code": "",
+        "function_name": null
+      },
+      "current": {
+        "event_id": "taco_0226:l2a",
+        "stage": "l2a",
+        "source_path": "experiments/flowevo_taco_lcb_20261019/e3_s0_20261020/raw/runs/taco_VERY_HARD/taco_0226/l2a.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "structural_status": "EMPTY",
+        "observed_at": "2026-10-19T18:52:06.189875+00:00",
+        "public_validation": "unavailable",
+        "historical_feedback": "not projected: legacy all-tests protocol"
+      },
+      "candidate_ledger": [
+        {
+          "event_id": "taco_0226:l1",
+          "stage": "l1",
+          "source_path": "experiments/flowevo_taco_lcb_20261019/e3_s0_20261020/raw/runs/taco_VERY_HARD/taco_0226/l1.py",
+          "sha256": "3ce7d7636f03d2dd137b761f6efd8defc165a9d11379b7a471aa83dab23f4349",
+          "structural_status": "OK",
+          "observed_at": "2026-10-19T18:49:05.965692+00:00",
+          "public_validation": "unavailable",
+          "historical_feedback": "not projected: legacy all-tests protocol"
+        },
+        {
+          "event_id": "taco_0226:l2a",
+          "stage": "l2a",
+          "source_path": "experiments/flowevo_taco_lcb_20261019/e3_s0_20261020/raw/runs/taco_VERY_HARD/taco_0226/l2a.py",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "structural_status": "EMPTY",
+          "observed_at": "2026-10-19T18:52:06.189875+00:00",
+          "public_validation": "unavailable",
+          "historical_feedback": "not projected: legacy all-tests protocol"
+        }
+      ],
+      "public_cases": [],
+      "independent_cases": [],
+      "expected_behavior": "decline",
+      "historical_checkpoint": false,
+      "public_feedback_reconstruction": "NOT_EXECUTED",
+      "baseline_comparison": "checkpoint_artifact_only_not_full_native_continuation",
+      "limitation": "If earlier candidate passed newly reconstructed public tests, native public-feedback execution would have stopped earlier; do not resume the original saved trajectory as if unchanged.",
+      "engineering_only": true
+    }
+  ]
+}
