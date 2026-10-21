@@ -44,7 +44,8 @@ class LearningLoop:
             results.append(response)
         return tuple(results)
 
-    def run_pipeline(self, pipeline, *, design, gate, regression, at, revise=False):
+    def run_pipeline(self, pipeline, *, design, gate, regression, at, revise=False,
+                     data_manifest=None, environment=None):
         """Complete one pending family's generation/validation with frozen role manifests.
 
         A caller must explicitly assign independent shards per family. No automatic
@@ -54,8 +55,12 @@ class LearningLoop:
         if len(jobs) != 1:
             raise ValueError('assign exactly one pending family to these data shards')
         job = jobs[0]
-        result = pipeline.run(self.public_input(job, at), design=design, gate=gate,
-                              regression=regression, at=at, revise=revise)
+        public = self.public_input(job, at)
+        if environment is not None:
+            public['environment'] = environment
+        result = pipeline.run(public, design=design, gate=gate,
+                              regression=regression, at=at, revise=revise,
+                              data_manifest=data_manifest)
         self.queue.events.append('COMPILE_ATTEMPTED', dict(job), at)
         self.events.append('PIPELINE_FINISHED', dict(job_id=job['job_id'],
             stream_id=self.stream_id, status=result['status']), at)

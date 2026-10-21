@@ -1,0 +1,80 @@
+{
+  "protocol_id": "S1.2-local-preflight-v1",
+  "execution_status": "NOT_READY_FOR_PAID_RUN",
+  "user_scope": "Local downloaded repository; remote server verification removed by user",
+  "generation": {
+    "first_family": "incomplete_artifact_recovery",
+    "families_authorized": 0,
+    "proposed_families": 1,
+    "max_calls": 7,
+    "induction": 1,
+    "candidates": 3,
+    "revisions_per_candidate": 1,
+    "input_upper": 65536,
+    "output_upper": 4096,
+    "max_reserved_tokens": 487424,
+    "model": null,
+    "price_quote": null,
+    "max_cost_microusd": null,
+    "retries": 0,
+    "reservation": "fsync before dispatch; unknown usage retains full reservation; no automatic retry",
+    "monetary_bound_formula": "ceil(487424 * max(input_price_microusd_per_million, output_price_microusd_per_million) / 1000000)",
+    "provider_requirement": "Exact model identity, no hidden retries, output cap and all request tokens within reserved upper bound"
+  },
+  "evaluation": {
+    "design_calls_max": 6,
+    "gate_calls_max": 1,
+    "regression_calls_max": 1,
+    "model_calls": 0,
+    "proposed_tools_max": 8,
+    "per_tool_milliseconds_upper": 10000,
+    "total_tool_milliseconds_upper": 80000,
+    "worker": "real isolated worker required before executing generated code",
+    "actual_cost": "measured separately; unknown monetary cost is retained, human audit time must not be recorded as zero"
+  },
+  "selection": {
+    "rule": "eligible first; descending preregistered score; ties ascending slot then revision",
+    "scoring_definition": null,
+    "winner_frozen_before_gate": true,
+    "failed_gate_reuse": false
+  },
+  "authorization": {
+    "max_state": "Experimental",
+    "requires_paired_benefit": true,
+    "active_allowed": false,
+    "current_permission": "Shadow only",
+    "source_model_calls": 0
+  },
+  "data": {
+    "required_roles": [
+      "discovery",
+      "design",
+      "gate",
+      "regression",
+      "test"
+    ],
+    "isolation": [
+      "problem_id",
+      "problem_family",
+      "source_lineage",
+      "generation_source"
+    ],
+    "discovery_input": "discovery/generation_input.json",
+    "historical_material": "All previously examined 800/35/48-task evidence is development-only",
+    "unresolved_roles": [
+      "design",
+      "gate",
+      "regression",
+      "test"
+    ],
+    "reason": "No independently reviewed provenance manifests/checkpoints prepared; do not relabel historical data"
+  },
+  "blockers": [
+    "real local Linux Worker isolation not validated",
+    "independent data and scoring not frozen",
+    "actual model, price quote and hard monetary cap unspecified",
+    "explicit API spending authorization absent"
+  ],
+  "automatic_next_stages": false,
+  "new_api_calls": 0
+}

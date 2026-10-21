@@ -2,8 +2,11 @@
 import ast
 import hashlib
 import math
+import time
+import fcntl
 from .contracts import fingerprint
 from .evidence import EvidenceStore
+from .data_roles import validate_data_roles
 
 
 class LearningPipeline:
@@ -29,6 +32,7 @@ class LearningPipeline:
                 return records[-1]['payload']['result']
             raise RuntimeError('interrupted/failed step consumed; host review required')
         self.events.append('STEP_STARTED', dict(key=key, request_hash=digest), at)
+        self._step_key=key
         try:
             result = callback()
         except Exception as exc:
@@ -38,8 +42,22 @@ class LearningPipeline:
         return result
 
     def _evaluate(self, checker, code, dataset):
-        self.budget.tool()
-        result = checker(code, dataset, self.budget.remaining_seconds)
+        durable = hasattr(self.budget, 'consume_shard')
+        if durable:
+            key=self.budget.tool(job_id=self._job_id,capability='evaluation:'+dataset['shard_id'],
+                request_id=self._step_key,request_hash=fingerprint([code,dataset]))
+        else:
+            key=self.budget.tool()
+        started=time.monotonic()
+        timeout=self.budget.remaining_seconds
+        if durable:timeout=min(timeout,self.budget.config['tool_milliseconds_upper']/1000)
+        try:
+            result = checker(code, dataset, timeout)
+            if durable:
+                self.budget.settle(key,tool_milliseconds=math.ceil((time.monotonic()-started)*1000))
+        except BaseException:
+            if durable:self.budget.settle(key)
+            raise
         if self.budget.remaining_seconds <= 0:
             raise TimeoutError('evaluation deadline exceeded')
         if not isinstance(result, dict) or type(result.get('eligible')) is not bool:
@@ -49,7 +67,23 @@ class LearningPipeline:
             raise ValueError('finite preregistered design score required')
         return result
 
-    def run(self, public_job, *, design, gate, regression, at, revise=False):
+    def run(self, public_job, *, design, gate, regression, at, revise=False, data_manifest=None):
+        # Serialize all jobs in this pipeline; the budget separately locks across processes.
+        with self.events.path.with_suffix('.pipeline.lock').open('a+b') as lock:
+            fcntl.flock(lock,fcntl.LOCK_EX)
+            try:
+                return self._run(public_job,design=design,gate=gate,regression=regression,at=at,revise=revise,data_manifest=data_manifest)
+            finally:fcntl.flock(lock,fcntl.LOCK_UN)
+
+    def _run(self, public_job, *, design, gate, regression, at, revise=False, data_manifest=None):
+        if data_manifest is not None:
+            validate_data_roles(data_manifest)
+            if any(data_manifest[role] != value for role, value in
+                   [('design', design), ('gate', gate), ('regression', regression)]):
+                raise ValueError('evaluation data differs from frozen manifest')
+            discovery = set(data_manifest['discovery']['source_groups'])
+            if discovery != {e['provenance_group_id'] for e in public_job['public_evidence']}:
+                raise ValueError('discovery provenance differs from public evidence')
         # Data roles are host manifests, never accepted from generated source.
         sets = [set(d['source_groups']) for d in (design, gate, regression)]
         sources = {e['provenance_group_id'] for e in public_job['public_evidence']}
@@ -61,8 +95,12 @@ class LearningPipeline:
         if len(set(shard_ids)) != 3:
             raise ValueError('data roles require distinct shard identities')
         job_id = public_job['job_id']
-        self._step(job_id+':protocol', dict(public_job=public_job, design=design,
-            gate=gate, regression=regression, revise=revise), lambda: {'frozen':True}, at)
+        self._job_id=job_id
+        protocol = dict(public_job=public_job, design=design,
+            gate=gate, regression=regression, revise=revise)
+        if data_manifest is not None:
+            protocol['data_manifest'] = data_manifest
+        self._step(job_id+':protocol', protocol, lambda: {'frozen':True}, at)
         def generate(phase, slot, payload):
             return self._step(job_id+':'+phase+':'+str(slot), payload,
                 lambda:self.compiler.request(payload, phase, slot, at), at)
@@ -95,8 +133,13 @@ class LearningPipeline:
             # Global shard identity prevents another job/candidate fishing on it.
             result = self._step('shard:'+data['shard_id'],
                 dict(job_id=job_id, role=role, code=winner['code'], data=data),
-                lambda:self._evaluate(self.gate_checker,winner['code'],data), at)
+                lambda:self._gate_evaluate(job_id,winner['code'],data), at)
             outcomes.append(result)
         return dict(status='ready_for_experimental_review' if all(r['eligible'] for r in outcomes)
                     else 'shadow_retained', winner=winner, validation=outcomes,
                     artifact_sha256=hashlib.sha256(winner['code'].encode()).hexdigest())
+
+    def _gate_evaluate(self,job_id,code,data):
+        if hasattr(self.budget,'consume_shard'):
+            self.budget.consume_shard(data['shard_id'],job_id=job_id,request_hash=fingerprint([code,data]))
+        return self._evaluate(self.gate_checker,code,data)

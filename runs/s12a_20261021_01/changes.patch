@@ -1,0 +1,461 @@
+diff --git a/FlowEvo/src/failure_evo/__init__.py b/FlowEvo/src/failure_evo/__init__.py
+index 4d6bda54..2e723578 100644
+--- a/FlowEvo/src/failure_evo/__init__.py
++++ b/FlowEvo/src/failure_evo/__init__.py
+@@ -13,0 +14,3 @@ from .pipeline import LearningPipeline
++from .persistent_budget import PersistentBudget
++from .data_roles import validate_data_roles
++from .pipeline_admission import build_admission_evidence
+diff --git a/FlowEvo/src/failure_evo/compile_queue.py b/FlowEvo/src/failure_evo/compile_queue.py
+index 30b61cc6..84f0a07c 100644
+--- a/FlowEvo/src/failure_evo/compile_queue.py
++++ b/FlowEvo/src/failure_evo/compile_queue.py
+@@ -65 +65 @@ class BoundedCompiler:
+-    def __init__(self, provider, budget, path, model):
++    def __init__(self, provider, budget, path, model, *, max_input_upper=65536, max_output_upper=4096):
+@@ -68,0 +69,3 @@ class BoundedCompiler:
++        if any(type(v) is not int or v < 1 for v in (max_input_upper, max_output_upper)):
++            raise ValueError('positive compiler token ceilings required')
++        self.max_input_upper, self.max_output_upper = max_input_upper, max_output_upper
+@@ -92 +95,10 @@ class BoundedCompiler:
+-        key = self.budget.reserve(len(str(request).encode()) + 4096, output_upper)
++        input_upper = len(str(request).encode()) + 4096
++        if (type(output_upper) is not int or not 0 < output_upper <= self.max_output_upper
++                or input_upper > self.max_input_upper):
++            raise BudgetExhausted('request exceeds frozen compiler token ceilings')
++        if hasattr(self.budget, 'consume_shard'):
++            key = self.budget.reserve(input_upper, output_upper,
++                job_id=job.get('job_id', fingerprint(job)), capability='generation:'+phase,
++                request_id=fingerprint(['generation',family,phase,slot]), request_hash=fingerprint(request))
++        else:
++            key = self.budget.reserve(input_upper, output_upper)
+@@ -96 +108,8 @@ class BoundedCompiler:
+-            self.budget.settle(key, response.get('usage', {}).get('total_tokens'))
++            # Preserve returned failures/model drift too, before validation or settlement.
++            self.events.append('GENERATION_RESPONSE', dict(request_sha256=fingerprint(request),
++                response=response), at)
++            if hasattr(self.budget, 'consume_shard'):
++                self.budget.settle(key, response.get('usage', {}).get('total_tokens'),
++                    cost_microusd=response.get('actual_cost_microusd'))
++            else:
++                self.budget.settle(key, response.get('usage', {}).get('total_tokens'))
+diff --git a/FlowEvo/src/failure_evo/data_roles.py b/FlowEvo/src/failure_evo/data_roles.py
+new file mode 100644
+index 00000000..24c58d4a
+--- /dev/null
++++ b/FlowEvo/src/failure_evo/data_roles.py
+@@ -0,0 +1,46 @@
++"""Host-reviewed provenance requirements for S1.2 independent confirmation."""
++from .contracts import fingerprint
++
++ROLES = ('discovery', 'design', 'gate', 'regression', 'test')
++DIMENSIONS = ('problem_id', 'problem_family', 'source_lineage', 'generation_source')
++
++
++def validate_data_roles(manifest):
++    """Fail closed on unknown ancestry; different seeds/shards are insufficient.
++
++    IDs are host-reviewed ancestry labels, not inferred from filenames. Historical
++    audit material can develop candidates but cannot confirm them independently.
++    """
++    if set(manifest) != set(ROLES):
++        raise ValueError('all five data roles required')
++    seen = {name: {} for name in DIMENSIONS}
++    shards = set()
++    for role in ROLES:
++        data = manifest[role]
++        shard = data.get('shard_id')
++        if not isinstance(shard, str) or not shard or shard in shards:
++            raise ValueError('unique shard identity required')
++        shards.add(shard)
++        items = data.get('items')
++        if not isinstance(items, list) or not items:
++            raise ValueError('missing independent data: ' + role)
++        groups = set()
++        for item in items:
++            if item.get('provenance_reviewed') is not True:
++                raise ValueError('unreviewed provenance')
++            if role in ('gate', 'regression', 'test') and item.get('development_exposed') is not False:
++                raise ValueError('confirmation material already exposed or unknown')
++            group = item.get('source_group')
++            if not isinstance(group, str) or not group:
++                raise ValueError('source group required')
++            groups.add(group)
++            for name in DIMENSIONS:
++                value = item.get(name)
++                if not isinstance(value, str) or not value.strip():
++                    raise ValueError('missing provenance: ' + name)
++                owner = seen[name].setdefault(value, role)
++                if owner != role:
++                    raise ValueError('cross-role overlap: ' + name)
++        if set(data.get('source_groups', [])) != groups:
++            raise ValueError('source groups differ from reviewed items')
++    return fingerprint(manifest)
+diff --git a/FlowEvo/src/failure_evo/evidence.py b/FlowEvo/src/failure_evo/evidence.py
+index e70069eb..80327753 100644
+--- a/FlowEvo/src/failure_evo/evidence.py
++++ b/FlowEvo/src/failure_evo/evidence.py
+@@ -2 +2 @@
+-import hashlib,json,pathlib,threading,math,difflib
++import hashlib,json,pathlib,threading,math,difflib,os
+@@ -11 +11,3 @@ class EvidenceStore:
+-        for text in self.path.read_text().splitlines():
++        content=self.path.read_text()
++        if content and not content.endswith('\n'):raise ValueError('partial evidence record; fail closed')
++        for text in content.splitlines():
+@@ -22 +24 @@ class EvidenceStore:
+-            with self.path.open('a') as f:f.write(canonical(row)+'\n');f.flush()
++            with self.path.open('a') as f:f.write(canonical(row)+'\n');f.flush();os.fsync(f.fileno())
+diff --git a/FlowEvo/src/failure_evo/learning.py b/FlowEvo/src/failure_evo/learning.py
+index ffe25e01..32cd7227 100644
+--- a/FlowEvo/src/failure_evo/learning.py
++++ b/FlowEvo/src/failure_evo/learning.py
+@@ -47 +47,2 @@ class LearningLoop:
+-    def run_pipeline(self, pipeline, *, design, gate, regression, at, revise=False):
++    def run_pipeline(self, pipeline, *, design, gate, regression, at, revise=False,
++                     data_manifest=None, environment=None):
+@@ -57,2 +58,6 @@ class LearningLoop:
+-        result = pipeline.run(self.public_input(job, at), design=design, gate=gate,
+-                              regression=regression, at=at, revise=revise)
++        public = self.public_input(job, at)
++        if environment is not None:
++            public['environment'] = environment
++        result = pipeline.run(public, design=design, gate=gate,
++                              regression=regression, at=at, revise=revise,
++                              data_manifest=data_manifest)
+diff --git a/FlowEvo/src/failure_evo/persistent_budget.py b/FlowEvo/src/failure_evo/persistent_budget.py
+new file mode 100644
+index 00000000..c7ff7220
+--- /dev/null
++++ b/FlowEvo/src/failure_evo/persistent_budget.py
+@@ -0,0 +1,185 @@
++"""Crash-safe, process-serialized run budget. POSIX host only; no network access.
++
++The append-only journal is fsynced *before* a capability can be invoked. A partial
++or corrupt record fails closed. Unknown requests keep their full reservation.
++One ledger owns all generation, validation and tool accounts for a run.
++"""
++from contextlib import contextmanager
++import fcntl
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import time
++import uuid
++from .contracts import canonical, fingerprint
++from .runtime import BudgetExhausted
++
++
++def integer(value, name):
++    if type(value) is not int or value < 0:
++        raise ValueError('nonnegative integer required: ' + name)
++    return value
++
++
++class PersistentBudget:
++    def __init__(self, path, *, run_id, protocol_hash, max_calls, max_tokens,
++                 max_tools, max_cost_microusd, token_rate_microusd_per_million,
++                 tool_cost_upper_microusd, max_tool_milliseconds,
++                 tool_milliseconds_upper, wall_seconds, clock=time.time):
++        if not run_id or not protocol_hash:
++            raise ValueError('run and protocol identity required')
++        values = dict(max_calls=max_calls,max_tokens=max_tokens,max_tools=max_tools,
++            max_cost_microusd=max_cost_microusd,token_rate_microusd_per_million=token_rate_microusd_per_million,
++            tool_cost_upper_microusd=tool_cost_upper_microusd,max_tool_milliseconds=max_tool_milliseconds,
++            tool_milliseconds_upper=tool_milliseconds_upper,wall_seconds=wall_seconds)
++        for name,value in values.items():integer(value,name)
++        if wall_seconds == 0 or tool_milliseconds_upper == 0:
++            raise ValueError('positive wall/tool time bounds required')
++        self.path=Path(path);self.path.parent.mkdir(parents=True,exist_ok=True)
++        self.clock=clock
++        self.config=dict(values,run_id=run_id,protocol_hash=protocol_hash,currency='USD',cost_unit='microusd')
++        with self._locked() as rows:
++            if not rows:
++                self._append(rows,'RUN_OPENED',dict(config=self.config,deadline=self.clock()+wall_seconds))
++            elif rows[0]['payload']['config'] != self.config:
++                raise ValueError('run identity, protocol or frozen limits changed')
++        self.max_calls=max_calls;self.max_tokens=max_tokens;self.max_tools=max_tools
++
++    @contextmanager
++    def _locked(self):
++        with self.path.with_suffix(self.path.suffix+'.lock').open('a+b') as lock:
++            fcntl.flock(lock,fcntl.LOCK_EX)
++            try:
++                rows=[];previous='0'*64
++                if self.path.exists():
++                    raw=self.path.read_bytes()
++                    if raw and not raw.endswith(b'\n'):raise ValueError('partial budget record; fail closed')
++                    for line in raw.splitlines():
++                        row=json.loads(line);digest=row.pop('record_hash')
++                        if row['previous_hash']!=previous or fingerprint(row)!=digest:
++                            raise ValueError('budget journal integrity failure')
++                        row['record_hash']=digest;rows.append(row);previous=digest
++                yield rows
++            finally:fcntl.flock(lock,fcntl.LOCK_UN)
++
++    def _append(self,rows,kind,payload):
++        now=self.clock()
++        if not math.isfinite(now):raise ValueError('invalid host clock')
++        row=dict(kind=kind,payload=payload,at=now,previous_hash=rows[-1]['record_hash'] if rows else '0'*64)
++        row['record_hash']=fingerprint(row)
++        with self.path.open('ab') as out:
++            out.write((canonical(row)+'\n').encode());out.flush();os.fsync(out.fileno())
++        fd=os.open(str(self.path.parent),os.O_RDONLY)
++        try:os.fsync(fd)
++        finally:os.close(fd)
++        rows.append(row)
++
++    @staticmethod
++    def _state(rows):
++        requests={};shards={}
++        for row in rows:
++            p=row['payload']
++            if row['kind']=='RESERVED':requests[p['request_id']]=dict(p,status='reserved')
++            elif row['kind']=='SETTLED':requests[p['request_id']].update(status='settled',settlement=p)
++            elif row['kind']=='UNKNOWN':requests[p['request_id']]['status']='unknown'
++            elif row['kind']=='SHARD_CONSUMED':shards[p['shard_id']]=p
++        return requests,shards
++
++    def _totals(self,rows):
++        requests,_=self._state(rows)
++        totals=dict(calls=0,tokens=0,tools=0,cost=0,tool_ms=0)
++        for r in requests.values():
++            totals['calls']+=r['kind']=='model';totals['tools']+=r['kind']=='tool'
++            settled=r.get('settlement',{})
++            totals['tokens']+=settled.get('tokens',r['token_upper'])
++            totals['cost']+=settled.get('cost_microusd',r['cost_upper_microusd'])
++            totals['tool_ms']+=settled.get('tool_milliseconds',r['tool_milliseconds_upper'])
++        return totals
++
++    def _reserve(self,kind,input_upper,output_upper,*,job_id,capability,request_id,request_hash):
++        integer(input_upper,'input');integer(output_upper,'output')
++        if not all(isinstance(x,str) and x for x in (job_id,capability,request_id,request_hash)):
++            raise ValueError('request provenance required')
++        tokens=input_upper+output_upper
++        cost=(tokens*self.config['token_rate_microusd_per_million']+999999)//1000000 if kind=='model' else self.config['tool_cost_upper_microusd']
++        ms=0 if kind=='model' else self.config['tool_milliseconds_upper']
++        with self._locked() as rows:
++            requests,_=self._state(rows)
++            if request_id in requests:raise ValueError('request already consumed; do not retry')
++            total=self._totals(rows)
++            if (self.clock()>=rows[0]['payload']['deadline'] or
++                total['calls']+(kind=='model')>self.max_calls or total['tools']+(kind=='tool')>self.max_tools or
++                total['tokens']+tokens>self.max_tokens or total['cost']+cost>self.config['max_cost_microusd'] or
++                total['tool_ms']+ms>self.config['max_tool_milliseconds']):
++                raise BudgetExhausted('persistent run budget exhausted')
++            self._append(rows,'RESERVED',dict(run_id=self.config['run_id'],job_id=job_id,
++                capability=capability,request_id=request_id,request_hash=request_hash,kind=kind,
++                input_upper=input_upper,output_upper=output_upper,token_upper=tokens,
++                cost_upper_microusd=cost,tool_milliseconds_upper=ms))
++        return request_id
++
++    def reserve(self,input_upper,output_upper,*,job_id='runtime',capability='model',request_id=None,request_hash=None):
++        request_id=request_id or str(uuid.uuid4())
++        return self._reserve('model',input_upper,output_upper,job_id=job_id,capability=capability,
++            request_id=request_id,request_hash=request_hash or fingerprint([input_upper,output_upper,request_id]))
++
++    def tool(self,*,job_id='runtime',capability='tool',request_id=None,request_hash=None):
++        request_id=request_id or str(uuid.uuid4())
++        return self._reserve('tool',0,0,job_id=job_id,capability=capability,request_id=request_id,
++            request_hash=request_hash or fingerprint([capability,request_id]))
++
++    def settle(self,key,tokens=None,*,cost_microusd=None,tool_milliseconds=None):
++        with self._locked() as rows:
++            requests,_=self._state(rows)
++            if key not in requests:raise ValueError('unknown request id')
++            r=requests[key]
++            if tokens is None and cost_microusd is None and tool_milliseconds is None:
++                if r['status']=='settled':return
++                if r['status']!='unknown':self._append(rows,'UNKNOWN',dict(request_id=key,reason='usage_not_known'))
++                return
++            actual=dict(request_id=key)
++            for name,value,bound in [('tokens',tokens,r['token_upper']),('cost_microusd',cost_microusd,r['cost_upper_microusd']),('tool_milliseconds',tool_milliseconds,r['tool_milliseconds_upper'])]:
++                if value is None:continue
++                if type(value) is not int or not 0<=value<=bound:
++                    raise BudgetExhausted('usage outside reservation; full reservation retained')
++                actual[name]=value
++            # No quote-derived number is labeled actual money. Unknown actual cost stays reserved.
++            if r['status']=='settled':
++                if r['settlement']!=actual:raise ValueError('conflicting duplicate settlement')
++                return
++            self._append(rows,'SETTLED',actual)
++
++    def consume_shard(self,shard_id,*,job_id,request_hash):
++        with self._locked() as rows:
++            _,shards=self._state(rows)
++            if shard_id in shards:raise ValueError('gate shard already consumed')
++            self._append(rows,'SHARD_CONSUMED',dict(shard_id=shard_id,job_id=job_id,request_hash=request_hash))
++
++    @property
++    def reservations(self):
++        with self._locked() as rows:
++            requests,_=self._state(rows)
++            return {k:r['token_upper'] for k,r in requests.items() if r['status']!='settled'}
++    @property
++    def remaining_seconds(self):
++        with self._locked() as rows:return max(0,rows[0]['payload']['deadline']-self.clock())
++    @property
++    def calls(self):return self.snapshot()['calls']
++    @property
++    def tool_calls(self):return self.snapshot()['tool_calls']
++    @property
++    def used_tokens(self):return self.snapshot()['charged_or_reserved_tokens']
++
++    def snapshot(self):
++        with self._locked() as rows:
++            t=self._totals(rows);requests,shards=self._state(rows)
++            return dict(run_id=self.config['run_id'],calls=t['calls'],tool_calls=t['tools'],
++                charged_or_reserved_tokens=t['tokens'],charged_or_reserved_cost_microusd=t['cost'],
++                charged_or_reserved_tool_milliseconds=t['tool_ms'],
++                remaining_calls=self.max_calls-t['calls'],remaining_tokens=self.max_tokens-t['tokens'],
++                remaining_tools=self.max_tools-t['tools'],remaining_cost_microusd=self.config['max_cost_microusd']-t['cost'],
++                remaining_tool_milliseconds=self.config['max_tool_milliseconds']-t['tool_ms'],
++                unknown_or_pending_requests=[k for k,r in requests.items() if r['status']!='settled'],
++                consumed_gate_shards=sorted(shards))
+diff --git a/FlowEvo/src/failure_evo/pipeline.py b/FlowEvo/src/failure_evo/pipeline.py
+index ea5a0c0d..1d2a5927 100644
+--- a/FlowEvo/src/failure_evo/pipeline.py
++++ b/FlowEvo/src/failure_evo/pipeline.py
+@@ -4,0 +5,2 @@ import math
++import time
++import fcntl
+@@ -6,0 +9 @@ from .evidence import EvidenceStore
++from .data_roles import validate_data_roles
+@@ -31,0 +35 @@ class LearningPipeline:
++        self._step_key=key
+@@ -41,2 +45,16 @@ class LearningPipeline:
+-        self.budget.tool()
+-        result = checker(code, dataset, self.budget.remaining_seconds)
++        durable = hasattr(self.budget, 'consume_shard')
++        if durable:
++            key=self.budget.tool(job_id=self._job_id,capability='evaluation:'+dataset['shard_id'],
++                request_id=self._step_key,request_hash=fingerprint([code,dataset]))
++        else:
++            key=self.budget.tool()
++        started=time.monotonic()
++        timeout=self.budget.remaining_seconds
++        if durable:timeout=min(timeout,self.budget.config['tool_milliseconds_upper']/1000)
++        try:
++            result = checker(code, dataset, timeout)
++            if durable:
++                self.budget.settle(key,tool_milliseconds=math.ceil((time.monotonic()-started)*1000))
++        except BaseException:
++            if durable:self.budget.settle(key)
++            raise
+@@ -52 +70,17 @@ class LearningPipeline:
+-    def run(self, public_job, *, design, gate, regression, at, revise=False):
++    def run(self, public_job, *, design, gate, regression, at, revise=False, data_manifest=None):
++        # Serialize all jobs in this pipeline; the budget separately locks across processes.
++        with self.events.path.with_suffix('.pipeline.lock').open('a+b') as lock:
++            fcntl.flock(lock,fcntl.LOCK_EX)
++            try:
++                return self._run(public_job,design=design,gate=gate,regression=regression,at=at,revise=revise,data_manifest=data_manifest)
++            finally:fcntl.flock(lock,fcntl.LOCK_UN)
++
++    def _run(self, public_job, *, design, gate, regression, at, revise=False, data_manifest=None):
++        if data_manifest is not None:
++            validate_data_roles(data_manifest)
++            if any(data_manifest[role] != value for role, value in
++                   [('design', design), ('gate', gate), ('regression', regression)]):
++                raise ValueError('evaluation data differs from frozen manifest')
++            discovery = set(data_manifest['discovery']['source_groups'])
++            if discovery != {e['provenance_group_id'] for e in public_job['public_evidence']}:
++                raise ValueError('discovery provenance differs from public evidence')
+@@ -64,2 +98,6 @@ class LearningPipeline:
+-        self._step(job_id+':protocol', dict(public_job=public_job, design=design,
+-            gate=gate, regression=regression, revise=revise), lambda: {'frozen':True}, at)
++        self._job_id=job_id
++        protocol = dict(public_job=public_job, design=design,
++            gate=gate, regression=regression, revise=revise)
++        if data_manifest is not None:
++            protocol['data_manifest'] = data_manifest
++        self._step(job_id+':protocol', protocol, lambda: {'frozen':True}, at)
+@@ -98 +136 @@ class LearningPipeline:
+-                lambda:self._evaluate(self.gate_checker,winner['code'],data), at)
++                lambda:self._gate_evaluate(job_id,winner['code'],data), at)
+@@ -102,0 +141,5 @@ class LearningPipeline:
++
++    def _gate_evaluate(self,job_id,code,data):
++        if hasattr(self.budget,'consume_shard'):
++            self.budget.consume_shard(data['shard_id'],job_id=job_id,request_hash=fingerprint([code,data]))
++        return self._evaluate(self.gate_checker,code,data)
+diff --git a/FlowEvo/src/failure_evo/pipeline_admission.py b/FlowEvo/src/failure_evo/pipeline_admission.py
+new file mode 100644
+index 00000000..d9cbbf42
+--- /dev/null
++++ b/FlowEvo/src/failure_evo/pipeline_admission.py
+@@ -0,0 +1,72 @@
++"""Translate frozen pipeline evidence into the existing registry review contract.
++
++Only trusted host checkers may provide assertions and paired results. Building a
++review document never grants permission; authorize_experiment remains mandatory.
++"""
++import hashlib
++from .contracts import fingerprint
++from .data_roles import validate_data_roles
++
++
++def build_admission_evidence(pipeline, card, *, public_job, data_manifest,
++                             revise, experiment_id, metadata):
++    manifest_hash = validate_data_roles(data_manifest)
++    if metadata != public_job.get('environment'):
++        raise ValueError('environment must be frozen in the original job')
++    for name in ('baseline_version', 'model_version', 'scorer_version', 'resource_limits'):
++        if not metadata.get(name):
++            raise ValueError('missing frozen environment metadata: ' + name)
++    rows = pipeline.events.records()
++    def completed(key, request=None):
++        matches = [(i, r) for i, r in enumerate(rows) if r['payload'].get('key') == key]
++        if len(matches) != 2 or [r['kind'] for _, r in matches] != ['STEP_STARTED', 'STEP_DONE']:
++            raise ValueError('step not completed exactly once: ' + key)
++        if request is not None and matches[0][1]['payload']['request_hash'] != fingerprint(request):
++            raise ValueError('frozen request mismatch')
++        return matches[0][0], matches[1][0], matches[1][1]
++    job_id = public_job['job_id']
++    protocol = dict(public_job=public_job, revise=revise, data_manifest=data_manifest,
++                    **{r: data_manifest[r] for r in ('design', 'gate', 'regression')})
++    _, protocol_end, _ = completed(job_id + ':protocol', protocol)
++    winner_start, winner_end, winner_row = completed(job_id + ':winner')
++    winner = winner_row['payload']['result']
++    completed(job_id + ':winner', winner)
++    digest = hashlib.sha256(winner['code'].encode()).hexdigest()
++    if not card.intact() or digest != card.artifact_sha256 or not protocol_end < winner_start:
++        raise ValueError('winner artifact or ordering differs')
++    if list(card.evidence_ids) != public_job['evidence_ids']:
++        raise ValueError('discovery evidence differs')
++    development = set(data_manifest['discovery']['source_groups']) | set(data_manifest['design']['source_groups'])
++    if not development <= set(card.source_group_ids):
++        raise ValueError('card must include all development provenance')
++    outcomes = []
++    for role in ('gate', 'regression'):
++        data = data_manifest[role]
++        start, end, row = completed('shard:' + data['shard_id'],
++            dict(job_id=job_id, role=role, code=winner['code'], data=data))
++        if start <= winner_end:
++            raise ValueError('validation preceded winner freeze')
++        outcomes.append(row)
++    gate, regression = [r['payload']['result'] for r in outcomes]
++    allowed_pairs = {(item['problem_id'], item['source_group']) for item in data_manifest['gate']['items']}
++    if any((pair.get('problem_id'), pair.get('source_group')) not in allowed_pairs
++           for pair in gate.get('paired_results', [])):
++        raise ValueError('paired result outside frozen gate data')
++    gate_passed = gate.get('eligible') is True
++    regression_passed = regression.get('eligible') is True
++    return dict(role='PILOT_ADMISSION', operator_id=card.operator_id, version=card.version,
++        artifact_sha256=digest, fingerprint=card.evidence_fingerprint.to_dict(),
++        scope=card.evidence_scope, evidence_ids=list(card.evidence_ids), experiment_id=experiment_id,
++        design_selection_id=winner_row['record_hash'], shard_id=data_manifest['gate']['shard_id'],
++        regression_shard=data_manifest['regression']['shard_id'], data_manifest_sha256=manifest_hash,
++        pipeline_record_hash=rows[-1]['record_hash'], evaluated_at=max(r['at'] for r in outcomes),
++        validation_source_groups=data_manifest['gate']['source_groups'],
++        frozen_before_evaluation=True, independent_validation=True, generation_data_isolated=True,
++        contract_checks_passed=gate_passed and gate.get('contract_checks_passed') is True,
++        scope_checks_passed=gate_passed and gate.get('scope_checks_passed') is True,
++        regression_passed=regression_passed, gate_passed=gate_passed,
++        paired_results=gate.get('paired_results', []), benefit_route=gate.get('benefit_route'),
++        cost_unit=gate.get('cost_unit'), reliability_result=gate.get('reliability_result'),
++        cost_result=gate.get('cost_result'), authorization_decision='PENDING_REGISTRY_REVIEW',
++        active_deployment_allowed=False,
++        **{name: metadata[name] for name in ('baseline_version', 'model_version', 'scorer_version', 'resource_limits')})

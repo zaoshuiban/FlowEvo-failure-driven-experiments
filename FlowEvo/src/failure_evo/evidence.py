@@ -1,5 +1,5 @@
 """Append-only evidence state with publication time and distinct-source gates."""
-import hashlib,json,pathlib,threading,math,difflib
+import hashlib,json,pathlib,threading,math,difflib,os
 from .contracts import canonical,fingerprint
 
 REQUIRED_FILES=('legal_case','oracle','original_code','patched_code','original_run','minimal_patch','patched_run','review')
@@ -8,7 +8,9 @@ class EvidenceStore:
     def records(self):
         rows=[];previous='0'*64
         if not self.path.exists():return rows
-        for text in self.path.read_text().splitlines():
+        content=self.path.read_text()
+        if content and not content.endswith('\n'):raise ValueError('partial evidence record; fail closed')
+        for text in content.splitlines():
             row=json.loads(text);payload={k:v for k,v in row.items() if k!='record_hash'}
             if row['previous_hash']!=previous or fingerprint(payload)!=row['record_hash']:raise ValueError('evidence chain changed')
             rows.append(row);previous=row['record_hash']
@@ -19,7 +21,7 @@ class EvidenceStore:
             rows=self.records()
             if rows and at<rows[-1]['at']:raise ValueError('append timestamp precedes stored record')
             row={'kind':kind,'payload':payload,'at':float(at),'previous_hash':rows[-1]['record_hash'] if rows else '0'*64};row['record_hash']=fingerprint(row)
-            with self.path.open('a') as f:f.write(canonical(row)+'\n');f.flush()
+            with self.path.open('a') as f:f.write(canonical(row)+'\n');f.flush();os.fsync(f.fileno())
             return row
     def visible(self,at):return [r for r in self.records() if r['at']<=at]
 

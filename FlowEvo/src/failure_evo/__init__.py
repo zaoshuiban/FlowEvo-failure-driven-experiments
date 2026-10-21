@@ -11,3 +11,6 @@ from .plugin import FailureLearningPlugin
 from .learning import LearningLoop
 from .native_adapter import NativeBenchmarkSession, baseline_manifest
 from .pipeline import LearningPipeline
+from .persistent_budget import PersistentBudget
+from .data_roles import validate_data_roles
+from .pipeline_admission import build_admission_evidence

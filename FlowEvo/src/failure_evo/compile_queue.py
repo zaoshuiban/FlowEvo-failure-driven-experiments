@@ -62,10 +62,13 @@ class CompileQueue:
 
 class BoundedCompiler:
     """Per-study 2 families × (1 induction + 3 candidates + 3 revisions) ceiling."""
-    def __init__(self, provider, budget, path, model):
+    def __init__(self, provider, budget, path, model, *, max_input_upper=65536, max_output_upper=4096):
         if budget.max_calls > 14:
             raise ValueError('generation budget exceeds 14 requests')
         self.provider, self.budget, self.model = provider, budget, model
+        if any(type(v) is not int or v < 1 for v in (max_input_upper, max_output_upper)):
+            raise ValueError('positive compiler token ceilings required')
+        self.max_input_upper, self.max_output_upper = max_input_upper, max_output_upper
         self.events = EvidenceStore(path)
         self.artifacts = Path(path).parent / 'generated_artifacts'
 
@@ -89,11 +92,27 @@ class BoundedCompiler:
         if phase == 'revision' and not any(r['phase'] == 'candidate' and r['slot'] == slot for r in own_completed):
             raise ValueError('candidate must precede revision')
         request = dict(job, phase=phase, slot=slot, max_tokens=output_upper)
-        key = self.budget.reserve(len(str(request).encode()) + 4096, output_upper)
+        input_upper = len(str(request).encode()) + 4096
+        if (type(output_upper) is not int or not 0 < output_upper <= self.max_output_upper
+                or input_upper > self.max_input_upper):
+            raise BudgetExhausted('request exceeds frozen compiler token ceilings')
+        if hasattr(self.budget, 'consume_shard'):
+            key = self.budget.reserve(input_upper, output_upper,
+                job_id=job.get('job_id', fingerprint(job)), capability='generation:'+phase,
+                request_id=fingerprint(['generation',family,phase,slot]), request_hash=fingerprint(request))
+        else:
+            key = self.budget.reserve(input_upper, output_upper)
         self.events.append('GENERATION_REQUESTED', request, at)
         try:
             response = self.provider(request)
-            self.budget.settle(key, response.get('usage', {}).get('total_tokens'))
+            # Preserve returned failures/model drift too, before validation or settlement.
+            self.events.append('GENERATION_RESPONSE', dict(request_sha256=fingerprint(request),
+                response=response), at)
+            if hasattr(self.budget, 'consume_shard'):
+                self.budget.settle(key, response.get('usage', {}).get('total_tokens'),
+                    cost_microusd=response.get('actual_cost_microusd'))
+            else:
+                self.budget.settle(key, response.get('usage', {}).get('total_tokens'))
             if response.get('model') != self.model:
                 raise ValueError('compiler model drift')
             if self.budget.remaining_seconds <= 0:
