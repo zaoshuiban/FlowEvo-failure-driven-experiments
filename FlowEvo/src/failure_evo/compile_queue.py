@@ -1,7 +1,8 @@
 """Bounded, persistent learning scheduler. No model or network client is imported."""
 import hashlib
+import json
 from pathlib import Path
-from .contracts import fingerprint
+from .contracts import fingerprint, canonical
 from .evidence import EvidenceStore
 from .runtime import BudgetExhausted
 
@@ -72,6 +73,46 @@ class BoundedCompiler:
         self.events = EvidenceStore(path)
         self.artifacts = Path(path).parent / 'generated_artifacts'
 
+    def import_specification(self, job, source_path, at):
+        """Bind an explicitly reviewed saved specification; no model request occurred."""
+        source=Path(source_path).resolve();content=source.read_text()
+        if not content.strip():raise ValueError('empty imported specification')
+        own=[r for r in self.events.records() if
+             (r['payload'].get('stream_id'),r['payload'].get('family_id'))==(job['stream_id'],job['family_id'])]
+        if own:raise ValueError('family already initialized; do not replace its specification')
+        self.events.append('SPECIFICATION_IMPORTED',dict(stream_id=job['stream_id'],
+            family_id=job['family_id'],phase='induction',content=content,
+            source_path=str(source),content_sha256=hashlib.sha256(content.encode()).hexdigest(),
+            origin='host_reviewed_saved_specification',new_model_calls=0),at)
+        return content
+
+    def import_candidate(self, job, slot, source_path, response_path, at):
+        """Import a real failed artifact for a NEW diagnostic run; never a new generation."""
+        from .model_api import validate_compile_output
+        source, response_file = Path(source_path).resolve(), Path(response_path).resolve()
+        saved = json.loads(response_file.read_text())
+        response = saved.get('response', saved)
+        choice = response['raw_response']['choices'][0]
+        value = json.loads(choice['message']['content'])
+        code = source.read_text()
+        if not code.strip() or value.get('code') != code or slot not in (0, 1, 2):
+            raise ValueError('imported source differs from raw model response')
+        rows = self.events.records()
+        if any(r['payload'].get('stream_id') == job['stream_id'] and
+               r['payload'].get('family_id') == job['family_id'] and
+               r['payload'].get('phase') == 'candidate' and r['payload'].get('slot') == slot for r in rows):
+            raise ValueError('candidate slot already imported/generated')
+        review = validate_compile_output(value, choice['finish_reason'])
+        payload = dict(stream_id=job['stream_id'], family_id=job['family_id'], phase='candidate', slot=slot,
+            content=code, content_sha256=hashlib.sha256(code.encode()).hexdigest(),
+            source_path=str(source), response_path=str(response_file), response_sha256=hashlib.sha256(response_file.read_bytes()).hexdigest(),
+            origin='saved_model_candidate_diagnostic_import', new_model_calls=0,
+            model=response.get('model'), response_id=response.get('id'))
+        self.events.append('CANDIDATE_IMPORTED', payload, at)
+        self.events.append('CANDIDATE_STATIC_REVIEW', dict(stream_id=job['stream_id'], family_id=job['family_id'],
+            slot=slot, phase='candidate', artifact_sha256=payload['content_sha256'], review=review), at)
+        return review
+
     def request(self, job, phase, slot, at, output_upper=4096):
         rows = [r['payload'] for r in self.events.records() if r['kind']=='GENERATION_REQUESTED']
         family = (job['stream_id'], job['family_id'])
@@ -82,8 +123,18 @@ class BoundedCompiler:
             raise ValueError('unknown generation phase')
         if (phase == 'induction' and slot != 0) or (phase != 'induction' and slot not in (0, 1, 2)):
             raise ValueError('candidate slot limit reached')
-        completed = [r['payload'] for r in self.events.records() if r['kind']=='GENERATION_COMPLETED']
+        completed = [r['payload'] for r in self.events.records() if r['kind'] in ('GENERATION_COMPLETED','SPECIFICATION_IMPORTED','CANDIDATE_IMPORTED')]
         own_completed = [r for r in completed if (r['stream_id'],r['family_id'])==family]
+        for record in own_completed:
+            if record.get('origin') == 'saved_model_candidate_diagnostic_import':
+                if (hashlib.sha256(Path(record['source_path']).read_bytes()).hexdigest() != record['content_sha256']
+                        or hashlib.sha256(Path(record['response_path']).read_bytes()).hexdigest() != record['response_sha256']):
+                    raise ValueError('imported candidate provenance changed')
+            if record.get('origin')=='host_reviewed_saved_specification':
+                if hashlib.sha256(Path(record['source_path']).read_bytes()).hexdigest()!=record['content_sha256']:
+                    raise ValueError('imported specification changed')
+                if phase in ('candidate','revision') and job.get('specification')!=record['content']:
+                    raise ValueError('request differs from imported specification')
         own = [r for r in rows if (r['stream_id'], r['family_id']) == family]
         if any(r['phase'] == phase and r['slot'] == slot for r in own):
             raise ValueError('generation request already consumed')
@@ -91,8 +142,33 @@ class BoundedCompiler:
             raise ValueError('induction must precede candidates')
         if phase == 'revision' and not any(r['phase'] == 'candidate' and r['slot'] == slot for r in own_completed):
             raise ValueError('candidate must precede revision')
+        if phase == 'revision' and 'revision_parent' in job:
+            parent = job['revision_parent']
+            candidate = next(r for r in own_completed if r['phase']=='candidate' and r['slot']==slot)
+            if (parent.get('slot') != slot or parent.get('code') != candidate['content'] or
+                    parent.get('sha256') != candidate['content_sha256']):
+                raise ValueError('revision parent differs from original model artifact')
+            reviews = [r['payload'] for r in self.events.records() if r['kind']=='CANDIDATE_STATIC_REVIEW'
+                       and r['payload']['stream_id']==family[0] and r['payload']['family_id']==family[1]
+                       and r['payload']['slot']==slot and r['payload']['phase']=='candidate']
+            if (len(reviews)!=1 or job.get('static_diagnostics')!=reviews[0]['review'] or
+                    job.get('static_diagnostics_sha256')!=fingerprint(reviews[0]['review'])):
+                raise ValueError('revision diagnostics differ from recorded static review')
+        if phase == 'revision' and 'functional_diagnostics' in job:
+            functional = [r['payload'] for r in self.events.records() if r['kind']=='CANDIDATE_FUNCTIONAL_REVIEW'
+                          and r['payload']['stream_id']==family[0] and r['payload']['family_id']==family[1]
+                          and r['payload']['slot']==slot and r['payload']['phase']=='candidate']
+            if (len(functional)!=1 or job['functional_diagnostics'] != functional[0]['review']
+                    or job.get('functional_diagnostics_sha256') != fingerprint(functional[0]['review'])):
+                raise ValueError('revision functional diagnostics differ from host review')
         request = dict(job, phase=phase, slot=slot, max_tokens=output_upper)
         input_upper = len(str(request).encode()) + 4096
+        # Validate the actual wire serialization BEFORE reserving a capability.
+        # Nested source strings can grow on JSON escaping; repr(request) is not a wire bound.
+        prepare = getattr(self.provider, 'preflight', None) or getattr(self.provider, 'prepare', None)
+        if callable(prepare):
+            wire = prepare(request)
+            input_upper = max(input_upper, len(canonical(wire).encode()) + 256)
         if (type(output_upper) is not int or not 0 < output_upper <= self.max_output_upper
                 or input_upper > self.max_input_upper):
             raise BudgetExhausted('request exceeds frozen compiler token ceilings')
@@ -103,6 +179,10 @@ class BoundedCompiler:
         else:
             key = self.budget.reserve(input_upper, output_upper)
         self.events.append('GENERATION_REQUESTED', request, at)
+        if callable(prepare):
+            self.events.append('WIRE_PREFLIGHT', dict(request_sha256=fingerprint(request),
+                wire_sha256=fingerprint(wire), wire_bytes=len(canonical(wire).encode()),
+                input_token_upper=input_upper, output_token_upper=output_upper), at)
         try:
             response = self.provider(request)
             # Preserve returned failures/model drift too, before validation or settlement.
@@ -117,6 +197,14 @@ class BoundedCompiler:
                 raise ValueError('compiler model drift')
             if self.budget.remaining_seconds <= 0:
                 raise BudgetExhausted('compiler exceeded deadline')
+            if str(response.get('parse_status','')).startswith('COMPILE_OUTPUT_'):
+                rejected = response.get('rejected_compile_output')
+                repairable = (response['parse_status']=='COMPILE_OUTPUT_CONTRACT_ERROR'
+                              and response.get('finish_reason')=='stop' and isinstance(rejected,dict)
+                              and isinstance(rejected.get('code'),str) and rejected['code'].strip()
+                              and response.get('code')==rejected['code'])
+                if not repairable:
+                    raise ValueError(response['parse_status'])
             content = response.get('specification') if phase=='induction' else response.get('code')
             if not isinstance(content,str) or not content.strip():
                 raise ValueError('compiler returned no specification/artifact')
@@ -129,7 +217,7 @@ class BoundedCompiler:
                 model=response.get('model'), response_id=response.get('id'),
                 content=content, artifact_path=str(artifact.resolve()),
                 content_sha256=hashlib.sha256(content.encode()).hexdigest(),
-                usage=response.get('usage', {}), status='draft'), at)
+                usage=response.get('usage', {}), status=('draft_compile_contract_rejected' if response.get('rejected_compile_output') else 'draft')), at)
             return response
         finally:
             if key in self.budget.reservations:

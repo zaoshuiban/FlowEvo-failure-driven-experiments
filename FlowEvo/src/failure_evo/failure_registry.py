@@ -8,6 +8,7 @@ from pathlib import Path
 from .contracts import Fingerprint, canonical, fingerprint
 from .evidence import EvidenceStore
 from .failure_events import finite_time
+from .generations import GenerationManagement, serialized
 
 HOOKS = ('before_native_retry', 'before_final_return')
 
@@ -82,7 +83,7 @@ class OperatorSnapshot:
     at: float
 
 
-class FailureOperatorRegistry:
+class FailureOperatorRegistry(GenerationManagement):
     """S1 pilot permissions only; active still requires a separate formal study.
 
     Mutation methods are trusted-host APIs, never exposed to operator workers.
@@ -100,6 +101,7 @@ class FailureOperatorRegistry:
         rows = self.events.records() if at is None else self.events.visible(at)
         return [r for r in rows if tuple(r['payload'].get('key', ())) == self.key(card)]
 
+    @serialized
     def register(self, card, at):
         if self._rows(card) or not card.intact():
             raise ValueError('version exists or artifact changed')
@@ -113,8 +115,9 @@ class FailureOperatorRegistry:
             raise ValueError('source provenance missing')
         self.events.append('SHADOW_REGISTERED', {'key': self.key(card), 'card': card.to_dict()}, at)
 
+    @serialized
     def authorize_experiment(self, card, gate_path, *, experiment_id, stream_id,
-                             after_task, effective_from, at):
+                             after_task, effective_from, at, promote_mature=False):
         if not experiment_id or not stream_id or type(after_task) is not int or after_task < 0:
             raise ValueError('explicit experiment/stream barrier required')
         if type(effective_from) is not int or effective_from <= after_task:
@@ -122,7 +125,21 @@ class FailureOperatorRegistry:
         rows = self._rows(card)
         if not rows or rows[0]['payload']['card'] != json.loads(canonical(card.to_dict())):
             raise ValueError('unknown or changed specification')
-        if rows[-1]['kind'] not in ('SHADOW_REGISTERED', 'GATE_CONSUMED') or not card.intact():
+        state = self.state(card)
+        if promote_mature:
+            if not state['opportunity_limit'] or not self.valid(card, at) or state['generation'] != 'nursery':
+                raise ValueError('mature promotion requires valid nursery')
+            source_tasks = {e['task_id'] for e in self.evidence.visible(at) if e['event_id'] in card.evidence_ids}
+            actual_reuse = [r['payload'] for r in rows if r['kind'] == 'OPPORTUNITY_COMPLETED'
+                            and r['payload']['outcome']['status'] == 'applied'
+                            and not r['payload']['outcome'].get('synthetic', False)
+                            and r['payload']['task_id'] not in source_tasks]
+            reused = {r['task_id'] for r in actual_reuse}
+            if len(reused) < 2 or len({r['program_sha256'] for r in actual_reuse}) < 2:
+                raise ValueError('mature promotion requires actual reuse on two other tasks')
+        elif state['authorization'] or state['permission'] != 'shadow' or state['retired']:
+            raise ValueError('pilot authorization requires frozen shadow')
+        if not card.intact():
             raise ValueError('pilot authorization requires frozen shadow')
         path = Path(gate_path).resolve()
         gate = json.loads(path.read_text())
@@ -134,7 +151,7 @@ class FailureOperatorRegistry:
         # Failed gates are consumed too: do not fish through candidates on one gate.
         self.events.append('GATE_CONSUMED', {'key': self.key(card), 'shard_id': shard}, at)
         required = ('frozen_before_evaluation', 'independent_validation', 'contract_checks_passed',
-                    'scope_checks_passed', 'generation_data_isolated', 'regression_passed')
+                    'scope_checks_passed', 'generation_data_isolated')
         if gate.get('role') != 'PILOT_ADMISSION' or not all(gate.get(k) is True for k in required):
             raise ValueError('independent pilot gate incomplete')
         bindings = dict(operator_id=card.operator_id, version=card.version,
@@ -147,9 +164,15 @@ class FailureOperatorRegistry:
         groups = gate.get('validation_source_groups', [])
         if not groups or set(groups) & set(card.source_group_ids):
             raise ValueError('gate overlaps development provenance')
+        if gate.get('regression_passed') is not True:
+            if promote_mature and gate.get('regression_passed') is False:
+                self.events.append('OPERATOR_SUSPENDED', dict(key=self.key(card), reason='trusted_independent_regression'), at)
+            raise ValueError('independent regression not passed')
         paired = gate.get('paired_results', [])
         if not paired:
             raise ValueError('paired pilot evidence required')
+        if promote_mature and not reused <= {r.get('problem_id') for r in paired}:
+            raise ValueError('paired gate must cover actual independent reuse tasks')
         checkpoints, savings, wins = set(), set(), set()
         for row in paired:
             if type(row.get('baseline_correct')) is not bool or type(row.get('operator_correct')) is not bool:
@@ -165,6 +188,8 @@ class FailureOperatorRegistry:
             if any(type(c) not in (int, float) or not math.isfinite(c) or c < 0 for c in costs):
                 raise ValueError('comparable paired cost required')
             if row['baseline_correct'] and not row['operator_correct']:
+                if promote_mature:
+                    self.events.append('OPERATOR_SUSPENDED', dict(key=self.key(card), reason='trusted_paired_negative_transfer'), at)
                 raise ValueError('observed reliability regression')
             if row['operator_correct'] and not row['baseline_correct']:
                 wins.add(problem)
@@ -178,8 +203,14 @@ class FailureOperatorRegistry:
         self.events.append('EXPERIMENT_AUTHORIZED', dict(
             key=self.key(card), gate_path=str(path), gate_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
             experiment_id=experiment_id, stream_id=stream_id, after_task=after_task,
-            effective_from=effective_from), at)
+            effective_from=effective_from, evidence_files=(state['authorization'].get('evidence_files', []) +
+                [dict(path=state['authorization']['gate_path'], sha256=state['authorization']['gate_sha256'])]
+                if promote_mature else [])), at)
+        if promote_mature:
+            self.events.append('GENERATION_CHANGED', dict(key=self.key(card), generation='mature',
+                reason='actual reuse plus independent paired gate; permission remains experimental'), at)
 
+    @serialized
     def suspend(self, card, reason, at):
         if not self._rows(card):
             raise ValueError('unknown operator')
@@ -193,10 +224,12 @@ class FailureOperatorRegistry:
         specs = [FailureOperator.from_dict(r['payload']['card']) for r in rows if r['kind'] == 'SHADOW_REGISTERED']
         cards = []
         for card in specs:
-            own = self._rows(card, at)
-            if own[-1]['kind'] != 'EXPERIMENT_AUTHORIZED':
+            state = self.state(card, at)
+            authorization = state['authorization']
+            if (not authorization or state['generation'] == 'cold'
+                    or (state['generation'] == 'nursery' and state['opportunity_limit']
+                        and not state['opportunities_remaining'])):
                 continue
-            authorization = own[-1]['payload']
             if (authorization['stream_id'] == stream_id and authorization['experiment_id'] == experiment_id
                     and experiment_id and authorization['effective_from'] <= task_index
                     and self.valid(card, at)):
@@ -208,14 +241,20 @@ class FailureOperatorRegistry:
     def valid(self, card, at):
         try:
             rows = self._rows(card, at)
-            if not rows or rows[-1]['kind'] != 'EXPERIMENT_AUTHORIZED' or not card.intact():
+            state = self.state(card, at)
+            if (not rows or state['permission'] != 'experimental' or state['generation'] == 'cold'
+                    or not state['authorization'] or not card.intact()):
                 return False
-            row = rows[-1]['payload']
+            if rows[0]['payload']['card'] != json.loads(canonical(card.to_dict())):
+                return False
+            row = state['authorization']
             evidence_rows = self.evidence.events.records()
             evidence_at = at if at is not None else max(rows[-1]['at'], evidence_rows[-1]['at'] if evidence_rows else rows[-1]['at'])
             known = {e['event_id'] for e in self.evidence.visible(evidence_at)}
             if not set(card.evidence_ids) <= known:
                 return False
-            return hashlib.sha256(Path(row['gate_path']).read_bytes()).hexdigest() == row['gate_sha256']
+            return (hashlib.sha256(Path(row['gate_path']).read_bytes()).hexdigest() == row['gate_sha256']
+                    and all(hashlib.sha256(Path(f['path']).read_bytes()).hexdigest() == f['sha256']
+                            for f in row.get('evidence_files', [])))
         except (OSError, ValueError, KeyError):
             return False

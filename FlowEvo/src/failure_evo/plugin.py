@@ -54,6 +54,13 @@ class FailureLearningPlugin:
             names = set()
         eligible = []
         for card in snapshot.cards:
+            if hasattr(self.registry, 'reconcile'):
+                try:
+                    if not self.registry.reconcile(card, at):
+                        continue
+                except Exception:
+                    state['hooks'].append(dict(hook=hook, checkpoint=checkpoint, status='error', reason='registry_reconciliation_failed'))
+                    return None
             if (card.evidence_fingerprint != self.context or hook not in card.hooks or stage not in card.stages
                     or feedback.status not in card.allowed_feedback
                     or (card.structural_statuses and structural_status(code) not in card.structural_statuses)
@@ -81,6 +88,18 @@ class FailureLearningPlugin:
                        generation_metadata=state['ledger'][-1]['generation_metadata'] if state['ledger'] else {},
                        candidate_ledger=copy.deepcopy(state['ledger']), remaining_budget=budget.snapshot(),
                        hook=hook, checkpoint_id=checkpoint, registry_snapshot_id=snapshot.snapshot_id)
+        reservation = None
+        if hasattr(self.registry, 'reserve_opportunity'):
+            try:
+                reservation = self.registry.reserve_opportunity(card, stream_id=self.stream_id,
+                    experiment_id=self.experiment_id, task_index=snapshot.task_index, task_id=task.problem_id,
+                    checkpoint=checkpoint, hook=hook, program_sha256=hashlib.sha256(code.encode()).hexdigest(), at=at)
+                if reservation is False:
+                    audit['reason'] = 'trial_quota_or_authorization_unavailable'
+                    return None
+            except Exception:
+                audit.update(status='error', reason='trial_reservation_failed')
+                return None
         started = time.monotonic()
         tools_before = budget.tool_calls
         try:
@@ -92,24 +111,32 @@ class FailureLearningPlugin:
                 raise ValueError('operator authorization changed')
             if not isinstance(result, dict) or result.get('status') not in ('applied', 'declined', 'error'):
                 raise ValueError('invalid operator result')
-            if result['status'] != 'applied':
-                audit['status'] = result['status']
-                return None
             # No permission changes, hidden scores, self-admission, or extra actions.
             allowed = {'status', 'candidate_code', 'selected_candidate_id', 'validation_status', 'actual_cost', 'evidence_ids', 'reason'}
             if set(result) - allowed or len(canonical(result).encode()) > 16384:
+                audit['safety_incident'] = 'unauthorized_action'
                 raise ValueError('operator attempted unauthorized action')
+            if result['status'] != 'applied':
+                if 'candidate_code' in result or 'selected_candidate_id' in result:
+                    audit['safety_incident'] = 'action_on_non_applied_result'
+                    raise ValueError('action on non-applied result')
+                audit['status'] = result['status']
+                return None
+            audit['proposed'] = True
             if ('candidate_code' in result) == ('selected_candidate_id' in result):
                 raise ValueError('exactly one action required')
             if 'candidate_code' in result:
                 if 'candidate_code' not in card.allowed_actions:
+                    audit['safety_incident'] = 'code_capability_unavailable'
                     raise ValueError('code capability unavailable')
                 proposed = result['candidate_code']
             else:
                 if 'select_candidate' not in card.allowed_actions:
+                    audit['safety_incident'] = 'selection_capability_unavailable'
                     raise ValueError('selection capability unavailable')
                 candidate = next((c for c in state['ledger'] if c['candidate_id'] == result['selected_candidate_id']), None)
                 if candidate is None:
+                    audit['safety_incident'] = 'candidate_outside_public_ledger'
                     raise ValueError('candidate is not in public ledger')
                 proposed = candidate['code']
             if not isinstance(proposed, str):
@@ -132,7 +159,11 @@ class FailureLearningPlugin:
                 raise BudgetExhausted('validation exceeded task deadline')
             candidate['public_feedback'] = public.to_dict()
             audit['validation_status'] = 'public_tests_pass' if public.status == 'PUBLIC_PASS' else ('structural_pass' if audit['public_check_outcome']=='unavailable' else 'failed')
+            if not self.registry.valid(card, None):
+                raise ValueError('operator authorization changed during public validation')
             if public.status != 'PUBLIC_PASS':
+                if feedback.status == 'PUBLIC_PASS' and audit['public_check_outcome'] == 'failed':
+                    audit['safety_incident'] = 'host_verified_negative_transfer'
                 audit.update(status='declined', reason='host_public_validation_failed')
                 return None
             audit.update(status='applied', candidate_id=candidate['candidate_id'])
@@ -141,7 +172,17 @@ class FailureLearningPlugin:
             audit.update(status='error', reason=type(exc).__name__)
             return None
         finally:
-            audit['actual_cost'] = dict(tool_calls=budget.tool_calls-tools_before, elapsed_seconds=time.monotonic()-started, model_calls=0)
+            audit['actual_cost'] = dict(tool_calls=budget.tool_calls-tools_before, elapsed_seconds=time.monotonic()-started, model_calls=0, model_tokens=0)
+            try:
+                if audit.get('safety_incident') and hasattr(self.registry, 'suspend'):
+                    self.registry.suspend(card, audit['safety_incident'], at)
+                if reservation:
+                    audit['synthetic'] = self.synthetic
+                    self.registry.complete_opportunity(card, reservation, outcome=audit, at=at)
+            except Exception:
+                # Reserved quota is never refunded after a crash or failed audit write.
+                audit.update(status='error', reason='registry_outcome_write_failed')
+                return None
 
     def finish(self, at):
         state = self.current
