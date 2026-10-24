@@ -1,0 +1,56 @@
+{
+  "protocol": "s19-compile-envelope-v2",
+  "raw_text": "{\"type\":\"json_object\",\"hypothesis\":{\"conditions\":\"Public runtime error is IndexError from heapq.heappop on an empty heap when need>0 but no voters with m>=current threshold remain in the heap.\",\"action\":\"REPAIR_EXISTING\",\"expected_improvement\":\"Eliminate IndexError on the audited public case by ensuring the heap is nonempty before popping, or by restructuring the greedy so a pop only occurs when a candidate exists.\",\"refusal_conditions\":\"Do not claim certified root cause or hidden correctness; do not treat this as proof of full correctness beyond the public case.\",\"stop_conditions\":\"Stop after one bounded repair attempt; if the public case still errors or the heap logic cannot be made safe within remaining calls, fall back to NATIVE.\",\"unknowns\":\"Whether the greedy direction (descending m, buying cheapest available) is the correct optimal strategy; whether other hidden cases would still fail; exact intended algorithm.\"},\"rule\":{\"when\":{\"candidate_state\":\"STRUCTURAL_PASS\",\"public_result\":\"RUNTIME_ERROR\",\"remaining_calls_min\":1},\"action\":\"REPAIR_EXISTING\",\"fallback\":\"NATIVE\"}}",
+  "raw_sha256": "cc30b6fc505a762ebee4f947930eddaecfb6300c140e2d4b5fe9ef42d247d062",
+  "accepted": true,
+  "reasons": [
+    "Removed allowlisted top-level type=json_object; no business semantics"
+  ],
+  "normalized": {
+    "hypothesis": {
+      "conditions": "Public runtime error is IndexError from heapq.heappop on an empty heap when need>0 but no voters with m>=current threshold remain in the heap.",
+      "action": "REPAIR_EXISTING",
+      "expected_improvement": "Eliminate IndexError on the audited public case by ensuring the heap is nonempty before popping, or by restructuring the greedy so a pop only occurs when a candidate exists.",
+      "refusal_conditions": "Do not claim certified root cause or hidden correctness; do not treat this as proof of full correctness beyond the public case.",
+      "stop_conditions": "Stop after one bounded repair attempt; if the public case still errors or the heap logic cannot be made safe within remaining calls, fall back to NATIVE.",
+      "unknowns": "Whether the greedy direction (descending m, buying cheapest available) is the correct optimal strategy; whether other hidden cases would still fail; exact intended algorithm."
+    },
+    "rule": {
+      "when": {
+        "candidate_state": "STRUCTURAL_PASS",
+        "public_result": "RUNTIME_ERROR",
+        "remaining_calls_min": 1
+      },
+      "action": "REPAIR_EXISTING",
+      "fallback": "NATIVE"
+    }
+  },
+  "normalized_sha256": "3a75b88da3309136831b5d8ef05aaef9e4d69e3bb016016f9f90399f5390f90a",
+  "rule_sha256": "83e5d65cf1b5a423e4b33dbac17f32fb5ef3f61ef95d3f08bbd612428ec0b035",
+  "original_response_path": "runs/s19_real_pilot_20261024_01/jobs/05953541aa4e0ad397dacb5975ec613cced143f7a3939e83a3984ec143df1a1e/1-response.json",
+  "response_sha256": "e22e3d87bb17ff4c84b0bcfb27332098a8e9c1a70a5ae54804b27fc3a66a434b",
+  "request_sha256": "0e3732fe56375b07f0fcef2c9b196d3b547cdf3a0b3148843306ef141c5dd3cb",
+  "request_path": "runs/s19_real_pilot_20261024_01/wire/learning/4/request.json",
+  "full_request_matches": true,
+  "original_diagnosis": {
+    "compile_error": "unknown/private/missing public field"
+  },
+  "source_action_comparison": [
+    {
+      "task_id": "s18_taco-test-909",
+      "event_id": "4e5dff279c78faee03879f07ace9526fefdc66e1982d51cc7dbb63bd1ec0468c",
+      "action": "REPAIR_EXISTING",
+      "generic_action": "REPAIR_EXISTING",
+      "same_action": true
+    },
+    {
+      "task_id": "s18_taco-test-909",
+      "event_id": "a9e18387cab8ae015d10ff0b95db37cb2737f4adaa35e1c1d5daded26237b5bd",
+      "action": "REPAIR_EXISTING",
+      "generic_action": "REPAIR_EXISTING",
+      "same_action": true
+    }
+  ],
+  "posthoc_only": true,
+  "registered": false
+}

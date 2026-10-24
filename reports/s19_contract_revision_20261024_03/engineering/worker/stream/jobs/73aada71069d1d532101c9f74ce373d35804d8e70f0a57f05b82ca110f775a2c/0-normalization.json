@@ -1,0 +1,31 @@
+{
+  "protocol": "s19-compile-envelope-v2",
+  "raw_text": "{\"hypothesis\": {\"conditions\": \"A delivered program has audited public mismatch\", \"action\": \"Generate fresh\", \"expected_improvement\": \"Recover public behavior; benefit unverified\", \"refusal_conditions\": \"Public pass, unknown evidence or insufficient budget\", \"stop_conditions\": \"No more than original call budget\", \"unknowns\": \"No causal or cross-task advantage established\"}, \"rule\": {\"when\": {\"candidate_state\": \"STRUCTURAL_PASS\", \"public_result\": \"WRONG_ANSWER\", \"remaining_calls_min\": 1}, \"action\": \"REGENERATE_FRESH\", \"fallback\": \"NATIVE\"}, \"type\": \"json_object\"}",
+  "raw_sha256": "81df0f65627bdf15e27d2803886d9e2976a6e6f07eae007696ec173b142088af",
+  "accepted": true,
+  "reasons": [
+    "Removed allowlisted top-level type=json_object; no business semantics"
+  ],
+  "normalized": {
+    "hypothesis": {
+      "conditions": "A delivered program has audited public mismatch",
+      "action": "Generate fresh",
+      "expected_improvement": "Recover public behavior; benefit unverified",
+      "refusal_conditions": "Public pass, unknown evidence or insufficient budget",
+      "stop_conditions": "No more than original call budget",
+      "unknowns": "No causal or cross-task advantage established"
+    },
+    "rule": {
+      "when": {
+        "candidate_state": "STRUCTURAL_PASS",
+        "public_result": "WRONG_ANSWER",
+        "remaining_calls_min": 1
+      },
+      "action": "REGENERATE_FRESH",
+      "fallback": "NATIVE"
+    }
+  },
+  "normalized_sha256": "f4cd173080e598b32819be2f9bf7eb2a60e4a97644a3030d5552121ef15c3dec",
+  "rule_sha256": "d3f82be18293ff472501ee82ba8e93f047bcd1764ae6e60ed026ce41802b7587",
+  "response_sha256": "7b8b9515c54cd1b6a63f74901d8517c2bfa09b9c463409e491271ca9d6780be6"
+}

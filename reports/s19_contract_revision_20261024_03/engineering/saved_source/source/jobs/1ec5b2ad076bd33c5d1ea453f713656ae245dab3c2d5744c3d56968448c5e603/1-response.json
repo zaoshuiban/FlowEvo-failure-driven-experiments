@@ -1,0 +1,10 @@
+{
+  "text": "{\"type\":\"json_object\",\"hypothesis\":{\"conditions\":\"The program crashes with IndexError on the audited public input because the greedy loop pops from an empty heap: when processing m from n-1 down to 0, it requires bought >= m but the heap may not contain enough affordable voters at that point, so heapq.heappop raises IndexError.\",\"action\":\"REPAIR_EXISTING\",\"expected_improvement\":\"Replacing the empty-heap pop with a correct greedy that only buys when the heap is nonempty (or restructuring to guarantee enough candidates) should eliminate the IndexError and produce the expected outputs 8, 0, 7 on the public case.\",\"refusal_conditions\":\"Do not claim a certified root cause or hidden correctness; do not assert the fix is optimal beyond the public case; do not infer private test behavior.\",\"stop_conditions\":\"Stop after one bounded repair attempt if the public case still raises an exception or mismatches expected tokens; do not exceed remaining call budget.\",\"unknowns\":\"Whether the greedy ordering (processing m descending and buying cheapest available) is the correct algorithm for all inputs; whether additional edge cases (n=1, all m=0, large p) are handled; whether the heap can still be empty under a corrected loop.\"},\"rule\":{\"when\":{\"candidate_state\":\"STRUCTURAL_PASS\",\"public_result\":\"RUNTIME_ERROR\",\"remaining_calls_min\":1},\"action\":\"REPAIR_EXISTING\",\"fallback\":\"NATIVE\"}}",
+  "usage": {
+    "prompt_tokens": 2,
+    "completion_tokens": 2,
+    "total_tokens": 4
+  },
+  "model": "deepseek-flash",
+  "finish_reason": "stop"
+}

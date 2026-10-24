@@ -8,8 +8,9 @@ from .workflow_protocol_v2 import program_observation
 
 
 class SymptomLearning:
-    def __init__(self, path, store, stream_id, representation="repair-choice-json-v1"):
+    def __init__(self, path, store, stream_id, representation="repair-choice-json-v1", scheduler_protocol="legacy-id-order"):
         self.representation=representation
+        self.scheduler_protocol=scheduler_protocol
         self.events = EvidenceStore(path)
         self.store, self.stream_id = store, stream_id
 

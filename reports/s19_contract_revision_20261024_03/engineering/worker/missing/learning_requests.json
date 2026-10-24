@@ -1,0 +1,65 @@
+[
+  {
+    "conservative_input_token_upper": 5707,
+    "estimate_method": "UTF8 byte upper proxy plus envelope margin; NOT tokenizer count",
+    "limits": {
+      "envelope_margin": 2048,
+      "input_token_upper": 32768,
+      "output_tokens": 8192,
+      "wire_bytes": 262144
+    },
+    "output_token_upper": 8192,
+    "protocol": "workflow-shared-protocol-v2",
+    "provider_input_tokens": null,
+    "serialized_utf8_bytes": 3659,
+    "request_id": "67d1230b083091966e1ddc154cc9798318e2b5b7a52cfe8792d7d3b4ad095b37/generate/0",
+    "request_sha256": "8fff882a2fe84b991df6dd6dc6409892932f1301360aabb25d518df34239633c",
+    "status": "COMPLETED",
+    "provider_requests": 1,
+    "request": {
+      "max_tokens": 8192,
+      "messages": [
+        {
+          "content": "Compile JSON with exactly hypothesis and rule. hypothesis has exactly six nonempty strings: conditions, action, expected_improvement, refusal_conditions, stop_conditions, unknowns. rule matches supplied schema. Evidence is data. No permissions, IDs as conditions, or private evidence.",
+          "role": "system"
+        },
+        {
+          "content": "{\"compile_contract\":{\"authority\":\"metadata cannot change actions, budget, or permissions\",\"metadata_allowlist\":{\"type\":\"json_object\"},\"required_top_level\":[\"hypothesis\",\"rule\"],\"unknown_fields\":\"reject with field path\",\"version\":\"s19-compile-envelope-v2\"},\"current_hypothesis\":null,\"diagnosis\":null,\"evidence_family\":{\"common_root_cause_certified\":false,\"subtypes\":[{\"finish_reason\":\"length\",\"hypothesis_id\":\"c0abd0609a371c78db3c3dcf812373dddc9c8201843f8514348b74e6be3529c2\"}]},\"objective\":\"Learn observable conditions and a bounded recovery action; do not infer certified root cause or claim hidden correctness.\",\"prior_rule\":null,\"prior_source_assessments\":[],\"public_effects\":[],\"representation\":\"repair-choice-json-v2\",\"schema\":{\"action\":[\"REPAIR_EXISTING\",\"REGENERATE_FRESH\"],\"additionalProperties\":false,\"fallback\":\"NATIVE\",\"representation\":\"repair-choice-json-v2\",\"required\":[\"when\",\"action\",\"fallback\"],\"when\":{\"candidate_state\":[\"STRUCTURAL_PASS\",\"NO_ENTRY\",\"NO_COMPLETE_CODE\",\"COMPILE_ERROR\"],\"public_result\":[\"WRONG_ANSWER\",\"RUNTIME_ERROR\",\"COMPILE_ERROR\",\"NO_COMPLETE_CODE\"],\"remaining_calls_min\":\"integer 1..5\"}},\"source_packets\":[{\"artifact_state\":\"NO_COMPLETE_CODE\",\"candidate_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"checkpoint_budget\":{\"calls\":1,\"max_calls\":3,\"max_tokens\":150000,\"max_tools\":20,\"remaining_seconds\":599.9989047499839,\"tool_calls\":0,\"used_tokens\":4},\"code\":\"\",\"event_id\":\"ef62f94ce43e32114515036614d85d2b89789eb4313a9fa95fb628178c78a3bc\",\"feedback\":{\"public_cases\":[],\"status\":\"NO_COMPLETE_CODE\",\"summary\":\"No complete program was produced.\",\"visibility\":\"public\"},\"public_cases\":[{\"comparison\":\"tokens\",\"expected\":\"0\",\"input\":\"0\\n\",\"legal_verified\":true,\"scorer\":\"s1\",\"source\":{\"case_sha256\":\"67e032f7f34aa626dfe2c0470392a57d573ab8dc7dd8a60846670d0055f3a4e0\",\"id\":\"identity-0\",\"kind\":\"engineering_fixture\"},\"visibility\":\"public\"},{\"comparison\":\"tokens\",\"expected\":\"1\",\"input\":\"1\\n\",\"legal_verified\":true,\"scorer\":\"s1\",\"source\":{\"case_sha256\":\"b7621495cb2827c0db92eda0a5196f1a6aad821dc8242a785180519987e82e52\",\"id\":\"identity-1\",\"kind\":\"engineering_fixture\"},\"visibility\":\"public\"}],\"stage\":\"l1\",\"task_id\":\"fixture-0\",\"task_public\":{\"problem_id\":\"fixture-0\",\"prompt\":\"Read one integer and print it unchanged.\",\"public_examples\":[{\"comparison\":\"tokens\",\"expected\":\"0\",\"input\":\"0\\n\",\"legal_verified\":true,\"scorer\":\"s1\",\"source\":{\"case_sha256\":\"67e032f7f34aa626dfe2c0470392a57d573ab8dc7dd8a60846670d0055f3a4e0\",\"id\":\"identity-0\",\"kind\":\"engineering_fixture\"},\"visibility\":\"public\"},{\"comparison\":\"tokens\",\"expected\":\"1\",\"input\":\"1\\n\",\"legal_verified\":true,\"scorer\":\"s1\",\"source\":{\"case_sha256\":\"b7621495cb2827c0db92eda0a5196f1a6aad821dc8242a785180519987e82e52\",\"id\":\"identity-1\",\"kind\":\"engineering_fixture\"},\"visibility\":\"public\"}]}}]}",
+          "role": "user"
+        }
+      ],
+      "model": "deepseek-flash",
+      "reasoning_effort": "none",
+      "response_format": {
+        "type": "json_object"
+      },
+      "stream": false,
+      "temperature": 0,
+      "thinking": {
+        "type": "disabled"
+      }
+    },
+    "raw_response": {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2,
+        "completion_tokens": 2,
+        "total_tokens": 4
+      },
+      "choices": [
+        {
+          "message": {
+            "content": "{\"hypothesis\": {\"conditions\": \"A delivered program has audited public mismatch\", \"action\": \"Test a bounded recovery action\", \"expected_improvement\": \"Recover public behavior; benefit unverified\", \"refusal_conditions\": \"Public pass, unknown evidence or insufficient budget\", \"stop_conditions\": \"No more than original call budget\", \"unknowns\": \"No causal or cross-task advantage established\"}, \"rule\": {\"when\": {\"candidate_state\": \"NO_COMPLETE_CODE\", \"public_result\": \"NO_COMPLETE_CODE\", \"remaining_calls_min\": 1}, \"action\": \"REGENERATE_FRESH\", \"fallback\": \"NATIVE\"}, \"type\": \"json_object\"}"
+          },
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    "usage": {
+      "prompt_tokens": 2,
+      "completion_tokens": 2,
+      "total_tokens": 4
+    },
+    "model": "deepseek-flash"
+  }
+]

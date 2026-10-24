@@ -62,6 +62,8 @@ class CompileQueue:
 
 
     def schedule_hypotheses(self, index, *, at, budget_available):
+        if getattr(index,'scheduler_protocol','legacy-id-order')=='evidence-diversity-v1':
+            return self.schedule_diverse(index,at=at,budget_available=budget_available)
         rows=self.events.records();jobs=[]
         attempts=[r['payload'] for r in rows if r['kind']=='JOB_STARTED']
         active={j['hypothesis_id'] for j in attempts if not any(r['kind']=='JOB_FINISHED' and r['payload']['job_id']==j['job_id'] for r in rows)}
@@ -81,6 +83,62 @@ class CompileQueue:
             self.events.append('SCHEDULE_DECISION',job,at)
             if not reason:
                 self.events.append('JOB_SCHEDULED',job,at);jobs.append(job);active.add(key)
+        return jobs
+
+    def schedule_diverse(self,index,*,at,budget_available):
+        """Public-prefix-only ranking; family is organizational, never a root cause claim.
+
+        Keep original hypothesis identities; coarse families exclude finish reason
+        but preserve artifact/result/actions, so incompatible actions are not merged.
+        One representative per family and no overlapping source tasks per boundary.
+        """
+        rows=self.events.visible(at);states={r['payload']['hypothesis_id']:r['payload'] for r in index.events.visible(at) if r['kind']=='HYPOTHESIS_VERSION'}
+        facts={x['event_id']:x for x in index.store.visible(at,index.stream_id)}
+        attempts=[r['payload'] for r in rows if r['kind']=='JOB_STARTED']
+        finished={r['payload']['job_id'] for r in rows if r['kind']=='JOB_FINISHED'}
+        active=[j for j in attempts if j['job_id'] not in finished]
+        used_tasks={facts[i]['task_id'] for j in active for i in j['evidence_ids'] if i in facts}
+        groups={}
+        for key,s in sorted(states.items()):
+            symptom={k:v for k,v in s['symptom'].items() if k!='finish_reason'}
+            family=fingerprint(symptom);groups.setdefault(family,[]).append((key,s))
+        ranked=[]
+        for family,members in groups.items():
+            ids=sorted({i for _,s in members for i in s['source_evidence_ids']+s['supporting_evidence_ids']+s['contradicting_evidence_ids'] if i in facts})
+            tasks=sorted({facts[i]['task_id'] for i in ids})
+            # Provenance group is a recorded proxy, NOT certified independent genealogy.
+            lineages=sorted({facts[i]['provenance_group_id'] for i in ids})
+            keys={k for k,_ in members};prior=[j for j in attempts if j['hypothesis_id'] in keys]
+            used={i for j in prior for i in j['evidence_ids']}
+            diag=sorted({x['effect_id'] for _,s in members for x in s.get('effects',[]) if x['source_event_id'] in facts})
+            consumed={i for j in prior for i in j.get('diagnostic_ids',[])} | {i for r in rows if r['kind']=='JOB_FINISHED' and r['payload'].get('hypothesis_id') in keys for i in r['payload'].get('consumed_diagnostics',[])}
+            # Prefer an already learned representative for a revision, otherwise earliest stable ID.
+            key,state=min(members,key=lambda kv:(not bool(kv[1]['linked_operator_versions']),kv[0]))
+            novelty=sorted(set(ids)-used);new_tasks={facts[i]['task_id'] for i in novelty}-{facts[i]['task_id'] for i in used if i in facts}
+            score=(len(tasks),len(lineages),len(new_tasks),int(len(state['applicable_actions'])>1),-len(prior))
+            basis=dict(independent_task_ids=tasks,provenance_group_ids=lineages,provenance_is_independence_proof=False,
+                fresh_task_count=len(new_tasks),visible_evidence_count=len(ids),actions=state['applicable_actions'],
+                previous_attempt_count=len(prior),subtypes=[dict(hypothesis_id=k,finish_reason=s['symptom']['finish_reason']) for k,s in members],
+                native_recovery_cost='NOT_RANKED: no prefix-bound comparable recovery cost supplied',
+                equivalent_rule_handling='RuleMemory deduplicates accepted rules; no-new-evidence blocks repeat compilation',
+                no_common_root_cause_claim=True)
+            ranked.append((score,family,key,state,ids,diag,prior,novelty,set(diag)-consumed,basis))
+        ranked.sort(key=lambda r:(tuple(-x for x in r[0]),r[1]))
+        jobs=[]
+        for rank,(_,family,key,state,ids,diag,prior,novelty,new_diag,basis) in enumerate(ranked,1):
+            tasks=set(basis['independent_task_ids'])
+            reason=('NO_BUDGET' if not budget_available else 'NO_ACTION' if not state['applicable_actions'] else
+                'NO_NEW_EVIDENCE' if not (novelty or new_diag) else
+                'IN_FLIGHT' if any(j['hypothesis_id'] in {m['hypothesis_id'] for m in basis['subtypes']} for j in active) else
+                'SOURCE_DIVERSITY_LIMIT' if tasks & used_tasks else
+                'FAMILY_LIMIT' if len(active)+len(jobs)>=self.max_families else '')
+            job=dict(job_id=fingerprint(['evidence-diversity-v1',family,ids,diag]),hypothesis_id=key,
+                evidence_ids=ids,diagnostic_ids=diag,decision='SKIP' if reason else 'REVISE' if prior else 'GENERATE',
+                reason=reason,hypothesis_version=state['version'],family_id=family,priority_rank=rank,priority_basis=basis,
+                scheduler_protocol='evidence-diversity-v1')
+            self.events.append('SCHEDULE_DECISION',job,at)
+            if not reason:
+                self.events.append('JOB_SCHEDULED',job,at);jobs.append(job);used_tasks.update(tasks)
         return jobs
 
 

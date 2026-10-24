@@ -1,0 +1,49 @@
+{
+  "protocol": "s19-compile-envelope-v2",
+  "raw_text": "{\"type\":\"json_object\",\"hypothesis\":{\"conditions\":\"Public runtime error (IndexError) occurs when the greedy loop pops from an empty heap because the code iterates m from n-1 down to 0 and requires have >= i, but voters with m_i >= i are never counted as already having votes; the heap can be empty while have < i.\",\"action\":\"REPAIR_EXISTING\",\"expected_improvement\":\"Replace the reverse greedy with the standard approach: sort voters by m_i descending, maintain a min-heap of p_i for voters with m_i >= current required count, and buy the cheapest votes until the number of acquired voters reaches the threshold, avoiding empty-heap pops.\",\"refusal_conditions\":\"Do not claim certified root cause or hidden correctness; only fix the observable IndexError and verify against the public example.\",\"stop_conditions\":\"Stop after producing a repaired solution that passes the public example (8,0,7) or after exhausting the single remaining call.\",\"unknowns\":\"Whether the repaired greedy is fully correct for all constraints; only public example is verified.\"},\"rule\":{\"when\":{\"candidate_state\":\"STRUCTURAL_PASS\",\"public_result\":\"RUNTIME_ERROR\",\"remaining_calls_min\":1},\"action\":\"REPAIR_EXISTING\",\"fallback\":\"NATIVE\"}}",
+  "raw_sha256": "37345e2c6b109856f104030b499d810f971f8510bc069dac749e3babca6b0392",
+  "accepted": true,
+  "reasons": [
+    "Removed allowlisted top-level type=json_object; no business semantics"
+  ],
+  "normalized": {
+    "hypothesis": {
+      "conditions": "Public runtime error (IndexError) occurs when the greedy loop pops from an empty heap because the code iterates m from n-1 down to 0 and requires have >= i, but voters with m_i >= i are never counted as already having votes; the heap can be empty while have < i.",
+      "action": "REPAIR_EXISTING",
+      "expected_improvement": "Replace the reverse greedy with the standard approach: sort voters by m_i descending, maintain a min-heap of p_i for voters with m_i >= current required count, and buy the cheapest votes until the number of acquired voters reaches the threshold, avoiding empty-heap pops.",
+      "refusal_conditions": "Do not claim certified root cause or hidden correctness; only fix the observable IndexError and verify against the public example.",
+      "stop_conditions": "Stop after producing a repaired solution that passes the public example (8,0,7) or after exhausting the single remaining call.",
+      "unknowns": "Whether the repaired greedy is fully correct for all constraints; only public example is verified."
+    },
+    "rule": {
+      "when": {
+        "candidate_state": "STRUCTURAL_PASS",
+        "public_result": "RUNTIME_ERROR",
+        "remaining_calls_min": 1
+      },
+      "action": "REPAIR_EXISTING",
+      "fallback": "NATIVE"
+    }
+  },
+  "normalized_sha256": "111025b2acd69046c5dd94694b361bb0f6fa5bad2748d20e42f4648c9b86ad8c",
+  "rule_sha256": "83e5d65cf1b5a423e4b33dbac17f32fb5ef3f61ef95d3f08bbd612428ec0b035",
+  "original_response_path": "runs/s19_real_pilot_20261024_01/jobs/9f7927314a4b70f77d6c1dfe923582bef0d648bb430e900ea222a13fbd4ff3e7/0-response.json",
+  "response_sha256": "d899e8bcdaf1cef86f2b7974a46217a5cb576442eac97a63b8efa56716f2dd31",
+  "request_sha256": "21e8f2adbce1cdaf57ee24b6ee2c672c8503eb22927288425c45a133fe5fd234",
+  "request_path": "runs/s19_real_pilot_20261024_01/wire/learning/1/request.json",
+  "full_request_matches": true,
+  "original_diagnosis": {
+    "compile_error": "unknown/private/missing public field"
+  },
+  "source_action_comparison": [
+    {
+      "task_id": "s18_taco-test-909",
+      "event_id": "de90b07dfc8f52121607318c3561d950e22895c0698ccedf3c5bf402dbe71eda",
+      "action": "REPAIR_EXISTING",
+      "generic_action": "REPAIR_EXISTING",
+      "same_action": true
+    }
+  ],
+  "posthoc_only": true,
+  "registered": false
+}

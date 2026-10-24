@@ -1,0 +1,49 @@
+{
+  "protocol": "s19-compile-envelope-v2",
+  "raw_text": "{\"type\":\"json_object\",\"hypothesis\":{\"conditions\":\"Public runtime error occurs when the greedy loop pops from an empty heap because the count of already-convinced voters (have) is less than the required threshold i but no affordable voters remain in the heap for that threshold.\",\"action\":\"REPAIR_EXISTING\",\"expected_improvement\":\"Eliminates the IndexError by ensuring the heap is only popped when non-empty and by restructuring the greedy to buy the cheapest available voter whenever the current convinced count is below the required threshold, matching the intended solution.\",\"refusal_conditions\":\"Refuse to claim the fix is certified correct or to infer hidden root cause; only assert that the public runtime error is addressed and public examples are expected to pass.\",\"stop_conditions\":\"Stop after applying the bounded repair and re-running the public cases; do not attempt further speculative changes without new public evidence.\",\"unknowns\":\"Whether the repaired greedy handles all edge cases (e.g., m_i=0 voters, large n) correctly beyond the public examples; whether the original algorithm's threshold logic was otherwise sound.\"},\"rule\":{\"when\":{\"candidate_state\":\"STRUCTURAL_PASS\",\"public_result\":\"RUNTIME_ERROR\",\"remaining_calls_min\":1},\"action\":\"REPAIR_EXISTING\",\"fallback\":\"NATIVE\"}}",
+  "raw_sha256": "54110515fa9fc4abbcbde61d7c17f06ce9b42870925f1212e72fff92b868cecb",
+  "accepted": true,
+  "reasons": [
+    "Removed allowlisted top-level type=json_object; no business semantics"
+  ],
+  "normalized": {
+    "hypothesis": {
+      "conditions": "Public runtime error occurs when the greedy loop pops from an empty heap because the count of already-convinced voters (have) is less than the required threshold i but no affordable voters remain in the heap for that threshold.",
+      "action": "REPAIR_EXISTING",
+      "expected_improvement": "Eliminates the IndexError by ensuring the heap is only popped when non-empty and by restructuring the greedy to buy the cheapest available voter whenever the current convinced count is below the required threshold, matching the intended solution.",
+      "refusal_conditions": "Refuse to claim the fix is certified correct or to infer hidden root cause; only assert that the public runtime error is addressed and public examples are expected to pass.",
+      "stop_conditions": "Stop after applying the bounded repair and re-running the public cases; do not attempt further speculative changes without new public evidence.",
+      "unknowns": "Whether the repaired greedy handles all edge cases (e.g., m_i=0 voters, large n) correctly beyond the public examples; whether the original algorithm's threshold logic was otherwise sound."
+    },
+    "rule": {
+      "when": {
+        "candidate_state": "STRUCTURAL_PASS",
+        "public_result": "RUNTIME_ERROR",
+        "remaining_calls_min": 1
+      },
+      "action": "REPAIR_EXISTING",
+      "fallback": "NATIVE"
+    }
+  },
+  "normalized_sha256": "033e2d178985638b264818f107e3202e174468de96160beb5ff6065126b11a36",
+  "rule_sha256": "83e5d65cf1b5a423e4b33dbac17f32fb5ef3f61ef95d3f08bbd612428ec0b035",
+  "original_response_path": "runs/s19_real_pilot_20261024_01/jobs/9f7927314a4b70f77d6c1dfe923582bef0d648bb430e900ea222a13fbd4ff3e7/1-response.json",
+  "response_sha256": "cd50bb0ee32f8c553a3e7de538421fe6e1ec5ad2edcd8df31601db26b702d5b0",
+  "request_sha256": "5f40e5135243d15eefcd75501228f4663e96490755bc481bea2c91329ab02f8b",
+  "request_path": "runs/s19_real_pilot_20261024_01/wire/learning/2/request.json",
+  "full_request_matches": true,
+  "original_diagnosis": {
+    "compile_error": "unknown/private/missing public field"
+  },
+  "source_action_comparison": [
+    {
+      "task_id": "s18_taco-test-909",
+      "event_id": "de90b07dfc8f52121607318c3561d950e22895c0698ccedf3c5bf402dbe71eda",
+      "action": "REPAIR_EXISTING",
+      "generic_action": "REPAIR_EXISTING",
+      "same_action": true
+    }
+  ],
+  "posthoc_only": true,
+  "registered": false
+}
