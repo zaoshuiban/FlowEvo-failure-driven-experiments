@@ -68,16 +68,19 @@ class CompileQueue:
         known={x['event_id'] for x in index.store.visible(at,index.stream_id)}
         for key,s in sorted(index.states().items()):
             evidence=sorted(set(s['source_evidence_ids']+s['contradicting_evidence_ids']+s['supporting_evidence_ids']) & known)
+            diagnostics=sorted(x['effect_id'] for x in s.get('effects',[]) if x['source_event_id'] in known)
             prior=[j for j in attempts if j['hypothesis_id']==key]
+            used_diagnostics={x for j in prior for x in j.get('diagnostic_ids',[])} | {x for r in rows if r['kind']=='JOB_FINISHED' and r['payload'].get('hypothesis_id')==key for x in r['payload'].get('consumed_diagnostics',[])}
             used={x for j in prior for x in j['evidence_ids']}
             reason = ('NO_BUDGET' if not budget_available else 'NO_ACTION' if not s['applicable_actions'] else
-                'NO_NEW_EVIDENCE' if not set(evidence)-used else 'IN_FLIGHT' if key in active else
+                'NO_NEW_EVIDENCE' if not (set(evidence)-used or set(diagnostics)-used_diagnostics) else 'IN_FLIGHT' if key in active else
                 'FAMILY_LIMIT' if len(active)>=self.max_families else '')
             decision='SKIP' if reason else 'REVISE' if prior else 'GENERATE'
-            job=dict(job_id=fingerprint([key,evidence]),hypothesis_id=key,evidence_ids=evidence,
+            job=dict(job_id=fingerprint([key,evidence,diagnostics]),hypothesis_id=key,evidence_ids=evidence,diagnostic_ids=diagnostics,
                 decision=decision,reason=reason,hypothesis_version=s['version'])
             self.events.append('SCHEDULE_DECISION',job,at)
-            if not reason:jobs.append(job);active.add(key)
+            if not reason:
+                self.events.append('JOB_SCHEDULED',job,at);jobs.append(job);active.add(key)
         return jobs
 
 

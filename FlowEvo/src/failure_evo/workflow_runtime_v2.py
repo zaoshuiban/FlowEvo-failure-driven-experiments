@@ -64,14 +64,19 @@ class PreparedController:
                         if plugin:
                             observed_candidate['validation_cost']['tool_calls']=1
                             from .failure_events import checked_public_feedback
-                            feedback=checked_public_feedback(self.evaluate(task,code))
+                            raw_checked=self.evaluate(task,code)
+                            feedback=checked_public_feedback(raw_checked)
+                            from .contracts import fingerprint
+                            observed_candidate['audited_case_outcomes']={fingerprint([c['input'],c['expected']]):c['correct'] for c in raw_checked.get('cases',[]) if type(c.get('correct')) is bool}
                             if budget.remaining_seconds<=0:raise TimeoutError('public evaluator exceeded deadline')
                         else:feedback=PublicFeedback.project(self.evaluate(task,code))
                 if plugin:
                     observed_candidate['public_feedback']=feedback.to_dict()
                 previous=code
                 event={'stage':stage,'request':payload,'operator_id':operator.operator_id if operator else None,'blocked':blocked,'operator_status':proposal.get('status') if proposal else None,
-                       'code':code,'code_sha256':hashlib.sha256(code.encode()).hexdigest(),'public_feedback':feedback.to_dict(),'budget':budget.snapshot()}
+                       'code':code,'code_sha256':hashlib.sha256(code.encode()).hexdigest(),'public_feedback':feedback.to_dict(),'budget':budget.snapshot(),
+                       'checkpoint_budget':dict(max_calls=budget.max_calls,max_tokens=budget.max_tokens,max_tools=budget.max_tools,
+                           calls=budget.calls,used_tokens=budget.used_tokens,tool_calls=budget.tool_calls,remaining_seconds=budget.remaining_seconds)}
                 events.append(event)
                 if feedback.status=='PUBLIC_PASS':best={'stage':stage,'code':code,'code_sha256':event['code_sha256']};break
             except Exception as exc:
@@ -86,4 +91,5 @@ class PreparedController:
                 'last_candidate':previous,'events':events,'budget':budget.snapshot(),'hidden_correctness':'NOT_QUERIED'}
         if plugin:
             result.update(candidate_ledger=plugin.current['ledger'],hook_events=plugin.current['hooks'],registry_snapshot_id=plugin.current['snapshot'].snapshot_id)
+        if plugin and 'routing' in plugin.current:result['routing_events']=plugin.current['routing']
         return result

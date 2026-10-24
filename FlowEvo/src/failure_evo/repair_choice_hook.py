@@ -16,7 +16,7 @@ class RepairChoiceHook:
             keys=list(dict.fromkeys(r['candidate_id'] for r in rows))
             eligible=[k for k in keys if self.memory._state(rows,k)['permission']=='experimental']
         self.current={'task':task,'ledger':[],'hooks':[],'keys':eligible,
-                      'snapshot':SimpleNamespace(snapshot_id=fingerprint(eligible))}
+                      'routing':[], 'snapshot':SimpleNamespace(snapshot_id=fingerprint(eligible))}
     def observe(self,code,stage,feedback,response,at,*args,**kwargs):
         row={'code_sha256':hashlib.sha256(code.encode()).hexdigest(),'stage':stage,
              'public_feedback':feedback.to_dict(),'generation_metadata':{'finish_reason':response.get('finish_reason')},
@@ -24,26 +24,43 @@ class RepairChoiceHook:
         self.current['ledger'].append(row);return row
     def invoke(self,hook,checkpoint,stage,code,feedback,budget,evaluator,at):
         if hook!='before_native_retry' or budget.max_calls-budget.calls<2:return None
+        matches=[]
+        for key in self.current['keys']:
+            state=self.memory.state(key)
+            if state['permission']=='experimental' and state['remaining']>0 and self.current['task'].problem_id in state.get('tasks',[]) and self.current['task'].problem_id not in state['used_tasks']:
+                a=self.memory.choose(state['rule'],code,feedback,budget)
+                if a!='NATIVE':matches.append({'candidate_id':key,'action':a})
+        from .repair_choice import generic_choice
+        if self.memory.representation=='repair-choice-json-v2':
+            from .repair_choice_v2 import generic_choice
+        native=generic_choice(code,feedback,budget)
+        self.current['routing'].append(dict(at=at,stage=stage,matching=matches,conflict=len({m['action'] for m in matches})>1,
+            selection_reason='first authorized matching version in persisted order',generic_action=native,
+            cheaper_native_known=False,estimated_cost_difference=None))
         for key in self.current['keys']:
             action=self.memory.reserve_action(key,self.current['task'].problem_id,code,feedback,budget)
             if action=='NATIVE':continue
             started=time.monotonic();before_budget=budget.snapshot()
-            audit={'before_feedback':feedback.to_dict(),'candidate_id':key,'action':action,'at':at,'stage':stage,'status':'error'}
+            audit={'before_outcomes':self.current['ledger'][-1].get('audited_case_outcomes',{}) if self.current['ledger'] else {},'before_stage':self.current['ledger'][-1]['stage'] if self.current['ledger'] else None,'before_code':code,'before_sha256':hashlib.sha256(code.encode()).hexdigest(),'before_feedback':feedback.to_dict(),'generic_action':native,'changed_generic_action':action!=native,'candidate_id':key,'action':action,'at':at,'stage':stage,'status':'error'}
             self.current['hooks'].append(audit)
             try:
                 response=self.client.execute_action(action,self.current['task'],code,feedback,budget)
                 proposed=response['code']
                 budget.tool()
-                checked=checked_public_feedback(evaluator(self.current['task'],proposed))
+                raw_checked=evaluator(self.current['task'],proposed)
+                checked=checked_public_feedback(raw_checked)
+                audit['after_outcomes']={fingerprint([c['input'],c['expected']]):c['correct'] for c in raw_checked.get('cases',[]) if type(c.get('correct')) is bool}
+                if self.memory.representation=='repair-choice-json-v2' and not audit['after_outcomes'] and checked.status in ('NO_COMPLETE_CODE','COMPILE_ERROR'):
+                    audit['after_outcomes']=dict.fromkeys(audit['before_outcomes'],False)
                 if budget.remaining_seconds<=0:raise TimeoutError('task deadline')
                 self.observe(proposed,stage+':rule',checked,response,at)
-                audit.update(status='applied' if checked.status=='PUBLIC_PASS' else 'declined',public_feedback=checked.to_dict(),response=response)
-                audit.update(elapsed_seconds=time.monotonic()-started,model_calls=budget.calls-before_budget['calls'],tokens=budget.snapshot()['charged_or_reserved_tokens']-before_budget['charged_or_reserved_tokens'],fallback_required=audit['status']!='applied',visibility='public')
+                audit.update(status='applied' if checked.status=='PUBLIC_PASS' else 'declined',public_feedback=checked.to_dict(),response=response,proposed_code=proposed,proposed_sha256=hashlib.sha256(proposed.encode()).hexdigest())
+                audit.update(budget_after=budget.snapshot(),elapsed_seconds=time.monotonic()-started,model_calls=budget.calls-before_budget['calls'],tokens=budget.snapshot()['charged_or_reserved_tokens']-before_budget['charged_or_reserved_tokens'],fallback_required=audit['status']!='applied',visibility='public')
                 self.memory.finish(key,self.current['task'].problem_id,audit)
                 if audit['status']=='applied':return {'stage':stage+':rule','code':proposed,'code_sha256':hashlib.sha256(proposed.encode()).hexdigest(),'public_feedback':checked}
                 return None
             except PreflightRejected as exc:
-                audit.update(status='declined',reason=str(exc));self.memory.finish(key,self.current['task'].problem_id,audit);return None
+                audit.update(status='declined',reason=str(exc),budget_after=budget.snapshot(),fallback_required=True,elapsed_seconds=time.monotonic()-started);self.memory.finish(key,self.current['task'].problem_id,audit);return None
             except Exception as exc:
                 audit['error']=type(exc).__name__;self.memory.finish(key,self.current['task'].problem_id,audit)
                 raise  # Unknown transport/evaluator state must never initiate retry.

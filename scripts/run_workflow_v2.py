@@ -15,7 +15,8 @@ from failure_evo.failure_events import FailureEvidenceStore
 from failure_evo.runtime import Budget
 from failure_evo.contracts import Fingerprint, canonical, fingerprint
 from failure_evo.persistent_budget import PersistentBudget
-ROOT=prior.ROOT; read=prior.read; write=prior.write; sha=prior.sha
+from failure_evo.contracts import atomic_json
+ROOT=prior.ROOT; read=prior.read; write=atomic_json; sha=prior.sha
 SPEC_FIELDS={'mechanism','conditions','repair_strategy','refusal_conditions','stop_rule','limitations'}
 
 def specification_messages(packet):
@@ -47,7 +48,12 @@ class ExperimentRunner:
             def send(self,prepared,**kwargs):
                 if any(row['status']=='UNKNOWN' for tr in owner.transports.values() for row in tr.audit):
                     raise PreflightRejected('RUN_HAS_UNKNOWN_REQUEST',dict(run_id=plan['run_id']))
-                return super().send(prepared,**kwargs)
+                try:return super().send(prepared,**kwargs)
+                finally:
+                    # Completed response/unknown status durable before the caller
+                    # can move to registration or evaluation.
+                    for channel,tr in owner.transports.items():
+                        if tr is self:write(owner.folder/f'{channel}_requests.json',self.audit)
         for name,budget in self.budgets.items():
             if name not in ('solve','learning','validation'):continue
             sender=sender_factory(name);counter=[max([int(p.name) for p in (self.folder/'wire'/name).glob('*') if p.name.isdigit()]+[0])]
@@ -76,15 +82,15 @@ class ExperimentRunner:
         instance=prior.CodeTaskInstance(task_id=task['task_id'],benchmark=task['dataset'],prompt=task['task_public']['prompt'],text=task['task_public']['prompt'])
         lib=self.libraries.setdefault((arm,task['dataset'],task['difficulty']),prior.CodeSkillLibrary())
         client_class=WorkflowClient
-        if self.plan.get('operator_representation')=='repair-choice-json-v1':
+        if self.plan.get('operator_representation')in ('repair-choice-json-v1','repair-choice-json-v2'):
             from failure_evo.repair_choice import RepairChoiceClient
             client_class=RepairChoiceClient
         client=client_class(self.transports['solve'],f'{arm}/{task["task_id"]}',memory=self.memory if arm=='M' else '',library=lib.retrieve(instance).get('context',''))
         plugin=WorkflowPlugin(self.registry,self.stores[arm],self.context,stream_id=self.plan['run_id']+'-'+arm,experiment_id=self.plan['run_id'],host_repair=client.host_repair,decision_runner=self.decision_runner,allow_actions=arm=='F',synthetic=self.plan['evidence_kind']=='engineering_fixture')
-        if self.plan.get('operator_representation')=='repair-choice-json-v1':
+        if self.plan.get('operator_representation')in ('repair-choice-json-v1','repair-choice-json-v2'):
             from failure_evo.repair_choice_hook import RepairChoiceHook
             from failure_evo.repair_choice_memory import RuleMemory
-            plugin=RepairChoiceHook(RuleMemory(self.folder/'rule_registry.jsonl'),client,self.context,enabled=arm=='F' and self.plan.get('rule_hook_enabled',True))
+            plugin=RepairChoiceHook(RuleMemory(self.folder/'rule_registry.jsonl',self.plan['operator_representation']),client,self.context,enabled=arm=='F' and self.plan.get('rule_hook_enabled',True))
         budget=Budget(**(task_limits or self.plan['per_task']))
         try:
             result=PreparedController(client,self.evaluator_factory(task),self.context,plugin=plugin,max_output=8192).solve(task['task_public'],budget)
@@ -163,3 +169,44 @@ if __name__=='__main__':
     else:
         if not args.plan or not args.authorization:parser.error('execute requires --plan and --authorization')
         execute(args.plan,args.authorization)
+
+
+def zero_api_runtime_probes(folder):
+    """Trusted host executes real transport/fallback code with FAKE provider I/O.
+    Isolated engineering ledgers must never be merged into experiment spend.
+    """
+    import time
+    folder=Path(folder)
+    if (folder/'result.json').exists():return read(folder/'result.json')
+    if folder.exists():raise ValueError('interrupted runtime probes; reconcile before continuing')
+    folder.mkdir(parents=True)
+    calls={'unknown':0,'normal':0}
+    def raw(code):return dict(model='deepseek-flash',usage=dict(prompt_tokens=1,completion_tokens=1,total_tokens=2),choices=[dict(message=dict(content='```python\n'+code+'\n```'),finish_reason='stop')])
+    def factory(mode):
+        def channel(name):
+            def send(wire):
+                calls[mode]+=1
+                if mode=='unknown':raise TimeoutError('engineering unknown send')
+                return raw('print(0)' if calls[mode]==1 else 'print(1)')
+            return send
+        return channel
+    def new(mode):
+        plan=dict(run_id='safety-'+mode,shared_protocol=VERSION,model='deepseek-flash',evidence_kind='engineering_fixture',operator_representation='repair-choice-json-v2',frozen_files={},budgets={'solve':prior.config(3,10,1000000)},per_task=dict(max_calls=3,max_tokens=150000,max_tools=5,wall_seconds=60))
+        plan['protocol_hash']=fingerprint(plan)
+        def evaluate(task):
+            def judge(public,code):
+                good=code=='print(1)';return dict(visibility='public',status='PUBLIC_PASS' if good else 'WRONG_ANSWER',tests_run=1,tests_passed=int(good),cases=[dict(input='',expected='1',actual='1' if good else '0',correct=good,visibility='public',legal_verified=True)])
+            return judge
+        return ExperimentRunner(folder/mode,plan,factory(mode),evaluator_factory=evaluate,decision_runner=lambda *a:None)
+    unknown=new('unknown');request=prepare([{'role':'user','content':'engineering transport probe'}])
+    stopped=False
+    try:unknown.transports['solve'].send(request,request_id='probe-1',capability='engineering')
+    except TimeoutError:pass
+    try:unknown.transports['solve'].send(request,request_id='probe-2',capability='engineering')
+    except PreflightRejected:stopped=True
+    unknown.save()
+    normal=new('normal');task=dict(task_id='engineering',dataset='fixture',difficulty='fixture',task_public=dict(problem_id='engineering',prompt='Print one',public_examples=[]))
+    result=normal.solve('G',task);normal.save()
+    report=dict(visibility='engineering_only',real_api_calls=0,unknown_stops=stopped and calls['unknown']==1 and bool(unknown.budgets['solve'].snapshot()['unknown_or_pending_requests']),native_fallback=result['status']=='PUBLIC_ACCEPTED' and calls['normal']==2,
+        host_code_sha256=sha(Path(__file__)),mock_calls=calls,at=time.time())
+    write(folder/'result.json',report);return report

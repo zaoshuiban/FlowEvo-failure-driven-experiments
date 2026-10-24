@@ -33,7 +33,13 @@ def assess(before,after,*,paired=None):
             'scope':'audited source checks only; no generalization or noninferiority claim'}
 
 class RuleMemory:
-    def __init__(self,path):
+    def __init__(self,path,representation=VERSION):
+        self.representation=representation
+        self.validate=validate_rule;self.choose=choose
+        if representation=='repair-choice-json-v2':
+            from .repair_choice_v2 import validate_rule as validate_v2,choose as choose_v2
+            self.validate,self.choose=validate_v2,choose_v2
+        elif representation!=VERSION:raise ValueError('unknown rule representation')
         self.path=Path(path);self.path.parent.mkdir(parents=True,exist_ok=True)
 
     @contextmanager
@@ -50,15 +56,31 @@ class RuleMemory:
         if not matches:raise KeyError(key)
         return json.loads(canonical(matches[-1]))
 
-    def add(self,rule,evidence_refs):
-        rule=validate_rule(rule)
+    def add(self,rule,evidence_refs,*,parent_operator_id=None,metadata=None):
+        rule=self.validate(rule)
         if not evidence_refs or any(not isinstance(x,str) or not x for x in evidence_refs):raise ValueError('trusted evidence references required')
-        key=fingerprint({'representation':VERSION,'rule':rule,'evidence_refs':sorted(set(evidence_refs))})
+        key=fingerprint({'representation':self.representation,'rule':rule,'evidence_refs':sorted(set(evidence_refs))})
         with self._transaction() as (rows,append):
+            if self.representation=='repair-choice-json-v2':
+                for prior in dict.fromkeys(r['candidate_id'] for r in rows):
+                    old=self._state(rows,prior)
+                    if old['representation']==self.representation and old['rule']==rule:
+                        delta=sorted(set(evidence_refs)-set(old['evidence_refs']))
+                        if delta:
+                            old['evidence_refs']=sorted(set(old['evidence_refs'])|set(delta))
+                            append({'event':'EVIDENCE_ATTACHED','candidate_id':prior,'evidence_delta':delta,'state':old})
+                        if metadata:
+                            records=old.get('equivalent_generation_records',[])
+                            if metadata not in records:
+                                old['equivalent_generation_records']=records+[metadata]
+                                append({'event':'EQUIVALENT_GENERATION_RECORDED','candidate_id':prior,'state':old})
+                        return prior
             if any(r.get('candidate_id')==key for r in rows):return key
-            append({'event':'CANDIDATE_SAVED','candidate_id':key,'state':{'representation':VERSION,'rule':rule,
+            append({'event':'CANDIDATE_SAVED','candidate_id':key,'state':{'representation':self.representation,'rule':rule,
                 'evidence_refs':sorted(set(evidence_refs)),'generation':'nursery','permission':'shadow',
-                'remaining':0,'assessment':None,'used_tasks':[]}})
+                'remaining':0,'assessment':None,'used_tasks':[],
+                'parent_operator_id':parent_operator_id,'operator_version':1+(self._state(rows,parent_operator_id).get('operator_version',0) if parent_operator_id else 0),
+                'version_metadata':metadata or {}}})
         return key
 
     def record_assessment(self,key,before,after,*,report_path,paired=None):
@@ -69,6 +91,17 @@ class RuleMemory:
             if evaluation['regressed']:state['permission']='suspended'
             append({'event':'HOST_ASSESSMENT','candidate_id':key,'state':state})
         return evaluation
+
+    def annotate_assessment(self,key,report):
+        """Append host cost/effect differences; never alter the frozen rule."""
+        with self._transaction() as (rows,append):
+            state=self._state(rows,key);parent=state.get('parent_operator_id')
+            value=dict(assessment_diff={'before':self._state(rows,parent).get('assessment') if parent else None,
+                       'after':state.get('assessment')},validation_cost=report.get('cost',{'actual_currency':None}),
+                       assessment_hash=fingerprint(report))
+            if state.get('assessment_metadata')==value:return
+            state['assessment_metadata']=value
+            append({'event':'VERSION_ASSESSED','candidate_id':key,'state':state})
 
     def authorize(self,key,*,tasks,opportunities,safety_checks,authorization_id):
         required={'contract','boundary','negative_cases','fallback','no_known_harm'}
@@ -87,7 +120,8 @@ class RuleMemory:
             s=self._state(rows,key)
             if s['permission']!='experimental' or s['generation']!='nursery' or s['remaining']<=0 or task_id not in s['tasks'] or task_id in s['used_tasks']:return 'NATIVE'
             if fingerprint(Path(s['report']['path']).read_text())!=s['report']['hash']:return 'NATIVE'
-            action=choose(s['rule'],code,feedback,budget)
+            if s['representation']!=self.representation:return 'NATIVE'
+            action=self.choose(s['rule'],code,feedback,budget)
             if action=='NATIVE':return action
             s['remaining']-=1;s['used_tasks'].append(task_id)
             append({'event':'TRIAL_RESERVED','candidate_id':key,'task_id':task_id,'action':action,'state':s})
@@ -105,6 +139,9 @@ class RuleMemory:
             def checks(cases):
                 return {fingerprint([c.get('input'),c.get('expected')]):c.get('actual')==c.get('expected') and not c.get('exception_class') for c in cases if 'actual' in c and 'expected' in c}
             a,b=checks(before),checks(after)
+            if self.representation=='repair-choice-json-v2':
+                a,b=result.get('before_outcomes',{}),result.get('after_outcomes',{})
+                if any(type(v) is not bool for v in [*a.values(),*b.values()]):raise ValueError('host audited boolean outcomes required')
             harmed=bool(a and set(a)==set(b) and any(a[k] and not b[k] for k in a))
             if harmed:s.update(permission='suspended',remaining=0)
             append({'event':'TRIAL_RESULT','candidate_id':key,'task_id':task_id,'result':result,'state':s})

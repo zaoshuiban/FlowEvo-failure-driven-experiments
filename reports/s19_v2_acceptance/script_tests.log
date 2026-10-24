@@ -1,0 +1,92 @@
+F.................F.............................EEEE................................
+======================================================================
+ERROR: test_allowlist_and_duplicate_renewal (test_s16c2_reuse.Tests.test_allowlist_and_duplicate_renewal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s16c2_reuse.py", line 27, in test_allowlist_and_duplicate_renewal
+    self.reg.extend(self.card,self.grant,time.time());self.assertFalse(self.reserve('unlisted'))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/generations.py", line 24, in locked
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s16c2_probation.py", line 26, in extend
+    raise ValueError('only valid exhausted and completed nursery probation can renew')
+ValueError: only valid exhausted and completed nursery probation can renew
+
+======================================================================
+ERROR: test_bounded_extension_preserves_history (test_s16c2_reuse.Tests.test_bounded_extension_preserves_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s16c2_reuse.py", line 17, in test_bounded_extension_preserves_history
+    before=self.reg.state(self.card);self.reg.extend(self.card,self.grant,time.time());state=self.reg.state(self.card)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/generations.py", line 24, in locked
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s16c2_probation.py", line 26, in extend
+    raise ValueError('only valid exhausted and completed nursery probation can renew')
+ValueError: only valid exhausted and completed nursery probation can renew
+
+======================================================================
+ERROR: test_grant_tamper_invalidates (test_s16c2_reuse.Tests.test_grant_tamper_invalidates)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s16c2_reuse.py", line 33, in test_grant_tamper_invalidates
+    self.reg.extend(self.card,self.grant,time.time());self.assertTrue(self.reg.valid(self.card,None));self.grant.write_text('{}');self.assertFalse(self.reg.valid(self.card,None));self.assertFalse(self.reserve('taco_0914'))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/generations.py", line 24, in locked
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s16c2_probation.py", line 26, in extend
+    raise ValueError('only valid exhausted and completed nursery probation can renew')
+ValueError: only valid exhausted and completed nursery probation can renew
+
+======================================================================
+ERROR: test_old_entry_remains_closed (test_s16c2_reuse.Tests.test_old_entry_remains_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s16c2_reuse.py", line 24, in test_old_entry_remains_closed
+    self.reg.extend(self.card,self.grant,time.time());old=WorkflowRegistry(self.folder/'registry.jsonl',self.reg.evidence)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/generations.py", line 24, in locked
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s16c2_probation.py", line 26, in extend
+    raise ValueError('only valid exhausted and completed nursery probation can renew')
+ValueError: only valid exhausted and completed nursery probation can renew
+
+======================================================================
+FAIL: test_dataset_roles_and_permissions (test_compare30_workflows.Checks.test_dataset_roles_and_permissions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_compare30_workflows.py", line 22, in test_dataset_roles_and_permissions
+    m.verify();rows=m.read(m.RUN/'tasks.json');self.assertEqual(len(rows),30)
+    ^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/compare30_workflows.py", line 101, in verify
+    for f,h in p['frozen_files'].items():assert sha(f)==h,f
+                                                ^^^^^^^^^
+AssertionError: /Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/compile_queue.py
+
+======================================================================
+FAIL: test_prepared_bundle_integrity_and_old_experiment_unchanged (test_prepare_workflow_pilot.PilotTests.test_prepared_bundle_integrity_and_old_experiment_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_prepare_workflow_pilot.py", line 56, in test_prepared_bundle_integrity_and_old_experiment_unchanged
+    for f,h in old['frozen_files'].items():self.assertEqual(p.sha(f),h,f)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '81e7a15c1997e7e1f29b429197161c9c74868d9ea4ee17d769ea71f6a33a52c2' != '6e625e31f6ba64b216471ad6f86f10c5085148575ea99047fda66842da598731'
+- 81e7a15c1997e7e1f29b429197161c9c74868d9ea4ee17d769ea71f6a33a52c2
++ 6e625e31f6ba64b216471ad6f86f10c5085148575ea99047fda66842da598731
+ : /Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/compile_queue.py
+
+----------------------------------------------------------------------
+Ran 84 tests in 0.674s
+
+FAILED (failures=2, errors=4)
+{
+  "tasks": 40,
+  "pilot_tasks": 10,
+  "total_proposed_api_hard_cap_usd": 3.5,
+  "real_api_calls": 0,
+  "protocol_hash": "304be0d3772374c7e2b37ff0a9834e5f636a394375da5ddc82cd25c7e0acf6a5"
+}

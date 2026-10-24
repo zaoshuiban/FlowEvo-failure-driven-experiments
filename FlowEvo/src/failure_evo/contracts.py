@@ -83,3 +83,68 @@ def public_schema():
             'excluded':['input_output','hidden_tests','reference_solution','final_score','future_trace','private_failed_case','arbitrary_feedback_text'],
             'public_case_requirement':['visibility=public','legal_verified=true'],
             'note':'Visibility/legal flags are supplied by the trusted host controller, never by candidate code.'}
+
+# S19 opt-in strict host boundary. Existing tolerant historical projectors stay
+# available for archived protocols; the new stream rejects, never guesses roles.
+def _fields(value, allowed, required=()):
+    if not isinstance(value,dict) or set(value)-set(allowed) or not set(required)<=set(value):
+        raise ValueError('unknown/private/missing public field')
+
+def _text(value):
+    if not isinstance(value,str):raise ValueError('public scalar string required')
+    return value
+
+def strict_public_case(value, *, provenance=True):
+    _fields(value,('input','expected','visibility','legal_verified','comparison','scorer','source','case_insensitive'),('input','expected','visibility','legal_verified'))
+    if value['visibility']!='public' or value['legal_verified'] is not True:raise ValueError('trusted legal public case required')
+    for k in ('input','expected','comparison','scorer'):
+        if k in value:_text(value[k])
+    if 'case_insensitive' in value and type(value['case_insensitive']) is not bool:raise ValueError('comparison flag must be boolean')
+    if provenance:
+        src=value.get('source');_fields(src,('kind','id','case_sha256'),('kind','id','case_sha256'))
+        if src['kind'] not in ('public_statement','public_dataset','host_public_generator','engineering_fixture') or not _text(src['id']):raise ValueError('public source required')
+        if src['case_sha256']!=fingerprint([value['input'],value['expected']]):raise ValueError('public source binding differs')
+    return copy.deepcopy(value)
+
+def strict_public_task(value):
+    _fields(value,('problem_id','prompt','starter_code','function_name','public_examples'),('problem_id','prompt'))
+    out={k:_text(v) for k,v in value.items() if k!='public_examples'}
+    examples=value.get('public_examples',[])
+    if not isinstance(examples,list):raise ValueError('public examples list required')
+    out['public_examples']=[strict_public_case(c) for c in examples]
+    return out
+
+def strict_stream_task(value):
+    _fields(value,('task_id','dataset','difficulty','task_public','public_cases','role'),('task_id','dataset','difficulty','task_public','public_cases'))
+    out={k:_text(v) for k,v in value.items() if k not in ('task_public','public_cases')}
+    out['task_public']=strict_public_task(value['task_public'])
+    if out['task_public']['problem_id']!=out['task_id']:raise ValueError('task identity mismatch')
+    if not isinstance(value['public_cases'],list) or not value['public_cases']:raise ValueError('public cases required')
+    out['public_cases']=[strict_public_case(c) for c in value['public_cases']]
+    return out
+
+def strict_feedback(value):
+    _fields(value,('status','summary','public_cases','visibility'),('status','summary','public_cases','visibility'))
+    if value['visibility']!='public':raise ValueError('nonpublic feedback')
+    cases=[]
+    for c in value['public_cases']:
+        _fields(c,('input','expected','actual','exception_class'),('input','expected'))
+        for k,v in c.items():
+            if v is not None:_text(v)
+        cases.append(canonical(c))
+    return PublicFeedback(_text(value['status']),_text(value['summary']),tuple(cases))
+
+def atomic_json(path,value):
+    import os,tempfile
+    from pathlib import Path
+    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
+    fd,tmp=tempfile.mkstemp(prefix='.'+path.name,dir=path.parent)
+    try:
+        with os.fdopen(fd,'w') as f:
+            f.write(json.dumps(value,ensure_ascii=False,indent=2)+'\n');f.flush();os.fsync(f.fileno())
+        os.replace(tmp,path)
+        directory=os.open(path.parent,os.O_RDONLY)
+        try:os.fsync(directory)
+        finally:os.close(directory)
+    finally:
+        if os.path.exists(tmp):os.unlink(tmp)
