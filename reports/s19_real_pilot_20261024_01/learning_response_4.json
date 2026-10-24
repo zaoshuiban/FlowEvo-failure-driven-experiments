@@ -1,0 +1,28 @@
+{
+  "id": "b6ee293b-4089-4f62-adb2-05b46070ad97",
+  "object": "chat.completion",
+  "created": 1792826345,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"type\":\"json_object\",\"hypothesis\":{\"conditions\":\"Public runtime error is IndexError from heapq.heappop on an empty heap when need>0 but no voters with m>=current threshold remain in the heap.\",\"action\":\"REPAIR_EXISTING\",\"expected_improvement\":\"Eliminate IndexError on the audited public case by ensuring the heap is nonempty before popping, or by restructuring the greedy so a pop only occurs when a candidate exists.\",\"refusal_conditions\":\"Do not claim certified root cause or hidden correctness; do not treat this as proof of full correctness beyond the public case.\",\"stop_conditions\":\"Stop after one bounded repair attempt; if the public case still errors or the heap logic cannot be made safe within remaining calls, fall back to NATIVE.\",\"unknowns\":\"Whether the greedy direction (descending m, buying cheapest available) is the correct optimal strategy; whether other hidden cases would still fail; exact intended algorithm.\"},\"rule\":{\"when\":{\"candidate_state\":\"STRUCTURAL_PASS\",\"public_result\":\"RUNTIME_ERROR\",\"remaining_calls_min\":1},\"action\":\"REPAIR_EXISTING\",\"fallback\":\"NATIVE\"}}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 3683,
+    "completion_tokens": 242,
+    "total_tokens": 3925,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 3555
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

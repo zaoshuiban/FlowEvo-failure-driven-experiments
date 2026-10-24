@@ -1,0 +1,159 @@
+{
+  "records": [
+    {
+      "job_id": "05953541aa4e0ad397dacb5975ec613cced143f7a3939e83a3984ec143df1a1e",
+      "slot": 0,
+      "response_sha256": "7a7fdc844c167af2a23a7e97ed158ec745f174560db0f96047e992c248f38d46",
+      "response_path": "runs/s19_real_pilot_20261024_01/jobs/05953541aa4e0ad397dacb5975ec613cced143f7a3939e83a3984ec143df1a1e/0-response.json",
+      "extra_keys": [
+        "type"
+      ],
+      "extra_type_value": "json_object",
+      "hypothesis_fields": [
+        "conditions",
+        "action",
+        "expected_improvement",
+        "refusal_conditions",
+        "stop_conditions",
+        "unknowns"
+      ],
+      "hypothesis": {
+        "conditions": "The program crashes with IndexError on the audited public input because the greedy loop pops from an empty heap: when processing m from n-1 down to 0, it requires bought >= m but the heap may not contain enough affordable voters at that point, so heapq.heappop raises IndexError.",
+        "action": "REPAIR_EXISTING",
+        "expected_improvement": "Replacing the empty-heap pop with a correct greedy that only buys when the heap is nonempty (or restructuring to guarantee enough candidates) should eliminate the IndexError and produce the expected outputs 8, 0, 7 on the public case.",
+        "refusal_conditions": "Do not claim a certified root cause or hidden correctness; do not assert the fix is optimal beyond the public case; do not infer private test behavior.",
+        "stop_conditions": "Stop after one bounded repair attempt if the public case still raises an exception or mismatches expected tokens; do not exceed remaining call budget.",
+        "unknowns": "Whether the greedy ordering (processing m descending and buying cheapest available) is the correct algorithm for all inputs; whether additional edge cases (n=1, all m=0, large p) are handled; whether the heap can still be empty under a corrected loop."
+      },
+      "rule": {
+        "when": {
+          "candidate_state": "STRUCTURAL_PASS",
+          "public_result": "RUNTIME_ERROR",
+          "remaining_calls_min": 1
+        },
+        "action": "REPAIR_EXISTING",
+        "fallback": "NATIVE"
+      },
+      "rule_subobject_valid": true,
+      "formal_envelope_accepted": false,
+      "posthoc_only": true
+    },
+    {
+      "job_id": "05953541aa4e0ad397dacb5975ec613cced143f7a3939e83a3984ec143df1a1e",
+      "slot": 1,
+      "response_sha256": "e22e3d87bb17ff4c84b0bcfb27332098a8e9c1a70a5ae54804b27fc3a66a434b",
+      "response_path": "runs/s19_real_pilot_20261024_01/jobs/05953541aa4e0ad397dacb5975ec613cced143f7a3939e83a3984ec143df1a1e/1-response.json",
+      "extra_keys": [
+        "type"
+      ],
+      "extra_type_value": "json_object",
+      "hypothesis_fields": [
+        "conditions",
+        "action",
+        "expected_improvement",
+        "refusal_conditions",
+        "stop_conditions",
+        "unknowns"
+      ],
+      "hypothesis": {
+        "conditions": "Public runtime error is IndexError from heapq.heappop on an empty heap when need>0 but no voters with m>=current threshold remain in the heap.",
+        "action": "REPAIR_EXISTING",
+        "expected_improvement": "Eliminate IndexError on the audited public case by ensuring the heap is nonempty before popping, or by restructuring the greedy so a pop only occurs when a candidate exists.",
+        "refusal_conditions": "Do not claim certified root cause or hidden correctness; do not treat this as proof of full correctness beyond the public case.",
+        "stop_conditions": "Stop after one bounded repair attempt; if the public case still errors or the heap logic cannot be made safe within remaining calls, fall back to NATIVE.",
+        "unknowns": "Whether the greedy direction (descending m, buying cheapest available) is the correct optimal strategy; whether other hidden cases would still fail; exact intended algorithm."
+      },
+      "rule": {
+        "when": {
+          "candidate_state": "STRUCTURAL_PASS",
+          "public_result": "RUNTIME_ERROR",
+          "remaining_calls_min": 1
+        },
+        "action": "REPAIR_EXISTING",
+        "fallback": "NATIVE"
+      },
+      "rule_subobject_valid": true,
+      "formal_envelope_accepted": false,
+      "posthoc_only": true
+    },
+    {
+      "job_id": "9f7927314a4b70f77d6c1dfe923582bef0d648bb430e900ea222a13fbd4ff3e7",
+      "slot": 0,
+      "response_sha256": "d899e8bcdaf1cef86f2b7974a46217a5cb576442eac97a63b8efa56716f2dd31",
+      "response_path": "runs/s19_real_pilot_20261024_01/jobs/9f7927314a4b70f77d6c1dfe923582bef0d648bb430e900ea222a13fbd4ff3e7/0-response.json",
+      "extra_keys": [
+        "type"
+      ],
+      "extra_type_value": "json_object",
+      "hypothesis_fields": [
+        "conditions",
+        "action",
+        "expected_improvement",
+        "refusal_conditions",
+        "stop_conditions",
+        "unknowns"
+      ],
+      "hypothesis": {
+        "conditions": "Public runtime error (IndexError) occurs when the greedy loop pops from an empty heap because the code iterates m from n-1 down to 0 and requires have >= i, but voters with m_i >= i are never counted as already having votes; the heap can be empty while have < i.",
+        "action": "REPAIR_EXISTING",
+        "expected_improvement": "Replace the reverse greedy with the standard approach: sort voters by m_i descending, maintain a min-heap of p_i for voters with m_i >= current required count, and buy the cheapest votes until the number of acquired voters reaches the threshold, avoiding empty-heap pops.",
+        "refusal_conditions": "Do not claim certified root cause or hidden correctness; only fix the observable IndexError and verify against the public example.",
+        "stop_conditions": "Stop after producing a repaired solution that passes the public example (8,0,7) or after exhausting the single remaining call.",
+        "unknowns": "Whether the repaired greedy is fully correct for all constraints; only public example is verified."
+      },
+      "rule": {
+        "when": {
+          "candidate_state": "STRUCTURAL_PASS",
+          "public_result": "RUNTIME_ERROR",
+          "remaining_calls_min": 1
+        },
+        "action": "REPAIR_EXISTING",
+        "fallback": "NATIVE"
+      },
+      "rule_subobject_valid": true,
+      "formal_envelope_accepted": false,
+      "posthoc_only": true
+    },
+    {
+      "job_id": "9f7927314a4b70f77d6c1dfe923582bef0d648bb430e900ea222a13fbd4ff3e7",
+      "slot": 1,
+      "response_sha256": "cd50bb0ee32f8c553a3e7de538421fe6e1ec5ad2edcd8df31601db26b702d5b0",
+      "response_path": "runs/s19_real_pilot_20261024_01/jobs/9f7927314a4b70f77d6c1dfe923582bef0d648bb430e900ea222a13fbd4ff3e7/1-response.json",
+      "extra_keys": [
+        "type"
+      ],
+      "extra_type_value": "json_object",
+      "hypothesis_fields": [
+        "conditions",
+        "action",
+        "expected_improvement",
+        "refusal_conditions",
+        "stop_conditions",
+        "unknowns"
+      ],
+      "hypothesis": {
+        "conditions": "Public runtime error occurs when the greedy loop pops from an empty heap because the count of already-convinced voters (have) is less than the required threshold i but no affordable voters remain in the heap for that threshold.",
+        "action": "REPAIR_EXISTING",
+        "expected_improvement": "Eliminates the IndexError by ensuring the heap is only popped when non-empty and by restructuring the greedy to buy the cheapest available voter whenever the current convinced count is below the required threshold, matching the intended solution.",
+        "refusal_conditions": "Refuse to claim the fix is certified correct or to infer hidden root cause; only assert that the public runtime error is addressed and public examples are expected to pass.",
+        "stop_conditions": "Stop after applying the bounded repair and re-running the public cases; do not attempt further speculative changes without new public evidence.",
+        "unknowns": "Whether the repaired greedy handles all edge cases (e.g., m_i=0 voters, large n) correctly beyond the public examples; whether the original algorithm's threshold logic was otherwise sound."
+      },
+      "rule": {
+        "when": {
+          "candidate_state": "STRUCTURAL_PASS",
+          "public_result": "RUNTIME_ERROR",
+          "remaining_calls_min": 1
+        },
+        "action": "REPAIR_EXISTING",
+        "fallback": "NATIVE"
+      },
+      "rule_subobject_valid": true,
+      "formal_envelope_accepted": false,
+      "posthoc_only": true
+    }
+  ],
+  "unique_rule_subobjects": 1,
+  "unique_raw_hypothesis_contents": 4,
+  "note": "Post-run diagnosis only. No field removal, re-registration, source evaluation or new API request. Formal candidate count remains zero."
+}
