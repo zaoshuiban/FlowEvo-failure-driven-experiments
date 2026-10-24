@@ -6,7 +6,7 @@ from run_learning_stream import LearningStream,configure_worker
 from test_s19_v2 import Provider,tasks,plan,rule,H
 from failure_evo.contracts import fingerprint
 
-def main(output,config,new_protocol=False):
+def main(output,config,new_protocol=False,evidence_bundle=False):
     configure_worker(config);output=Path(output);output.mkdir(parents=True,exist_ok=False)
     (output/'tmp').mkdir();tempfile.tempdir=str(output/'tmp')
     provider=Provider();p=plan(output.name);
@@ -22,6 +22,7 @@ def main(output,config,new_protocol=False):
         return factory
     def protocols(p):
         if new_protocol:p.update(compile_protocol='s19-compile-envelope-v2',scheduler_protocol='evidence-diversity-v1')
+        if evidence_bundle:p.update(learning_evidence_protocol='learning-evidence-bundle-v1')
         return p
     protocols(p); p['worker_environment']=config;p['protocol_hash']=fingerprint({k:v for k,v in p.items() if k!='protocol_hash'})
     runner=e.ExperimentRunner(output/'stream',p,sender_factory(provider))
@@ -52,6 +53,12 @@ def main(output,config,new_protocol=False):
         audits=[e.read(f) for f in (runner.folder/'jobs').glob('*/*-normalization.json')]
         assertions['new_protocol_live_entry']=bool(audits) and all(a['accepted'] and a['reasons'] for a in audits)
         assertions['capability_audited']=bool(list((runner.folder/'jobs').glob('*/*-capability.json')))
+    if evidence_bundle:
+        bundles=[e.read(f)['bundle'] for f in runner.folder.glob('jobs/*/*-evidence-bundle.json')]
+        assertions['bundle_real_entry']=bool(bundles)
+        assertions['public_functional_diagnosis_reaches_revision']=any(b['functional_evidence'] for b in bundles)
+        hooks=[h for f in runner.folder.glob('branches/*/*/workflow.json') for h in e.read(f).get('hook_events',[]) if h.get('request_distinctness')]
+        assertions['actual_sent_request_matches_audit']=bool(hooks) and all(h['request_distinctness']['actual_sent_wire_sha256']==h['request_distinctness']['learned']['wire_sha256'] for h in hooks)
     runner.save();mr.save()
     summary=dict(passed=all(assertions.values()),evidence_kind='engineering_fixture',real_model_api_calls=0,
         real_linux_worker=True,assertions=assertions,mock_provider_calls=provider.calls,missing_provider_calls=missing.calls,
@@ -61,4 +68,4 @@ def main(output,config,new_protocol=False):
     if not summary['passed']:raise RuntimeError('acceptance failed')
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--output',required=True);p.add_argument('--worker-config',required=True);p.add_argument('--new-protocol',action='store_true');a=p.parse_args();main(a.output,e.read(a.worker_config),a.new_protocol)
+    p=argparse.ArgumentParser();p.add_argument('--output',required=True);p.add_argument('--worker-config',required=True);p.add_argument('--new-protocol',action='store_true');p.add_argument('--evidence-bundle',action='store_true');a=p.parse_args();main(a.output,e.read(a.worker_config),a.new_protocol,a.evidence_bundle)

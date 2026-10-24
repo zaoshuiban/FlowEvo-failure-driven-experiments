@@ -90,7 +90,7 @@ class ExperimentRunner:
         if self.plan.get('operator_representation')in ('repair-choice-json-v1','repair-choice-json-v2'):
             from failure_evo.repair_choice_hook import RepairChoiceHook
             from failure_evo.repair_choice_memory import RuleMemory
-            plugin=RepairChoiceHook(RuleMemory(self.folder/'rule_registry.jsonl',self.plan['operator_representation']),client,self.context,enabled=arm=='F' and self.plan.get('rule_hook_enabled',True))
+            plugin=RepairChoiceHook(RuleMemory(self.folder/'rule_registry.jsonl',self.plan['operator_representation']),client,self.context,enabled=arm=='F' and self.plan.get('rule_hook_enabled',True),audit_requests=self.plan.get('learning_evidence_protocol')=='learning-evidence-bundle-v1')
         budget=Budget(**(task_limits or self.plan['per_task']))
         try:
             result=PreparedController(client,self.evaluator_factory(task),self.context,plugin=plugin,max_output=8192).solve(task['task_public'],budget)

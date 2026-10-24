@@ -255,7 +255,8 @@ class WorkflowClient:
         response['delivery']=delivery(response['text'],response['finish_reason'])
         response['code']=response['delivery']['code']
         return response
-    def __call__(self,payload,budget):
+    def native_messages(self,payload):
+        # Pure builder shared by the sender and opt-in counterfactual audit.
         if payload['stage']=='l1':
             messages=[dict(role='system',content=SYSTEM_PROMPT),dict(role='user',content=prompt_for(PublicTaskView.project(payload['task']).to_dict()))]
         else:
@@ -263,7 +264,9 @@ class WorkflowClient:
             raw=self.last['text'] if self.last and self.last['code']==previous else '```python\n'+previous+'\n```'
             messages,_=repair_messages(payload['task'],raw,payload.get('feedback',{}),
                 finish_reason=self.last['finish_reason'] if self.last else 'unknown',memory=self.memory,library=self.library)
-        self.last=self._call(messages,budget,payload['temperature'],'native-solve')
+        return messages
+    def __call__(self,payload,budget):
+        self.last=self._call(self.native_messages(payload),budget,payload['temperature'],'native-solve')
         return self.last
     def host_repair(self,payload,instruction,budget):
         messages,_=repair_messages(payload['task_public'],'```python\n'+payload['candidate_code']+'\n```',payload['public_feedback'],

@@ -13,6 +13,7 @@ from failure_evo.repair_choice_v2 import VERSION,SCHEMA,choose,eligible_actions,
 from failure_evo.repair_choice_memory import RuleMemory
 from failure_evo.learning_contract import VERSION as COMPILE_VERSION, normalize
 from failure_evo.repair_choice_v2 import generic_choice
+from failure_evo import learning_evidence_bundle as leb
 from failure_evo.runtime import Budget,BudgetExhausted
 from failure_evo.workflow_protocol_v2 import prepare,delivery,PreflightRejected
 
@@ -57,14 +58,18 @@ class LearningStream:
         if arm not in ('G','M','F') or batch_size<1:raise ValueError('stream config')
         self.tasks=[strict_stream_task(t) for t in tasks]
         if len({t['task_id'] for t in tasks})!=len(tasks):raise ValueError('duplicate task')
+        self.evidence_protocol=runner.plan.get('learning_evidence_protocol','legacy-full-packets')
+        if self.evidence_protocol not in ('legacy-full-packets',leb.VERSION):raise ValueError('unknown learning evidence protocol')
         self.compile_protocol=runner.plan.get('compile_protocol','legacy-strict')
         self.scheduler_protocol=runner.plan.get('scheduler_protocol','legacy-id-order')
         if self.compile_protocol not in ('legacy-strict',COMPILE_VERSION):raise ValueError('unknown compile protocol')
+        if self.evidence_protocol==leb.VERSION and self.compile_protocol!=COMPILE_VERSION:raise ValueError('bundle requires versioned compile envelope')
         if self.scheduler_protocol not in ('legacy-id-order','evidence-diversity-v1'):raise ValueError('unknown scheduler protocol')
         self.runner,self.arm,self.batch_size=runner,arm,batch_size;self.path=runner.folder;self.fault=fault or (lambda stage:None)
         self.log=EvidenceStore(self.path/'stream.jsonl');manifest=dict(arm=arm,tasks_hash=fingerprint(self.tasks),batch_size=batch_size)
         if self.compile_protocol!='legacy-strict' or self.scheduler_protocol!='legacy-id-order':
             manifest.update(compile_protocol=self.compile_protocol,scheduler_protocol=self.scheduler_protocol)
+        if self.evidence_protocol!= 'legacy-full-packets':manifest['learning_evidence_protocol']=self.evidence_protocol
         if self.log.records():
             if self.log.records()[0]['payload']!=manifest:raise ValueError('stream changed')
         else:self.log.append('STREAM_OPENED',manifest,time.time())
@@ -163,6 +168,7 @@ class LearningStream:
             assessment=assess(case_map(before,packet['public_cases']),case_map(after,packet['public_cases']))
             report=dict(assessment,visibility='public',kind='SOURCE',source_event_id=packet['event_id'],before=before,after=after,response=response,proposed_code=proposed,action=action,safety=probes,
                 source_checkpoint_budget=packet['checkpoint_budget'],validation_budget_after=b.snapshot(),diagnosis='source public pass' if after['passed'] else 'source public repair failed',cost=dict(model_calls=1,tokens=response['usage']['total_tokens'],tool_seconds=before.get('seconds',0)+after.get('seconds',0),actual_currency=None))
+        if self.evidence_protocol==leb.VERSION:report['observed_at']=time.time()
         e.write(path,report)
         if 'before' in report:self.memory.record_assessment(key,case_map(report['before'],packet['public_cases']),case_map(report['after'],packet['public_cases']),report_path=path)
         self.memory.annotate_assessment(key,report)
@@ -171,6 +177,27 @@ class LearningStream:
     def learning_messages(self,job,prior,diagnosis):
         packets=[packet_check(self.packets[i]) for i in job['evidence_ids']]
         h=self.index.states()[job['hypothesis_id']]
+        if self.evidence_protocol==leb.VERSION:
+            cutoff=time.time()
+            facts={x['event_id']:x for x in self.runner.stores[self.arm].visible(cutoff,self.index.stream_id)}
+            diagnostics=[]
+            # Enumerate immutable, completed public assessments (not only the
+            # latest registry report, which may hide an earlier counterexample).
+            receipts={r['payload']['report_hash']:r['at'] for r in self.log.records() if r['kind']=='SOURCE_ASSESSED' and r['at']<=cutoff}
+            for path in sorted((self.path/'assessments').glob('*.json')):
+                report=e.read(path)
+                if report.get('source_event_id') not in job['evidence_ids']:continue
+                digest=fingerprint(report)
+                if digest not in receipts:continue  # incomplete/crashed assessment is not learning evidence
+                if 'observed_at' not in report:raise ValueError('new stream requires time-bound source diagnosis')
+                # Bind the rule to its original generation, including duplicate versions.
+                job_id,slot=path.stem.rsplit('-',1)
+                normalized=e.read(self.path/'jobs'/job_id/f'{slot}-normalization.json')
+                if not normalized['accepted']:raise ValueError('assessment rule was not accepted')
+                d=leb.diagnostic(report,self.packets[report['source_event_id']],normalized['normalized']['rule'],report_ref=str(path.resolve().relative_to(self.path.resolve())),observed_at=receipts[digest],cutoff=cutoff)
+                diagnostics.append(d)
+            bundle=leb.build(packets,facts,dict(job,family_id=job.get('family_id',h.get('group_id'))),cutoff=cutoff,diagnostics=diagnostics,hypothesis=h.get('content'))
+            return leb.messages(bundle,prior,diagnosis if diagnosis and 'compile_error' in diagnosis else None)
         # Only host-projected public fields. Never raw evaluator stderr or final review.
         family_keys={m['hypothesis_id'] for m in job.get('priority_basis',{}).get('subtypes',[])} or {job['hypothesis_id']}
         effects=[x for key,state in self.index.states().items() if key in family_keys for x in state.get('effects',[]) if x['effect_id'] in job.get('diagnostic_ids',[])]
@@ -205,6 +232,9 @@ class LearningStream:
             if mp.exists():messages=e.read(mp)
             else:
                 messages=self.learning_messages(job,prior,state['diagnosis']);e.write(mp,messages)
+                if self.evidence_protocol==leb.VERSION:
+                    bundle=json.loads(messages[1]['content'])['learning_evidence_bundle']
+                    e.write(base/f'{slot}-evidence-bundle.json',dict(bundle=bundle,sha256=fingerprint(bundle)))
             rp=base/f'{slot}-response.json'
             if rp.exists():
                 # Require a settled, hash-matching transport receipt; never trust
@@ -232,10 +262,18 @@ class LearningStream:
                 state.update(slot=slot+1,diagnosis={'compile_error':str(exc)});e.write(state_path,state);continue
             key=self.memory.add(rule,job['evidence_ids'],parent_operator_id=parent,metadata=dict(generation_request_id=job['job_id']+f'/generate/{slot}',evidence_delta=sorted(set(job['evidence_ids'])-set(self.memory.state(parent)['evidence_refs'] if parent else [])),rule_diff=dict(before=prior,after=rule),generation_cost=response['usage']))
             if self.compile_protocol==COMPILE_VERSION:
-                self.audit_capability(key,job,slot,rule)
+                self.audit_capability(key,job,slot,rule,prior)
             state['candidate_id']=key;e.write(state_path,state);self.event('CANDIDATE_REGISTERED',job_id=job['job_id'],slot=slot,candidate_id=key)
             self.fault('CANDIDATE_REGISTERED')
             report=self.assess(key,job,slot);self.event('SOURCE_ASSESSED',job_id=job['job_id'],candidate_id=key,report_hash=fingerprint(report));self.fault('SOURCE_ASSESSED')
+            if self.evidence_protocol==leb.VERSION:
+                audit_path=base/f'{slot}-capability.json'
+                if audit_path.exists():
+                    audit=e.read(audit_path);audit['source_effect']={k:report.get(k) for k in ('level','source_success','improved','regressed','cost')}
+                    receipts=[x for x in self.runner.transports['validation'].audit if x['request_id']==job['job_id']+f'/validate/{slot}']
+                    audit['actual_source_request_sha256']=receipts[-1]['request_sha256'] if receipts else None
+                    audit['source_native_request_comparison']='UNAVAILABLE: source packet alone does not preserve native success-library/last-response context'
+                    e.write(audit_path,audit)
             source=self.packets[report['source_event_id']]
             # Full raw response remains in assessment artifact, not next prompt.
             public_report={k:report.get(k) for k in ('visibility','kind','level','source_success','regressed','improved','diagnosis','cost')}
@@ -246,10 +284,11 @@ class LearningStream:
                 if self.memory.state(key)['permission']=='shadow':
                     self.memory.authorize(key,tasks=future,opportunities=self.runner.plan.get('trial_opportunities',1),safety_checks=dict(contract=report['safety']['contract'],boundary=report['safety']['applicable'] and report['safety']['public_pass_refused'],negative_cases=report['safety']['unknown_refused'] and report['safety']['zero_calls_refused'] and report['safety']['one_call_fallback_reserved'] and report['safety']['zero_tools_refused'] and report['safety']['missing_source_not_repaired'],fallback=report['safety']['native_fallback'] and report['safety']['unknown_request_stops'],no_known_harm=not bool(report['regressed'])),authorization_id=self.runner.plan['protocol_hash'])
             if report.get('source_success') or slot==1:break
-            state.update(slot=1,parent=key,diagnosis=public_report);e.write(state_path,state)
+            revision_diagnosis=leb.diagnostic(report,source,rule,report_ref=f"assessments/{job['job_id']}-{slot}.json",observed_at=report['observed_at'],cutoff=time.time()) if self.evidence_protocol==leb.VERSION else public_report
+            state.update(slot=1,parent=key,diagnosis=revision_diagnosis);e.write(state_path,state)
         self.index.finish(job,state.get('candidate_id'),time.time());self.runner.save()
 
-    def audit_capability(self,key,job,slot,rule):
+    def audit_capability(self,key,job,slot,rule,prior=None):
         observations=[]
         for event_id,packet in sorted(self.packets.items()):
             b=restore_budget(packet['checkpoint_budget']);f=strict_feedback(packet['feedback'])
@@ -259,6 +298,8 @@ class LearningStream:
         matched=[x for x in observations if x['matched']]
         state=self.memory.state(key)
         audit=dict(candidate_id=key,rule_sha256=fingerprint(rule),job_id=job['job_id'],slot=slot,
+            rule_duplicate=bool(state.get('equivalent_generation_records')),conditions_changed=(prior['when']!=rule['when']) if prior else None,action_changed=(prior['action']!=rule['action']) if prior else None,
+            source_effect='PENDING_ASSESSMENT',future_matching='NOT_YET_OBSERVED',
             observations=observations,status='DISTINCT_ACTION_PROPOSAL' if any(x['changed_generic_action'] for x in matched) else
             'NO_DISTINCT_ACTION_VALUE' if matched else 'NO_MATCHING_OPPORTUNITY',
             distinct_matched_actions=sorted({x['action'] for x in matched}),
@@ -300,8 +341,8 @@ class LearningStream:
         budget=self.runner.budgets.get('learning');available=bool(budget and budget.snapshot()['remaining_calls']>=2 and budget.snapshot()['remaining_cost_microusd']>0)
         for job in self.index.schedule(at=time.time(),budget_available=available):
             try:self.job(job,completed)
-            except PreflightRejected:
-                self.event('ABORTED',job_id=job['job_id'],reason='budget/preflight');self.index.finish(job,None,time.time())
+            except PreflightRejected as exc:
+                self.event('ABORTED',job_id=job['job_id'],reason=exc.reason if self.evidence_protocol==leb.VERSION else 'budget/preflight',details=exc.details);self.index.finish(job,None,time.time())
             except Exception as exc:
                 self.event('JOB_UNKNOWN',job_id=job['job_id'],reason=type(exc).__name__);raise
 

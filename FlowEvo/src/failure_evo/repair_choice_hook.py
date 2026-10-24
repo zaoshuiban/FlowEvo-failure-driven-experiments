@@ -7,8 +7,8 @@ from .failure_events import checked_public_feedback
 from .workflow_protocol_v2 import PreflightRejected
 
 class RepairChoiceHook:
-    def __init__(self,memory,client,context,*,enabled=True):
-        self.memory=memory;self.client=client;self.context=context;self.enabled=enabled
+    def __init__(self,memory,client,context,*,enabled=True,audit_requests=False):
+        self.memory=memory;self.client=client;self.context=context;self.enabled=enabled;self.audit_requests=audit_requests
     def begin(self,task,at):
         # Only versions already experimental at task start may run. Recheck live
         # permission on reservation so suspension takes effect immediately.
@@ -44,7 +44,20 @@ class RepairChoiceHook:
             audit={'before_outcomes':self.current['ledger'][-1].get('audited_case_outcomes',{}) if self.current['ledger'] else {},'before_stage':self.current['ledger'][-1]['stage'] if self.current['ledger'] else None,'before_code':code,'before_sha256':hashlib.sha256(code.encode()).hexdigest(),'before_feedback':feedback.to_dict(),'generic_action':native,'changed_generic_action':action!=native,'candidate_id':key,'action':action,'at':at,'stage':stage,'status':'error'}
             self.current['hooks'].append(audit)
             try:
+                if self.audit_requests:
+                    from .repair_choice import action_messages
+                    from .workflow_runtime_v2 import PreparedController
+                    from .learning_distinctness import request_view,compare
+                    native_messages=self.client.native_messages(dict(stage=stage,task=self.current['task'].to_dict(),previous_candidate=code,feedback=feedback.to_dict()))
+                    audit['request_distinctness']=compare(
+                        request_view(action_messages(action,self.current['task'],code,feedback),limits=self.client.limits,temperature=0),
+                        request_view(native_messages,limits=self.client.limits,temperature=dict(PreparedController.stages)[stage]))
+                    audit['request_distinctness']['generic_evidence']='counterfactual exact native builder at same checkpoint; not sent'
                 response=self.client.execute_action(action,self.current['task'],code,feedback,budget)
+                if self.audit_requests:
+                    receipts=[r for r in self.client.transport.audit if r['request_id']==f'{self.client.request_prefix}/{self.client.sequence}']
+                    audit['request_distinctness']['actual_sent_wire_sha256']=receipts[-1]['request_sha256'] if receipts else None
+                    if not receipts or receipts[-1]['request_sha256']!=audit['request_distinctness']['learned'].get('wire_sha256'):raise ValueError('audited/sent request mismatch')
                 proposed=response['code']
                 budget.tool()
                 raw_checked=evaluator(self.current['task'],proposed)
