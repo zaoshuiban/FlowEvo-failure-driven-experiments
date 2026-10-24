@@ -1,0 +1,1209 @@
+[
+  {
+    "task_id": "s18_taco-test-456",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-456",
+      "prompt": "Dora the explorer has decided to use her money after several years of juicy royalties to go shopping. What better place to shop than Nlogonia?\n\nThere are $n$ stores numbered from $1$ to $n$ in Nlogonia. The $i$-th of these stores offers a positive integer $a_i$.\n\nEach day among the last $m$ days Dora bought a single integer from some of the stores. The same day, Swiper the fox bought a single integer from all the stores that Dora did not buy an integer from on that day.\n\nDora considers Swiper to be her rival, and she considers that she beat Swiper on day $i$ if and only if the least common multiple of the numbers she bought on day $i$ is strictly greater than the least common multiple of the numbers that Swiper bought on day $i$.\n\nThe least common multiple (LCM) of a collection of integers is the smallest positive integer that is divisible by all the integers in the collection.\n\nHowever, Dora forgot the values of $a_i$. Help Dora find out if there are positive integer values of $a_i$ such that she beat Swiper on every day. You don't need to find what are the possible values of $a_i$ though.\n\nNote that it is possible for some values of $a_i$ to coincide in a solution.\n\n\n-----Input-----\n\nThe first line contains integers $m$ and $n$ ($1\\leq m \\leq 50$, $1\\leq n \\leq 10^4$) — the number of days and the number of stores.\n\nAfter this $m$ lines follow, the $i$-th line starts with an integer $s_i$ ($1\\leq s_i \\leq n-1$), the number of integers Dora bought on day $i$, followed by $s_i$ distinct integers, the indices of the stores where Dora bought an integer on the $i$-th day. The indices are between $1$ and $n$.\n\n\n-----Output-----\n\nOutput must consist of a single line containing \"possible\" if there exist positive integers $a_i$ such that for each day the least common multiple of the integers bought by Dora is strictly greater than the least common multiple of the integers bought by Swiper on that day. Otherwise, print \"impossible\".\n\nNote that you don't have to restore the integers themselves.\n\n\n-----Examples-----\nInput\n2 5\n3 1 2 3\n3 3 4 5\n\nOutput\npossible\n\nInput\n10 10\n1 1\n1 2\n1 3\n1 4\n1 5\n1 6\n1 7\n1 8\n1 9\n1 10\n\nOutput\nimpossible\n\n\n\n-----Note-----\n\nIn the first sample, a possible choice for the values of the $a_i$ is $3, 4, 3, 5, 2$. On the first day, Dora buys the integers $3, 4$ and $3$, whose LCM is $12$, while Swiper buys integers $5$ and $2$, whose LCM is $10$. On the second day, Dora buys $3, 5$ and $2$, whose LCM is $30$, and Swiper buys integers $3$ and $4$, whose LCM is $12$.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "2 5\n3 1 2 3\n3 3 4 5\n",
+          "expected": "possible",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#10/example/0",
+            "case_sha256": "baf76fbc3f3f50447eeeabcb45eee603a03ff2fc726303855ded8d30e6b89de9"
+          }
+        },
+        {
+          "input": "10 10\n1 1\n1 2\n1 3\n1 4\n1 5\n1 6\n1 7\n1 8\n1 9\n1 10\n",
+          "expected": "impossible",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#10/example/1",
+            "case_sha256": "d5a5aecb0a14addbe81dfae5baf15cf7deafd218172b85ebeed2a30e5b3548a4"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "2 5\n3 1 2 3\n3 3 4 5\n",
+        "expected": "possible",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#10/case/0",
+          "case_sha256": "baf76fbc3f3f50447eeeabcb45eee603a03ff2fc726303855ded8d30e6b89de9"
+        }
+      },
+      {
+        "input": "10 10\n1 1\n1 2\n1 3\n1 4\n1 5\n1 6\n1 7\n1 8\n1 9\n1 10\n",
+        "expected": "impossible",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#10/case/1",
+          "case_sha256": "d5a5aecb0a14addbe81dfae5baf15cf7deafd218172b85ebeed2a30e5b3548a4"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-481",
+    "dataset": "taco",
+    "difficulty": "VERY_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-481",
+      "prompt": "You are given a positive (greater than zero) integer $n$.\n\nYou have to represent $n$ as the sum of integers (possibly negative) consisting only of ones (digits '1'). For example, $24 = 11 + 11 + 1 + 1$ and $102 = 111 - 11 + 1 + 1$.\n\nAmong all possible representations, you have to find the one that uses the minimum number of ones in total.\n\n\n-----Input-----\n\nThe single line contains one integer $n$ ($1 \\le n < 10^{50}$).\n\n\n-----Output-----\n\nPrint one integer $x$ — the minimum number of ones, such that there exist a representation of $n$ as the sum of integers (possibly negative) that uses $x$ ones in total.\n\n\n-----Examples-----\n\nInput\n24\nOutput\n6\nInput\n102\nOutput\n7\n\n\n-----Note-----\n\nNone",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "24\n",
+          "expected": "6",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#11/example/0",
+            "case_sha256": "2257340b726d4d5514985d0e2071c22df1c3cf7db00bb52f362989761afc4fd3"
+          }
+        },
+        {
+          "input": "102\n",
+          "expected": "7",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#11/example/1",
+            "case_sha256": "283a74b60ef926f30033c633086d3af7eca48c6be3fd16cb7b76ee14cd5cb283"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "24\n",
+        "expected": "6",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#11/case/0",
+          "case_sha256": "2257340b726d4d5514985d0e2071c22df1c3cf7db00bb52f362989761afc4fd3"
+        }
+      },
+      {
+        "input": "102\n",
+        "expected": "7",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#11/case/1",
+          "case_sha256": "283a74b60ef926f30033c633086d3af7eca48c6be3fd16cb7b76ee14cd5cb283"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-760",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-760",
+      "prompt": "After returning from the army Makes received a gift — an array a consisting of n positive integer numbers. He hadn't been solving problems for a long time, so he became interested to answer a particular question: how many triples of indices (i,  j,  k) (i < j < k), such that a_{i}·a_{j}·a_{k} is minimum possible, are there in the array? Help him with it!\n\n\n-----Input-----\n\nThe first line of input contains a positive integer number n (3 ≤ n ≤ 10^5) — the number of elements in array a. The second line contains n positive integer numbers a_{i} (1 ≤ a_{i} ≤ 10^9) — the elements of a given array.\n\n\n-----Output-----\n\nPrint one number — the quantity of triples (i,  j,  k) such that i,  j and k are pairwise distinct and a_{i}·a_{j}·a_{k} is minimum possible.\n\n\n-----Examples-----\nInput\n4\n1 1 1 1\n\nOutput\n4\n\nInput\n5\n1 3 2 3 4\n\nOutput\n2\n\nInput\n6\n1 3 3 1 3 2\n\nOutput\n1\n\n\n\n-----Note-----\n\nIn the first example Makes always chooses three ones out of four, and the number of ways to choose them is 4.\n\nIn the second example a triple of numbers (1, 2, 3) is chosen (numbers, not indices). Since there are two ways to choose an element 3, then the answer is 2.\n\nIn the third example a triple of numbers (1, 1, 2) is chosen, and there's only one way to choose indices.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "4\n1 1 1 1\n",
+          "expected": "4",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#12/example/0",
+            "case_sha256": "494f22d4f5214d0292e15bf328e18301732a8c431cf66dcb9cbe73e6fec06c23"
+          }
+        },
+        {
+          "input": "5\n1 3 2 3 4\n",
+          "expected": "2",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#12/example/1",
+            "case_sha256": "b05f7e0f15aaef80c21dd06a1fa38ba3e328fd8a6a444d55b70a17f3ae555549"
+          }
+        },
+        {
+          "input": "6\n1 3 3 1 3 2\n",
+          "expected": "1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#12/example/2",
+            "case_sha256": "938acc9327745e18691590f30200fc72abf6e1eeb10113627509746d37358a58"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "4\n1 1 1 1\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#12/case/0",
+          "case_sha256": "494f22d4f5214d0292e15bf328e18301732a8c431cf66dcb9cbe73e6fec06c23"
+        }
+      },
+      {
+        "input": "5\n1 3 2 3 4\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#12/case/1",
+          "case_sha256": "b05f7e0f15aaef80c21dd06a1fa38ba3e328fd8a6a444d55b70a17f3ae555549"
+        }
+      },
+      {
+        "input": "6\n1 3 3 1 3 2\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#12/case/2",
+          "case_sha256": "938acc9327745e18691590f30200fc72abf6e1eeb10113627509746d37358a58"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-100",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-100",
+      "prompt": "Anton is playing a very interesting computer game, but now he is stuck at one of the levels. To pass to the next level he has to prepare n potions.\n\nAnton has a special kettle, that can prepare one potions in x seconds. Also, he knows spells of two types that can faster the process of preparing potions.  Spells of this type speed up the preparation time of one potion. There are m spells of this type, the i-th of them costs b_{i} manapoints and changes the preparation time of each potion to a_{i} instead of x.  Spells of this type immediately prepare some number of potions. There are k such spells, the i-th of them costs d_{i} manapoints and instantly create c_{i} potions. \n\nAnton can use no more than one spell of the first type and no more than one spell of the second type, and the total number of manapoints spent should not exceed s. Consider that all spells are used instantly and right before Anton starts to prepare potions.\n\nAnton wants to get to the next level as fast as possible, so he is interested in the minimum number of time he needs to spent in order to prepare at least n potions.\n\n\n-----Input-----\n\nThe first line of the input contains three integers n, m, k (1 ≤ n ≤ 2·10^9, 1 ≤ m, k ≤ 2·10^5) — the number of potions, Anton has to make, the number of spells of the first type and the number of spells of the second type.\n\nThe second line of the input contains two integers x and s (2 ≤ x ≤ 2·10^9, 1 ≤ s ≤ 2·10^9) — the initial number of seconds required to prepare one potion and the number of manapoints Anton can use.\n\nThe third line contains m integers a_{i} (1 ≤ a_{i} < x) — the number of seconds it will take to prepare one potion if the i-th spell of the first type is used.\n\nThe fourth line contains m integers b_{i} (1 ≤ b_{i} ≤ 2·10^9) — the number of manapoints to use the i-th spell of the first type.\n\nThere are k integers c_{i} (1 ≤ c_{i} ≤ n) in the fifth line — the number of potions that will be immediately created if the i-th spell of the second type is used. It's guaranteed that c_{i} are not decreasing, i.e. c_{i} ≤ c_{j} if i < j.\n\nThe sixth line contains k integers d_{i} (1 ≤ d_{i} ≤ 2·10^9) — the number of manapoints required to use the i-th spell of the second type. It's guaranteed that d_{i} are not decreasing, i.e. d_{i} ≤ d_{j} if i < j.\n\n\n-----Output-----\n\nPrint one integer — the minimum time one has to spent in order to prepare n potions.\n\n\n-----Examples-----\nInput\n20 3 2\n10 99\n2 4 3\n20 10 40\n4 15\n10 80\n\nOutput\n20\n\nInput\n20 3 2\n10 99\n2 4 3\n200 100 400\n4 15\n100 800\n\nOutput\n200\n\n\n\n-----Note-----\n\nIn the first sample, the optimum answer is to use the second spell of the first type that costs 10 manapoints. Thus, the preparation time of each potion changes to 4 seconds. Also, Anton should use the second spell of the second type to instantly prepare 15 potions spending 80 manapoints. The total number of manapoints used is 10 + 80 = 90, and the preparation time is 4·5 = 20 seconds (15 potions were prepared instantly, and the remaining 5 will take 4 seconds each).\n\nIn the second sample, Anton can't use any of the spells, so he just prepares 20 potions, spending 10 seconds on each of them and the answer is 20·10 = 200.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "20 3 2\n10 99\n2 4 3\n20 10 40\n4 15\n10 80\n",
+          "expected": "20",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#13/example/0",
+            "case_sha256": "c2f04296a081d85d8aff8f37fd5bcae6f79d69bdb2a2828e0f3bfb0e0adda059"
+          }
+        },
+        {
+          "input": "20 3 2\n10 99\n2 4 3\n200 100 400\n4 15\n100 800\n",
+          "expected": "200",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#13/example/1",
+            "case_sha256": "6a9e8870a59e923fd2e23ea9304e5a7c449e33932bb2bc1c2e9701ddeb0992d9"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "20 3 2\n10 99\n2 4 3\n20 10 40\n4 15\n10 80\n",
+        "expected": "20",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#13/case/0",
+          "case_sha256": "c2f04296a081d85d8aff8f37fd5bcae6f79d69bdb2a2828e0f3bfb0e0adda059"
+        }
+      },
+      {
+        "input": "20 3 2\n10 99\n2 4 3\n200 100 400\n4 15\n100 800\n",
+        "expected": "200",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#13/case/1",
+          "case_sha256": "6a9e8870a59e923fd2e23ea9304e5a7c449e33932bb2bc1c2e9701ddeb0992d9"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-862",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-862",
+      "prompt": "Vasiliy has a car and he wants to get from home to the post office. The distance which he needs to pass equals to d kilometers.\n\nVasiliy's car is not new — it breaks after driven every k kilometers and Vasiliy needs t seconds to repair it. After repairing his car Vasiliy can drive again (but after k kilometers it will break again, and so on). In the beginning of the trip the car is just from repair station.\n\nTo drive one kilometer on car Vasiliy spends a seconds, to walk one kilometer on foot he needs b seconds (a < b).\n\nYour task is to find minimal time after which Vasiliy will be able to reach the post office. Consider that in every moment of time Vasiliy can left his car and start to go on foot.\n\n\n-----Input-----\n\nThe first line contains 5 positive integers d, k, a, b, t (1 ≤ d ≤ 10^12; 1 ≤ k, a, b, t ≤ 10^6; a < b), where:  d — the distance from home to the post office;  k — the distance, which car is able to drive before breaking;  a — the time, which Vasiliy spends to drive 1 kilometer on his car;  b — the time, which Vasiliy spends to walk 1 kilometer on foot;  t — the time, which Vasiliy spends to repair his car. \n\n\n-----Output-----\n\nPrint the minimal time after which Vasiliy will be able to reach the post office.\n\n\n-----Examples-----\nInput\n5 2 1 4 10\n\nOutput\n14\n\nInput\n5 2 1 4 5\n\nOutput\n13\n\n\n\n-----Note-----\n\nIn the first example Vasiliy needs to drive the first 2 kilometers on the car (in 2 seconds) and then to walk on foot 3 kilometers (in 12 seconds). So the answer equals to 14 seconds.\n\nIn the second example Vasiliy needs to drive the first 2 kilometers on the car (in 2 seconds), then repair his car (in 5 seconds) and drive 2 kilometers more on the car (in 2 seconds). After that he needs to walk on foot 1 kilometer (in 4 seconds). So the answer equals to 13 seconds.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "5 2 1 4 10\n",
+          "expected": "14",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#14/example/0",
+            "case_sha256": "16b6e23de68fe6c8f1e4136a460c73c7fa3f789b64a58d5fbd41822b458fd0e3"
+          }
+        },
+        {
+          "input": "5 2 1 4 5\n",
+          "expected": "13",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#14/example/1",
+            "case_sha256": "bb12c5b0f2162ed4bece9b54e24be7e891fc80d9f4eca043563ae08f5dea20c2"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "5 2 1 4 10\n",
+        "expected": "14",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#14/case/0",
+          "case_sha256": "16b6e23de68fe6c8f1e4136a460c73c7fa3f789b64a58d5fbd41822b458fd0e3"
+        }
+      },
+      {
+        "input": "5 2 1 4 5\n",
+        "expected": "13",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#14/case/1",
+          "case_sha256": "bb12c5b0f2162ed4bece9b54e24be7e891fc80d9f4eca043563ae08f5dea20c2"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-920",
+    "dataset": "taco",
+    "difficulty": "VERY_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-920",
+      "prompt": "Let's call two strings $a$ and $b$ (both of length $k$) a bit similar if they have the same character in some position, i. e. there exists at least one $i \\in [1, k]$ such that $a_i = b_i$.\n\nYou are given a binary string $s$ of length $n$ (a string of $n$ characters 0 and/or 1) and an integer $k$. Let's denote the string $s[i..j]$ as the substring of $s$ starting from the $i$-th character and ending with the $j$-th character (that is, $s[i..j] = s_i s_{i + 1} s_{i + 2} \\dots s_{j - 1} s_j$).\n\nLet's call a binary string $t$ of length $k$ beautiful if it is a bit similar to all substrings of $s$ having length exactly $k$; that is, it is a bit similar to $s[1..k], s[2..k+1], \\dots, s[n-k+1..n]$.\n\nYour goal is to find the lexicographically smallest string $t$ that is beautiful, or report that no such string exists. String $x$ is lexicographically less than string $y$ if either $x$ is a prefix of $y$ (and $x \\ne y$), or there exists such $i$ ($1 \\le i \\le \\min(|x|, |y|)$), that $x_i < y_i$, and for any $j$ ($1 \\le j < i$) $x_j = y_j$.\n\n\n-----Input-----\n\nThe first line contains one integer $q$ ($1 \\le q \\le 10000$) — the number of test cases. Each test case consists of two lines.\n\nThe first line of each test case contains two integers $n$ and $k$ ($1 \\le k \\le n \\le 10^6$). The second line contains the string $s$, consisting of $n$ characters (each character is either 0 or 1).\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $10^6$.\n\n\n-----Output-----\n\nFor each test case, print the answer as follows:\n\nif it is impossible to construct a beautiful string, print one line containing the string NO (note: exactly in upper case, you can't print No, for example);\n\notherwise, print two lines. The first line should contain the string YES (exactly in upper case as well); the second line — the lexicographically smallest beautiful string, consisting of $k$ characters 0 and/or 1.\n\n\n-----Examples-----\n\nInput\n7\n4 2\n0110\n4 2\n1001\n9 3\n010001110\n9 3\n101110001\n10 3\n0101110001\n10 10\n1111111111\n11 10\n11111111110\nOutput\nYES\n11\nYES\n00\nYES\n010\nYES\n101\nNO\nYES\n0000000001\nYES\n0000000010\n\n\n-----Note-----\n\nNone",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "7\n4 2\n0110\n4 2\n1001\n9 3\n010001110\n9 3\n101110001\n10 3\n0101110001\n10 10\n1111111111\n11 10\n11111111110\n",
+          "expected": "YES\n11\nYES\n00\nYES\n010\nYES\n101\nNO\nYES\n0000000001\nYES\n0000000010",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#15/example/0",
+            "case_sha256": "6b7195fbcee7355f2a10e040430d3d0028aa74eb101f8eb7490d339dd0a360b9"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "7\n4 2\n0110\n4 2\n1001\n9 3\n010001110\n9 3\n101110001\n10 3\n0101110001\n10 10\n1111111111\n11 10\n11111111110\n",
+        "expected": "YES\n11\nYES\n00\nYES\n010\nYES\n101\nNO\nYES\n0000000001\nYES\n0000000010",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#15/case/0",
+          "case_sha256": "6b7195fbcee7355f2a10e040430d3d0028aa74eb101f8eb7490d339dd0a360b9"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-91",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-91",
+      "prompt": "In Arcady's garden there grows a peculiar apple-tree that fruits one time per year. Its peculiarity can be explained in following way: there are n inflorescences, numbered from 1 to n. Inflorescence number 1 is situated near base of tree and any other inflorescence with number i (i > 1) is situated at the top of branch, which bottom is p_{i}-th inflorescence and p_{i} < i.\n\nOnce tree starts fruiting, there appears exactly one apple in each inflorescence. The same moment as apples appear, they start to roll down along branches to the very base of tree. Each second all apples, except ones in first inflorescence simultaneously roll down one branch closer to tree base, e.g. apple in a-th inflorescence gets to p_{a}-th inflorescence. Apples that end up in first inflorescence are gathered by Arcady in exactly the same moment. Second peculiarity of this tree is that once two apples are in same inflorescence they annihilate. This happens with each pair of apples, e.g. if there are 5 apples in same inflorescence in same time, only one will not be annihilated and if there are 8 apples, all apples will be annihilated. Thus, there can be no more than one apple in each inflorescence in each moment of time.\n\nHelp Arcady with counting number of apples he will be able to collect from first inflorescence during one harvest.\n\n\n-----Input-----\n\nFirst line of input contains single integer number n (2 ≤ n ≤ 100 000)  — number of inflorescences.\n\nSecond line of input contains sequence of n - 1 integer numbers p_2, p_3, ..., p_{n} (1 ≤ p_{i} < i), where p_{i} is number of inflorescence into which the apple from i-th inflorescence rolls down.\n\n\n-----Output-----\n\nSingle line of output should contain one integer number: amount of apples that Arcady will be able to collect from first inflorescence during one harvest.\n\n\n-----Examples-----\nInput\n3\n1 1\n\nOutput\n1\n\nInput\n5\n1 2 2 2\n\nOutput\n3\n\nInput\n18\n1 1 1 4 4 3 2 2 2 10 8 9 9 9 10 10 4\n\nOutput\n4\n\n\n\n-----Note-----\n\nIn first example Arcady will be able to collect only one apple, initially situated in 1st inflorescence. In next second apples from 2nd and 3rd inflorescences will roll down and annihilate, and Arcady won't be able to collect them.\n\nIn the second example Arcady will be able to collect 3 apples. First one is one initially situated in first inflorescence. In a second apple from 2nd inflorescence will roll down to 1st (Arcady will collect it) and apples from 3rd, 4th, 5th inflorescences will roll down to 2nd. Two of them will annihilate and one not annihilated will roll down from 2-nd inflorescence to 1st one in the next second and Arcady will collect it.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "3\n1 1\n",
+          "expected": "1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#16/example/0",
+            "case_sha256": "a00c7505282f47922c22f3662f01d5339f8f71471346d9576fc12271e9450264"
+          }
+        },
+        {
+          "input": "5\n1 2 2 2\n",
+          "expected": "3",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#16/example/1",
+            "case_sha256": "36232cd87e3fd61bf05a519305316678282b083533e4017f2dedf9c19f267caa"
+          }
+        },
+        {
+          "input": "18\n1 1 1 4 4 3 2 2 2 10 8 9 9 9 10 10 4\n",
+          "expected": "4",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#16/example/2",
+            "case_sha256": "6ace95eae1fa7f61ee9e77c494adbe4de6fb9e9ab87c1bf2d558b381dd5c0a92"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "3\n1 1\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#16/case/0",
+          "case_sha256": "a00c7505282f47922c22f3662f01d5339f8f71471346d9576fc12271e9450264"
+        }
+      },
+      {
+        "input": "5\n1 2 2 2\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#16/case/1",
+          "case_sha256": "36232cd87e3fd61bf05a519305316678282b083533e4017f2dedf9c19f267caa"
+        }
+      },
+      {
+        "input": "18\n1 1 1 4 4 3 2 2 2 10 8 9 9 9 10 10 4\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#16/case/2",
+          "case_sha256": "6ace95eae1fa7f61ee9e77c494adbe4de6fb9e9ab87c1bf2d558b381dd5c0a92"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-150",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-150",
+      "prompt": "You are given two positive integer sequences $a_1, \\ldots, a_n$ and $b_1, \\ldots, b_m$. For each $j = 1, \\ldots, m$ find the greatest common divisor of $a_1 + b_j, \\ldots, a_n + b_j$.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $m$ ($1 \\leq n, m \\leq 2 \\cdot 10^5$).\n\nThe second line contains $n$ integers $a_1, \\ldots, a_n$ ($1 \\leq a_i \\leq 10^{18})$.\n\nThe third line contains $m$ integers $b_1, \\ldots, b_m$ ($1 \\leq b_j \\leq 10^{18})$.\n\n\n-----Output-----\n\nPrint $m$ integers. The $j$-th of them should be equal to GCD$(a_1 + b_j, \\ldots, a_n + b_j)$.\n\n\n-----Examples-----\n\nInput\n4 4\n1 25 121 169\n1 2 7 23\nOutput\n2 3 8 24\n\n\n-----Note-----\n\nNone",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "4 4\n1 25 121 169\n1 2 7 23\n",
+          "expected": "2 3 8 24",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#17/example/0",
+            "case_sha256": "ab32ebcb04d8b046231264f8613e782f28e2f45b8aae42bfe0336634975a11be"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "4 4\n1 25 121 169\n1 2 7 23\n",
+        "expected": "2 3 8 24",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#17/case/0",
+          "case_sha256": "ab32ebcb04d8b046231264f8613e782f28e2f45b8aae42bfe0336634975a11be"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-548",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-548",
+      "prompt": "For a sequence a of n integers between 1 and m, inclusive, denote f(a) as the number of distinct subsequences of a (including the empty subsequence).\n\nYou are given two positive integers n and m. Let S be the set of all sequences of length n consisting of numbers from 1 to m. Compute the sum f(a) over all a in S modulo 10^9 + 7.\n\n\n-----Input-----\n\nThe only line contains two integers n and m (1 ≤ n, m ≤ 10^6) — the number of elements in arrays and the upper bound for elements.\n\n\n-----Output-----\n\nPrint the only integer c — the desired sum modulo 10^9 + 7.\n\n\n-----Examples-----\nInput\n1 3\n\nOutput\n6\n\nInput\n2 2\n\nOutput\n14\n\nInput\n3 3\n\nOutput\n174",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "1 3\n",
+          "expected": "6",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#18/example/0",
+            "case_sha256": "0b53859b849aacdf4454732cdf211fa07a49ed87120b3dab53406508a5f6978d"
+          }
+        },
+        {
+          "input": "2 2\n",
+          "expected": "14",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#18/example/1",
+            "case_sha256": "a3d3d2312077158ac98bd95f1b4fd408c293fe752a752604ee3bef5e840d2b9c"
+          }
+        },
+        {
+          "input": "3 3\n",
+          "expected": "174",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#18/example/2",
+            "case_sha256": "51885de9a41a68ed410393005325e3a1feb781ccf20f62da0eccf86a8cd589c9"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "1 3\n",
+        "expected": "6",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#18/case/0",
+          "case_sha256": "0b53859b849aacdf4454732cdf211fa07a49ed87120b3dab53406508a5f6978d"
+        }
+      },
+      {
+        "input": "2 2\n",
+        "expected": "14",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#18/case/1",
+          "case_sha256": "a3d3d2312077158ac98bd95f1b4fd408c293fe752a752604ee3bef5e840d2b9c"
+        }
+      },
+      {
+        "input": "3 3\n",
+        "expected": "174",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#18/case/2",
+          "case_sha256": "51885de9a41a68ed410393005325e3a1feb781ccf20f62da0eccf86a8cd589c9"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s18_taco-test-434",
+    "dataset": "taco",
+    "difficulty": "VERY_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "s18_taco-test-434",
+      "prompt": "Recently Vasya learned that, given two points with different $x$ coordinates, you can draw through them exactly one parabola with equation of type $y = x^2 + bx + c$, where $b$ and $c$ are reals. Let's call such a parabola an $U$-shaped one.\n\nVasya drew several distinct points with integer coordinates on a plane and then drew an $U$-shaped parabola through each pair of the points that have different $x$ coordinates. The picture became somewhat messy, but Vasya still wants to count how many of the parabolas drawn don't have any drawn point inside their internal area. Help Vasya.\n\nThe internal area of an $U$-shaped parabola is the part of the plane that lies strictly above the parabola when the $y$ axis is directed upwards.\n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($1 \\le n \\le 100\\,000$) — the number of points.\n\nThe next $n$ lines describe the points, the $i$-th of them contains two integers $x_i$ and $y_i$ — the coordinates of the $i$-th point. It is guaranteed that all points are distinct and that the coordinates do not exceed $10^6$ by absolute value.\n\n\n-----Output-----\n\nIn the only line print a single integer — the number of $U$-shaped parabolas that pass through at least two of the given points and do not contain any of the given points inside their internal area (excluding the parabola itself).\n\n\n-----Examples-----\nInput\n3\n-1 0\n0 2\n1 0\n\nOutput\n2\n\nInput\n5\n1 0\n1 -1\n0 -1\n-1 0\n-1 -1\n\nOutput\n1\n\n\n\n-----Note-----\n\nOn the pictures below all $U$-shaped parabolas that pass through at least two given points are drawn for each of the examples. The $U$-shaped parabolas that do not have any given point inside their internal area are drawn in red.  [Image] The first example. \n\n [Image] The second example.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "3\n-1 0\n0 2\n1 0\n",
+          "expected": "2",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#19/example/0",
+            "case_sha256": "defb3c3671ebe14256e5724440d21b1bb7153733092796b969156e80a6c489f9"
+          }
+        },
+        {
+          "input": "5\n1 0\n1 -1\n0 -1\n-1 0\n-1 -1\n",
+          "expected": "1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#19/example/1",
+            "case_sha256": "5137e3cfba0d2ced1adb357c45409e8c5e1c7eba459722bd8ce1f39b3a0a7768"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "3\n-1 0\n0 2\n1 0\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#19/case/0",
+          "case_sha256": "defb3c3671ebe14256e5724440d21b1bb7153733092796b969156e80a6c489f9"
+        }
+      },
+      {
+        "input": "5\n1 0\n1 -1\n0 -1\n-1 0\n-1 -1\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "runs/s18_data_freeze_20261023_01/observation_tasks.json#19/case/1",
+          "case_sha256": "5137e3cfba0d2ced1adb357c45409e8c5e1c7eba459722bd8ce1f39b3a0a7768"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0118",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0118",
+      "prompt": "You are given a tree consisting of $n$ vertices. A number is written on each vertex; the number on vertex $i$ is equal to $a_i$.\n\nLet's denote the function $g(x, y)$ as the greatest common divisor of the numbers written on the vertices belonging to the simple path from vertex $x$ to vertex $y$ (including these two vertices). Also let's denote $dist(x, y)$ as the number of vertices on the simple path between vertices $x$ and $y$, including the endpoints. $dist(x, x) = 1$ for every vertex $x$.\n\nYour task is calculate the maximum value of $dist(x, y)$ among such pairs of vertices that $g(x, y) > 1$.\n\n\n-----Input-----\n\nThe first line contains one integer $n$ — the number of vertices $(1 \\le n \\le 2 \\cdot 10^5)$.\n\nThe second line contains $n$ integers $a_1$, $a_2$, ..., $a_n$ $(1 \\le a_i \\le 2 \\cdot 10^5)$ — the numbers written on vertices.\n\nThen $n - 1$ lines follow, each containing two integers $x$ and $y$ $(1 \\le x, y \\le n, x \\ne y)$ denoting an edge connecting vertex $x$ with vertex $y$. It is guaranteed that these edges form a tree.\n\n\n-----Output-----\n\nIf there is no pair of vertices $x, y$ such that $g(x, y) > 1$, print $0$. Otherwise print the maximum value of $dist(x, y)$ among such pairs.\n\n\n-----Examples-----\nInput\n3\n2 3 4\n1 2\n2 3\n\nOutput\n1\n\nInput\n3\n2 3 4\n1 3\n2 3\n\nOutput\n2\n\nInput\n3\n1 1 1\n1 2\n2 3\n\nOutput\n0\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"3\\n19 13 4\\n2 1\\n3 2\", \"expected\": \"1\", \"comparison\": \"tokens\"}, {\"input\": \"5\\n16 15 5 16 14\\n2 1\\n3 1\\n4 1\\n5 3\", \"expected\": \"2\", \"comparison\": \"tokens\"}, {\"input\": \"4\\n13 4 9 14\\n2 1\\n3 1\\n4 3\", \"expected\": \"1\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "3\n19 13 4\n2 1\n3 2",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "case_insensitive": false,
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#0/case/0",
+          "case_sha256": "e43d6ef9614df6d56850cfa37246522ed06d5dbd8c13853d2d96e141c4089783"
+        }
+      },
+      {
+        "input": "5\n16 15 5 16 14\n2 1\n3 1\n4 1\n5 3",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "case_insensitive": false,
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#0/case/1",
+          "case_sha256": "284fd1238a7d83e4cf606a2a8f8c6c62c1465ce350170fcebedcc237888f4687"
+        }
+      },
+      {
+        "input": "4\n13 4 9 14\n2 1\n3 1\n4 3",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "case_insensitive": false,
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#0/case/2",
+          "case_sha256": "14874261805841aebe7881a6475eb8a2526cb60feee8d7ed5f194679b7b896b5"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0337",
+    "dataset": "taco",
+    "difficulty": "EASY",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0337",
+      "prompt": "Polygon is not only the best platform for developing problems but also a square matrix with side $n$, initially filled with the character 0.\n\nOn the polygon, military training was held. The soldiers placed a cannon above each cell in the first row and a cannon to the left of each cell in the first column. Thus, exactly $2n$ cannons were placed. [Image] Initial polygon for $n=4$. \n\nCannons shoot character 1. At any moment of time, no more than one cannon is shooting. When a 1 flies out of a cannon, it flies forward (in the direction of the shot) until it collides with a polygon border or another 1. After that, it takes the cell in which it was before the collision and remains there. Take a look at the examples for better understanding.\n\nMore formally:   if a cannon stands in the row $i$, to the left of the first column, and shoots with a 1, then the 1 starts its flight from the cell ($i, 1$) and ends in some cell ($i, j$);  if a cannon stands in the column $j$, above the first row, and shoots with a 1, then the 1 starts its flight from the cell ($1, j$) and ends in some cell ($i, j$). \n\nFor example, consider the following sequence of shots: [Image] \n\n 1. Shoot the cannon in the row $2$.                         2. Shoot the cannon in the row $2$.                         3. Shoot the cannon in column $3$. \n\nYou have a report from the military training on your desk. This report is a square matrix with side length $n$ consisting of 0 and 1. You wonder if the training actually happened. In other words, is there a sequence of shots such that, after the training, you get the given matrix?\n\nEach cannon can make an arbitrary number of shots. Before the training, each cell of the polygon contains 0.\n\n\n-----Input-----\n\nThe first line contains an integer $t$ ($1 \\le t \\le 1000$) — the number of test cases. Then $t$ test cases follow.\n\nEach test case starts with a line containing an integer $n$ ($1 \\le n \\le 50$) — the size of the polygon.\n\nThis is followed by $n$ lines of length $n$, consisting of 0 and 1 — the polygon matrix after the training.\n\nThe total area of the matrices in all test cases in one test does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each test case print:  YES if there is a sequence of shots leading to a given matrix;  NO if such a sequence does not exist. \n\nThe letters in the words YES and NO can be printed in any case.\n\n\n-----Example-----\nInput\n5\n4\n0010\n0011\n0000\n0000\n2\n10\n01\n2\n00\n00\n4\n0101\n1111\n0101\n0111\n4\n0100\n1110\n0101\n0111\n\nOutput\nYES\nNO\nYES\nYES\nNO\n\n\n\n-----Note-----\n\nThe first test case was explained in the statement.\n\nThe answer to the second test case is NO, since a 1 in a cell ($1, 1$) flying out of any cannon would continue its flight further.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n3\\n010\\n100\\n110\\n\", \"expected\": \"NO\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n3\\n011\\n001\\n000\\n\", \"expected\": \"YES\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n3\\n110\\n100\\n111\\n\", \"expected\": \"NO\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n3\n010\n100\n110\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#1/case/0",
+          "case_sha256": "a88a5149e800bb2ba68a473af3d8ee0df4444fafa28205509a8ae24ca68f8012"
+        }
+      },
+      {
+        "input": "1\n3\n011\n001\n000\n",
+        "expected": "YES",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#1/case/1",
+          "case_sha256": "38457c0b0128109eb2427ad8da2cca4714a067e0f2c7a30f81a8c6d9a1976428"
+        }
+      },
+      {
+        "input": "1\n3\n110\n100\n111\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#1/case/2",
+          "case_sha256": "cb748a61b9189859b6ab7a0e75ef351f903a2e6af8584513530ce8a9cd595b53"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0313",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0313",
+      "prompt": "Arkady has a playlist that initially consists of $n$ songs, numerated from $1$ to $n$ in the order they appear in the playlist. Arkady starts listening to the songs in the playlist one by one, starting from song $1$. The playlist is cycled, i. e. after listening to the last song, Arkady will continue listening from the beginning.\n\nEach song has a genre $a_i$, which is a positive integer. Let Arkady finish listening to a song with genre $y$, and the genre of the next-to-last listened song be $x$. If $\\operatorname{gcd}(x, y) = 1$, he deletes the last listened song (with genre $y$) from the playlist. After that he continues listening normally, skipping the deleted songs, and forgetting about songs he listened to before. In other words, after he deletes a song, he can't delete the next song immediately.\n\nHere $\\operatorname{gcd}(x, y)$ denotes the greatest common divisor (GCD) of integers $x$ and $y$.\n\nFor example, if the initial songs' genres were $[5, 9, 2, 10, 15]$, then the playlist is converted as follows: [5, 9, 2, 10, 15] $\\to$ [5, 9, 2, 10, 15] $\\to$ [5, 2, 10, 15] (because $\\operatorname{gcd}(5, 9) = 1$) $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 10, 15] (because $\\operatorname{gcd}(5, 2) = 1$) $\\to$ [5, 10, 15] $\\to$ [5, 10, 15] $\\to$ ... The bold numbers represent the two last played songs. Note that after a song is deleted, Arkady forgets that he listened to that and the previous songs.\n\nGiven the initial playlist, please determine which songs are eventually deleted and the order these songs are deleted.\n\n\n-----Input-----\n\nEach test contains multiple test cases. The first line contains the number of test cases $t$ ($1 \\le t \\le 10000$). Description of the test cases follows.\n\nThe first line of each test case contains a single integer $n$ ($1 \\le n \\le 10^5$) — the number of songs.\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ ($1 \\le a_i \\le 10^9$) — the genres of the songs.\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each test case, print a single line. First, print a single integer $k$ — the number of deleted songs. After that print $k$ distinct integers: deleted songs in the order of their deletion.\n\n\n-----Examples-----\n\nInput\n5\n5\n5 9 2 10 15\n6\n1 2 4 2 4 2\n2\n1 2\n1\n1\n1\n2\nOutput\n2 2 3 \n2 2 1 \n2 2 1 \n1 1 \n0\n\n\n-----Note-----\n\nExplanation of the first test case is given in the statement.\n\nIn the second test case, the playlist is converted as follows: [1, 2, 4, 2, 4, 2] $\\to$ [1, 2, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] (because $\\operatorname{gcd}(1, 2) = 1$) $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [4, 2, 4, 2] (because $\\operatorname{gcd}(2, 1) = 1$) $\\to$ [4, 2, 4, 2] $\\to$ ...\n\nIn the third test case, the playlist is converted as follows: [1, 2] $\\to$ [1, 2] $\\to$ [1] (because $\\operatorname{gcd}(1, 2) = 1$) $\\to$ [1] $\\to$ [1] (Arkady listened to the same song twice in a row) $\\to$ [] (because $\\operatorname{gcd}(1, 1) = 1$).\n\nThe fourth test case is same as the third after deletion of the second song.\n\nIn the fifth test case, the same song is listened to over and over again, but since $\\operatorname{gcd}(2, 2) \\ne 1$, it is not deleted.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n3\\n12 1 12\\n\", \"expected\": \"1 2\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n3\\n5 11 7\\n\", \"expected\": \"2 2 1\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n3\\n6 1 5\\n\", \"expected\": \"2 2 1\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n3\n12 1 12\n",
+        "expected": "1 2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#2/case/0",
+          "case_sha256": "c8b493d3a4ad0808bde0824fd4502a4222cb241d0b498a289d927e30c665b8cd"
+        }
+      },
+      {
+        "input": "1\n3\n5 11 7\n",
+        "expected": "2 2 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#2/case/1",
+          "case_sha256": "7257c30922125f1a7b40cc67cafc1c549bbf9fdd65bdd33ad2fad6cc44d1eb12"
+        }
+      },
+      {
+        "input": "1\n3\n6 1 5\n",
+        "expected": "2 2 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#2/case/2",
+          "case_sha256": "860804cd3983107e56a354504f61bf9e32377b8f04e7b2dabfad08b16903436d"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0664",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0664",
+      "prompt": "Read problems statements in mandarin chinese, russian and vietnamese as well. \n\nChef has a binary array A of length N. He also has a frame that can focus on at max K consecutive elements of the array. \n\nChef has a lovely dog which likes to do following two things.  \n\nShifting the array A to the right by one element (N-th element becomes 1_{st}, 1_{st} becomes 2_{nd} and so on) \nAsking Chef what is the maximal number of elements equal to 1, that can be captured by a frame (frame can capture not more than K consecutive elements of array).\n\nHelp Chef entertain his Dog!\n\n------ Input ------ \n\nThe first line of each test case contains three integers N, K and P denoting the number of elements in array A, size of a frame and the number of Dog's requests.\n\nThe second line contains N space-separated integers A_{1}, A_{2}, ..., A_{N} denoting the elements of array. \n\nThe third line contains string consisting of P characters, i-th character stands for dog's i-th question and equals '!' if  Dog shifts the array and '?' if dog asks what is the maximal number of ones captured by the frame. \n\n------ Output ------ \n\nFor each Dog's question output a single line containing an integer corresponding to the answer of the question. \n\n------ Constraints ------ \n\n$1 ≤ N, K, P ≤ 10^{5}$\n$0 ≤ A_{i} ≤ 1$\n\n------ Subtasks ------ \n\n$Subtask #1  (30 points) N, K, P ≤ 10^{3} $\n$Subtask #2 (70 points) Original constraints.$\n\n----- Sample Input 1 ------ \n5 3 4\n\n1 0 0 1 1\n\n?!!?\n----- Sample Output 1 ------ \n2\n\n3\n----- explanation 1 ------ \nExample case 1.\nFor the first question , Chef can pick last 3 elements (or last two, no matter) for his frame, \nand will have 2 elements equal 1.\nAfter first shift (exclamation mark) array will become: 1 1 0 0 1.\nAfter second shift (exclamation mark) array will become: 1 1 1 0 0.\nNow for the second question Chef can pick first 3 elements for his frame,\nand will have 3 elements equal 1.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"4 8 20\\n0 0 1 0\\n?!?!!!!?!!!!?!!!!!??\\n\", \"expected\": \"1\\n1\\n1\\n1\\n1\\n1\", \"comparison\": \"tokens\"}, {\"input\": \"2 11 20\\n0 1\\n?!?!!!!!!!!!!!!??!!?\\n\", \"expected\": \"1\\n1\\n1\\n1\\n1\", \"comparison\": \"tokens\"}, {\"input\": \"6 12 20\\n0 0 1 0 0 0\\n!!!!??!!!!!!???!?!??\\n\", \"expected\": \"1\\n1\\n1\\n1\\n1\\n1\\n1\\n1\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "4 8 20\n0 0 1 0\n?!?!!!!?!!!!?!!!!!??\n",
+        "expected": "1\n1\n1\n1\n1\n1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#3/case/0",
+          "case_sha256": "9820e86cda16637e47af65925fb146c4a53483333b6f6af69aa6721724799008"
+        }
+      },
+      {
+        "input": "2 11 20\n0 1\n?!?!!!!!!!!!!!!??!!?\n",
+        "expected": "1\n1\n1\n1\n1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#3/case/1",
+          "case_sha256": "b37a97f8c1e05c459e46549386eb500cf32b7fc0d71d09444dacf7c2f7fa7f4d"
+        }
+      },
+      {
+        "input": "6 12 20\n0 0 1 0 0 0\n!!!!??!!!!!!???!?!??\n",
+        "expected": "1\n1\n1\n1\n1\n1\n1\n1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#3/case/2",
+          "case_sha256": "b5bfd36ee7df84d6ba719d5d69ab2567391e0a64417d9ad14db0cbb6328e069a"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0967",
+    "dataset": "taco",
+    "difficulty": "EASY",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0967",
+      "prompt": "Read problems statements in Mandarin chinese, Russian and Vietnamese as well. \n\nOnce, after a stressful day, Chef decided to relax and visit a casino near his house to gamble. He feels lucky and he's going to bet almost all of his money.\n\nThe game Chef is going to play in the casino consists of tossing a die with $N$ faces twice. There is a number written on each face of the die (these numbers are not necessarily distinct). In order to win, Chef must get the number $A$ on the first toss and the number $B$ on the second toss of the die.\n\nThe excited viewers want to know the probability that Chef will win the game. Can you help them find that number? Assume that Chef gets each face of the die with the same probability on each toss and that tosses are mutually independent.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains three space-separated integers $N$, $A$ and $B$.\nThe second line contains $N$ space-separated integers $x_{1}, x_{2}, \\dots, x_{N}$ denoting the numbers written on the faces of the die.\n\n------  Output ------\nFor each test case, print a single line containing one real number — the probability that Chef will win. Your answer will be considered correct if its absolute error does not exceed $10^{-6}$.\n\n------  Constraints ------\n$1 ≤ T ≤ 70$\n$1 ≤ N ≤ 10^{4}$\n$1 ≤ A ≤ N$\n$1 ≤ B ≤ N$\n$1 ≤ x_{i} ≤ N$ for each valid $i$\n\n------  Subtasks ------\nSubtask #1 (20 points):\n$T ≤ 10$\n$N ≤ 100$\n\nSubtask #2 (80 points): original constraints\n\n----- Sample Input 1 ------ \n2\n5 1 1\n1 1 1 1 1\n2 1 1\n1 2\n----- Sample Output 1 ------ \n1.0000000000\n0.2500000000\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n8 1 2\\n7 4 5 5 3 3 6 5\\n\", \"expected\": \"0.0000000000\", \"comparison\": \"float\"}, {\"input\": \"1\\n7 1 7\\n5 4 1 1 6 2 2\\n\", \"expected\": \"0.0000000000\", \"comparison\": \"float\"}, {\"input\": \"1\\n6 5 6\\n3 5 3 3 6 5\\n\", \"expected\": \"0.0555555556\", \"comparison\": \"float\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n8 1 2\n7 4 5 5 3 3 6 5\n",
+        "expected": "0.0000000000",
+        "comparison": "float",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#4/case/0",
+          "case_sha256": "907ede6952708d7598a08eedd5e95b4376072c0498918ad78b2dd551ebb47e4a"
+        }
+      },
+      {
+        "input": "1\n7 1 7\n5 4 1 1 6 2 2\n",
+        "expected": "0.0000000000",
+        "comparison": "float",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#4/case/1",
+          "case_sha256": "77b587b629bcdc3b6481bd865c078450373c7e1b28042206e62de2ef2b512d1e"
+        }
+      },
+      {
+        "input": "1\n6 5 6\n3 5 3 3 6 5\n",
+        "expected": "0.0555555556",
+        "comparison": "float",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#4/case/2",
+          "case_sha256": "52d3bed856119f6193433a15fbb2f2292b4bfa4f9d244b4a4d262aefb0044744"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0511",
+    "dataset": "taco",
+    "difficulty": "VERY_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0511",
+      "prompt": "Chef is again playing a game with his best friend Garry. As usual, the rules of this game are extremely strange and uncommon.\nFirst, they are given a stack of $N$ discs. Each disc has a distinct, non-negative integer written on it. The players exchange turns to make a move. Before the start of the game, they both agree upon a set of positive integers  $S$ of size $K$. It is guaranteed that S contains the integer $1$. In a move, a player can select any value $x$ from $S$ and pop exactly $x$ elements from the top of the stack. The game ends when there are no discs remaining. Chef goes first.\nScoring: For every disc a player pops, his score increases by $2^p$ where $p$ is the integer written on the disc. For example, if a player pops the discs, with integers $p_1, p_2, p_3, \\dots, p_m$ written on it, during the entire course of the game, then his total score will be $2^{p_1} + 2^{p_2} + 2^{p_3} + \\dots + 2^{p_m}$.\nThe player with higher score wins the game. Determine the winner if both the players play optimally, or if the game ends in a draw.\n\n-----Input:-----\n- First line contains $T$, the number of testcases. Then the testcases follow.\n- The first line of each test case contains two space separated integers $N$ and $K$, denoting the size of the stack and the set S respectively.\n- Next line contains $N$ space separated integers $A_i$ where $A_1$ is the topmost element, denoting the initial arrangement of the stack.\n- The last line of each test case contains $K$ space separated integers each denoting $x_i$.\n\n-----Output:-----\nFor each testcase, output \"Chef\" (without quotes) if Chef wins, \"Garry\" (without quotes) if Garry wins, otherwise \"Draw\" (without quotes) in a separate line.\n\n-----Constraints-----\n- $1 \\leq T \\leq 1000$\n- $1 \\leq N \\leq 10^5$\n- $1 \\leq K \\leq \\min(100, N)$\n- $0 \\leq A_i \\leq 10^9$\n- $1 \\leq x_i \\leq N$\n- $x_i \\neq x_j$ for all $i \\neq j$\n- $A_i \\neq A_j$ for all $i \\neq j$\n- Set $S$ contains integer $1$. \n- Sum of $N$ over all test cases does not exceed $10^5$.\n\n-----Sample Input:-----\n1\n3 2\n5 7 1\n1 2\n\n-----Sample Output:-----\nChef\n\n-----Explanation:-----\nChef can select 2 from the set and draw the top two discs (with integers 5 and 7 written on it) from the stack. Garry cannot select 2 from the set as there is only 1 disc left in the stack. However, he can select 1 from the set and pop the last disc.\nSo, Chef's score = $2^5$ + $2^7$ = $160$\n\nGarry's score = $2^1$ = $2$\n\nChef wins.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n8 2\\n11 10 3 5 0 7 4 2\\n1 7\\n\", \"expected\": \"Chef\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n9 3\\n6 3 11 0 9 2 1 4 10\\n1 2 7\\n\", \"expected\": \"Chef\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n2 1\\n0 5\\n1\\n\", \"expected\": \"Garry\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n8 2\n11 10 3 5 0 7 4 2\n1 7\n",
+        "expected": "Chef",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#5/case/0",
+          "case_sha256": "c68c97b3cb7e8df70dc2f3d7c490a4e8f8e4f3903293bdad3e4eff78880756b5"
+        }
+      },
+      {
+        "input": "1\n9 3\n6 3 11 0 9 2 1 4 10\n1 2 7\n",
+        "expected": "Chef",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#5/case/1",
+          "case_sha256": "604d6c74dd1974f47ee41a5072d7df33484450d8eeef9bb9c8f59ec12c749933"
+        }
+      },
+      {
+        "input": "1\n2 1\n0 5\n1\n",
+        "expected": "Garry",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#5/case/2",
+          "case_sha256": "58c26d52dc7076c48e6be15e96a06146835a9168d03dabad742b7b9b086a8a4f"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0284",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0284",
+      "prompt": "One unknown hacker wants to get the admin's password of AtForces testing system, to get problems from the next contest. To achieve that, he sneaked into the administrator's office and stole a piece of paper with a list of $n$ passwords — strings, consists of small Latin letters.\n\nHacker went home and started preparing to hack AtForces. He found that the system contains only passwords from the stolen list and that the system determines the equivalence of the passwords $a$ and $b$ as follows:  two passwords $a$ and $b$ are equivalent if there is a letter, that exists in both $a$ and $b$;  two passwords $a$ and $b$ are equivalent if there is a password $c$ from the list, which is equivalent to both $a$ and $b$. \n\nIf a password is set in the system and an equivalent one is applied to access the system, then the user is accessed into the system.\n\nFor example, if the list contain passwords \"a\", \"b\", \"ab\", \"d\", then passwords \"a\", \"b\", \"ab\" are equivalent to each other, but the password \"d\" is not equivalent to any other password from list. In other words, if:  admin's password is \"b\", then you can access to system by using any of this passwords: \"a\", \"b\", \"ab\";  admin's password is \"d\", then you can access to system by using only \"d\". \n\nOnly one password from the list is the admin's password from the testing system. Help hacker to calculate the minimal number of passwords, required to guaranteed access to the system. Keep in mind that the hacker does not know which password is set in the system.\n\n\n-----Input-----\n\nThe first line contain integer $n$ ($1 \\le n \\le 2 \\cdot 10^5$) — number of passwords in the list. Next $n$ lines contains passwords from the list – non-empty strings $s_i$, with length at most $50$ letters. Some of the passwords may be equal.\n\nIt is guaranteed that the total length of all passwords does not exceed $10^6$ letters. All of them consist only of lowercase Latin letters.\n\n\n-----Output-----\n\nIn a single line print the minimal number of passwords, the use of which will allow guaranteed to access the system.\n\n\n-----Examples-----\nInput\n4\na\nb\nab\nd\n\nOutput\n2\nInput\n3\nab\nbc\nabc\n\nOutput\n1\nInput\n1\ncodeforces\n\nOutput\n1\n\n\n-----Note-----\n\nIn the second example hacker need to use any of the passwords to access the system.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"3\\naeaea\\neac\\ncc\\n\", \"expected\": \"1\", \"comparison\": \"tokens\"}, {\"input\": \"6\\ndebed\\nbfffd\\nb\\nbcbcd\\ndfc\\na\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}, {\"input\": \"10\\naecae\\naac\\nc\\nd\\ne\\ndaa\\ndeeca\\nbceca\\nce\\nbddff\\n\", \"expected\": \"1\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "3\naeaea\neac\ncc\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#6/case/0",
+          "case_sha256": "b2fe9c4d0fa6c6452dfa3485dad54c2913b4a12aa45928150c833e19ddfa2d07"
+        }
+      },
+      {
+        "input": "6\ndebed\nbfffd\nb\nbcbcd\ndfc\na\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#6/case/1",
+          "case_sha256": "7b31b95d5c93379fc91d39b3c8eed5f8d61f368cac16cb3cfd25527871e68981"
+        }
+      },
+      {
+        "input": "10\naecae\naac\nc\nd\ne\ndaa\ndeeca\nbceca\nce\nbddff\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#6/case/2",
+          "case_sha256": "ca2fe5356ddc8730dd4329066e4be1983fb2609ef246d82a9af7a5bcda6a819e"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0294",
+    "dataset": "taco",
+    "difficulty": "EASY",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0294",
+      "prompt": "Alice has a lovely piece of cloth. It has the shape of a square with a side of length $a$ centimeters. Bob also wants such piece of cloth. He would prefer a square with a side of length $b$ centimeters (where $b < a$). Alice wanted to make Bob happy, so she cut the needed square out of the corner of her piece and gave it to Bob. Now she is left with an ugly L shaped cloth (see pictures below).\n\nAlice would like to know whether the area of her cloth expressed in square centimeters is prime. Could you help her to determine it?\n\n\n-----Input-----\n\nThe first line contains a number $t$ ($1 \\leq t \\leq 5$) — the number of test cases.\n\nEach of the next $t$ lines describes the $i$-th test case. It contains two integers $a$ and $b~(1 \\leq b < a \\leq 10^{11})$ — the side length of Alice's square and the side length of the square that Bob wants.\n\n\n-----Output-----\n\nPrint $t$ lines, where the $i$-th line is the answer to the $i$-th test case. Print \"YES\" (without quotes) if the area of the remaining piece of cloth is prime, otherwise print \"NO\".\n\nYou can print each letter in an arbitrary case (upper or lower).\n\n\n-----Example-----\nInput\n4\n6 5\n16 13\n61690850361 24777622630\n34 33\n\nOutput\nYES\nNO\nNO\nYES\n\n\n\n-----Note-----\n\nThe figure below depicts the first test case. The blue part corresponds to the piece which belongs to Bob, and the red part is the piece that Alice keeps for herself. The area of the red part is $6^2 - 5^2 = 36 - 25 = 11$, which is prime, so the answer is \"YES\". [Image] \n\nIn the second case, the area is $16^2 - 13^2 = 87$, which is divisible by $3$. [Image] \n\nIn the third case, the area of the remaining piece is $61690850361^2 - 24777622630^2 = 3191830435068605713421$. This number is not prime because $3191830435068605713421 = 36913227731 \\cdot 86468472991 $.\n\nIn the last case, the area is $34^2 - 33^2 = 67$.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n10 3\\n\", \"expected\": \"NO\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n16 14\\n\", \"expected\": \"NO\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n11 8\\n\", \"expected\": \"NO\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n10 3\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#7/case/0",
+          "case_sha256": "958ba45055f3e22a62dc1c22fba194f1f5430719aac34c5a96a8462f8f13bb4a"
+        }
+      },
+      {
+        "input": "1\n16 14\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#7/case/1",
+          "case_sha256": "bc94674fed54c4bf98849203924526c071e05f3d813a6cd1488f9aa96d25d407"
+        }
+      },
+      {
+        "input": "1\n11 8\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#7/case/2",
+          "case_sha256": "5acf97371d7aa0570578892a1ff49cd61accb1eb3d9867e6bfb155448c6bcad4"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0985",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0985",
+      "prompt": "After overcoming the stairs Dasha came to classes. She needed to write a password to begin her classes. The password is a string of length n which satisfies the following requirements:  There is at least one digit in the string,  There is at least one lowercase (small) letter of the Latin alphabet in the string,  There is at least one of three listed symbols in the string: '#', '*', '&'.  [Image] \n\nConsidering that these are programming classes it is not easy to write the password.\n\nFor each character of the password we have a fixed string of length m, on each of these n strings there is a pointer on some character. The i-th character displayed on the screen is the pointed character in the i-th string. Initially, all pointers are on characters with indexes 1 in the corresponding strings (all positions are numbered starting from one).\n\nDuring one operation Dasha can move a pointer in one string one character to the left or to the right. Strings are cyclic, it means that when we move the pointer which is on the character with index 1 to the left, it moves to the character with the index m, and when we move it to the right from the position m it moves to the position 1.\n\nYou need to determine the minimum number of operations necessary to make the string displayed on the screen a valid password. \n\n\n-----Input-----\n\nThe first line contains two integers n, m (3 ≤ n ≤ 50, 1 ≤ m ≤ 50) — the length of the password and the length of strings which are assigned to password symbols. \n\nEach of the next n lines contains the string which is assigned to the i-th symbol of the password string. Its length is m, it consists of digits, lowercase English letters, and characters '#', '*' or '&'.\n\nYou have such input data that you can always get a valid password.\n\n\n-----Output-----\n\nPrint one integer — the minimum number of operations which is necessary to make the string, which is displayed on the screen, a valid password. \n\n\n-----Examples-----\nInput\n3 4\n1**2\na3*0\nc4**\n\nOutput\n1\n\nInput\n5 5\n#*&#*\n*a1c&\n&q2w*\n#a3c#\n*&#*&\n\nOutput\n3\n\n\n\n-----Note-----\n\nIn the first test it is necessary to move the pointer of the third string to one left to get the optimal answer.  [Image] \n\nIn the second test one of possible algorithms will be:   to move the pointer of the second symbol once to the right.  to move the pointer of the third symbol twice to the right.  [Image]\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"5 5\\n011a#\\n*ab&0\\n&1#b*\\n#*bb&\\nb&0&&\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}, {\"input\": \"5 1\\n0\\na\\n#\\n#\\n*\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}, {\"input\": \"5 1\\n0\\na\\n#\\n1\\na\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "5 5\n011a#\n*ab&0\n&1#b*\n#*bb&\nb&0&&\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#8/case/0",
+          "case_sha256": "270df623d34338854bbecff5f276a7626c95a5dc685376eb5429771258555327"
+        }
+      },
+      {
+        "input": "5 1\n0\na\n#\n#\n*\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#8/case/1",
+          "case_sha256": "c31a9e659488a31abcfdaa17d2b638a2f922fd46a028e5ded37f50442b208b02"
+        }
+      },
+      {
+        "input": "5 1\n0\na\n#\n1\na\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#8/case/2",
+          "case_sha256": "e7fdadd9d6639efbee3d54a631245bb161d25fc0e0795de58d6d4fa1548d9157"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0914",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0914",
+      "prompt": "You are given an array $a$ of $n$ positive integers.\n\nLet $\\text{LIS}(a)$ denote the length of longest strictly increasing subsequence of $a$. For example,\n\n$\\text{LIS}([2, \\underline{1}, 1, \\underline{3}])$ = $2$.\n\n$\\text{LIS}([\\underline{3}, \\underline{5}, \\underline{10}, \\underline{20}])$ = $4$.\n\n$\\text{LIS}([3, \\underline{1}, \\underline{2}, \\underline{4}])$ = $3$.\n\nWe define array $a'$ as the array obtained after reversing the array $a$ i.e. $a' = [a_n, a_{n-1}, \\ldots , a_1]$.\n\nThe beauty of array $a$ is defined as $min(\\text{LIS}(a),\\text{LIS}(a'))$.\n\nYour task is to determine the maximum possible beauty of the array $a$ if you can rearrange the array $a$ arbitrarily.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains a single integer $t$ $(1 \\leq t \\leq 10^4)$  — the number of test cases. Description of the test cases follows.\n\nThe first line of each test case contains a single integer $n$ $(1 \\leq n \\leq 2\\cdot 10^5)$  — the length of array $a$.\n\nThe second line of each test case contains $n$ integers $a_1,a_2, \\ldots ,a_n$ $(1 \\leq a_i \\leq 10^9)$  — the elements of the array $a$.\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $2\\cdot 10^5$.\n\n\n-----Output-----\n\nFor each test case, output a single integer  — the maximum possible beauty of $a$ after rearranging its elements arbitrarily.\n\n\n-----Examples-----\n\nInput\n3\n3\n6 6 6\n6\n2 5 4 5 2 4\n4\n1 3 2 2\nOutput\n1\n3\n2\n\n\n-----Note-----\n\nIn the first test case, $a$ = $[6, 6, 6]$ and $a'$ = $[6, 6, 6]$. $\\text{LIS}(a) = \\text{LIS}(a')$ = $1$. Hence the beauty is $min(1, 1) = 1$.\n\nIn the second test case, $a$ can be rearranged to $[2, 5, 4, 5, 4, 2]$. Then $a'$ = $[2, 4, 5, 4, 5, 2]$. $\\text{LIS}(a) = \\text{LIS}(a') = 3$. Hence the beauty is $3$ and it can be shown that this is the maximum possible beauty.\n\nIn the third test case, $a$ can be rearranged to $[1, 2, 3, 2]$. Then $a'$ = $[2, 3, 2, 1]$. $\\text{LIS}(a) = 3$, $\\text{LIS}(a') = 2$. Hence the beauty is $min(3, 2) = 2$ and it can be shown that $2$ is the maximum possible beauty.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n4\\n2 2 3 3\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n6\\n1 1 2 2 2 3\\n\", \"expected\": \"3\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n6\\n2 2 2 3 3 3\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n4\n2 2 3 3\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#9/case/0",
+          "case_sha256": "ed5d70c6c4bb44b6a72f7659d6c6ff8ca193d366d5e05a3f7cb6c082e6578b36"
+        }
+      },
+      {
+        "input": "1\n6\n1 1 2 2 2 3\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#9/case/1",
+          "case_sha256": "f8af4df4d777c0bdbc48811a32380f499ab55d7fec8b2189fc0c5c4fbab1e616"
+        }
+      },
+      {
+        "input": "1\n6\n2 2 2 3 3 3\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#9/case/2",
+          "case_sha256": "d41d49916c4d3147c2a864f09cea28c8b941f4b6a3f1d135bb81824ec2959e21"
+        }
+      }
+    ]
+  }
+]
