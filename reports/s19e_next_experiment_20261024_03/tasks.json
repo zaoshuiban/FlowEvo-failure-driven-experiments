@@ -1,0 +1,923 @@
+[
+  {
+    "task_id": "taco_0721",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0721",
+      "prompt": "Sansa has an array. She wants to find the value obtained by XOR-ing the contiguous subarrays, followed by XOR-ing the values thus obtained. Determine this value.  \n\nExample \n\n$arr=[3,4,5]$   \n\nSubarray\tOperation\tResult\n3\t\tNone\t\t3\n4\t\tNone\t\t4\n5\t\tNone\t\t5\n3,4\t\t3 XOR 4\t\t7\n4,5\t\t4 XOR 5\t\t1\n3,4,5\t\t3 XOR 4 XOR 5\t2\n\nNow we take the resultant values and XOR them together:\n\n$3\\oplus4\\oplus5\\oplus7\\oplus1\\oplus2=6$.  Return $\\boldsymbol{6}$.   \n\nFunction Description  \n\nComplete the sansaXor function in the editor below.  \n\nsansaXor has the following parameter(s):  \n\nint arr[n]:  an array of integers  \n\nReturns   \n\nint: the result of calculations  \n\nInput Format\n\nThe first line contains an integer $\\boldsymbol{\\boldsymbol{t}}$, the number of the test cases.   \n\nEach of the next $\\boldsymbol{\\boldsymbol{t}}$ pairs of lines is as follows: \n\n- The first line of each test case contains an integer $n$, the number of elements in $arr$. \n\n- The second line of each test case contains $n$ space-separated integers $arr[i]$.    \n\nConstraints\n\n$1\\leq t\\leq5$ \n\n$2\\leq n\\leq10^5$ \n\n$1\\leq arr[i]\\leq10^8$  \n\nSample Input 0\n2\n3\n1 2 3\n4\n4 5 7 5\n\nSample Output 0\n2\n0\n\nExplanation 0\n\nTest case 0: \n\n$1\\oplus2\\oplus3\\oplus(1\\oplus2)\\oplus(2\\oplus3)\\oplus(1\\oplus2\\oplus3)=2$ \n\nTest case 1: \n\n$4\\oplus5\\oplus7\\oplus5\\oplus(4\\oplus5)\\oplus(5\\oplus7)\\oplus(7\\oplus5)\\oplus(4\\oplus5\\oplus7)\\oplus(5\\oplus7\\oplus5)\\oplus(4\\oplus5\\oplus7\\oplus5)=0$  \n\nSample Input 1\n2\n3\n98 74 12\n3\n50 13 2\n\nSample Output 1\n110\n48\n\nExplanation 1\n\nTest Case 0:\n\n$98\\oplus74\\oplus12\\oplus(98\\oplus74)\\oplus(74\\oplus12)\\oplus(98\\oplus74\\oplus12)=110$  \n\nTest Case 1:\n\n$50\\oplus13\\oplus2\\oplus(50\\oplus13)\\oplus(13\\oplus2)\\oplus(50\\oplus13\\oplus2)=48$\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n3\\n3 82 97\\n\", \"expected\": \"98\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n5\\n10 49 92 75 76\\n\", \"expected\": \"26\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n10\\n56 1 48 31 12 65 1 7 62 95\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n3\n3 82 97\n",
+        "expected": "98",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#10/case/0",
+          "case_sha256": "69d0da79d45c38ce44a0fe1b02fc983a5bf156171f5eab7d6d58a3cf30144039"
+        }
+      },
+      {
+        "input": "1\n5\n10 49 92 75 76\n",
+        "expected": "26",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#10/case/1",
+          "case_sha256": "2c9d90e850113c5b1f4fe6c61faa85da7570bf1a7eccde2a84e8815f80c788d6"
+        }
+      },
+      {
+        "input": "1\n10\n56 1 48 31 12 65 1 7 62 95\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#10/case/2",
+          "case_sha256": "f1bf6f1e09e7edc7ff7912522a5c110326bb38bb4717651cb6cc1747067a3b22"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0317",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0317",
+      "prompt": "Read problems statements in Mandarin Chinese  and Russian. \n\nConsider an infinite full binary tree (each node has two children except the leaf nodes) defined as follows. For a node labelled v its left child will be labelled 2*v and its right child will be labelled 2*v+1. The root is labelled as 1.\n\nYou are given N queries of the form i j. For each query, you have to print the length of the shortest path between node labelled i and  node labelled j.\n\n------ Input ------ \n\nFirst line contains N, the number of queries. Each query consists of two space separated integers i and j in one line.\n\n------ Output ------ \n\nFor each query, print the required answer in one line.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ i,j ≤ 10^{9}$\n\n----- Sample Input 1 ------ \n3\n1 2\n2 3\n4 3\n----- Sample Output 1 ------ \n1\n2\n3\n----- explanation 1 ------ \nFor first query, 1 is directly connected to 2 by an edge. Hence distance 1.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"10\\n152 282\\n162 512\\n463 755\\n664 798\\n666 890\\n457 73\\n17 502\\n26 952\\n735 696\\n286 17\", \"expected\": \"11\\n14\\n17\\n18\\n18\\n14\\n12\\n11\\n14\\n4\", \"comparison\": \"tokens\"}, {\"input\": \"10\\n930 333\\n984 453\\n464 981\\n10 991\\n485 926\\n981 418\\n874 37\\n468 811\\n923 927\\n739 35\", \"expected\": \"17\\n13\\n13\\n12\\n13\\n15\\n14\\n15\\n6\\n12\", \"comparison\": \"tokens\"}, {\"input\": \"10\\n999 811\\n618 627\\n347 761\\n517 7\\n96 650\\n645 976\\n579 968\\n976 540\\n389 691\\n556 113\", \"expected\": \"16\\n10\\n13\\n11\\n15\\n18\\n18\\n18\\n17\\n15\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "10\n152 282\n162 512\n463 755\n664 798\n666 890\n457 73\n17 502\n26 952\n735 696\n286 17",
+        "expected": "11\n14\n17\n18\n18\n14\n12\n11\n14\n4",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#11/case/0",
+          "case_sha256": "67fcc544b2478c133638746c540d1e455a5244fdf33e235caac3c98e3012bb0b"
+        }
+      },
+      {
+        "input": "10\n930 333\n984 453\n464 981\n10 991\n485 926\n981 418\n874 37\n468 811\n923 927\n739 35",
+        "expected": "17\n13\n13\n12\n13\n15\n14\n15\n6\n12",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#11/case/1",
+          "case_sha256": "8d02669770b8ebc4c32dc3fb862e23c1262043a04b98b9b3b2713264e4b19096"
+        }
+      },
+      {
+        "input": "10\n999 811\n618 627\n347 761\n517 7\n96 650\n645 976\n579 968\n976 540\n389 691\n556 113",
+        "expected": "16\n10\n13\n11\n15\n18\n18\n18\n17\n15",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#11/case/2",
+          "case_sha256": "68a3636cdb6063d8e0909220fb2b628048076a950b7c5857781e2675bb589e92"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0657",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0657",
+      "prompt": "Read problems statements in mandarin chinese, russian and vietnamese as well. \n\nYesterday Chef had cooked N very tasty dishes. A dish is prepared of several ingredients. You are given this information by N arrays, each array contains elements equal to the number of ingredients used in that dish. Also, an element of the array denotes the tastiness of the ingredient in the corresponding dish.\n\nChef placed his N dishes in a line, one after the other. You can make a simple observation that the last ingredient of a dish will be a neighbor of the first ingredient of the next dish. Of course, this is not valid for the N-th dish, as it's the last dish.\n\nOverall quality of these dishes will be calculated as follows. Consider dish i and i + 1, if the last ingredient of dish i be of tastiness x, and the first ingredient of dish i + 1 of tastiness of y, then the quality of dish will be increased by |x - y| * i, where (|t| denotes the absolute value of t).\n\nChef wants to maximize the quality of the dish. For each dish, he is allowed to take its ingredients and cyclically rotate/shift them by as many rotations as he wishes. Find the maximum possible quality of the dishes that he can obtain.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases.\nThe first line of each test case contains a single integer N denoting the number of dishes. \nNext N lines follows. i-th line contains integer M denoting the number of ingredients in i-th dish and M space-separated integers A_{1}, A_{2}, ..., A_{M} denoting the tastiness of ingredients of i-th dish.\". \n\n------ Output ------ \n\nFor each test case, output in a single line an integer corresponding to the maximum possible quality of the dishes.\n\n------ Constraints ------ \n\n$Total number of ingredients over all the test cases in a single test file won't exceed 10^{6}$\n$M ≥ 1$\n$1 ≤ A_{i} ≤ 10^{6}$\n\n------ Subtasks ------ \n\n$Subtask #1 (20 points): Total number of dishes = 2.$\n$Subtask #2 (30 points): 1 ≤ A_{i} ≤ 500$\n$Subtask #3 (50 points): original constraints$\n\n------ Example ------ \n\nInput:\n3\n3\n3 1 2 3\n2 3 2\n2 4 5\n2\n2 1 2\n2 4 5\n3\n2 1 2\n3 3 2 5\n2 4 5\n\nOutput:\n8\n4\n10\n\n------ Explanation ------ \n\nExample case 1. \n01) 123|32|45 = 0 * 1 + 2 * 2 = 4\n02) 312|32|45 = 1 * 1 + 2 * 2 = 5\n03) 231|32|45 = 2 * 1 + 2 * 2 = 6\n04) 123|23|45 = 1 * 1 + 1 * 2 = 3\n05) 312|23|45 = 0 * 1 + 1 * 2 = 2\n06) 231|23|45 = 1 * 1 + 1 * 2 = 3\n07) 123|32|54 = 0 * 1 + 3 * 2 = 6\n08) 312|32|54 = 1 * 1 + 3 * 2 = 7 \n09) 231|32|54 = 2 * 1 + 3 * 2 = 8\n10) 123|23|54 = 1 * 1 + 2 * 2 = 5\n11) 312|23|54 = 0 * 1 + 2 * 2 = 4\n12) 231|23|54 = 1 * 1 + 2 * 2 = 5\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n3\\n2 7 7\\n2 7 6\\n2 6 1\\n\", \"expected\": \"13\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n4\\n2 4 7\\n4 4 4 3 6\\n2 7 5\\n2 5 4\\n\", \"expected\": \"15\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n2\\n3 5 7 4\\n3 3 6 7\\n\", \"expected\": \"4\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n3\n2 7 7\n2 7 6\n2 6 1\n",
+        "expected": "13",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#12/case/0",
+          "case_sha256": "2d093430d9ef3dbf8f06be61db09ee3abfef3776b0e75b2ceb542824f9bb84df"
+        }
+      },
+      {
+        "input": "1\n4\n2 4 7\n4 4 4 3 6\n2 7 5\n2 5 4\n",
+        "expected": "15",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#12/case/1",
+          "case_sha256": "ea756520d23ec927b8b3bf082459b0355f894b21519dd07dcb70ddaf9682ae05"
+        }
+      },
+      {
+        "input": "1\n2\n3 5 7 4\n3 3 6 7\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#12/case/2",
+          "case_sha256": "c50fcec22f01b4b6fb4591aefcc2a149e1bc0357f9c4385668a88c69b3f0d227"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0357",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0357",
+      "prompt": "Read problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are the owner of a big company. You are so rich, that the government has allowed you to print as many notes as you want of any single value that you like. You also have peculiar behavioral traits and you often do things that look weird to a third person. \n\nYou have N employees, where the i-th employee has salary A_{i}. You want to pay them using a denomination that you create. You are also eco-friendly and wish to save paper. So, you wish to pay them using as few notes as possible. Find out the minimum number of notes required if you can alter the salary of at most one employee to any positive integer that you like, and choose the positive integer value that each note is worth (called its denomination).\n\nEach employee must receive the exact value of his/her salary and no more.\n\n------  Subtasks ------\nSubtask #1 (100 points): Original constraints\n\n------ Input Format ------ \n\n- The first line contains an integer T, the number of test cases. Then the test cases follow.\n- The first line of each test case contains a single integer N.\n- The second line contains N integers A_{1}, A_{2}, \\ldots, A_{N}, where A_{i} is the salary of the i-th employee.\n\n------ Output Format ------ \n\nFor each test case, output in a single line the answer to the problem.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 12\\cdot 10^{4}$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i} ≤ 10^{9}$\n- The sum of $N$ over all test cases is at most $10^{6}$.\n\n----- Sample Input 1 ------ \n3\n3\n1 2 3\n3\n8 4 2\n2\n2 2 \n\n----- Sample Output 1 ------ \n4\n4\n2\n\n----- explanation 1 ------ \nTest Case $1$: We can change the salary of the third person to $1$ and use $1$ as the denomination. So in total we need $\\frac{1}{1} + \\frac{2}{1} + \\frac{1}{1}$ = $1 + 2 + 1$ = $4$ notes.\n\nTest Case $2$: We can change the salary of the first person to $2$ and use $2$ as the denomination. So in total we need $1 + 2 + 1$ = $4$ notes.\n\nTest Case $3$: We can use $2$ as the denomination and we need not change the salary of any person. So in total we need $1 + 1$ = $2$ notes.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n3\\n10 3 5\\n\", \"expected\": \"4\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n4\\n19 6 11 4\\n\", \"expected\": \"22\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n4\\n8 12 12 17\\n\", \"expected\": \"9\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n3\n10 3 5\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#13/case/0",
+          "case_sha256": "6d8a003ff95d8c683fed74497adfeb27d75e1eb71bac58aa3a4ebfab77ba7808"
+        }
+      },
+      {
+        "input": "1\n4\n19 6 11 4\n",
+        "expected": "22",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#13/case/1",
+          "case_sha256": "9f040643011df049a5111ce292641fdd4ec984627c98ddd2a4993972d6e7f157"
+        }
+      },
+      {
+        "input": "1\n4\n8 12 12 17\n",
+        "expected": "9",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#13/case/2",
+          "case_sha256": "790fe3bd3fc7d229acdf626e6aede781c211a909b2e1ede963a9d3b2ca7aaa7e"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0363",
+    "dataset": "taco",
+    "difficulty": "EASY",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0363",
+      "prompt": "Once upon a time there was only one router in the well-known company Bmail. Years went by and over time new routers were purchased. Every time they bought a new router, they connected it to one of the routers bought before it. You are given the values $p_i$ — the index of the router to which the $i$-th router was connected after being purchased ($p_i < i$).\n\nThere are $n$ routers in Boogle in total now. Print the sequence of routers on the path from the first to the $n$-th router.\n\n\n-----Input-----\n\nThe first line contains integer number $n$ ($2 \\le n \\le 200000$) — the number of the routers. The following line contains $n-1$ integers $p_2, p_3, \\dots, p_n$ ($1 \\le p_i < i$), where $p_i$ is equal to index of the router to which the $i$-th was connected after purchase.\n\n\n-----Output-----\n\nPrint the path from the $1$-st to the $n$-th router. It starts with $1$ and ends with $n$. All the elements in the path should be distinct.\n\n\n-----Examples-----\nInput\n8\n1 1 2 2 3 2 5\n\nOutput\n1 2 5 8 \nInput\n6\n1 2 3 4 5\n\nOutput\n1 2 3 4 5 6 \nInput\n7\n1 1 2 3 4 3\n\nOutput\n1 3 7\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"5\\n1 2 3 3\\n\", \"expected\": \"1 2 3 5\", \"comparison\": \"tokens\"}, {\"input\": \"6\\n1 2 3 2 4\\n\", \"expected\": \"1 2 3 4 6\", \"comparison\": \"tokens\"}, {\"input\": \"6\\n1 2 1 1 2\\n\", \"expected\": \"1 2 6\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "5\n1 2 3 3\n",
+        "expected": "1 2 3 5",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "case_insensitive": false,
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#14/case/0",
+          "case_sha256": "dad1b72402a4ddb2a1a0e6f44fad2dfc74794b218b7fca958c90e25aefb41a42"
+        }
+      },
+      {
+        "input": "6\n1 2 3 2 4\n",
+        "expected": "1 2 3 4 6",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "case_insensitive": false,
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#14/case/1",
+          "case_sha256": "024e6cd849093ca9318c216a75bf2b792292b8568a63975081f55cf9a3dbe577"
+        }
+      },
+      {
+        "input": "6\n1 2 1 1 2\n",
+        "expected": "1 2 6",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "case_insensitive": false,
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#14/case/2",
+          "case_sha256": "f771c9bf9eb60b423a1db3b65cd0cfc7be1a7caa7fd540385eef0d60f47e5b42"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0517",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0517",
+      "prompt": "We define a $hackonacci$ series as follows:\n\n$hackonacci(n)=1\\cdot hackonacci(n-1)+2\\cdot hackon acesi(n-2)+3\\cdot hackon aci(n-3)$   \n$hackonacci(1)=1$  \n$hackonacci(2)=2$  \n$hackonacci(3)=3$  \n\nWe define a Hackonacci Matrix to be an $n\\times n$ matrix where the rows and columns are indexed from ${1}$ to $n$, and the top-left cell is $(1,1)$. Each cell $(i,j)$ must contains either the character X or the character Y. If $hackonacci((i\\cdot j)^2)$ is even, it's X; otherwise, it's Y.\n\nNext, we want to perform ${q}$ queries where each query ${i}$ consists of an integer, ${angle}_i$. Each ${angle}_i$ is a multiple of ${90}$ degrees and describes the angle by which you must rotate the matrix in the clockwise direction. For each ${angle}_i$, we want to count the number of cells that are different after the rotation. For example, the diagram below depicts the $270^{\\circ}$ rotation of a Hackonacci Matrix when $n=2$: \n\nAs you can see, there are two cells whose values change after the rotation. Note that we filled each initial cell using the Hackonacci formula given above:\n\n$(1,1)$: $hagonacci((1\\cdot1)^2)=hakenacci(1)=1$ \n\nBecause this is an odd number, we mark this cell with a Y.\n$(1,2)$: $\\begin{equation}\\begin{aligned}hackonacci((1\\cdot2)^2)&=hackonocci(4)\\\\ &\\Rightarrow1\\cdot hagonacci(3)+2\\cdot hackonaccci(2)+3\\cdot hackonacci(1)\\\\ &\\Rightarrow1\\cdot3+2\\cdot2+3\\cdot1=3+4+3=10\\end{aligned}\\end{equation}$ \n\nBecause this is an even number, we mark this cell with an X.\n$(2,1)$: $hakenacci((2\\cdot1)^2)=hakenacci(4)\\Rightarrow10$ \n\nBecause this is an even number, we mark this cell with an X.\n$(2,2)$: $hakenaci((2\\cdot2)^2)=hakenacci(16)\\Rightarrow296578$ \n\nBecause this is an even number, we mark this cell with an X.\n\nGiven the value of $n$ and ${q}$ queries, construct a Hackonacci Matrix and answer the queries. For each query ${i}$, print an integer on a new line denoting the number of cells whose values differ from the initial Hackonacci Matrix when it's rotated by ${angle}_i$ degrees in the clockwise direction. \n\nInput Format\n\nThe first line contains two space-separated integers describing the respective values of $n$ and ${q}$. \n\nEach line ${i}$ of the ${q}$ subsequent lines contains an integer denoting ${angle}_i$.\n\nConstraints\n\n$1\\leq n\\leq2000$  \n$1\\leq q\\leq10^4$  \n$0\\leq angle_i\\leq10^5$  \nIt is guaranteed that each ${angle}_i$ is multiple of ${90}$ degrees.\n\nOutput Format\n\nFor each ${angle}_i$, print a single integer on a new line denoting the number of different cells that differ between the initial matrix and the matrix rotated by ${angle}_i$ degrees.\n\nSample Input 0\n4 3\n90\n180\n270\n\nSample Output 0\n10\n6\n10\n\nExplanation 0\n\nBecause $n=4$, we must build a $4\\times4$ Hackonacci matrix and then perform $q=3$ queries, shown below. The following diagrams depict each query rotation, and cells whose values changed after performing a rotation are highlighted in orange:\n\nWhen we perform a $90^{\\circ}$ rotation on the matrix, there are $10$ cells whose  values change: \n\nThus, we print $10$ on a new line.\nWhen we perform a ${180^{\\circ}}$ rotation on the matrix, there are ${6}$ cells whose  values change:\n \nThus, we print ${6}$ on a new line.\nWhen we perform a $270^{\\circ}$ rotation on the matrix, there are $10$ cells whose  values change:\n \nThus, we print $10$ on a new line.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"2 7\\n0\\n90\\n180\\n270\\n360\\n450\\n990\\n\", \"expected\": \"0\\n2\\n2\\n2\\n0\\n2\\n2\", \"comparison\": \"tokens\"}, {\"input\": \"9 7\\n0\\n90\\n180\\n270\\n360\\n450\\n990\\n\", \"expected\": \"0\\n42\\n32\\n42\\n0\\n42\\n42\", \"comparison\": \"tokens\"}, {\"input\": \"3 7\\n0\\n90\\n180\\n270\\n360\\n450\\n990\\n\", \"expected\": \"0\\n4\\n6\\n4\\n0\\n4\\n4\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "2 7\n0\n90\n180\n270\n360\n450\n990\n",
+        "expected": "0\n2\n2\n2\n0\n2\n2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#15/case/0",
+          "case_sha256": "9997339b959ee05cb1889c10310c992606f6d255d73204e19b8700749f4b3158"
+        }
+      },
+      {
+        "input": "9 7\n0\n90\n180\n270\n360\n450\n990\n",
+        "expected": "0\n42\n32\n42\n0\n42\n42",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#15/case/1",
+          "case_sha256": "4c60c6273f8b9f2184da1f7d46488c02967daea143049b8b9a6ae0b4162f45ea"
+        }
+      },
+      {
+        "input": "3 7\n0\n90\n180\n270\n360\n450\n990\n",
+        "expected": "0\n4\n6\n4\n0\n4\n4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#15/case/2",
+          "case_sha256": "5856650d8d3aaed83ecd9068400b1c034418c10063a998c583342203867469f1"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0572",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0572",
+      "prompt": "You are given an undirected tree of $n$ vertices. \n\nSome vertices are colored blue, some are colored red and some are uncolored. It is guaranteed that the tree contains at least one red vertex and at least one blue vertex.\n\nYou choose an edge and remove it from the tree. Tree falls apart into two connected components. Let's call an edge nice if neither of the resulting components contain vertices of both red and blue colors.\n\nHow many nice edges are there in the given tree?\n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($2 \\le n \\le 3 \\cdot 10^5$) — the number of vertices in the tree.\n\nThe second line contains $n$ integers $a_1, a_2, \\dots, a_n$ ($0 \\le a_i \\le 2$) — the colors of the vertices. $a_i = 1$ means that vertex $i$ is colored red, $a_i = 2$ means that vertex $i$ is colored blue and $a_i = 0$ means that vertex $i$ is uncolored.\n\nThe $i$-th of the next $n - 1$ lines contains two integers $v_i$ and $u_i$ ($1 \\le v_i, u_i \\le n$, $v_i \\ne u_i$) — the edges of the tree. It is guaranteed that the given edges form a tree. It is guaranteed that the tree contains at least one red vertex and at least one blue vertex.\n\n\n-----Output-----\n\nPrint a single integer — the number of nice edges in the given tree.\n\n\n-----Examples-----\nInput\n5\n2 0 0 1 2\n1 2\n2 3\n2 4\n2 5\n\nOutput\n1\n\nInput\n5\n1 0 0 0 2\n1 2\n2 3\n3 4\n4 5\n\nOutput\n4\n\nInput\n3\n1 1 2\n2 3\n1 3\n\nOutput\n0\n\n\n\n-----Note-----\n\nHere is the tree from the first example: [Image] \n\nThe only nice edge is edge $(2, 4)$. Removing it makes the tree fall apart into components $\\{4\\}$ and $\\{1, 2, 3, 5\\}$. The first component only includes a red vertex and the second component includes blue vertices and uncolored vertices.\n\nHere is the tree from the second example: [Image] \n\nEvery edge is nice in it.\n\nHere is the tree from the third example: [Image] \n\nEdge $(1, 3)$ splits the into components $\\{1\\}$ and $\\{3, 2\\}$, the latter one includes both red and blue vertex, thus the edge isn't nice. Edge $(2, 3)$ splits the into components $\\{1, 3\\}$ and $\\{2\\}$, the former one includes both red and blue vertex, thus the edge also isn't nice. So the answer is 0.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"4\\n1 1 2 2\\n1 2\\n1 3\\n2 4\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}, {\"input\": \"3\\n1 2 2\\n1 2\\n1 3\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}, {\"input\": \"2\\n1 2\\n1 2\\n\", \"expected\": \"1\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "4\n1 1 2 2\n1 2\n1 3\n2 4\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#16/case/0",
+          "case_sha256": "758b984510f88385d1e728e8db19ad47a6bbbd1d685f109a80e76ec9152389ba"
+        }
+      },
+      {
+        "input": "3\n1 2 2\n1 2\n1 3\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#16/case/1",
+          "case_sha256": "9a3845630df48596e142c8f443e3dfdd6347185c7823a3231957ab34ac9b0afe"
+        }
+      },
+      {
+        "input": "2\n1 2\n1 2\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#16/case/2",
+          "case_sha256": "6da08f8ff4d022944434e3d7f42fa088bc2ff3fe24cca895083c0bad96bf3791"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0730",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0730",
+      "prompt": "There are $2\\times N$ nodes in an undirected graph, and a number of edges connecting some nodes.  In each edge, the first value will be between $1$ and $N$, inclusive.  The second node will be between $N+1$ and $2\\times N$, inclusive.  Given a list of edges, determine the size of the smallest and largest connected components that have $2$ or more nodes.  A node can have any number of connections.  The highest node value will always be connected to at least $1$ other node.    \n\nNote\nSingle nodes should not be considered in the answer. \n\nExample \n\n$bg=[[1,5],[1,6],[2,4]]$\n\nThe smaller component contains $2$ nodes and the larger contains $3$.  Return the array $[2,3]$.    \n\nFunction Description \n\nComplete the connectedComponents function in the editor below.  \n\nconnectedComponents has the following parameter(s): \n\n-   int bg[n][2]: a 2-d array of integers that represent node ends of graph edges\n\nReturns \n\n-   int[2]: an array with 2 integers, the smallest and largest component sizes  \n\nInput Format\n\nThe first line contains an integer $n$, the size of $bg$. \n\nEach of the next $n$ lines contain two space-separated integers, $bg[i][0]$ and $bg[i][1]$.   \n\nConstraints\n\n$1\\leq number of{nodesN}\\leq15000$  \n$1\\leq bg[i][0]\\leq N$  \n$N+1\\le bg[i][1]\\le2N$  \n\nSample Input\nSTDIN   Function\n-----   --------\n5       bg[] size n = 5\n1 6     bg = [[1, 6],[2, 7], [3, 8], [4,9], [2, 6]]\n2 7\n3 8\n4 9\n2 6\n\nSample Output\n2 4\n\nExplanation\n\nSince the component with node $5$ contains only one node, it is not considered.  \n\nThe number of vertices in the smallest connected component in the graph is $2$ based on either $(3,8)$ or $(4,9)$.  \n\nThe number of vertices in the largest connected component in the graph is $4$ i.e. $1-2-6-7$.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"4\\n1 8\\n2 8\\n1 7\\n1 8\\n\", \"expected\": \"4 4\", \"comparison\": \"tokens\"}, {\"input\": \"6\\n2 8\\n2 10\\n5 9\\n5 10\\n5 7\\n3 12\\n\", \"expected\": \"2 6\", \"comparison\": \"tokens\"}, {\"input\": \"9\\n9 16\\n9 18\\n6 15\\n3 16\\n2 15\\n6 17\\n8 17\\n7 17\\n8 18\\n\", \"expected\": \"10 10\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "4\n1 8\n2 8\n1 7\n1 8\n",
+        "expected": "4 4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#17/case/0",
+          "case_sha256": "8697f3ba992724551b13668439f4a72b790249418b1c4f9d6f6fa336871f5277"
+        }
+      },
+      {
+        "input": "6\n2 8\n2 10\n5 9\n5 10\n5 7\n3 12\n",
+        "expected": "2 6",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#17/case/1",
+          "case_sha256": "023c075feb64e5ee70ff910d34b4ce91396cf9df74533eb85b17e24f572589f4"
+        }
+      },
+      {
+        "input": "9\n9 16\n9 18\n6 15\n3 16\n2 15\n6 17\n8 17\n7 17\n8 18\n",
+        "expected": "10 10",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#17/case/2",
+          "case_sha256": "f0b7b7c43fd74037b89508d916b23738bef32dad0ec4e59520b679eacb66ebb5"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0831",
+    "dataset": "taco",
+    "difficulty": "EASY",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0831",
+      "prompt": "Petya has n integers: 1, 2, 3, ..., n. He wants to split these integers in two non-empty groups in such a way that the absolute difference of sums of integers in each group is as small as possible. \n\nHelp Petya to split the integers. Each of n integers should be exactly in one group.\n\n\n-----Input-----\n\nThe first line contains a single integer n (2 ≤ n ≤ 60 000) — the number of integers Petya has.\n\n\n-----Output-----\n\nPrint the smallest possible absolute difference in the first line.\n\nIn the second line print the size of the first group, followed by the integers in that group. You can print these integers in arbitrary order. If there are multiple answers, print any of them.\n\n\n-----Examples-----\nInput\n4\n\nOutput\n0\n2 1 4 \n\nInput\n2\n\nOutput\n1\n1 1 \n\n\n\n-----Note-----\n\nIn the first example you have to put integers 1 and 4 in the first group, and 2 and 3 in the second. This way the sum in each group is 5, and the absolute difference is 0.\n\nIn the second example there are only two integers, and since both groups should be non-empty, you have to put one integer in the first group and one in the second. This way the absolute difference of sums of integers in each group is 1.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"37\", \"expected\": \"1\", \"comparison\": \"partition\"}, {\"input\": \"22\", \"expected\": \"1\", \"comparison\": \"partition\"}, {\"input\": \"12\", \"expected\": \"0\", \"comparison\": \"partition\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "37",
+        "expected": "1",
+        "comparison": "partition",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#18/case/0",
+          "case_sha256": "263bbd923d686af2f07a153e8d78193257941c45509dcec2d42630822eac027f"
+        }
+      },
+      {
+        "input": "22",
+        "expected": "1",
+        "comparison": "partition",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#18/case/1",
+          "case_sha256": "57067c9fa61ba70f69959566f03038804fd82c5d33d2327cceadb8346204695a"
+        }
+      },
+      {
+        "input": "12",
+        "expected": "0",
+        "comparison": "partition",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#18/case/2",
+          "case_sha256": "5d08c4a965aa3b4c666fd0d65664b18f6052231b6ec0d1c2243e973ff7365476"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0917",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0917",
+      "prompt": "Read problems statements in Russian here \nThe Head Chef is interested in studying interactions between his chefs . There are  N  chefs with ids 1 to N . Each chef trusts some of the other chefs . The relation of trust is one way . Also , a chef may trust chefs only with ids strictly greater than his/her id .A chef with id = i , trusts the chefs with next n_{i} id's.  \n\nThe Head Chef wants to know given a chef B and a set of chefs S,  how many lines of trust exist between each element of S and B . A line of trust between chefs A and B is a sequence of chefs a_{1} ... a_{k} starting at A ( a_{1} = A )and finishing at B  (A_{k} = B) such that A_{i} trusts A_{(i+1) } for all i ( 1 to k-1) . Two lines of trust are different if they have a different chef at the some position in the line . \n\nSince the answer may be quite large , output it modulo 1000000007 .\n\n------ Input ------ \n\nThe first line contains a two space seperated integers N and  B denoting the number of chefs and the target chef for whom the lines of trust have to be calculated.  \nThe next  N lines contains an integer  n_{i} denoting the number of chefs which are trusted by the chef with id = i .  \nThe next line contains a single integer  Q  denoting the number of queries \nThe next  Q  lines contain elements of set S .\n\n------ Output ------ \n\nOutput a single line for each query containing the answer to the query.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 200000$\n$1 ≤ B ≤ N$\n$1 ≤ Q ≤ 100000$\n$1 ≤ Each element of set S  < B$\n$1 ≤ i + n_{i} ( for i = 1 to N )  ≤ N$\n$0 ≤ n_{i} ( for i = 1 to N )  ≤ N - 1$\n\n----- Sample Input 1 ------ \n3 3\n2\n1\n0\n2\n1\n2\n----- Sample Output 1 ------ \n2\n1\n----- explanation 1 ------ \nExample case 1. The lines of trust between 1 and 3 are \n1 , 3 \n1 , 2 ,3 \nThere is one line of trust between 2 and 3 which is \n2 3\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"9 2\\n3\\n0\\n0\\n2\\n4\\n0\\n2\\n0\\n0\\n8\\n1\\n1\\n1\\n1\\n1\\n1\\n1\\n1\\n\", \"expected\": \"1\\n1\\n1\\n1\\n1\\n1\\n1\\n1\", \"comparison\": \"tokens\"}, {\"input\": \"9 3\\n4\\n7\\n0\\n3\\n4\\n1\\n2\\n1\\n0\\n8\\n2\\n1\\n1\\n1\\n2\\n1\\n1\\n1\\n\", \"expected\": \"1\\n2\\n2\\n2\\n1\\n2\\n2\\n2\", \"comparison\": \"tokens\"}, {\"input\": \"10 3\\n9\\n1\\n5\\n3\\n0\\n4\\n3\\n0\\n1\\n0\\n8\\n1\\n2\\n2\\n2\\n1\\n2\\n2\\n1\\n\", \"expected\": \"2\\n1\\n1\\n1\\n2\\n1\\n1\\n2\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "9 2\n3\n0\n0\n2\n4\n0\n2\n0\n0\n8\n1\n1\n1\n1\n1\n1\n1\n1\n",
+        "expected": "1\n1\n1\n1\n1\n1\n1\n1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#19/case/0",
+          "case_sha256": "0ec7222179573e61d6015853ae352eaea87bcec8ccc83a1a1f70817ca0cb2283"
+        }
+      },
+      {
+        "input": "9 3\n4\n7\n0\n3\n4\n1\n2\n1\n0\n8\n2\n1\n1\n1\n2\n1\n1\n1\n",
+        "expected": "1\n2\n2\n2\n1\n2\n2\n2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#19/case/1",
+          "case_sha256": "a1366c5ad91ab490f5b78aebdead31bf4d9c12f7ea73dba17eb2ec0b93817861"
+        }
+      },
+      {
+        "input": "10 3\n9\n1\n5\n3\n0\n4\n3\n0\n1\n0\n8\n1\n2\n2\n2\n1\n2\n2\n1\n",
+        "expected": "2\n1\n1\n1\n2\n1\n1\n2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#19/case/2",
+          "case_sha256": "710a0f734d61ae29ee285d9c4f50cfbe80751d06e080d7b8f03779520d4787d4"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0401",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0401",
+      "prompt": "A certain parallel universe has exactly N people living in it.\n\nThe i-th of these N people claims that they are the parent of exactly A_{i} of these N people.\n\nHowever, some of these people might be lying — the i-th person may be either telling the truth (in which case they have exactly A_{i} children) or lying (in which case they can have any number of children).\n\nIt is known that each person has at most one parent. Further, as one would expect, it is not allowed for a person's child to also be their ancestor.\n\nWhat is the maximum possible number of truth-tellers in this universe?\n\n------ Input Format ------ \n\n- The first line of input will contain a single integer T, denoting the number of test cases.\n- Each test case consists of two lines of input.\n- The first line of each test case contains a single integer N, the number of people.\n- The second line of each test case contains N space-separated integers A_{1}, A_{2}, \\ldots, A_{N}. \n\n------ Output Format ------ \n\nFor each test case, output on a new line the maximum number of people that can be telling the truth.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 4 \\cdot 10^{4}$\n$1 ≤ N ≤ 3\\cdot 10^{5}$\n$0 ≤ A_{i} < N$\n- The sum of $N$ across all test cases won't exceed $3 \\cdot 10^{5}$.\n\n------ subtasks ------ \n\nSubtask 1 (20 points):\n$1 ≤ T ≤ 5$\n$1 ≤ N ≤ 20$\nSubtask 2 (80 points):\nNo further constraints.\n\n----- Sample Input 1 ------ \n4\n2\n1 0\n2\n1 1\n3\n2 0 1\n5\n2 3 1 2 3\n\n----- Sample Output 1 ------ \n2\n1\n2\n2\n\n----- explanation 1 ------ \nTest case $1$: Both people can be telling the truth, with the first person being the parent of the second.\n\nTest case $2$: If both people were telling the truth, they would be each others' parents — and that is not allowed. Hence, at most one of them can be telling the truth.\n\nTest case $3$: The first and third people cannot be telling the truth at the same time. However, it is possible for the first and second people to be truthful — person $1$ can be the parent of person $2$ and person $3$. Hence, the answer is $2$.\n\nTest case $4$: There are several ways to pick $2$ people to be telling the truth — for example,\n- The parent of person $2$ and person $3$ is person $1$\n- The parent of person $1$ and person $5$ is person $4$\n\nin which case persons number $1$ and $4$ would be telling the truth.\n\nHowever, it can be shown that it is impossible for any three of them to be simultaneously telling the truth.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n4\\n3 2 1 1\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n1\\n0\\n\", \"expected\": \"1\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n2\\n0 0\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n4\n3 2 1 1\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#22/case/0",
+          "case_sha256": "e4197419f3e60fa342416c9a99fd16da45154133db02f97ff9e8f2c22bd7e9b7"
+        }
+      },
+      {
+        "input": "1\n1\n0\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#22/case/1",
+          "case_sha256": "0d7dad5dab5d7a8e13c78423b7eb602a9f35840c91a36e7dd78ee06f39565c9d"
+        }
+      },
+      {
+        "input": "1\n2\n0 0\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#22/case/2",
+          "case_sha256": "0ddbf768c0197156860907e88507fbc62f431318440f258d62dcdc0f97890a8c"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0646",
+    "dataset": "taco",
+    "difficulty": "EASY",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0646",
+      "prompt": "Ram wants to generate some prime numbers for his cryptosystem. Help him please!\nYour task is to generate all prime numbers between two given numbers.\n\nWarning: large Input/Output data, be careful with certain languages (though most should be OK if the algorithm is well designed)\n\n------ Input Format ------ \n\nThe first line contains t, the number of test cases (less then or equal to 10). \n\nFollowed by t lines which contain two numbers m and n (1 ≤ m ≤ n ≤ 1000000000, n-m≤100000) separated by a space.\n\n------ Output Format ------ \n\nFor every test case print all prime numbers p such that m ≤ p ≤ n,\none number per line.  Separate the answers for each test case by an empty line.\n\n------ Constraints ------ \n\n(1 ≤ m ≤ n ≤ 1000000000, n-m≤100000)\n\n----- Sample Input 1 ------ \n2\n1 10\n3 5\n----- Sample Output 1 ------ \n2\n3\n5\n7\n\n3\n5\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n20 74\\n\", \"expected\": \"23\\n29\\n31\\n37\\n41\\n43\\n47\\n53\\n59\\n61\\n67\\n71\\n73\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n154 198\\n\", \"expected\": \"157\\n163\\n167\\n173\\n179\\n181\\n191\\n193\\n197\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n44 118\\n\", \"expected\": \"47\\n53\\n59\\n61\\n67\\n71\\n73\\n79\\n83\\n89\\n97\\n101\\n103\\n107\\n109\\n113\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n20 74\n",
+        "expected": "23\n29\n31\n37\n41\n43\n47\n53\n59\n61\n67\n71\n73",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#23/case/0",
+          "case_sha256": "d5ef3f92301249d2bf85566165f2384d11e75628c2e2966ecc1494a935287869"
+        }
+      },
+      {
+        "input": "1\n154 198\n",
+        "expected": "157\n163\n167\n173\n179\n181\n191\n193\n197",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#23/case/1",
+          "case_sha256": "87df2f5bc6d8f837a9c670258b40be3c6f2319b4c76551f95b40e621f097e288"
+        }
+      },
+      {
+        "input": "1\n44 118\n",
+        "expected": "47\n53\n59\n61\n67\n71\n73\n79\n83\n89\n97\n101\n103\n107\n109\n113",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#23/case/2",
+          "case_sha256": "0dc772a046044e05f0e33adbd2fe43609178faf41d88c065dee8f762c9d7bce1"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0583",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0583",
+      "prompt": "Gildong owns a bulgogi restaurant. The restaurant has a lot of customers, so many of them like to make a reservation before visiting it.\n\nGildong tries so hard to satisfy the customers that he even memorized all customers' preferred temperature ranges! Looking through the reservation list, he wants to satisfy all customers by controlling the temperature of the restaurant.\n\nThe restaurant has an air conditioner that has 3 states: off, heating, and cooling. When it's off, the restaurant's temperature remains the same. When it's heating, the temperature increases by 1 in one minute. Lastly, when it's cooling, the temperature decreases by 1 in one minute. Gildong can change the state as many times as he wants, at any integer minutes. The air conditioner is off initially.\n\nEach customer is characterized by three values: $t_i$ — the time (in minutes) when the $i$-th customer visits the restaurant, $l_i$ — the lower bound of their preferred temperature range, and $h_i$ — the upper bound of their preferred temperature range.\n\nA customer is satisfied if the temperature is within the preferred range at the instant they visit the restaurant. Formally, the $i$-th customer is satisfied if and only if the temperature is between $l_i$ and $h_i$ (inclusive) in the $t_i$-th minute.\n\nGiven the initial temperature, the list of reserved customers' visit times and their preferred temperature ranges, you're going to help him find if it's possible to satisfy all customers.\n\n\n-----Input-----\n\nEach test contains one or more test cases. The first line contains the number of test cases $q$ ($1 \\le q \\le 500$). Description of the test cases follows.\n\nThe first line of each test case contains two integers $n$ and $m$ ($1 \\le n \\le 100$, $-10^9 \\le m \\le 10^9$), where $n$ is the number of reserved customers and $m$ is the initial temperature of the restaurant.\n\nNext, $n$ lines follow. The $i$-th line of them contains three integers $t_i$, $l_i$, and $h_i$ ($1 \\le t_i \\le 10^9$, $-10^9 \\le l_i \\le h_i \\le 10^9$), where $t_i$ is the time when the $i$-th customer visits, $l_i$ is the lower bound of their preferred temperature range, and $h_i$ is the upper bound of their preferred temperature range. The preferred temperature ranges are inclusive.\n\nThe customers are given in non-decreasing order of their visit time, and the current time is $0$.\n\n\n-----Output-----\n\nFor each test case, print \"YES\" if it is possible to satisfy all customers. Otherwise, print \"NO\".\n\nYou can print each letter in any case (upper or lower).\n\n\n-----Example-----\nInput\n4\n3 0\n5 1 2\n7 3 5\n10 -1 0\n2 12\n5 7 10\n10 16 20\n3 -100\n100 0 0\n100 -50 50\n200 100 100\n1 100\n99 -100 0\n\nOutput\nYES\nNO\nYES\nNO\n\n\n\n-----Note-----\n\nIn the first case, Gildong can control the air conditioner to satisfy all customers in the following way:  At $0$-th minute, change the state to heating (the temperature is 0).  At $2$-nd minute, change the state to off (the temperature is 2).  At $5$-th minute, change the state to heating (the temperature is 2, the $1$-st customer is satisfied).  At $6$-th minute, change the state to off (the temperature is 3).  At $7$-th minute, change the state to cooling (the temperature is 3, the $2$-nd customer is satisfied).  At $10$-th minute, the temperature will be 0, which satisfies the last customer. \n\nIn the third case, Gildong can change the state to heating at $0$-th minute and leave it be. Then all customers will be satisfied. Note that the $1$-st customer's visit time equals the $2$-nd customer's visit time.\n\nIn the second and the fourth case, Gildong has to make at least one customer unsatisfied.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n3 2\\n2 2 4\\n2 -3 -3\\n5 -4 -2\\n\", \"expected\": \"NO\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n3 1\\n2 1 3\\n5 -4 -3\\n7 2 6\\n\", \"expected\": \"NO\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n4 2\\n2 3 7\\n2 -2 0\\n4 3 4\\n4 4 4\\n\", \"expected\": \"NO\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n3 2\n2 2 4\n2 -3 -3\n5 -4 -2\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#24/case/0",
+          "case_sha256": "41461c9698a4231c16faebe10569dd1f6cb8842265681a3d184d26582c246abe"
+        }
+      },
+      {
+        "input": "1\n3 1\n2 1 3\n5 -4 -3\n7 2 6\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#24/case/1",
+          "case_sha256": "6c37d4343665caa48c3b2261629d4b28f49c32bc8900b11f82d97ed64f046ea2"
+        }
+      },
+      {
+        "input": "1\n4 2\n2 3 7\n2 -2 0\n4 3 4\n4 4 4\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#24/case/2",
+          "case_sha256": "571beead6299cfc3b67a4d96cee76aa60ee7c411d79072564612d9ab5d997b96"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0812",
+    "dataset": "taco",
+    "difficulty": "VERY_HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0812",
+      "prompt": "Read problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a double-ended queue $Q$. Initially, it contains elements $Q_{1}, Q_{2}, \\ldots, Q_{M}$ in this order. Each of these elements is an integer between $1$ and $N$ (inclusive) and each integer between $1$ and $N$ (inclusive) occurs in the queue at least once.\n\nWe want to pop some (possibly zero) elements from the front of the queue and some (not necessarily the same number, possibly zero) elements from the back. Among all the popped elements, each integer between $1$ and $N$ (inclusive) should appear at least once. Find the smallest possible total number of elements we need to pop.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $M$.\nThe second line contains $M$ space-separated integers $Q_{1}, Q_{2}, \\ldots, Q_{M}$.\n\n------  Output ------\nFor each test case, print a single line containing one integer — the minimum number of elements we need to pop.\n\n------  Constraints ------\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$N ≤ M ≤ 2 \\cdot 10^{5}$\nfor each $i$ ($1 ≤ i ≤ N$), there is at least one element equal to $i$ in the queue\nthe sum of $N$ over all test cases does not exceed $10^{5}$\nthe sum of $M$ over all test cases does not exceed $2 \\cdot 10^{5}$\n\n----- Sample Input 1 ------ \n3\n\n2 2\n\n1 2\n\n2 3\n\n1 2 1\n\n3 6\n\n1 1 1 3 2 2\n----- Sample Output 1 ------ \n2\n\n2\n\n4\n----- explanation 1 ------ \nExample case 1: Since $N = M$ and all elements are pairwise distinct, we have to pop everything to get each value at least once.\n\nExample case 2: We can pop the first $2$ or the last $2$ elements.\n\nExample case 3: We can pop the first element and the last $3$ elements, so the answer is $1 + 3 = 4$.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n2 4\\n2 1 2 2\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n1 3\\n1 1 1\\n\", \"expected\": \"1\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n2 3\\n2 1 2\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n2 4\n2 1 2 2\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#25/case/0",
+          "case_sha256": "c5b040d844f41659d22358561899aaa39dce27f916ee14b191bb41354fda3352"
+        }
+      },
+      {
+        "input": "1\n1 3\n1 1 1\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#25/case/1",
+          "case_sha256": "06079b43ab7a844dc49ca8136c1f6d7d0cf3060ca0d73b1ba0b9a8a7624d2fef"
+        }
+      },
+      {
+        "input": "1\n2 3\n2 1 2\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "trusted",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#25/case/2",
+          "case_sha256": "d616ab9bc4d276780ef7ca5b2d84698bd30d875c4c991441773a9b3771518577"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0838",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0838",
+      "prompt": "Read problems statements in Mandarin Chinese  and Russian. \n\nOlya works as a warehouse keeper for a T-Shirt factory. Now the factory is facing hard times, so currently they produce only the T-shirts of three kinds: red, green and blue T-Shirts. All the T-shirts are stored in the containers, each of the containers contain the T-Shirts of a single colour.\nNow there are N containers at the warehouse, lined up in a line. Let's enumerate the containers by the positive integers from 1 to N, starting from the leftmost and ending at the rightmost one. Their order is described with a string S. Each symbol of this string is either \"r\", \"g\" or \"b\" and denotes the colour of the respective T-shirts, stored in the container.\nOlya likes orderliness. She is not satisfied with the fact that different kinds of containers are messed up. So she wants to rearrange the containers in such a way that the number of pairs of adjacent containers that contain the T-shirts of different colors is as minimal as possible.\nFor doing that, she has a special crane. The crane is capable of doing the following things:\n\nTake a container with the number X and put it in front of all the containers. This operation takes (X-1) seconds. Note that we are considering the 1-dimensional model of the warehouse, so \"in front of all the containers\" means to the left of all the containers. The warehouse is so large, so you shouldn't worry about its' size and this operation is always performable.\nTake a container with the number X and take some container to the left of it (say, the container number Y). Remove the container number X from its' position and insert it right after the container with the number Y. This operation will take X-Y-1 seconds.\nTake a container with the number X and take some container to the right of it (say, the container number Y). Remove the container number X from its' position and insert it right after the container with the number Y. This operation will take Y-X seconds.\n\nNote that after the operation, we will re-enumerate the containers from left to right by the positive integers from 1 to N.\n \nThough Olya is keen on orderliness, she doesn't way to stay at the warehouse for long on Sunday. So she asks you to help her and to calculate the minimal possible number of seconds that is necessary to rearrange the containers in the desired way.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows.\n\nThe first (and only) line of each test case contains a string S, consisting of N symbols denoting the color string corresponding to the containers.\n\n------ Output ------ \n\nFor each test case, output a single line containing the answer to the problem's question for the corresponding test case.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$The string S consists only of the lower-case Latin letters from the set {r, g, b}.$\n$(Subtask 1): 1 ≤ N = |S| ≤ 7 - 33 points.$\n$(Subtask 2): 1 ≤ N = |S| ≤ 1000 - 33 points.$\n$(Subtask 3): 1 ≤ N = |S| ≤ 10^{5} - 34 points.$\n\n----- Sample Input 1 ------ \n4\n\nrgr\n\nrrr\n\nrgb\n\nrgbr\n----- Sample Output 1 ------ \n1\n\n0\n\n0\n\n2\n----- explanation 1 ------ \nExample case 1.We can move the second container to the beginning of the line. This will take one second.\nExample case 2.Containers are already in desired way.\nExample case 3.Here also, containers are already in desired way.\nExample case 4.You can put first r to the just right of b. It will take 2 seconds to do so.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\ngg\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}, {\"input\": \"1\\nrbgrgbb\\n\", \"expected\": \"4\", \"comparison\": \"tokens\"}, {\"input\": \"1\\nggbgggg\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\ngg\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#27/case/0",
+          "case_sha256": "14fc4e78ca0693a090b215b72521f511f0767d9998cdc1c71d8946d84c9d59c7"
+        }
+      },
+      {
+        "input": "1\nrbgrgbb\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#27/case/1",
+          "case_sha256": "1f1616245730997432fffc57a52400415a3fbd9ff4adfbec72282dd5bb1fc20a"
+        }
+      },
+      {
+        "input": "1\nggbgggg\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#27/case/2",
+          "case_sha256": "622631243357c9bfbf1b64e0436e4aa8301de50d3b19a74e2fe4f433fed5439a"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0915",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0915",
+      "prompt": "Read problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nSometimes, the stability of a stock market is at least as important as rapid price changes.\n\nLet a stable block be a maximal consecutive block of days with same stock prices.\n\nMoreover, let a stable block of order K be a stable block of length at least K.\n\nFor example, if stock prices for 7 consecutive days are: 20, 10, 10, 7, 7, 7, 10, then there are 4 stable blocks there: [20], [10, 10], [7, 7, 7] and [10]. Moreover, there are:\n\n0 stable blocks of order 4 or higher\n1 stable block of order 3: [7, 7, 7]\n2 stable block of order 2: [10, 10], [7, 7, 7]\n4 stable block of order 1: [20], [10, 10], [7, 7, 7] and [10]\n\nGiven historical prices of a stock across N days, the goal is to answer Q customers' questions.\n\nThe i-th question contains three integers L_{i}, R_{i} and K_{i}. It asks for the number of stable blocks of order K_{i}, if only the stock prices of the days in the range L_{i}, R_{i} are considered.\n\n------ Input ------ \n\nIn the first line there is a single integer T, denoting the number of test cases to handle. After that the description of T test cases follow.\n\nThe first line of each test case contains two space-separated integers N and Q, denoting respectively, the number of days for which the stock prices are given, and the number of questions to answer.\n\nThe second line contains N space-separated integers A_{1}, A_{2}, ..., A_{N}, where A_{i} denotes the price of the stock on the i-th day. \n\nQ lines follow. In the i-th of them there are three space-separated integers L_{i}, R_{i} and K_{i} denoting the i-th query.\n\n------ Output ------ \n\nFor each test case, print answers to all queries in the test case, one per line.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 5$ \n$1 ≤ N, Q ≤ 10^{5}$ \n$1 ≤ A_{i} ≤ 10^{6}$ \n$1 ≤ L_{i} ≤ R_{i} ≤ N$ \n$1 ≤ K_{i} ≤ R_{i} - L_{i} + 1$ \n\n------ Subtasks ------ \n\nSubtask #1: (10 points)\n\n$1 ≤ N, Q ≤ 3000$ \n\nSubtask #2: (90 points)\n\n$original constraints$\n\n----- Sample Input 1 ------ \n2\n8 5\n20 10 10 10 7 7 7 10\n2 6 2\n3 6 2\n3 6 3\n3 8 3\n3 8 1\n3 2\n27 27 27\n1 3 1\n2 2 1\n----- Sample Output 1 ------ \n2\n2\n0\n1\n3\n1\n1\n----- explanation 1 ------ \nThere are two test cases to handle\n\nTest case #1:\nThere are 8 days for which prices are given and 5 queries to handle.\nThe first query asks for the number of stable blocks of order 2 in range [2, 6], which corresponds to prices 10 10 10 7 7. The answer is 2 because there are two such blocks: 10 10 10 and 7 7.\nThe second query asks for the number of stable blocks of order 2 in range [3, 6], which corresponds to prices 10 10 7 7. The answer is 2 because there are two such blocks: 10 10 and 7 7.\nThe third query asks for the number of stable blocks of order 3 in range [3, 6], which corresponds to prices 10 10 7 7. The answer is 0 because there is no stable block of order 3 there (maximum order of a stable block is 2).\nThe fourth query asks for the number of stable blocks of order 3 in range [3, 8], which corresponds to prices 10 10 7 7 7 10. The answer is 1 because the only stable block of order 3 here is 7 7 7.\nThe fifth query asks for the number of stable blocks of order 1 in range [3, 8], which corresponds to prices 10 10 7 7 7 10. The answer is 3 because there are 3 stable blocks of order 1 there: 10 10, 7 7 7 and 10.\n\nTest case #2:\nThere are 3 days for which prices are given and 2 queries to handle.\nThe first query asks for the number of stable blocks of order 1 in range [1, 3], which corresponds to prices 27 27 27. The answer is 1 because the only such block there is 27 27 27.\nThe second query asks for the number of stable blocks of order 1 in range [2, 2], which corresponds to a single price 27. The answer is 1 because the only such block there is 27.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n8 12\\n1 3 2 3 1 3 3 2\\n5 8 4\\n7 7 1\\n6 7 1\\n6 7 1\\n7 8 2\\n6 6 1\\n8 8 1\\n4 4 1\\n8 8 1\\n3 8 5\\n3 4 1\\n3 7 1\\n\", \"expected\": \"0\\n1\\n1\\n1\\n0\\n1\\n1\\n1\\n1\\n0\\n2\\n4\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n8 12\\n2 3 3 1 1 3 1 3\\n2 6 3\\n1 4 4\\n6 8 1\\n8 8 1\\n7 7 1\\n2 3 2\\n8 8 1\\n1 5 2\\n6 7 1\\n1 1 1\\n6 7 1\\n5 8 2\\n\", \"expected\": \"0\\n0\\n3\\n1\\n1\\n1\\n1\\n2\\n2\\n1\\n2\\n0\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n6 12\\n2 3 3 1 2 1\\n1 1 1\\n2 2 1\\n3 4 2\\n3 6 2\\n6 6 1\\n2 3 1\\n6 6 1\\n4 5 2\\n6 6 1\\n4 5 1\\n1 5 1\\n4 6 3\\n\", \"expected\": \"1\\n1\\n0\\n0\\n1\\n1\\n1\\n0\\n1\\n2\\n4\\n0\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n8 12\n1 3 2 3 1 3 3 2\n5 8 4\n7 7 1\n6 7 1\n6 7 1\n7 8 2\n6 6 1\n8 8 1\n4 4 1\n8 8 1\n3 8 5\n3 4 1\n3 7 1\n",
+        "expected": "0\n1\n1\n1\n0\n1\n1\n1\n1\n0\n2\n4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#28/case/0",
+          "case_sha256": "343d0d7831ffb27cdbb5f6ff933dfb97aa94a10f733dcc8f0a80c3ee214724b3"
+        }
+      },
+      {
+        "input": "1\n8 12\n2 3 3 1 1 3 1 3\n2 6 3\n1 4 4\n6 8 1\n8 8 1\n7 7 1\n2 3 2\n8 8 1\n1 5 2\n6 7 1\n1 1 1\n6 7 1\n5 8 2\n",
+        "expected": "0\n0\n3\n1\n1\n1\n1\n2\n2\n1\n2\n0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#28/case/1",
+          "case_sha256": "d03aa7f462c0ff21d3d91e30797b7971cb1a955e23b960c8339923686725dc7e"
+        }
+      },
+      {
+        "input": "1\n6 12\n2 3 3 1 2 1\n1 1 1\n2 2 1\n3 4 2\n3 6 2\n6 6 1\n2 3 1\n6 6 1\n4 5 2\n6 6 1\n4 5 1\n1 5 1\n4 6 3\n",
+        "expected": "1\n1\n0\n0\n1\n1\n1\n0\n1\n2\n4\n0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#28/case/2",
+          "case_sha256": "a5987de0e79f1669e1309461b052333eb5f516bd2ffe72bfdb8c44a629e752f6"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "taco_0215",
+    "dataset": "taco",
+    "difficulty": "EASY",
+    "role": "previously_exposed_development",
+    "task_public": {
+      "problem_id": "taco_0215",
+      "prompt": "Alyona has recently bought a miniature fridge that can be represented as a matrix with $h$ rows and $2$ columns. Initially there is only one shelf at the bottom of the fridge, but Alyona can install arbitrary number of shelves inside the fridge between any two rows. A shelf is two cells wide, does not occupy any space but separates the inside of the fridge to the lower and upper part.\n\n [Image] An example of a fridge with $h = 7$ and two shelves. The shelves are shown in black. The picture corresponds to the first example. \n\nAlyona has $n$ bottles of milk that she wants to put in the fridge. The $i$-th bottle is $a_i$ cells tall and $1$ cell wide. She can put a bottle on some shelf if the corresponding space above the shelf is at least as tall as the bottle. She can not put a bottle on top of another bottle (if there is no shelf between them). Two bottles can not share a cell.\n\nAlyona is interested in the largest integer $k$ such that she can put bottles $1$, $2$, ..., $k$ in the fridge at the same time. Find this largest $k$.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $h$ ($1 \\le n \\le 10^3$, $1 \\le h \\le 10^9$) — the number of bottles and the height of the fridge.\n\nThe second line contains $n$ integers $a_1$, $a_2$, ..., $a_n$ ($1 \\le a_i \\le h$) — the heights of the bottles.\n\n\n-----Output-----\n\nPrint the single integer $k$ — the maximum integer such that Alyona can put the bottles $1$, $2$, ..., $k$ in the fridge at the same time. If Alyona can put all bottles in the fridge, print $n$. It is easy to see that Alyona can always put at least one bottle in the fridge.\n\n\n-----Examples-----\nInput\n5 7\n2 3 5 4 1\n\nOutput\n3\n\nInput\n10 10\n9 1 1 1 1 1 1 1 1 1\n\nOutput\n4\n\nInput\n5 10\n3 1 4 2 4\n\nOutput\n5\n\n\n\n-----Note-----\n\nOne of optimal locations in the first example is shown on the picture in the statement.\n\nOne of optimal locations in the second example is shown on the picture below.\n\n [Image] \n\nOne of optimal locations in the third example is shown on the picture below.\n\n [Image]\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"6 12\\n6 7 9 8 7 1\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}, {\"input\": \"2 1\\n1 1\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}, {\"input\": \"2 18\\n13 8\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "6 12\n6 7 9 8 7 1\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#29/case/0",
+          "case_sha256": "b7d705a526dc15409e82e0a6d8a2fa4dd88e1b963b1c9e64934da6b464b42844"
+        }
+      },
+      {
+        "input": "2 1\n1 1\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#29/case/1",
+          "case_sha256": "97ea7d3786f0d6d2259d3fa70e5010c5b13224c758ee5a21be3135532a3094b6"
+        }
+      },
+      {
+        "input": "2 18\n13 8\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#29/case/2",
+          "case_sha256": "3e4d1b3bb8766c6f344bd32b36e09b074e045ceb8bdda2ac09cc6e4ce6ae1860"
+        }
+      }
+    ]
+  }
+]
