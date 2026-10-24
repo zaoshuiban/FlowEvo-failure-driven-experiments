@@ -1,5 +1,6 @@
 """Opt-in adapter for the existing PreparedController and JSON RuleMemory."""
 import hashlib
+import time
 from types import SimpleNamespace
 from .contracts import fingerprint
 from .failure_events import checked_public_feedback
@@ -26,7 +27,8 @@ class RepairChoiceHook:
         for key in self.current['keys']:
             action=self.memory.reserve_action(key,self.current['task'].problem_id,code,feedback,budget)
             if action=='NATIVE':continue
-            audit={'candidate_id':key,'action':action,'at':at,'stage':stage,'status':'error'}
+            started=time.monotonic();before_budget=budget.snapshot()
+            audit={'before_feedback':feedback.to_dict(),'candidate_id':key,'action':action,'at':at,'stage':stage,'status':'error'}
             self.current['hooks'].append(audit)
             try:
                 response=self.client.execute_action(action,self.current['task'],code,feedback,budget)
@@ -36,6 +38,7 @@ class RepairChoiceHook:
                 if budget.remaining_seconds<=0:raise TimeoutError('task deadline')
                 self.observe(proposed,stage+':rule',checked,response,at)
                 audit.update(status='applied' if checked.status=='PUBLIC_PASS' else 'declined',public_feedback=checked.to_dict(),response=response)
+                audit.update(elapsed_seconds=time.monotonic()-started,model_calls=budget.calls-before_budget['calls'],tokens=budget.snapshot()['charged_or_reserved_tokens']-before_budget['charged_or_reserved_tokens'],fallback_required=audit['status']!='applied',visibility='public')
                 self.memory.finish(key,self.current['task'].problem_id,audit)
                 if audit['status']=='applied':return {'stage':stage+':rule','code':proposed,'code_sha256':hashlib.sha256(proposed.encode()).hexdigest(),'public_feedback':checked}
                 return None

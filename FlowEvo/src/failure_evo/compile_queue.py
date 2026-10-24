@@ -61,6 +61,26 @@ class CompileQueue:
             raise
 
 
+    def schedule_hypotheses(self, index, *, at, budget_available):
+        rows=self.events.records();jobs=[]
+        attempts=[r['payload'] for r in rows if r['kind']=='JOB_STARTED']
+        active={j['hypothesis_id'] for j in attempts if not any(r['kind']=='JOB_FINISHED' and r['payload']['job_id']==j['job_id'] for r in rows)}
+        known={x['event_id'] for x in index.store.visible(at,index.stream_id)}
+        for key,s in sorted(index.states().items()):
+            evidence=sorted(set(s['source_evidence_ids']+s['contradicting_evidence_ids']+s['supporting_evidence_ids']) & known)
+            prior=[j for j in attempts if j['hypothesis_id']==key]
+            used={x for j in prior for x in j['evidence_ids']}
+            reason = ('NO_BUDGET' if not budget_available else 'NO_ACTION' if not s['applicable_actions'] else
+                'NO_NEW_EVIDENCE' if not set(evidence)-used else 'IN_FLIGHT' if key in active else
+                'FAMILY_LIMIT' if len(active)>=self.max_families else '')
+            decision='SKIP' if reason else 'REVISE' if prior else 'GENERATE'
+            job=dict(job_id=fingerprint([key,evidence]),hypothesis_id=key,evidence_ids=evidence,
+                decision=decision,reason=reason,hypothesis_version=s['version'])
+            self.events.append('SCHEDULE_DECISION',job,at)
+            if not reason:jobs.append(job);active.add(key)
+        return jobs
+
+
 class BoundedCompiler:
     """Per-study 2 families × (1 induction + 3 candidates + 3 revisions) ceiling."""
     def __init__(self, provider, budget, path, model, *, max_input_upper=65536, max_output_upper=4096):

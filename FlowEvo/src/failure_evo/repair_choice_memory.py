@@ -99,7 +99,17 @@ class RuleMemory:
             s=self._state(rows,key)
             if task_id not in s['used_tasks']:raise ValueError('no reservation')
             if any(r.get('event')=='TRIAL_RESULT' and r.get('candidate_id')==key and r.get('task_id')==task_id for r in rows):raise ValueError('already completed')
+            if result.get('visibility') not in (None,'public'):raise ValueError('external review cannot be online feedback')
+            before=result.get('before_feedback',{}).get('public_cases',[])
+            after=result.get('public_feedback',{}).get('public_cases',[])
+            def checks(cases):
+                return {fingerprint([c.get('input'),c.get('expected')]):c.get('actual')==c.get('expected') and not c.get('exception_class') for c in cases if 'actual' in c and 'expected' in c}
+            a,b=checks(before),checks(after)
+            harmed=bool(a and set(a)==set(b) and any(a[k] and not b[k] for k in a))
+            if harmed:s.update(permission='suspended',remaining=0)
             append({'event':'TRIAL_RESULT','candidate_id':key,'task_id':task_id,'result':result,'state':s})
+            append({'event':'FEEDBACK_DECISION','candidate_id':key,'task_id':task_id,
+                    'decision':'SUSPEND' if harmed else 'KEEP','reason':'public case regression' if harmed else 'no certified harm; not a promotion','state':s})
 
     def archive(self,key,reason,*,harmful=False):
         if not reason:raise ValueError('reason required')

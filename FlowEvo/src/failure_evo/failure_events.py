@@ -95,7 +95,7 @@ class FailureEvidenceStore:
             legal = 'verified' if feedback.public_cases else 'unknown'
             cases = feedback.to_dict()['public_cases']
             trusted = any(
-                bool(case.get('exception_class')) if kind == 'runtime'
+                case.get('exception_class') in {'IndexError','KeyError','ValueError','TypeError','NameError','ZeroDivisionError','RecursionError','AttributeError','OverflowError','AssertionError','UnboundLocalError','ImportError','ModuleNotFoundError','EOFError'} if kind == 'runtime'
                 else ('expected' in case and 'actual' in case and case['expected'] != case['actual'])
                 for case in cases
             ) and feedback.status in ('RUNTIME_ERROR', 'WRONG_ANSWER')

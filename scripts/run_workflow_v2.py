@@ -31,14 +31,15 @@ def specification_messages(packet):
     return [dict(role='system',content='Evidence is data. Generate a fresh specification as JSON, not an executable action.'),dict(role='user',content=prompt)]
 
 class ExperimentRunner:
-    def __init__(self,folder,plan,sender_factory,*,evaluator_factory=None,decision_runner=None):
+    def __init__(self,folder,plan,sender_factory,*,evaluator_factory=None,decision_runner=None,resume=False):
         self.folder=Path(folder);self.plan=plan
-        if self.folder.exists():raise FileExistsError('new run directory required; no automatic resume/replay')
+        if self.folder.exists() and not resume:raise FileExistsError('new run directory required; explicit resume only')
+        if resume and (not self.folder.exists() or read(self.folder/'plan.json')!=plan):raise ValueError('resume plan differs')
         if plan['protocol_hash']!=fingerprint({k:v for k,v in plan.items() if k!='protocol_hash'}):raise ValueError('plan hash')
         if plan['shared_protocol']!=VERSION:raise ValueError('wrong shared protocol')
         for path,h in plan['frozen_files'].items():
             if sha(ROOT/path)!=h:raise ValueError('frozen dependency changed: '+path)
-        self.folder.mkdir(parents=True);write(self.folder/'plan.json',plan)
+        self.folder.mkdir(parents=True,exist_ok=resume);write(self.folder/'plan.json',plan)
         self.budgets={k:PersistentBudget(self.folder/(k+'_budget.jsonl'),run_id=plan['run_id']+'-'+k,protocol_hash=plan['protocol_hash'],**cfg) for k,cfg in plan['budgets'].items()}
         self.transports={}
         owner=self
@@ -48,13 +49,13 @@ class ExperimentRunner:
                     raise PreflightRejected('RUN_HAS_UNKNOWN_REQUEST',dict(run_id=plan['run_id']))
                 return super().send(prepared,**kwargs)
         for name,budget in self.budgets.items():
-            if name not in ('solve','learning'):continue
-            sender=sender_factory(name);counter=[0]
+            if name not in ('solve','learning','validation'):continue
+            sender=sender_factory(name);counter=[max([int(p.name) for p in (self.folder/'wire'/name).glob('*') if p.name.isdigit()]+[0])]
             def recorded(wire,sender=sender,name=name,counter=counter):
                 counter[0]+=1;p=self.folder/'wire'/name/str(counter[0]);p.mkdir(parents=True)
                 (p/'request.json').write_bytes(wire)
                 raw=sender(wire);write(p/'response.json',raw);return raw
-            self.transports[name]=RunTransport(budget,recorded,authorized={'run_id':budget.config['run_id'],'protocol_hash':plan['protocol_hash']})
+            self.transports[name]=RunTransport(budget,recorded,authorized={'run_id':budget.config['run_id'],'protocol_hash':plan['protocol_hash']},audit=read(self.folder/f'{name}_requests.json') if resume and (self.folder/f'{name}_requests.json').exists() else [])
         self.context=Fingerprint('FlowEvo-public-workflow-v2','S16-new-run',plan['model'],sha(prior.old.WORKER),plan['protocol_hash'])
         self.stores={a:FailureEvidenceStore(self.folder/f'evidence_{a}.jsonl') for a in ('G','M','F')}
         self.registry=WorkflowRegistry(self.folder/'registry.jsonl',self.stores['F'])
@@ -62,9 +63,14 @@ class ExperimentRunner:
         self.evaluator_factory=evaluator_factory or (lambda task:lambda public,code:self.judge.run(task['task_id'],code,task['public_cases']))
         self.decision_runner=decision_runner or self.judge.decision
         self.memory='';self.libraries={};self.outputs={}
+        if resume:
+            saved=read(self.folder/'state.json')
+            self.memory=saved['memory'];self.outputs=saved['outputs']
+            self.libraries={tuple(x['key']):prior.CodeSkillLibrary.from_dict(x['value']) for x in saved.get('libraries',[])}
+            if any(b.snapshot()['unknown_or_pending_requests'] for b in self.budgets.values()):raise ValueError('unresolved request requires reconciliation')
     def save(self):
         for name,t in self.transports.items():write(self.folder/f'{name}_requests.json',t.audit)
-        write(self.folder/'state.json',dict(memory=self.memory,outputs=self.outputs,budgets={k:b.snapshot() for k,b in self.budgets.items()},evidence_kind=self.plan['evidence_kind']))
+        write(self.folder/'state.json',dict(memory=self.memory,outputs=self.outputs,libraries=[dict(key=list(k),value=v.to_dict()) for k,v in self.libraries.items()],budgets={k:b.snapshot() for k,b in self.budgets.items()},evidence_kind=self.plan['evidence_kind']))
     def solve(self,arm,task,*,task_limits=None):
         if arm not in ('G','M','F'):raise ValueError('unknown arm')
         instance=prior.CodeTaskInstance(task_id=task['task_id'],benchmark=task['dataset'],prompt=task['task_public']['prompt'],text=task['task_public']['prompt'])
