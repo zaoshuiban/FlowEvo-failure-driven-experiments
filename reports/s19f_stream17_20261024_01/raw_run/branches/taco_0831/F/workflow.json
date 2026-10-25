@@ -1,0 +1,128 @@
+{
+  "problem_id": "taco_0831",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l1",
+    "code": "n = int(input())\nS = n * (n + 1) // 2\ntarget = S // 2\n\nin_group1 = [False] * (n + 1)\nsum1 = 0\nfor i in range(n, 0, -1):\n    if sum1 + i <= target:\n        in_group1[i] = True\n        sum1 += i\n\ndiff = abs(S - 2 * sum1)\ngroup1 = [i for i in range(1, n + 1) if in_group1[i]]\n\nprint(diff)\nprint(len(group1), *group1)",
+    "code_sha256": "3a2e0c6a38e2763b22da750c1c40ddaac54c44a74dc59a2a7487d1a0acaef4f5"
+  },
+  "retained_candidates": [
+    "3a2e0c6a38e2763b22da750c1c40ddaac54c44a74dc59a2a7487d1a0acaef4f5"
+  ],
+  "last_candidate": "n = int(input())\nS = n * (n + 1) // 2\ntarget = S // 2\n\nin_group1 = [False] * (n + 1)\nsum1 = 0\nfor i in range(n, 0, -1):\n    if sum1 + i <= target:\n        in_group1[i] = True\n        sum1 += i\n\ndiff = abs(S - 2 * sum1)\ngroup1 = [i for i in range(1, n + 1) if in_group1[i]]\n\nprint(diff)\nprint(len(group1), *group1)",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "taco_0831",
+          "prompt": "Petya has n integers: 1, 2, 3, ..., n. He wants to split these integers in two non-empty groups in such a way that the absolute difference of sums of integers in each group is as small as possible. \n\nHelp Petya to split the integers. Each of n integers should be exactly in one group.\n\n\n-----Input-----\n\nThe first line contains a single integer n (2 ≤ n ≤ 60 000) — the number of integers Petya has.\n\n\n-----Output-----\n\nPrint the smallest possible absolute difference in the first line.\n\nIn the second line print the size of the first group, followed by the integers in that group. You can print these integers in arbitrary order. If there are multiple answers, print any of them.\n\n\n-----Examples-----\nInput\n4\n\nOutput\n0\n2 1 4 \n\nInput\n2\n\nOutput\n1\n1 1 \n\n\n\n-----Note-----\n\nIn the first example you have to put integers 1 and 4 in the first group, and 2 and 3 in the second. This way the sum in each group is 5, and the absolute difference is 0.\n\nIn the second example there are only two integers, and since both groups should be non-empty, you have to put one integer in the first group and one in the second. This way the absolute difference of sums of integers in each group is 1.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"37\", \"expected\": \"1\", \"comparison\": \"partition\"}, {\"input\": \"22\", \"expected\": \"1\", \"comparison\": \"partition\"}, {\"input\": \"12\", \"expected\": \"0\", \"comparison\": \"partition\"}]",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 599.9999307090184
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "n = int(input())\nS = n * (n + 1) // 2\ntarget = S // 2\n\nin_group1 = [False] * (n + 1)\nsum1 = 0\nfor i in range(n, 0, -1):\n    if sum1 + i <= target:\n        in_group1[i] = True\n        sum1 += i\n\ndiff = abs(S - 2 * sum1)\ngroup1 = [i for i in range(1, n + 1) if in_group1[i]]\n\nprint(diff)\nprint(len(group1), *group1)",
+      "code_sha256": "3a2e0c6a38e2763b22da750c1c40ddaac54c44a74dc59a2a7487d1a0acaef4f5",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "1\n11 26 28 29 30 31 32 33 34 35 36 37\n",
+            "exception_class": null,
+            "expected": "1",
+            "input": "37"
+          },
+          {
+            "actual": "1\n7 9 17 18 19 20 21 22\n",
+            "exception_class": null,
+            "expected": "1",
+            "input": "22"
+          },
+          {
+            "actual": "0\n4 6 10 11 12\n",
+            "exception_class": null,
+            "expected": "0",
+            "input": "12"
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 1559,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 5,
+        "max_tokens": 204800,
+        "max_tools": 40,
+        "calls": 1,
+        "used_tokens": 1559,
+        "tool_calls": 1,
+        "remaining_seconds": 592.731503167015
+      }
+    }
+  ],
+  "budget": {
+    "calls": 1,
+    "charged_or_reserved_tokens": 1559,
+    "tool_calls": 1
+  },
+  "hidden_correctness": "NOT_QUERIED",
+  "candidate_ledger": [
+    {
+      "code_sha256": "3a2e0c6a38e2763b22da750c1c40ddaac54c44a74dc59a2a7487d1a0acaef4f5",
+      "stage": "l1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "1\n11 26 28 29 30 31 32 33 34 35 36 37\n",
+            "exception_class": null,
+            "expected": "1",
+            "input": "37"
+          },
+          {
+            "actual": "1\n7 9 17 18 19 20 21 22\n",
+            "exception_class": null,
+            "expected": "1",
+            "input": "22"
+          },
+          {
+            "actual": "0\n4 6 10 11 12\n",
+            "exception_class": null,
+            "expected": "0",
+            "input": "12"
+          }
+        ],
+        "visibility": "public"
+      },
+      "generation_metadata": {
+        "finish_reason": "stop"
+      },
+      "at": 1792894936.628619,
+      "learnable": true,
+      "validation_cost": {
+        "tool_calls": 1
+      },
+      "audited_case_outcomes": {
+        "263bbd923d686af2f07a153e8d78193257941c45509dcec2d42630822eac027f": true,
+        "57067c9fa61ba70f69959566f03038804fd82c5d33d2327cceadb8346204695a": true,
+        "5d08c4a965aa3b4c666fd0d65664b18f6052231b6ec0d1c2243e973ff7365476": true
+      }
+    }
+  ],
+  "hook_events": [],
+  "registry_snapshot_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "routing_events": []
+}

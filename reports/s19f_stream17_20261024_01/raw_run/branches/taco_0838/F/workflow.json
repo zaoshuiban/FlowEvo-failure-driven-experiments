@@ -1,0 +1,128 @@
+{
+  "problem_id": "taco_0838",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l1",
+    "code": "import sys\n\ndef inversion_count(arr):\n    # arr: list of integers (1-based positions)\n    n = len(arr)\n    bit = [0] * (n + 2)\n    def update(i, v):\n        while i <= n:\n            bit[i] += v\n            i += i & -i\n    def query(i):\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n    inv = 0\n    for i in range(n - 1, -1, -1):\n        inv += query(arr[i] - 1)\n        update(arr[i], 1)\n    return inv\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    if not input_data:\n        return\n    t = int(input_data[0])\n    idx = 1\n    results = []\n    for _ in range(t):\n        s = input_data[idx]\n        idx += 1\n        n = len(s)\n        freq = {'r': 0, 'g': 0, 'b': 0}\n        for ch in s:\n            freq[ch] += 1\n        colors = [c for c in 'rgb' if freq[c] > 0]\n        if len(colors) == 1:\n            results.append('0')\n            continue\n        # generate permutations of colors\n        from itertools import permutations\n        best = float('inf')\n        for perm in permutations(colors):\n            # build position lists for T\n            pos_lists = {}\n            cur = 1\n            for c in perm:\n                pos_lists[c] = list(range(cur, cur + freq[c]))\n                cur += freq[c]\n            # map S to positions\n            ptr = {c: 0 for c in colors}\n            arr = []\n            for ch in s:\n                arr.append(pos_lists[ch][ptr[ch]])\n                ptr[ch] += 1\n            inv = inversion_count(arr)\n            if inv < best:\n                best = inv\n        results.append(str(best))\n    sys.stdout.write('\\n'.join(results))\n\nif __name__ == \"__main__\":\n    solve()",
+    "code_sha256": "07d9eadb17794518771e7b74fc0cbea98d3645e39ab237a560fb2de53940a5c1"
+  },
+  "retained_candidates": [
+    "07d9eadb17794518771e7b74fc0cbea98d3645e39ab237a560fb2de53940a5c1"
+  ],
+  "last_candidate": "import sys\n\ndef inversion_count(arr):\n    # arr: list of integers (1-based positions)\n    n = len(arr)\n    bit = [0] * (n + 2)\n    def update(i, v):\n        while i <= n:\n            bit[i] += v\n            i += i & -i\n    def query(i):\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n    inv = 0\n    for i in range(n - 1, -1, -1):\n        inv += query(arr[i] - 1)\n        update(arr[i], 1)\n    return inv\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    if not input_data:\n        return\n    t = int(input_data[0])\n    idx = 1\n    results = []\n    for _ in range(t):\n        s = input_data[idx]\n        idx += 1\n        n = len(s)\n        freq = {'r': 0, 'g': 0, 'b': 0}\n        for ch in s:\n            freq[ch] += 1\n        colors = [c for c in 'rgb' if freq[c] > 0]\n        if len(colors) == 1:\n            results.append('0')\n            continue\n        # generate permutations of colors\n        from itertools import permutations\n        best = float('inf')\n        for perm in permutations(colors):\n            # build position lists for T\n            pos_lists = {}\n            cur = 1\n            for c in perm:\n                pos_lists[c] = list(range(cur, cur + freq[c]))\n                cur += freq[c]\n            # map S to positions\n            ptr = {c: 0 for c in colors}\n            arr = []\n            for ch in s:\n                arr.append(pos_lists[ch][ptr[ch]])\n                ptr[ch] += 1\n            inv = inversion_count(arr)\n            if inv < best:\n                best = inv\n        results.append(str(best))\n    sys.stdout.write('\\n'.join(results))\n\nif __name__ == \"__main__\":\n    solve()",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "taco_0838",
+          "prompt": "Read problems statements in Mandarin Chinese  and Russian. \n\nOlya works as a warehouse keeper for a T-Shirt factory. Now the factory is facing hard times, so currently they produce only the T-shirts of three kinds: red, green and blue T-Shirts. All the T-shirts are stored in the containers, each of the containers contain the T-Shirts of a single colour.\nNow there are N containers at the warehouse, lined up in a line. Let's enumerate the containers by the positive integers from 1 to N, starting from the leftmost and ending at the rightmost one. Their order is described with a string S. Each symbol of this string is either \"r\", \"g\" or \"b\" and denotes the colour of the respective T-shirts, stored in the container.\nOlya likes orderliness. She is not satisfied with the fact that different kinds of containers are messed up. So she wants to rearrange the containers in such a way that the number of pairs of adjacent containers that contain the T-shirts of different colors is as minimal as possible.\nFor doing that, she has a special crane. The crane is capable of doing the following things:\n\nTake a container with the number X and put it in front of all the containers. This operation takes (X-1) seconds. Note that we are considering the 1-dimensional model of the warehouse, so \"in front of all the containers\" means to the left of all the containers. The warehouse is so large, so you shouldn't worry about its' size and this operation is always performable.\nTake a container with the number X and take some container to the left of it (say, the container number Y). Remove the container number X from its' position and insert it right after the container with the number Y. This operation will take X-Y-1 seconds.\nTake a container with the number X and take some container to the right of it (say, the container number Y). Remove the container number X from its' position and insert it right after the container with the number Y. This operation will take Y-X seconds.\n\nNote that after the operation, we will re-enumerate the containers from left to right by the positive integers from 1 to N.\n \nThough Olya is keen on orderliness, she doesn't way to stay at the warehouse for long on Sunday. So she asks you to help her and to calculate the minimal possible number of seconds that is necessary to rearrange the containers in the desired way.\n\n------ Input ------ \n\nThe first line of the input contains an integer T denoting the number of test cases. The description of T test cases follows.\n\nThe first (and only) line of each test case contains a string S, consisting of N symbols denoting the color string corresponding to the containers.\n\n------ Output ------ \n\nFor each test case, output a single line containing the answer to the problem's question for the corresponding test case.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 10$\n$The string S consists only of the lower-case Latin letters from the set {r, g, b}.$\n$(Subtask 1): 1 ≤ N = |S| ≤ 7 - 33 points.$\n$(Subtask 2): 1 ≤ N = |S| ≤ 1000 - 33 points.$\n$(Subtask 3): 1 ≤ N = |S| ≤ 10^{5} - 34 points.$\n\n----- Sample Input 1 ------ \n4\n\nrgr\n\nrrr\n\nrgb\n\nrgbr\n----- Sample Output 1 ------ \n1\n\n0\n\n0\n\n2\n----- explanation 1 ------ \nExample case 1.We can move the second container to the beginning of the line. This will take one second.\nExample case 2.Containers are already in desired way.\nExample case 3.Here also, containers are already in desired way.\nExample case 4.You can put first r to the just right of b. It will take 2 seconds to do so.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\ngg\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}, {\"input\": \"1\\nrbgrgbb\\n\", \"expected\": \"4\", \"comparison\": \"tokens\"}, {\"input\": \"1\\nggbgggg\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}]",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 599.9999280420016
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "import sys\n\ndef inversion_count(arr):\n    # arr: list of integers (1-based positions)\n    n = len(arr)\n    bit = [0] * (n + 2)\n    def update(i, v):\n        while i <= n:\n            bit[i] += v\n            i += i & -i\n    def query(i):\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n    inv = 0\n    for i in range(n - 1, -1, -1):\n        inv += query(arr[i] - 1)\n        update(arr[i], 1)\n    return inv\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    if not input_data:\n        return\n    t = int(input_data[0])\n    idx = 1\n    results = []\n    for _ in range(t):\n        s = input_data[idx]\n        idx += 1\n        n = len(s)\n        freq = {'r': 0, 'g': 0, 'b': 0}\n        for ch in s:\n            freq[ch] += 1\n        colors = [c for c in 'rgb' if freq[c] > 0]\n        if len(colors) == 1:\n            results.append('0')\n            continue\n        # generate permutations of colors\n        from itertools import permutations\n        best = float('inf')\n        for perm in permutations(colors):\n            # build position lists for T\n            pos_lists = {}\n            cur = 1\n            for c in perm:\n                pos_lists[c] = list(range(cur, cur + freq[c]))\n                cur += freq[c]\n            # map S to positions\n            ptr = {c: 0 for c in colors}\n            arr = []\n            for ch in s:\n                arr.append(pos_lists[ch][ptr[ch]])\n                ptr[ch] += 1\n            inv = inversion_count(arr)\n            if inv < best:\n                best = inv\n        results.append(str(best))\n    sys.stdout.write('\\n'.join(results))\n\nif __name__ == \"__main__\":\n    solve()",
+      "code_sha256": "07d9eadb17794518771e7b74fc0cbea98d3645e39ab237a560fb2de53940a5c1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "0",
+            "exception_class": null,
+            "expected": "0",
+            "input": "1\ngg\n"
+          },
+          {
+            "actual": "4",
+            "exception_class": null,
+            "expected": "4",
+            "input": "1\nrbgrgbb\n"
+          },
+          {
+            "actual": "2",
+            "exception_class": null,
+            "expected": "2",
+            "input": "1\nggbgggg\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 4399,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 5,
+        "max_tokens": 204800,
+        "max_tools": 40,
+        "calls": 1,
+        "used_tokens": 4399,
+        "tool_calls": 1,
+        "remaining_seconds": 581.0411907499656
+      }
+    }
+  ],
+  "budget": {
+    "calls": 1,
+    "charged_or_reserved_tokens": 4399,
+    "tool_calls": 1
+  },
+  "hidden_correctness": "NOT_QUERIED",
+  "candidate_ledger": [
+    {
+      "code_sha256": "07d9eadb17794518771e7b74fc0cbea98d3645e39ab237a560fb2de53940a5c1",
+      "stage": "l1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "0",
+            "exception_class": null,
+            "expected": "0",
+            "input": "1\ngg\n"
+          },
+          {
+            "actual": "4",
+            "exception_class": null,
+            "expected": "4",
+            "input": "1\nrbgrgbb\n"
+          },
+          {
+            "actual": "2",
+            "exception_class": null,
+            "expected": "2",
+            "input": "1\nggbgggg\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "generation_metadata": {
+        "finish_reason": "stop"
+      },
+      "at": 1792894998.215193,
+      "learnable": true,
+      "validation_cost": {
+        "tool_calls": 1
+      },
+      "audited_case_outcomes": {
+        "14fc4e78ca0693a090b215b72521f511f0767d9998cdc1c71d8946d84c9d59c7": true,
+        "1f1616245730997432fffc57a52400415a3fbd9ff4adfbec72282dd5bb1fc20a": true,
+        "622631243357c9bfbf1b64e0436e4aa8301de50d3b19a74e2fe4f433fed5439a": true
+      }
+    }
+  ],
+  "hook_events": [],
+  "registry_snapshot_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "routing_events": []
+}

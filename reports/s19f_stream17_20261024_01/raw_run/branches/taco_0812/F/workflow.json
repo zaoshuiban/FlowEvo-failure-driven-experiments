@@ -1,0 +1,128 @@
+{
+  "problem_id": "taco_0812",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l1",
+    "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    t = int(input_data[0])\n    idx = 1\n    INF = 10**9\n    out_lines = []\n    for _ in range(t):\n        N = int(input_data[idx]); idx += 1\n        M = int(input_data[idx]); idx += 1\n        Q = list(map(int, input_data[idx:idx+M])); idx += M\n        \n        first = [INF] * (N+1)\n        last = [-1] * (N+1)\n        for i, val in enumerate(Q, 1):\n            if first[val] == INF:\n                first[val] = i\n            last[val] = i\n        \n        min_last_from_first = [INF] * (M+2)\n        for v in range(1, N+1):\n            f = first[v]\n            l = last[v]\n            if l < min_last_from_first[f]:\n                min_last_from_first[f] = l\n        \n        suff_min = [INF] * (M+2)\n        for i in range(M, 0, -1):\n            suff_min[i] = min(min_last_from_first[i], suff_min[i+1])\n        \n        max_kept = 0\n        for l in range(1, M+1):\n            if suff_min[l] == INF:\n                max_r = M\n            else:\n                max_r = suff_min[l] - 1\n            kept = max_r - l + 1\n            if kept > max_kept:\n                max_kept = kept\n        \n        ans = M - max_kept\n        out_lines.append(str(ans))\n    \n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    solve()",
+    "code_sha256": "5a5deb7b9d4e06265b4997ba3cfb7d7582e2925bd7a18863be8d992b1428fc6f"
+  },
+  "retained_candidates": [
+    "5a5deb7b9d4e06265b4997ba3cfb7d7582e2925bd7a18863be8d992b1428fc6f"
+  ],
+  "last_candidate": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    t = int(input_data[0])\n    idx = 1\n    INF = 10**9\n    out_lines = []\n    for _ in range(t):\n        N = int(input_data[idx]); idx += 1\n        M = int(input_data[idx]); idx += 1\n        Q = list(map(int, input_data[idx:idx+M])); idx += M\n        \n        first = [INF] * (N+1)\n        last = [-1] * (N+1)\n        for i, val in enumerate(Q, 1):\n            if first[val] == INF:\n                first[val] = i\n            last[val] = i\n        \n        min_last_from_first = [INF] * (M+2)\n        for v in range(1, N+1):\n            f = first[v]\n            l = last[v]\n            if l < min_last_from_first[f]:\n                min_last_from_first[f] = l\n        \n        suff_min = [INF] * (M+2)\n        for i in range(M, 0, -1):\n            suff_min[i] = min(min_last_from_first[i], suff_min[i+1])\n        \n        max_kept = 0\n        for l in range(1, M+1):\n            if suff_min[l] == INF:\n                max_r = M\n            else:\n                max_r = suff_min[l] - 1\n            kept = max_r - l + 1\n            if kept > max_kept:\n                max_kept = kept\n        \n        ans = M - max_kept\n        out_lines.append(str(ans))\n    \n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    solve()",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "taco_0812",
+          "prompt": "Read problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a double-ended queue $Q$. Initially, it contains elements $Q_{1}, Q_{2}, \\ldots, Q_{M}$ in this order. Each of these elements is an integer between $1$ and $N$ (inclusive) and each integer between $1$ and $N$ (inclusive) occurs in the queue at least once.\n\nWe want to pop some (possibly zero) elements from the front of the queue and some (not necessarily the same number, possibly zero) elements from the back. Among all the popped elements, each integer between $1$ and $N$ (inclusive) should appear at least once. Find the smallest possible total number of elements we need to pop.\n\n------  Input ------\nThe first line of the input contains a single integer $T$ denoting the number of test cases. The description of $T$ test cases follows.\nThe first line of each test case contains two space-separated integers $N$ and $M$.\nThe second line contains $M$ space-separated integers $Q_{1}, Q_{2}, \\ldots, Q_{M}$.\n\n------  Output ------\nFor each test case, print a single line containing one integer — the minimum number of elements we need to pop.\n\n------  Constraints ------\n$1 ≤ T ≤ 10$\n$1 ≤ N ≤ 10^{5}$\n$N ≤ M ≤ 2 \\cdot 10^{5}$\nfor each $i$ ($1 ≤ i ≤ N$), there is at least one element equal to $i$ in the queue\nthe sum of $N$ over all test cases does not exceed $10^{5}$\nthe sum of $M$ over all test cases does not exceed $2 \\cdot 10^{5}$\n\n----- Sample Input 1 ------ \n3\n\n2 2\n\n1 2\n\n2 3\n\n1 2 1\n\n3 6\n\n1 1 1 3 2 2\n----- Sample Output 1 ------ \n2\n\n2\n\n4\n----- explanation 1 ------ \nExample case 1: Since $N = M$ and all elements are pairwise distinct, we have to pop everything to get each value at least once.\n\nExample case 2: We can pop the first $2$ or the last $2$ elements.\n\nExample case 3: We can pop the first element and the last $3$ elements, so the answer is $1 + 3 = 4$.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n2 4\\n2 1 2 2\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n1 3\\n1 1 1\\n\", \"expected\": \"1\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n2 3\\n2 1 2\\n\", \"expected\": \"2\", \"comparison\": \"tokens\"}]",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 599.9999030409963
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    t = int(input_data[0])\n    idx = 1\n    INF = 10**9\n    out_lines = []\n    for _ in range(t):\n        N = int(input_data[idx]); idx += 1\n        M = int(input_data[idx]); idx += 1\n        Q = list(map(int, input_data[idx:idx+M])); idx += M\n        \n        first = [INF] * (N+1)\n        last = [-1] * (N+1)\n        for i, val in enumerate(Q, 1):\n            if first[val] == INF:\n                first[val] = i\n            last[val] = i\n        \n        min_last_from_first = [INF] * (M+2)\n        for v in range(1, N+1):\n            f = first[v]\n            l = last[v]\n            if l < min_last_from_first[f]:\n                min_last_from_first[f] = l\n        \n        suff_min = [INF] * (M+2)\n        for i in range(M, 0, -1):\n            suff_min[i] = min(min_last_from_first[i], suff_min[i+1])\n        \n        max_kept = 0\n        for l in range(1, M+1):\n            if suff_min[l] == INF:\n                max_r = M\n            else:\n                max_r = suff_min[l] - 1\n            kept = max_r - l + 1\n            if kept > max_kept:\n                max_kept = kept\n        \n        ans = M - max_kept\n        out_lines.append(str(ans))\n    \n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    solve()",
+      "code_sha256": "5a5deb7b9d4e06265b4997ba3cfb7d7582e2925bd7a18863be8d992b1428fc6f",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "2",
+            "exception_class": null,
+            "expected": "2",
+            "input": "1\n2 4\n2 1 2 2\n"
+          },
+          {
+            "actual": "1",
+            "exception_class": null,
+            "expected": "1",
+            "input": "1\n1 3\n1 1 1\n"
+          },
+          {
+            "actual": "2",
+            "exception_class": null,
+            "expected": "2",
+            "input": "1\n2 3\n2 1 2\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 3306,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 5,
+        "max_tokens": 204800,
+        "max_tools": 40,
+        "calls": 1,
+        "used_tokens": 3306,
+        "tool_calls": 1,
+        "remaining_seconds": 586.9487317079911
+      }
+    }
+  ],
+  "budget": {
+    "calls": 1,
+    "charged_or_reserved_tokens": 3306,
+    "tool_calls": 1
+  },
+  "hidden_correctness": "NOT_QUERIED",
+  "candidate_ledger": [
+    {
+      "code_sha256": "5a5deb7b9d4e06265b4997ba3cfb7d7582e2925bd7a18863be8d992b1428fc6f",
+      "stage": "l1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "2",
+            "exception_class": null,
+            "expected": "2",
+            "input": "1\n2 4\n2 1 2 2\n"
+          },
+          {
+            "actual": "1",
+            "exception_class": null,
+            "expected": "1",
+            "input": "1\n1 3\n1 1 1\n"
+          },
+          {
+            "actual": "2",
+            "exception_class": null,
+            "expected": "2",
+            "input": "1\n2 3\n2 1 2\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "generation_metadata": {
+        "finish_reason": "stop"
+      },
+      "at": 1792894979.166034,
+      "learnable": true,
+      "validation_cost": {
+        "tool_calls": 1
+      },
+      "audited_case_outcomes": {
+        "c5b040d844f41659d22358561899aaa39dce27f916ee14b191bb41354fda3352": true,
+        "06079b43ab7a844dc49ca8136c1f6d7d0cf3060ca0d73b1ba0b9a8a7624d2fef": true,
+        "d616ab9bc4d276780ef7ca5b2d84698bd30d875c4c991441773a9b3771518577": true
+      }
+    }
+  ],
+  "hook_events": [],
+  "registry_snapshot_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "routing_events": []
+}

@@ -1,0 +1,128 @@
+{
+  "problem_id": "taco_0363",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l1",
+    "code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    p = [0, 0] + data[1:]  # p[i] is parent of i, 1-indexed\n\n    path = []\n    cur = n\n    while cur != 0:\n        path.append(cur)\n        if cur == 1:\n            break\n        cur = p[cur]\n\n    path.reverse()\n    sys.stdout.write(' '.join(map(str, path)))\n\nif __name__ == \"__main__\":\n    main()",
+    "code_sha256": "9ad97d7d62535b8678c1cf501bcce23511090a689da42961d98a7be3a322245f"
+  },
+  "retained_candidates": [
+    "9ad97d7d62535b8678c1cf501bcce23511090a689da42961d98a7be3a322245f"
+  ],
+  "last_candidate": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    p = [0, 0] + data[1:]  # p[i] is parent of i, 1-indexed\n\n    path = []\n    cur = n\n    while cur != 0:\n        path.append(cur)\n        if cur == 1:\n            break\n        cur = p[cur]\n\n    path.reverse()\n    sys.stdout.write(' '.join(map(str, path)))\n\nif __name__ == \"__main__\":\n    main()",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "taco_0363",
+          "prompt": "Once upon a time there was only one router in the well-known company Bmail. Years went by and over time new routers were purchased. Every time they bought a new router, they connected it to one of the routers bought before it. You are given the values $p_i$ — the index of the router to which the $i$-th router was connected after being purchased ($p_i < i$).\n\nThere are $n$ routers in Boogle in total now. Print the sequence of routers on the path from the first to the $n$-th router.\n\n\n-----Input-----\n\nThe first line contains integer number $n$ ($2 \\le n \\le 200000$) — the number of the routers. The following line contains $n-1$ integers $p_2, p_3, \\dots, p_n$ ($1 \\le p_i < i$), where $p_i$ is equal to index of the router to which the $i$-th was connected after purchase.\n\n\n-----Output-----\n\nPrint the path from the $1$-st to the $n$-th router. It starts with $1$ and ends with $n$. All the elements in the path should be distinct.\n\n\n-----Examples-----\nInput\n8\n1 1 2 2 3 2 5\n\nOutput\n1 2 5 8 \nInput\n6\n1 2 3 4 5\n\nOutput\n1 2 3 4 5 6 \nInput\n7\n1 1 2 3 4 3\n\nOutput\n1 3 7\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"5\\n1 2 3 3\\n\", \"expected\": \"1 2 3 5\", \"comparison\": \"tokens\"}, {\"input\": \"6\\n1 2 3 2 4\\n\", \"expected\": \"1 2 3 4 6\", \"comparison\": \"tokens\"}, {\"input\": \"6\\n1 2 1 1 2\\n\", \"expected\": \"1 2 6\", \"comparison\": \"tokens\"}]",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 599.9999019159586
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    p = [0, 0] + data[1:]  # p[i] is parent of i, 1-indexed\n\n    path = []\n    cur = n\n    while cur != 0:\n        path.append(cur)\n        if cur == 1:\n            break\n        cur = p[cur]\n\n    path.reverse()\n    sys.stdout.write(' '.join(map(str, path)))\n\nif __name__ == \"__main__\":\n    main()",
+      "code_sha256": "9ad97d7d62535b8678c1cf501bcce23511090a689da42961d98a7be3a322245f",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "1 2 3 5",
+            "exception_class": null,
+            "expected": "1 2 3 5",
+            "input": "5\n1 2 3 3\n"
+          },
+          {
+            "actual": "1 2 3 4 6",
+            "exception_class": null,
+            "expected": "1 2 3 4 6",
+            "input": "6\n1 2 3 2 4\n"
+          },
+          {
+            "actual": "1 2 6",
+            "exception_class": null,
+            "expected": "1 2 6",
+            "input": "6\n1 2 1 1 2\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 654,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 5,
+        "max_tokens": 204800,
+        "max_tools": 40,
+        "calls": 1,
+        "used_tokens": 654,
+        "tool_calls": 1,
+        "remaining_seconds": 597.6652834999841
+      }
+    }
+  ],
+  "budget": {
+    "calls": 1,
+    "charged_or_reserved_tokens": 654,
+    "tool_calls": 1
+  },
+  "hidden_correctness": "NOT_QUERIED",
+  "candidate_ledger": [
+    {
+      "code_sha256": "9ad97d7d62535b8678c1cf501bcce23511090a689da42961d98a7be3a322245f",
+      "stage": "l1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "1 2 3 5",
+            "exception_class": null,
+            "expected": "1 2 3 5",
+            "input": "5\n1 2 3 3\n"
+          },
+          {
+            "actual": "1 2 3 4 6",
+            "exception_class": null,
+            "expected": "1 2 3 4 6",
+            "input": "6\n1 2 3 2 4\n"
+          },
+          {
+            "actual": "1 2 6",
+            "exception_class": null,
+            "expected": "1 2 6",
+            "input": "6\n1 2 1 1 2\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "generation_metadata": {
+        "finish_reason": "stop"
+      },
+      "at": 1792894895.746992,
+      "learnable": true,
+      "validation_cost": {
+        "tool_calls": 1
+      },
+      "audited_case_outcomes": {
+        "dad1b72402a4ddb2a1a0e6f44fad2dfc74794b218b7fca958c90e25aefb41a42": true,
+        "024e6cd849093ca9318c216a75bf2b792292b8568a63975081f55cf9a3dbe577": true,
+        "f771c9bf9eb60b423a1db3b65cd0cfc7be1a7caa7fd540385eef0d60f47e5b42": true
+      }
+    }
+  ],
+  "hook_events": [],
+  "registry_snapshot_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "routing_events": []
+}

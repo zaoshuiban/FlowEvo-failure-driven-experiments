@@ -1,0 +1,128 @@
+{
+  "problem_id": "taco_0317",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l1",
+    "code": "import sys\n\ndef distance(a, b):\n    d = 0\n    while a != b:\n        if a > b:\n            a //= 2\n        else:\n            b //= 2\n        d += 1\n    return d\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    out = []\n    idx = 1\n    for _ in range(n):\n        i = int(data[idx]); j = int(data[idx+1])\n        idx += 2\n        out.append(str(distance(i, j)))\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+    "code_sha256": "44db43c1a5a43bc20f2da129a3cac7fc9135075401941f471ee329ae594c6afb"
+  },
+  "retained_candidates": [
+    "44db43c1a5a43bc20f2da129a3cac7fc9135075401941f471ee329ae594c6afb"
+  ],
+  "last_candidate": "import sys\n\ndef distance(a, b):\n    d = 0\n    while a != b:\n        if a > b:\n            a //= 2\n        else:\n            b //= 2\n        d += 1\n    return d\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    out = []\n    idx = 1\n    for _ in range(n):\n        i = int(data[idx]); j = int(data[idx+1])\n        idx += 2\n        out.append(str(distance(i, j)))\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "taco_0317",
+          "prompt": "Read problems statements in Mandarin Chinese  and Russian. \n\nConsider an infinite full binary tree (each node has two children except the leaf nodes) defined as follows. For a node labelled v its left child will be labelled 2*v and its right child will be labelled 2*v+1. The root is labelled as 1.\n\nYou are given N queries of the form i j. For each query, you have to print the length of the shortest path between node labelled i and  node labelled j.\n\n------ Input ------ \n\nFirst line contains N, the number of queries. Each query consists of two space separated integers i and j in one line.\n\n------ Output ------ \n\nFor each query, print the required answer in one line.\n\n------ Constraints ------ \n\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ i,j ≤ 10^{9}$\n\n----- Sample Input 1 ------ \n3\n1 2\n2 3\n4 3\n----- Sample Output 1 ------ \n1\n2\n3\n----- explanation 1 ------ \nFor first query, 1 is directly connected to 2 by an edge. Hence distance 1.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"10\\n152 282\\n162 512\\n463 755\\n664 798\\n666 890\\n457 73\\n17 502\\n26 952\\n735 696\\n286 17\", \"expected\": \"11\\n14\\n17\\n18\\n18\\n14\\n12\\n11\\n14\\n4\", \"comparison\": \"tokens\"}, {\"input\": \"10\\n930 333\\n984 453\\n464 981\\n10 991\\n485 926\\n981 418\\n874 37\\n468 811\\n923 927\\n739 35\", \"expected\": \"17\\n13\\n13\\n12\\n13\\n15\\n14\\n15\\n6\\n12\", \"comparison\": \"tokens\"}, {\"input\": \"10\\n999 811\\n618 627\\n347 761\\n517 7\\n96 650\\n645 976\\n579 968\\n976 540\\n389 691\\n556 113\", \"expected\": \"16\\n10\\n13\\n11\\n15\\n18\\n18\\n18\\n17\\n15\", \"comparison\": \"tokens\"}]",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 599.9999257079908
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "import sys\n\ndef distance(a, b):\n    d = 0\n    while a != b:\n        if a > b:\n            a //= 2\n        else:\n            b //= 2\n        d += 1\n    return d\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    out = []\n    idx = 1\n    for _ in range(n):\n        i = int(data[idx]); j = int(data[idx+1])\n        idx += 2\n        out.append(str(distance(i, j)))\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+      "code_sha256": "44db43c1a5a43bc20f2da129a3cac7fc9135075401941f471ee329ae594c6afb",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "11\n14\n17\n18\n18\n14\n12\n11\n14\n4",
+            "exception_class": null,
+            "expected": "11\n14\n17\n18\n18\n14\n12\n11\n14\n4",
+            "input": "10\n152 282\n162 512\n463 755\n664 798\n666 890\n457 73\n17 502\n26 952\n735 696\n286 17"
+          },
+          {
+            "actual": "17\n13\n13\n12\n13\n15\n14\n15\n6\n12",
+            "exception_class": null,
+            "expected": "17\n13\n13\n12\n13\n15\n14\n15\n6\n12",
+            "input": "10\n930 333\n984 453\n464 981\n10 991\n485 926\n981 418\n874 37\n468 811\n923 927\n739 35"
+          },
+          {
+            "actual": "16\n10\n13\n11\n15\n18\n18\n18\n17\n15",
+            "exception_class": null,
+            "expected": "16\n10\n13\n11\n15\n18\n18\n18\n17\n15",
+            "input": "10\n999 811\n618 627\n347 761\n517 7\n96 650\n645 976\n579 968\n976 540\n389 691\n556 113"
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 704,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 5,
+        "max_tokens": 204800,
+        "max_tools": 40,
+        "calls": 1,
+        "used_tokens": 704,
+        "tool_calls": 1,
+        "remaining_seconds": 597.9523010409903
+      }
+    }
+  ],
+  "budget": {
+    "calls": 1,
+    "charged_or_reserved_tokens": 704,
+    "tool_calls": 1
+  },
+  "hidden_correctness": "NOT_QUERIED",
+  "candidate_ledger": [
+    {
+      "code_sha256": "44db43c1a5a43bc20f2da129a3cac7fc9135075401941f471ee329ae594c6afb",
+      "stage": "l1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "11\n14\n17\n18\n18\n14\n12\n11\n14\n4",
+            "exception_class": null,
+            "expected": "11\n14\n17\n18\n18\n14\n12\n11\n14\n4",
+            "input": "10\n152 282\n162 512\n463 755\n664 798\n666 890\n457 73\n17 502\n26 952\n735 696\n286 17"
+          },
+          {
+            "actual": "17\n13\n13\n12\n13\n15\n14\n15\n6\n12",
+            "exception_class": null,
+            "expected": "17\n13\n13\n12\n13\n15\n14\n15\n6\n12",
+            "input": "10\n930 333\n984 453\n464 981\n10 991\n485 926\n981 418\n874 37\n468 811\n923 927\n739 35"
+          },
+          {
+            "actual": "16\n10\n13\n11\n15\n18\n18\n18\n17\n15",
+            "exception_class": null,
+            "expected": "16\n10\n13\n11\n15\n18\n18\n18\n17\n15",
+            "input": "10\n999 811\n618 627\n347 761\n517 7\n96 650\n645 976\n579 968\n976 540\n389 691\n556 113"
+          }
+        ],
+        "visibility": "public"
+      },
+      "generation_metadata": {
+        "finish_reason": "stop"
+      },
+      "at": 1792894866.545193,
+      "learnable": true,
+      "validation_cost": {
+        "tool_calls": 1
+      },
+      "audited_case_outcomes": {
+        "67fcc544b2478c133638746c540d1e455a5244fdf33e235caac3c98e3012bb0b": true,
+        "8d02669770b8ebc4c32dc3fb862e23c1262043a04b98b9b3b2713264e4b19096": true,
+        "68a3636cdb6063d8e0909220fb2b628048076a950b7c5857781e2675bb589e92": true
+      }
+    }
+  ],
+  "hook_events": [],
+  "registry_snapshot_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "routing_events": []
+}

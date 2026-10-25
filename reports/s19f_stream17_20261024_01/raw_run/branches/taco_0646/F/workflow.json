@@ -1,0 +1,128 @@
+{
+  "problem_id": "taco_0646",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l1",
+    "code": "import sys\nimport math\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    t = int(data[0])\n    idx = 1\n    out = []\n    \n    for case in range(t):\n        m = int(data[idx]); n = int(data[idx+1]); idx += 2\n        \n        if m < 2:\n            m = 2\n        \n        if m <= n:\n            limit = int(math.isqrt(n)) + 1\n            # simple sieve for primes up to sqrt(n)\n            sieve = bytearray(b'\\x01') * (limit + 1)\n            sieve[0:2] = b'\\x00\\x00'\n            for i in range(2, int(math.isqrt(limit)) + 1):\n                if sieve[i]:\n                    start = i * i\n                    sieve[start:limit+1:i] = b'\\x00' * (((limit - start) // i) + 1)\n            primes = [i for i in range(2, limit + 1) if sieve[i]]\n            \n            size = n - m + 1\n            segment = bytearray(b'\\x01') * size\n            \n            for p in primes:\n                start = max(p * p, ((m + p - 1) // p) * p)\n                if start > n:\n                    continue\n                segment[start - m:n - m + 1:p] = b'\\x00' * (((n - start) // p) + 1)\n            \n            for i in range(size):\n                if segment[i]:\n                    out.append(str(m + i))\n        \n        if case != t - 1:\n            out.append(\"\")\n    \n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+    "code_sha256": "e7ea10050bf1c67607cd9d0a8df318f3d79c4f9f66bb4a4dc46ac16b1578cac7"
+  },
+  "retained_candidates": [
+    "e7ea10050bf1c67607cd9d0a8df318f3d79c4f9f66bb4a4dc46ac16b1578cac7"
+  ],
+  "last_candidate": "import sys\nimport math\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    t = int(data[0])\n    idx = 1\n    out = []\n    \n    for case in range(t):\n        m = int(data[idx]); n = int(data[idx+1]); idx += 2\n        \n        if m < 2:\n            m = 2\n        \n        if m <= n:\n            limit = int(math.isqrt(n)) + 1\n            # simple sieve for primes up to sqrt(n)\n            sieve = bytearray(b'\\x01') * (limit + 1)\n            sieve[0:2] = b'\\x00\\x00'\n            for i in range(2, int(math.isqrt(limit)) + 1):\n                if sieve[i]:\n                    start = i * i\n                    sieve[start:limit+1:i] = b'\\x00' * (((limit - start) // i) + 1)\n            primes = [i for i in range(2, limit + 1) if sieve[i]]\n            \n            size = n - m + 1\n            segment = bytearray(b'\\x01') * size\n            \n            for p in primes:\n                start = max(p * p, ((m + p - 1) // p) * p)\n                if start > n:\n                    continue\n                segment[start - m:n - m + 1:p] = b'\\x00' * (((n - start) // p) + 1)\n            \n            for i in range(size):\n                if segment[i]:\n                    out.append(str(m + i))\n        \n        if case != t - 1:\n            out.append(\"\")\n    \n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "taco_0646",
+          "prompt": "Ram wants to generate some prime numbers for his cryptosystem. Help him please!\nYour task is to generate all prime numbers between two given numbers.\n\nWarning: large Input/Output data, be careful with certain languages (though most should be OK if the algorithm is well designed)\n\n------ Input Format ------ \n\nThe first line contains t, the number of test cases (less then or equal to 10). \n\nFollowed by t lines which contain two numbers m and n (1 ≤ m ≤ n ≤ 1000000000, n-m≤100000) separated by a space.\n\n------ Output Format ------ \n\nFor every test case print all prime numbers p such that m ≤ p ≤ n,\none number per line.  Separate the answers for each test case by an empty line.\n\n------ Constraints ------ \n\n(1 ≤ m ≤ n ≤ 1000000000, n-m≤100000)\n\n----- Sample Input 1 ------ \n2\n1 10\n3 5\n----- Sample Output 1 ------ \n2\n3\n5\n7\n\n3\n5\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n20 74\\n\", \"expected\": \"23\\n29\\n31\\n37\\n41\\n43\\n47\\n53\\n59\\n61\\n67\\n71\\n73\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n154 198\\n\", \"expected\": \"157\\n163\\n167\\n173\\n179\\n181\\n191\\n193\\n197\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n44 118\\n\", \"expected\": \"47\\n53\\n59\\n61\\n67\\n71\\n73\\n79\\n83\\n89\\n97\\n101\\n103\\n107\\n109\\n113\", \"comparison\": \"tokens\"}]",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 599.9999321249779
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "import sys\nimport math\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    t = int(data[0])\n    idx = 1\n    out = []\n    \n    for case in range(t):\n        m = int(data[idx]); n = int(data[idx+1]); idx += 2\n        \n        if m < 2:\n            m = 2\n        \n        if m <= n:\n            limit = int(math.isqrt(n)) + 1\n            # simple sieve for primes up to sqrt(n)\n            sieve = bytearray(b'\\x01') * (limit + 1)\n            sieve[0:2] = b'\\x00\\x00'\n            for i in range(2, int(math.isqrt(limit)) + 1):\n                if sieve[i]:\n                    start = i * i\n                    sieve[start:limit+1:i] = b'\\x00' * (((limit - start) // i) + 1)\n            primes = [i for i in range(2, limit + 1) if sieve[i]]\n            \n            size = n - m + 1\n            segment = bytearray(b'\\x01') * size\n            \n            for p in primes:\n                start = max(p * p, ((m + p - 1) // p) * p)\n                if start > n:\n                    continue\n                segment[start - m:n - m + 1:p] = b'\\x00' * (((n - start) // p) + 1)\n            \n            for i in range(size):\n                if segment[i]:\n                    out.append(str(m + i))\n        \n        if case != t - 1:\n            out.append(\"\")\n    \n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+      "code_sha256": "e7ea10050bf1c67607cd9d0a8df318f3d79c4f9f66bb4a4dc46ac16b1578cac7",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "23\n29\n31\n37\n41\n43\n47\n53\n59\n61\n67\n71\n73",
+            "exception_class": null,
+            "expected": "23\n29\n31\n37\n41\n43\n47\n53\n59\n61\n67\n71\n73",
+            "input": "1\n20 74\n"
+          },
+          {
+            "actual": "157\n163\n167\n173\n179\n181\n191\n193\n197",
+            "exception_class": null,
+            "expected": "157\n163\n167\n173\n179\n181\n191\n193\n197",
+            "input": "1\n154 198\n"
+          },
+          {
+            "actual": "47\n53\n59\n61\n67\n71\n73\n79\n83\n89\n97\n101\n103\n107\n109\n113",
+            "exception_class": null,
+            "expected": "47\n53\n59\n61\n67\n71\n73\n79\n83\n89\n97\n101\n103\n107\n109\n113",
+            "input": "1\n44 118\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 834,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 5,
+        "max_tokens": 204800,
+        "max_tools": 40,
+        "calls": 1,
+        "used_tokens": 834,
+        "tool_calls": 1,
+        "remaining_seconds": 597.0901044579805
+      }
+    }
+  ],
+  "budget": {
+    "calls": 1,
+    "charged_or_reserved_tokens": 834,
+    "tool_calls": 1
+  },
+  "hidden_correctness": "NOT_QUERIED",
+  "candidate_ledger": [
+    {
+      "code_sha256": "e7ea10050bf1c67607cd9d0a8df318f3d79c4f9f66bb4a4dc46ac16b1578cac7",
+      "stage": "l1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "23\n29\n31\n37\n41\n43\n47\n53\n59\n61\n67\n71\n73",
+            "exception_class": null,
+            "expected": "23\n29\n31\n37\n41\n43\n47\n53\n59\n61\n67\n71\n73",
+            "input": "1\n20 74\n"
+          },
+          {
+            "actual": "157\n163\n167\n173\n179\n181\n191\n193\n197",
+            "exception_class": null,
+            "expected": "157\n163\n167\n173\n179\n181\n191\n193\n197",
+            "input": "1\n154 198\n"
+          },
+          {
+            "actual": "47\n53\n59\n61\n67\n71\n73\n79\n83\n89\n97\n101\n103\n107\n109\n113",
+            "exception_class": null,
+            "expected": "47\n53\n59\n61\n67\n71\n73\n79\n83\n89\n97\n101\n103\n107\n109\n113",
+            "input": "1\n44 118\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "generation_metadata": {
+        "finish_reason": "stop"
+      },
+      "at": 1792894963.2798731,
+      "learnable": true,
+      "validation_cost": {
+        "tool_calls": 1
+      },
+      "audited_case_outcomes": {
+        "d5ef3f92301249d2bf85566165f2384d11e75628c2e2966ecc1494a935287869": true,
+        "87df2f5bc6d8f837a9c670258b40be3c6f2319b4c76551f95b40e621f097e288": true,
+        "0dc772a046044e05f0e33adbd2fe43609178faf41d88c065dee8f762c9d7bce1": true
+      }
+    }
+  ],
+  "hook_events": [],
+  "registry_snapshot_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "routing_events": []
+}

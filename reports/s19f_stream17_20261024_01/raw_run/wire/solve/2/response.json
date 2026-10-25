@@ -1,0 +1,28 @@
+{
+  "id": "6f1735cb-993e-4be0-a13d-8f4e79846f5e",
+  "object": "chat.completion",
+  "created": 1792894871,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef distance(a, b):\n    d = 0\n    while a != b:\n        if a > b:\n            a //= 2\n        else:\n            b //= 2\n        d += 1\n    return d\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    out = []\n    idx = 1\n    for _ in range(n):\n        i = int(data[idx]); j = int(data[idx+1])\n        idx += 2\n        out.append(str(distance(i, j)))\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 555,
+    "completion_tokens": 149,
+    "total_tokens": 704,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 171
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

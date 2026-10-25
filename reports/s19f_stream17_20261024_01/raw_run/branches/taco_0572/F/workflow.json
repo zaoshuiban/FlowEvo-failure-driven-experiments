@@ -1,0 +1,128 @@
+{
+  "problem_id": "taco_0572",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l1",
+    "code": "import sys\nsys.setrecursionlimit(1 << 20)\n\ndef solve():\n    input = sys.stdin.readline\n    n = int(input())\n    colors = list(map(int, input().split()))\n    \n    adj = [[] for _ in range(n)]\n    edges = []\n    for _ in range(n - 1):\n        u, v = map(int, input().split())\n        u -= 1\n        v -= 1\n        adj[u].append(v)\n        adj[v].append(u)\n        edges.append((u, v))\n    \n    total_red = colors.count(1)\n    total_blue = colors.count(2)\n    \n    # Iterative DFS to get parent and order\n    parent = [-1] * n\n    order = []\n    stack = [0]\n    parent[0] = -2  # mark root\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for w in adj[u]:\n            if parent[w] == -1:\n                parent[w] = u\n                stack.append(w)\n    \n    red_count = [0] * n\n    blue_count = [0] * n\n    for u in range(n):\n        if colors[u] == 1:\n            red_count[u] = 1\n        elif colors[u] == 2:\n            blue_count[u] = 1\n    \n    # Process in reverse order to accumulate counts\n    for u in reversed(order):\n        if parent[u] >= 0:\n            red_count[parent[u]] += red_count[u]\n            blue_count[parent[u]] += blue_count[u]\n    \n    ans = 0\n    for u in range(n):\n        if parent[u] >= 0:\n            # u is child, edge (parent[u], u)\n            r1 = red_count[u]\n            b1 = blue_count[u]\n            r2 = total_red - r1\n            b2 = total_blue - b1\n            if not (r1 > 0 and b1 > 0) and not (r2 > 0 and b2 > 0):\n                ans += 1\n    \n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()",
+    "code_sha256": "8e2b482348ceddb56ecfc5a9bf170fc73edb93ce8a053ea0160bc62d8ccd76ab"
+  },
+  "retained_candidates": [
+    "8e2b482348ceddb56ecfc5a9bf170fc73edb93ce8a053ea0160bc62d8ccd76ab"
+  ],
+  "last_candidate": "import sys\nsys.setrecursionlimit(1 << 20)\n\ndef solve():\n    input = sys.stdin.readline\n    n = int(input())\n    colors = list(map(int, input().split()))\n    \n    adj = [[] for _ in range(n)]\n    edges = []\n    for _ in range(n - 1):\n        u, v = map(int, input().split())\n        u -= 1\n        v -= 1\n        adj[u].append(v)\n        adj[v].append(u)\n        edges.append((u, v))\n    \n    total_red = colors.count(1)\n    total_blue = colors.count(2)\n    \n    # Iterative DFS to get parent and order\n    parent = [-1] * n\n    order = []\n    stack = [0]\n    parent[0] = -2  # mark root\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for w in adj[u]:\n            if parent[w] == -1:\n                parent[w] = u\n                stack.append(w)\n    \n    red_count = [0] * n\n    blue_count = [0] * n\n    for u in range(n):\n        if colors[u] == 1:\n            red_count[u] = 1\n        elif colors[u] == 2:\n            blue_count[u] = 1\n    \n    # Process in reverse order to accumulate counts\n    for u in reversed(order):\n        if parent[u] >= 0:\n            red_count[parent[u]] += red_count[u]\n            blue_count[parent[u]] += blue_count[u]\n    \n    ans = 0\n    for u in range(n):\n        if parent[u] >= 0:\n            # u is child, edge (parent[u], u)\n            r1 = red_count[u]\n            b1 = blue_count[u]\n            r2 = total_red - r1\n            b2 = total_blue - b1\n            if not (r1 > 0 and b1 > 0) and not (r2 > 0 and b2 > 0):\n                ans += 1\n    \n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "taco_0572",
+          "prompt": "You are given an undirected tree of $n$ vertices. \n\nSome vertices are colored blue, some are colored red and some are uncolored. It is guaranteed that the tree contains at least one red vertex and at least one blue vertex.\n\nYou choose an edge and remove it from the tree. Tree falls apart into two connected components. Let's call an edge nice if neither of the resulting components contain vertices of both red and blue colors.\n\nHow many nice edges are there in the given tree?\n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($2 \\le n \\le 3 \\cdot 10^5$) — the number of vertices in the tree.\n\nThe second line contains $n$ integers $a_1, a_2, \\dots, a_n$ ($0 \\le a_i \\le 2$) — the colors of the vertices. $a_i = 1$ means that vertex $i$ is colored red, $a_i = 2$ means that vertex $i$ is colored blue and $a_i = 0$ means that vertex $i$ is uncolored.\n\nThe $i$-th of the next $n - 1$ lines contains two integers $v_i$ and $u_i$ ($1 \\le v_i, u_i \\le n$, $v_i \\ne u_i$) — the edges of the tree. It is guaranteed that the given edges form a tree. It is guaranteed that the tree contains at least one red vertex and at least one blue vertex.\n\n\n-----Output-----\n\nPrint a single integer — the number of nice edges in the given tree.\n\n\n-----Examples-----\nInput\n5\n2 0 0 1 2\n1 2\n2 3\n2 4\n2 5\n\nOutput\n1\n\nInput\n5\n1 0 0 0 2\n1 2\n2 3\n3 4\n4 5\n\nOutput\n4\n\nInput\n3\n1 1 2\n2 3\n1 3\n\nOutput\n0\n\n\n\n-----Note-----\n\nHere is the tree from the first example: [Image] \n\nThe only nice edge is edge $(2, 4)$. Removing it makes the tree fall apart into components $\\{4\\}$ and $\\{1, 2, 3, 5\\}$. The first component only includes a red vertex and the second component includes blue vertices and uncolored vertices.\n\nHere is the tree from the second example: [Image] \n\nEvery edge is nice in it.\n\nHere is the tree from the third example: [Image] \n\nEdge $(1, 3)$ splits the into components $\\{1\\}$ and $\\{3, 2\\}$, the latter one includes both red and blue vertex, thus the edge isn't nice. Edge $(2, 3)$ splits the into components $\\{1, 3\\}$ and $\\{2\\}$, the former one includes both red and blue vertex, thus the edge also isn't nice. So the answer is 0.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"4\\n1 1 2 2\\n1 2\\n1 3\\n2 4\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}, {\"input\": \"3\\n1 2 2\\n1 2\\n1 3\\n\", \"expected\": \"0\", \"comparison\": \"tokens\"}, {\"input\": \"2\\n1 2\\n1 2\\n\", \"expected\": \"1\", \"comparison\": \"tokens\"}]",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 599.999925333017
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "import sys\nsys.setrecursionlimit(1 << 20)\n\ndef solve():\n    input = sys.stdin.readline\n    n = int(input())\n    colors = list(map(int, input().split()))\n    \n    adj = [[] for _ in range(n)]\n    edges = []\n    for _ in range(n - 1):\n        u, v = map(int, input().split())\n        u -= 1\n        v -= 1\n        adj[u].append(v)\n        adj[v].append(u)\n        edges.append((u, v))\n    \n    total_red = colors.count(1)\n    total_blue = colors.count(2)\n    \n    # Iterative DFS to get parent and order\n    parent = [-1] * n\n    order = []\n    stack = [0]\n    parent[0] = -2  # mark root\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for w in adj[u]:\n            if parent[w] == -1:\n                parent[w] = u\n                stack.append(w)\n    \n    red_count = [0] * n\n    blue_count = [0] * n\n    for u in range(n):\n        if colors[u] == 1:\n            red_count[u] = 1\n        elif colors[u] == 2:\n            blue_count[u] = 1\n    \n    # Process in reverse order to accumulate counts\n    for u in reversed(order):\n        if parent[u] >= 0:\n            red_count[parent[u]] += red_count[u]\n            blue_count[parent[u]] += blue_count[u]\n    \n    ans = 0\n    for u in range(n):\n        if parent[u] >= 0:\n            # u is child, edge (parent[u], u)\n            r1 = red_count[u]\n            b1 = blue_count[u]\n            r2 = total_red - r1\n            b2 = total_blue - b1\n            if not (r1 > 0 and b1 > 0) and not (r2 > 0 and b2 > 0):\n                ans += 1\n    \n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()",
+      "code_sha256": "8e2b482348ceddb56ecfc5a9bf170fc73edb93ce8a053ea0160bc62d8ccd76ab",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "0\n",
+            "exception_class": null,
+            "expected": "0",
+            "input": "4\n1 1 2 2\n1 2\n1 3\n2 4\n"
+          },
+          {
+            "actual": "0\n",
+            "exception_class": null,
+            "expected": "0",
+            "input": "3\n1 2 2\n1 2\n1 3\n"
+          },
+          {
+            "actual": "1\n",
+            "exception_class": null,
+            "expected": "1",
+            "input": "2\n1 2\n1 2\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 1746,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 5,
+        "max_tokens": 204800,
+        "max_tools": 40,
+        "calls": 1,
+        "used_tokens": 1746,
+        "tool_calls": 1,
+        "remaining_seconds": 594.6470108749927
+      }
+    }
+  ],
+  "budget": {
+    "calls": 1,
+    "charged_or_reserved_tokens": 1746,
+    "tool_calls": 1
+  },
+  "hidden_correctness": "NOT_QUERIED",
+  "candidate_ledger": [
+    {
+      "code_sha256": "8e2b482348ceddb56ecfc5a9bf170fc73edb93ce8a053ea0160bc62d8ccd76ab",
+      "stage": "l1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "0\n",
+            "exception_class": null,
+            "expected": "0",
+            "input": "4\n1 1 2 2\n1 2\n1 3\n2 4\n"
+          },
+          {
+            "actual": "0\n",
+            "exception_class": null,
+            "expected": "0",
+            "input": "3\n1 2 2\n1 2\n1 3\n"
+          },
+          {
+            "actual": "1\n",
+            "exception_class": null,
+            "expected": "1",
+            "input": "2\n1 2\n1 2\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "generation_metadata": {
+        "finish_reason": "stop"
+      },
+      "at": 1792894920.421139,
+      "learnable": true,
+      "validation_cost": {
+        "tool_calls": 1
+      },
+      "audited_case_outcomes": {
+        "758b984510f88385d1e728e8db19ad47a6bbbd1d685f109a80e76ec9152389ba": true,
+        "9a3845630df48596e142c8f443e3dfdd6347185c7823a3231957ab34ac9b0afe": true,
+        "6da08f8ff4d022944434e3d7f42fa088bc2ff3fe24cca895083c0bad96bf3791": true
+      }
+    }
+  ],
+  "hook_events": [],
+  "registry_snapshot_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "routing_events": []
+}

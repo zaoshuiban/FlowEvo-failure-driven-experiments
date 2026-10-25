@@ -1,0 +1,28 @@
+{
+  "id": "c6c23461-931b-4133-a43a-941338ff4e4e",
+  "object": "chat.completion",
+  "created": 1792894970,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef solve():\n    input = sys.stdin.readline\n    q = int(input())\n    out = []\n    for _ in range(q):\n        n, m = map(int, input().split())\n        customers = []\n        for _ in range(n):\n            t, l, h = map(int, input().split())\n            customers.append((t, l, h))\n        \n        # Current possible temperature range at current time\n        low = high = m\n        cur_time = 0\n        possible = True\n        \n        for t, l, h in customers:\n            dt = t - cur_time\n            # Expand possible range by dt\n            low -= dt\n            high += dt\n            # Intersect with customer's range\n            low = max(low, l)\n            high = min(high, h)\n            if low > high:\n                possible = False\n                break\n            cur_time = t\n        \n        out.append(\"YES\" if possible else \"NO\")\n    \n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1160,
+    "completion_tokens": 228,
+    "total_tokens": 1388,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 136
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

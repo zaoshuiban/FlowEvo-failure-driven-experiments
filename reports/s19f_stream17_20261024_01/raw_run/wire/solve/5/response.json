@@ -1,0 +1,28 @@
+{
+  "id": "5c171788-b12b-4aa1-9a9a-0a7beddd4f6a",
+  "object": "chat.completion",
+  "created": 1792894900,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    p = [0, 0] + data[1:]  # p[i] is parent of i, 1-indexed\n\n    path = []\n    cur = n\n    while cur != 0:\n        path.append(cur)\n        if cur == 1:\n            break\n        cur = p[cur]\n\n    path.reverse()\n    sys.stdout.write(' '.join(map(str, path)))\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 529,
+    "completion_tokens": 125,
+    "total_tokens": 654,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 145
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

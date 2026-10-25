@@ -1,0 +1,128 @@
+{
+  "problem_id": "taco_0357",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l1",
+    "code": "import sys\nimport math\n\ninput = sys.stdin.read\ndata = input().split()\nt = int(data[0])\nidx = 1\nout = []\n\nfor _ in range(t):\n    n = int(data[idx]); idx += 1\n    A = list(map(int, data[idx:idx+n])); idx += n\n    \n    if n == 1:\n        out.append(\"1\")\n        continue\n    \n    total_sum = sum(A)\n    \n    pref = [0]*n\n    suff = [0]*n\n    \n    pref[0] = A[0]\n    for i in range(1, n):\n        pref[i] = math.gcd(pref[i-1], A[i])\n    \n    suff[n-1] = A[n-1]\n    for i in range(n-2, -1, -1):\n        suff[i] = math.gcd(suff[i+1], A[i])\n    \n    gcd_all = pref[n-1]\n    ans = total_sum // gcd_all\n    \n    for i in range(n):\n        if i == 0:\n            g = suff[1]\n        elif i == n-1:\n            g = pref[n-2]\n        else:\n            g = math.gcd(pref[i-1], suff[i+1])\n        notes = (total_sum - A[i]) // g + 1\n        if notes < ans:\n            ans = notes\n    \n    out.append(str(ans))\n\nsys.stdout.write(\"\\n\".join(out))",
+    "code_sha256": "e724539769a24d04fb6a386f3cb6cef7d6e3cabd6f1e2593b3165f37bee013b5"
+  },
+  "retained_candidates": [
+    "e724539769a24d04fb6a386f3cb6cef7d6e3cabd6f1e2593b3165f37bee013b5"
+  ],
+  "last_candidate": "import sys\nimport math\n\ninput = sys.stdin.read\ndata = input().split()\nt = int(data[0])\nidx = 1\nout = []\n\nfor _ in range(t):\n    n = int(data[idx]); idx += 1\n    A = list(map(int, data[idx:idx+n])); idx += n\n    \n    if n == 1:\n        out.append(\"1\")\n        continue\n    \n    total_sum = sum(A)\n    \n    pref = [0]*n\n    suff = [0]*n\n    \n    pref[0] = A[0]\n    for i in range(1, n):\n        pref[i] = math.gcd(pref[i-1], A[i])\n    \n    suff[n-1] = A[n-1]\n    for i in range(n-2, -1, -1):\n        suff[i] = math.gcd(suff[i+1], A[i])\n    \n    gcd_all = pref[n-1]\n    ans = total_sum // gcd_all\n    \n    for i in range(n):\n        if i == 0:\n            g = suff[1]\n        elif i == n-1:\n            g = pref[n-2]\n        else:\n            g = math.gcd(pref[i-1], suff[i+1])\n        notes = (total_sum - A[i]) // g + 1\n        if notes < ans:\n            ans = notes\n    \n    out.append(str(ans))\n\nsys.stdout.write(\"\\n\".join(out))",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "taco_0357",
+          "prompt": "Read problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are the owner of a big company. You are so rich, that the government has allowed you to print as many notes as you want of any single value that you like. You also have peculiar behavioral traits and you often do things that look weird to a third person. \n\nYou have N employees, where the i-th employee has salary A_{i}. You want to pay them using a denomination that you create. You are also eco-friendly and wish to save paper. So, you wish to pay them using as few notes as possible. Find out the minimum number of notes required if you can alter the salary of at most one employee to any positive integer that you like, and choose the positive integer value that each note is worth (called its denomination).\n\nEach employee must receive the exact value of his/her salary and no more.\n\n------  Subtasks ------\nSubtask #1 (100 points): Original constraints\n\n------ Input Format ------ \n\n- The first line contains an integer T, the number of test cases. Then the test cases follow.\n- The first line of each test case contains a single integer N.\n- The second line contains N integers A_{1}, A_{2}, \\ldots, A_{N}, where A_{i} is the salary of the i-th employee.\n\n------ Output Format ------ \n\nFor each test case, output in a single line the answer to the problem.\n\n------ Constraints ------ \n\n$1 ≤ T ≤ 12\\cdot 10^{4}$\n$1 ≤ N ≤ 10^{5}$\n$1 ≤ A_{i} ≤ 10^{9}$\n- The sum of $N$ over all test cases is at most $10^{6}$.\n\n----- Sample Input 1 ------ \n3\n3\n1 2 3\n3\n8 4 2\n2\n2 2 \n\n----- Sample Output 1 ------ \n4\n4\n2\n\n----- explanation 1 ------ \nTest Case $1$: We can change the salary of the third person to $1$ and use $1$ as the denomination. So in total we need $\\frac{1}{1} + \\frac{2}{1} + \\frac{1}{1}$ = $1 + 2 + 1$ = $4$ notes.\n\nTest Case $2$: We can change the salary of the first person to $2$ and use $2$ as the denomination. So in total we need $1 + 2 + 1$ = $4$ notes.\n\nTest Case $3$: We can use $2$ as the denomination and we need not change the salary of any person. So in total we need $1 + 1$ = $2$ notes.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n3\\n10 3 5\\n\", \"expected\": \"4\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n4\\n19 6 11 4\\n\", \"expected\": \"22\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n4\\n8 12 12 17\\n\", \"expected\": \"9\", \"comparison\": \"tokens\"}]",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 599.9999203340267
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "import sys\nimport math\n\ninput = sys.stdin.read\ndata = input().split()\nt = int(data[0])\nidx = 1\nout = []\n\nfor _ in range(t):\n    n = int(data[idx]); idx += 1\n    A = list(map(int, data[idx:idx+n])); idx += n\n    \n    if n == 1:\n        out.append(\"1\")\n        continue\n    \n    total_sum = sum(A)\n    \n    pref = [0]*n\n    suff = [0]*n\n    \n    pref[0] = A[0]\n    for i in range(1, n):\n        pref[i] = math.gcd(pref[i-1], A[i])\n    \n    suff[n-1] = A[n-1]\n    for i in range(n-2, -1, -1):\n        suff[i] = math.gcd(suff[i+1], A[i])\n    \n    gcd_all = pref[n-1]\n    ans = total_sum // gcd_all\n    \n    for i in range(n):\n        if i == 0:\n            g = suff[1]\n        elif i == n-1:\n            g = pref[n-2]\n        else:\n            g = math.gcd(pref[i-1], suff[i+1])\n        notes = (total_sum - A[i]) // g + 1\n        if notes < ans:\n            ans = notes\n    \n    out.append(str(ans))\n\nsys.stdout.write(\"\\n\".join(out))",
+      "code_sha256": "e724539769a24d04fb6a386f3cb6cef7d6e3cabd6f1e2593b3165f37bee013b5",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "4",
+            "exception_class": null,
+            "expected": "4",
+            "input": "1\n3\n10 3 5\n"
+          },
+          {
+            "actual": "22",
+            "exception_class": null,
+            "expected": "22",
+            "input": "1\n4\n19 6 11 4\n"
+          },
+          {
+            "actual": "9",
+            "exception_class": null,
+            "expected": "9",
+            "input": "1\n4\n8 12 12 17\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 2043,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 5,
+        "max_tokens": 204800,
+        "max_tools": 40,
+        "calls": 1,
+        "used_tokens": 2043,
+        "tool_calls": 1,
+        "remaining_seconds": 592.2134940000251
+      }
+    }
+  ],
+  "budget": {
+    "calls": 1,
+    "charged_or_reserved_tokens": 2043,
+    "tool_calls": 1
+  },
+  "hidden_correctness": "NOT_QUERIED",
+  "candidate_ledger": [
+    {
+      "code_sha256": "e724539769a24d04fb6a386f3cb6cef7d6e3cabd6f1e2593b3165f37bee013b5",
+      "stage": "l1",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "4",
+            "exception_class": null,
+            "expected": "4",
+            "input": "1\n3\n10 3 5\n"
+          },
+          {
+            "actual": "22",
+            "exception_class": null,
+            "expected": "22",
+            "input": "1\n4\n19 6 11 4\n"
+          },
+          {
+            "actual": "9",
+            "exception_class": null,
+            "expected": "9",
+            "input": "1\n4\n8 12 12 17\n"
+          }
+        ],
+        "visibility": "public"
+      },
+      "generation_metadata": {
+        "finish_reason": "stop"
+      },
+      "at": 1792894893.4011168,
+      "learnable": true,
+      "validation_cost": {
+        "tool_calls": 1
+      },
+      "audited_case_outcomes": {
+        "6d8a003ff95d8c683fed74497adfeb27d75e1eb71bac58aa3a4ebfab77ba7808": true,
+        "9f040643011df049a5111ce292641fdd4ec984627c98ddd2a4993972d6e7f157": true,
+        "790fe3bd3fc7d229acdf626e6aede781c211a909b2e1ede963a9d3b2ca7aaa7e": true
+      }
+    }
+  ],
+  "hook_events": [],
+  "registry_snapshot_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "routing_events": []
+}

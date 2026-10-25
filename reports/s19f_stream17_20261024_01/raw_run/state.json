@@ -1,0 +1,231 @@
+{
+  "memory": "",
+  "outputs": {},
+  "libraries": [
+    {
+      "key": [
+        "F",
+        "taco",
+        "MEDIUM"
+      ],
+      "value": {
+        "solutions": {
+          "taco_0721": "t = int(input())\nfor _ in range(t):\n    n = int(input())\n    arr = list(map(int, input().split()))\n    if n % 2 == 0:\n        print(0)\n    else:\n        res = 0\n        for i in range(0, n, 2):\n            res ^= arr[i]\n        print(res)",
+          "taco_0317": "import sys\n\ndef distance(a, b):\n    d = 0\n    while a != b:\n        if a > b:\n            a //= 2\n        else:\n            b //= 2\n        d += 1\n    return d\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    out = []\n    idx = 1\n    for _ in range(n):\n        i = int(data[idx]); j = int(data[idx+1])\n        idx += 2\n        out.append(str(distance(i, j)))\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+          "taco_0517": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    if not input_data:\n        return\n    n = int(input_data[0])\n    q = int(input_data[1])\n    queries = list(map(int, input_data[2:2+q]))\n    \n    # Build matrix M: 1 if 'Y', 0 if 'X'\n    # 'Y' if (i*j)%7 in {0,1,6}\n    M = []\n    for i in range(1, n+1):\n        row = bytearray(n)\n        for j in range(1, n+1):\n            r = (i*j) % 7\n            if r == 0 or r == 1 or r == 6:\n                row[j-1] = 1\n        M.append(row)\n    \n    ans0 = 0\n    ans90 = 0\n    ans180 = 0\n    ans270 = 0\n    \n    # 180 rotation\n    for i in range(n):\n        row_i = M[i]\n        row_180 = M[n-1-i]\n        for j in range(n):\n            if row_i[j] != row_180[n-1-j]:\n                ans180 += 1\n    \n    # 90 rotation\n    for i in range(n):\n        row_i = M[i]\n        for j in range(n):\n            if row_i[j] != M[j][n-1-i]:\n                ans90 += 1\n    \n    # 270 rotation\n    for i in range(n):\n        row_i = M[i]\n        for j in range(n):\n            if row_i[j] != M[n-1-j][i]:\n                ans270 += 1\n    \n    ans_map = {0: ans0, 90: ans90, 180: ans180, 270: ans270}\n    \n    out_lines = []\n    for angle in queries:\n        a = angle % 360\n        out_lines.append(str(ans_map[a]))\n    \n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    solve()",
+          "taco_0730": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    if not input_data:\n        return\n    n = int(input_data[0])\n    edges = []\n    idx = 1\n    max_node = 0\n    nodes_set = set()\n    for _ in range(n):\n        u = int(input_data[idx]); v = int(input_data[idx+1])\n        idx += 2\n        edges.append((u, v))\n        max_node = max(max_node, u, v)\n        nodes_set.add(u)\n        nodes_set.add(v)\n    \n    parent = list(range(max_node + 1))\n    size = [1] * (max_node + 1)\n    \n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n    \n    def union(x, y):\n        rx = find(x)\n        ry = find(y)\n        if rx == ry:\n            return\n        if size[rx] < size[ry]:\n            rx, ry = ry, rx\n        parent[ry] = rx\n        size[rx] += size[ry]\n    \n    for u, v in edges:\n        union(u, v)\n    \n    comp_size = {}\n    for node in nodes_set:\n        root = find(node)\n        comp_size[root] = comp_size.get(root, 0) + 1\n    \n    sizes = [s for s in comp_size.values() if s >= 2]\n    if not sizes:\n        # According to problem, at least one component size >= 2\n        # but just in case, return [0,0] or something? \n        # The problem guarantees it, so we can assume sizes is non-empty.\n        print(\"0 0\")\n    else:\n        print(min(sizes), max(sizes))\n\nif __name__ == \"__main__\":\n    solve()",
+          "taco_0401": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    t = int(input_data[0])\n    idx = 1\n    results = []\n    for _ in range(t):\n        n = int(input_data[idx]); idx += 1\n        A = list(map(int, input_data[idx:idx+n])); idx += n\n        A.sort()\n        limit = n - 1\n        total = 0\n        count = 0\n        for x in A:\n            if total + x <= limit:\n                total += x\n                count += 1\n            else:\n                break\n        results.append(str(count))\n    sys.stdout.write(\"\\n\".join(results))\n\nif __name__ == \"__main__\":\n    solve()",
+          "taco_0583": "import sys\n\ndef solve():\n    input = sys.stdin.readline\n    q = int(input())\n    out = []\n    for _ in range(q):\n        n, m = map(int, input().split())\n        customers = []\n        for _ in range(n):\n            t, l, h = map(int, input().split())\n            customers.append((t, l, h))\n        \n        # Current possible temperature range at current time\n        low = high = m\n        cur_time = 0\n        possible = True\n        \n        for t, l, h in customers:\n            dt = t - cur_time\n            # Expand possible range by dt\n            low -= dt\n            high += dt\n            # Intersect with customer's range\n            low = max(low, l)\n            high = min(high, h)\n            if low > high:\n                possible = False\n                break\n            cur_time = t\n        \n        out.append(\"YES\" if possible else \"NO\")\n    \n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()"
+        },
+        "by_benchmark": {
+          "taco": [
+            [
+              "taco_0721",
+              "Sansa has an array. She wants to find the value obtained by XOR-ing the contiguous subarrays, followed by XOR-ing the values thus obtained. Determine this value.  \n\nExample \n\n$arr=[3,4,5]$   \n\nSubarra",
+              "t = int(input())\nfor _ in range(t):\n    n = int(input())\n    arr = list(map(int, input().split()))\n    if n % 2 == 0:\n        print(0)\n    else:\n        res = 0\n        for i in range(0, n, 2):\n            res ^= arr[i]\n        print(res)"
+            ],
+            [
+              "taco_0317",
+              "Read problems statements in Mandarin Chinese  and Russian. \n\nConsider an infinite full binary tree (each node has two children except the leaf nodes) defined as follows. For a node labelled v its left",
+              "import sys\n\ndef distance(a, b):\n    d = 0\n    while a != b:\n        if a > b:\n            a //= 2\n        else:\n            b //= 2\n        d += 1\n    return d\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    out = []\n    idx = 1\n    for _ in range(n):\n        i = int(data[idx]); j = int(data[idx+1])\n        idx += 2\n        out.append(str(distance(i, j)))\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()"
+            ],
+            [
+              "taco_0517",
+              "We define a $hackonacci$ series as follows:\n\n$hackonacci(n)=1\\cdot hackonacci(n-1)+2\\cdot hackon acesi(n-2)+3\\cdot hackon aci(n-3)$   \n$hackonacci(1)=1$  \n$hackonacci(2)=2$  \n$hackonacci(3)=3$  \n\nWe d",
+              "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    if not input_data:\n        return\n    n = int(input_data[0])\n    q = int(input_data[1])\n    queries = list(map(int, input_data[2:2+q]))\n    \n    # Build matrix M: 1 if 'Y', 0 if 'X'\n    # 'Y' if (i*j)%7 in {0,1,6}\n    M = []\n    for i in range(1, n+1):\n        row = bytearray(n)\n        for j in range(1, n+1):\n            r = (i*j) % 7\n            if r == 0 or r == 1 or r == 6:\n                row[j-1] = 1\n        M.a"
+            ],
+            [
+              "taco_0730",
+              "There are $2\\times N$ nodes in an undirected graph, and a number of edges connecting some nodes.  In each edge, the first value will be between $1$ and $N$, inclusive.  The second node will be between",
+              "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    if not input_data:\n        return\n    n = int(input_data[0])\n    edges = []\n    idx = 1\n    max_node = 0\n    nodes_set = set()\n    for _ in range(n):\n        u = int(input_data[idx]); v = int(input_data[idx+1])\n        idx += 2\n        edges.append((u, v))\n        max_node = max(max_node, u, v)\n        nodes_set.add(u)\n        nodes_set.add(v)\n    \n    parent = list(range(max_node + 1))\n    size = [1] * (max_node + 1)"
+            ],
+            [
+              "taco_0401",
+              "A certain parallel universe has exactly N people living in it.\n\nThe i-th of these N people claims that they are the parent of exactly A_{i} of these N people.\n\nHowever, some of these people might be l",
+              "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    t = int(input_data[0])\n    idx = 1\n    results = []\n    for _ in range(t):\n        n = int(input_data[idx]); idx += 1\n        A = list(map(int, input_data[idx:idx+n])); idx += n\n        A.sort()\n        limit = n - 1\n        total = 0\n        count = 0\n        for x in A:\n            if total + x <= limit:\n                total += x\n                count += 1\n            else:\n                break\n        results.app"
+            ],
+            [
+              "taco_0583",
+              "Gildong owns a bulgogi restaurant. The restaurant has a lot of customers, so many of them like to make a reservation before visiting it.\n\nGildong tries so hard to satisfy the customers that he even me",
+              "import sys\n\ndef solve():\n    input = sys.stdin.readline\n    q = int(input())\n    out = []\n    for _ in range(q):\n        n, m = map(int, input().split())\n        customers = []\n        for _ in range(n):\n            t, l, h = map(int, input().split())\n            customers.append((t, l, h))\n        \n        # Current possible temperature range at current time\n        low = high = m\n        cur_time = 0\n        possible = True\n        \n        for t, l, h in customers:\n            dt = t - cur_ti"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "key": [
+        "F",
+        "taco",
+        "HARD"
+      ],
+      "value": {
+        "solutions": {
+          "taco_0657": "import sys\nfrom bisect import bisect_right\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    it = iter(input_data)\n    T = int(next(it))\n    out = []\n    for _ in range(T):\n        N = int(next(it))\n        dishes = []\n        for _ in range(N):\n            M = int(next(it))\n            A = [int(next(it)) for _ in range(M)]\n            dishes.append(A)\n        \n        if N == 1:\n            out.append(\"0\")\n            continue\n        \n        # Build pairs for each dish\n        dish_pairs = []\n        for A in dishes:\n            M = len(A)\n            if M == 1:\n                pairs = [(A[0], A[0])]\n            else:\n                pairs = []\n                for j in range(M):\n                    l = A[j]\n                    f = A[(j+1) % M]\n                    pairs.append((f, l))\n            dish_pairs.append(pairs)\n        \n        # Initialize dp for dish 0\n        dp = {}\n        for f, l in dish_pairs[0]:\n            dp[l] = 0  # max over same l is 0\n        \n        for i in range(1, N):\n            w = i  # because term index is i (1-based) between dish i and i+1\n            # prev_vals from dp keys\n            prev_vals = sorted(dp.keys())\n            prev_dp_list = [dp[v] for v in prev_vals]\n            n_prev = len(prev_vals)\n            \n            # Precompute left_max and right_max\n            left_max = [0]*n_prev\n            right_max = [0]*n_prev\n            \n            # left_max[k] = max_{j<=k} (dp[prev_vals[j]] - w*prev_vals[j])\n            cur = -10**18\n            for k in range(n_prev):\n                val = prev_dp_list[k] - w * prev_vals[k]\n                if val > cur:\n                    cur = val\n                left_max[k] = cur\n            \n            # right_max[k] = max_{j>=k} (dp[prev_vals[j]] + w*prev_vals[j])\n            cur = -10**18\n            for k in range(n_prev-1, -1, -1):\n                val = prev_dp_list[k] + w * prev_vals[k]\n                if val > cur:\n                    cur = val\n                right_max[k] = cur\n            \n            new_dp = {}\n            for f, l in dish_pairs[i]:\n                idx = bisect_right(prev_vals, f) - 1\n                best = -10**18\n                if idx >= 0:\n                    cand = left_max[idx] + w * f\n                    if cand > best:\n                        best = cand\n                if idx + 1 < n_prev:\n                    cand = right_max[idx+1] - w * f\n                    if cand > best:\n                        best = cand\n                if l in new_dp:\n                    if best > new_dp[l]:\n                        new_dp[l] = best\n                else:\n                    new_dp[l] = best\n            dp = new_dp\n        \n        ans = max(dp.values())\n        out.append(str(ans))\n    \n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+          "taco_0917": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    it = iter(input_data)\n    N = int(next(it))\n    B = int(next(it))\n    n = [0] * (N + 1)\n    for i in range(1, N + 1):\n        n[i] = int(next(it))\n    Q = int(next(it))\n    queries = [int(next(it)) for _ in range(Q)]\n    \n    MOD = 1000000007\n    \n    dp = [0] * (N + 2)\n    S = [0] * (N + 3)\n    \n    if B <= N:\n        dp[B] = 1\n        S[B] = 1\n        S[B+1] = 0\n        for i in range(B-1, 0, -1):\n            L = i + 1\n            R = i + n[i]\n            if R > B:\n                R = B\n            if L > R:\n                dp[i] = 0\n            else:\n                dp[i] = (S[L] - S[R+1]) % MOD\n            S[i] = (dp[i] + S[i+1]) % MOD\n    \n    out = []\n    for a in queries:\n        out.append(str(dp[a] % MOD))\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+          "taco_0838": "import sys\n\ndef inversion_count(arr):\n    # arr: list of integers (1-based positions)\n    n = len(arr)\n    bit = [0] * (n + 2)\n    def update(i, v):\n        while i <= n:\n            bit[i] += v\n            i += i & -i\n    def query(i):\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n    inv = 0\n    for i in range(n - 1, -1, -1):\n        inv += query(arr[i] - 1)\n        update(arr[i], 1)\n    return inv\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    if not input_data:\n        return\n    t = int(input_data[0])\n    idx = 1\n    results = []\n    for _ in range(t):\n        s = input_data[idx]\n        idx += 1\n        n = len(s)\n        freq = {'r': 0, 'g': 0, 'b': 0}\n        for ch in s:\n            freq[ch] += 1\n        colors = [c for c in 'rgb' if freq[c] > 0]\n        if len(colors) == 1:\n            results.append('0')\n            continue\n        # generate permutations of colors\n        from itertools import permutations\n        best = float('inf')\n        for perm in permutations(colors):\n            # build position lists for T\n            pos_lists = {}\n            cur = 1\n            for c in perm:\n                pos_lists[c] = list(range(cur, cur + freq[c]))\n                cur += freq[c]\n            # map S to positions\n            ptr = {c: 0 for c in colors}\n            arr = []\n            for ch in s:\n                arr.append(pos_lists[ch][ptr[ch]])\n                ptr[ch] += 1\n            inv = inversion_count(arr)\n            if inv < best:\n                best = inv\n        results.append(str(best))\n    sys.stdout.write('\\n'.join(results))\n\nif __name__ == \"__main__\":\n    solve()",
+          "taco_0915": "import sys\ninput = sys.stdin.read\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0]*(n+1)\n    def update(self, i, delta):\n        while i <= self.n:\n            self.bit[i] += delta\n            i += i & -i\n    def query(self, i):\n        s = 0\n        while i > 0:\n            s += self.bit[i]\n            i -= i & -i\n        return s\n    def range_sum(self, l, r):\n        if l > r:\n            return 0\n        return self.query(r) - self.query(l-1)\n\ndef solve():\n    data = input().split()\n    t = int(data[0])\n    idx = 1\n    out_lines = []\n    for _ in range(t):\n        N = int(data[idx]); Q = int(data[idx+1]); idx += 2\n        A = list(map(int, data[idx:idx+N])); idx += N\n        \n        # Build blocks\n        block_id = [0]*N\n        block_start = []\n        block_end = []\n        block_len = []\n        block_val = []\n        \n        i = 0\n        b = 0\n        while i < N:\n            j = i\n            while j < N and A[j] == A[i]:\n                j += 1\n            block_start.append(i)\n            block_end.append(j-1)\n            block_len.append(j-i)\n            block_val.append(A[i])\n            for k in range(i, j):\n                block_id[k] = b\n            b += 1\n            i = j\n        num_blocks = b\n        \n        queries = []\n        for qi in range(Q):\n            L = int(data[idx])-1\n            R = int(data[idx+1])-1\n            K = int(data[idx+2])\n            idx += 3\n            queries.append((L, R, K, qi))\n        \n        ans = [0]*Q\n        middle_queries = []  # (K, bL+1, bR-1, qi, left_contrib, right_contrib)\n        \n        for L, R, K, qi in queries:\n            bL = block_id[L]\n            bR = block_id[R]\n            if bL == bR:\n                length = R - L + 1\n                ans[qi] = 1 if length >= K else 0\n            else:\n                left_len = block_end[bL] - L + 1\n                right_len = R - block_start[bR] + 1\n                left_contrib = 1 if left_len >= K else 0\n                right_contrib = 1 if right_len >= K else 0\n                mid_l = bL + 1\n                mid_r = bR - 1\n                if mid_l <= mid_r:\n                    middle_queries.append((K, mid_l, mid_r, qi, left_contrib, right_contrib))\n                else:\n                    ans[qi] = left_contrib + right_contrib\n        \n        # Offline processing for middle queries\n        # Sort blocks by length descending\n        blocks_sorted = sorted(range(num_blocks), key=lambda x: block_len[x], reverse=True)\n        # Sort middle queries by K descending\n        middle_queries.sort(key=lambda x: x[0], reverse=True)\n        \n        bit = Fenwick(num_blocks)\n        bp = 0\n        for K, mid_l, mid_r, qi, left_contrib, right_contrib in middle_queries:\n            while bp < num_blocks and block_len[blocks_sorted[bp]] >= K:\n                bit.update(blocks_sorted[bp]+1, 1)  # 1-based index\n                bp += 1\n            mid_count = bit.range_sum(mid_l+1, mid_r+1)  # convert to 1-based\n            ans[qi] = left_contrib + right_contrib + mid_count\n        \n        out_lines.extend(map(str, ans))\n    \n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    solve()"
+        },
+        "by_benchmark": {
+          "taco": [
+            [
+              "taco_0657",
+              "Read problems statements in mandarin chinese, russian and vietnamese as well. \n\nYesterday Chef had cooked N very tasty dishes. A dish is prepared of several ingredients. You are given this information",
+              "import sys\nfrom bisect import bisect_right\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    it = iter(input_data)\n    T = int(next(it))\n    out = []\n    for _ in range(T):\n        N = int(next(it))\n        dishes = []\n        for _ in range(N):\n            M = int(next(it))\n            A = [int(next(it)) for _ in range(M)]\n            dishes.append(A)\n        \n        if N == 1:\n            out.append(\"0\")\n            continue\n        \n        # Build pairs for each dish\n     "
+            ],
+            [
+              "taco_0917",
+              "Read problems statements in Russian here \nThe Head Chef is interested in studying interactions between his chefs . There are  N  chefs with ids 1 to N . Each chef trusts some of the other chefs . The ",
+              "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    it = iter(input_data)\n    N = int(next(it))\n    B = int(next(it))\n    n = [0] * (N + 1)\n    for i in range(1, N + 1):\n        n[i] = int(next(it))\n    Q = int(next(it))\n    queries = [int(next(it)) for _ in range(Q)]\n    \n    MOD = 1000000007\n    \n    dp = [0] * (N + 2)\n    S = [0] * (N + 3)\n    \n    if B <= N:\n        dp[B] = 1\n        S[B] = 1\n        S[B+1] = 0\n        for i in range(B-1, 0, -1):\n            L = i "
+            ],
+            [
+              "taco_0838",
+              "Read problems statements in Mandarin Chinese  and Russian. \n\nOlya works as a warehouse keeper for a T-Shirt factory. Now the factory is facing hard times, so currently they produce only the T-shirts o",
+              "import sys\n\ndef inversion_count(arr):\n    # arr: list of integers (1-based positions)\n    n = len(arr)\n    bit = [0] * (n + 2)\n    def update(i, v):\n        while i <= n:\n            bit[i] += v\n            i += i & -i\n    def query(i):\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n    inv = 0\n    for i in range(n - 1, -1, -1):\n        inv += query(arr[i] - 1)\n        update(arr[i], 1)\n    return inv\n\ndef solve():\n    input_data = sys.stdin.r"
+            ],
+            [
+              "taco_0915",
+              "Read problems statements in Mandarin Chinese, Russian and Vietnamese as well. \n\nSometimes, the stability of a stock market is at least as important as rapid price changes.\n\nLet a stable block be a max",
+              "import sys\ninput = sys.stdin.read\n\nclass Fenwick:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0]*(n+1)\n    def update(self, i, delta):\n        while i <= self.n:\n            self.bit[i] += delta\n            i += i & -i\n    def query(self, i):\n        s = 0\n        while i > 0:\n            s += self.bit[i]\n            i -= i & -i\n        return s\n    def range_sum(self, l, r):\n        if l > r:\n            return 0\n        return self.query(r) - self.query(l-1)\n\ndef solve():"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "key": [
+        "F",
+        "taco",
+        "MEDIUM_HARD"
+      ],
+      "value": {
+        "solutions": {
+          "taco_0357": "import sys\nimport math\n\ninput = sys.stdin.read\ndata = input().split()\nt = int(data[0])\nidx = 1\nout = []\n\nfor _ in range(t):\n    n = int(data[idx]); idx += 1\n    A = list(map(int, data[idx:idx+n])); idx += n\n    \n    if n == 1:\n        out.append(\"1\")\n        continue\n    \n    total_sum = sum(A)\n    \n    pref = [0]*n\n    suff = [0]*n\n    \n    pref[0] = A[0]\n    for i in range(1, n):\n        pref[i] = math.gcd(pref[i-1], A[i])\n    \n    suff[n-1] = A[n-1]\n    for i in range(n-2, -1, -1):\n        suff[i] = math.gcd(suff[i+1], A[i])\n    \n    gcd_all = pref[n-1]\n    ans = total_sum // gcd_all\n    \n    for i in range(n):\n        if i == 0:\n            g = suff[1]\n        elif i == n-1:\n            g = pref[n-2]\n        else:\n            g = math.gcd(pref[i-1], suff[i+1])\n        notes = (total_sum - A[i]) // g + 1\n        if notes < ans:\n            ans = notes\n    \n    out.append(str(ans))\n\nsys.stdout.write(\"\\n\".join(out))",
+          "taco_0572": "import sys\nsys.setrecursionlimit(1 << 20)\n\ndef solve():\n    input = sys.stdin.readline\n    n = int(input())\n    colors = list(map(int, input().split()))\n    \n    adj = [[] for _ in range(n)]\n    edges = []\n    for _ in range(n - 1):\n        u, v = map(int, input().split())\n        u -= 1\n        v -= 1\n        adj[u].append(v)\n        adj[v].append(u)\n        edges.append((u, v))\n    \n    total_red = colors.count(1)\n    total_blue = colors.count(2)\n    \n    # Iterative DFS to get parent and order\n    parent = [-1] * n\n    order = []\n    stack = [0]\n    parent[0] = -2  # mark root\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for w in adj[u]:\n            if parent[w] == -1:\n                parent[w] = u\n                stack.append(w)\n    \n    red_count = [0] * n\n    blue_count = [0] * n\n    for u in range(n):\n        if colors[u] == 1:\n            red_count[u] = 1\n        elif colors[u] == 2:\n            blue_count[u] = 1\n    \n    # Process in reverse order to accumulate counts\n    for u in reversed(order):\n        if parent[u] >= 0:\n            red_count[parent[u]] += red_count[u]\n            blue_count[parent[u]] += blue_count[u]\n    \n    ans = 0\n    for u in range(n):\n        if parent[u] >= 0:\n            # u is child, edge (parent[u], u)\n            r1 = red_count[u]\n            b1 = blue_count[u]\n            r2 = total_red - r1\n            b2 = total_blue - b1\n            if not (r1 > 0 and b1 > 0) and not (r2 > 0 and b2 > 0):\n                ans += 1\n    \n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()"
+        },
+        "by_benchmark": {
+          "taco": [
+            [
+              "taco_0357",
+              "Read problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are the owner of a big company. You are so rich, that the government has allowed you to print as man",
+              "import sys\nimport math\n\ninput = sys.stdin.read\ndata = input().split()\nt = int(data[0])\nidx = 1\nout = []\n\nfor _ in range(t):\n    n = int(data[idx]); idx += 1\n    A = list(map(int, data[idx:idx+n])); idx += n\n    \n    if n == 1:\n        out.append(\"1\")\n        continue\n    \n    total_sum = sum(A)\n    \n    pref = [0]*n\n    suff = [0]*n\n    \n    pref[0] = A[0]\n    for i in range(1, n):\n        pref[i] = math.gcd(pref[i-1], A[i])\n    \n    suff[n-1] = A[n-1]\n    for i in range(n-2, -1, -1):\n        su"
+            ],
+            [
+              "taco_0572",
+              "You are given an undirected tree of $n$ vertices. \n\nSome vertices are colored blue, some are colored red and some are uncolored. It is guaranteed that the tree contains at least one red vertex and at ",
+              "import sys\nsys.setrecursionlimit(1 << 20)\n\ndef solve():\n    input = sys.stdin.readline\n    n = int(input())\n    colors = list(map(int, input().split()))\n    \n    adj = [[] for _ in range(n)]\n    edges = []\n    for _ in range(n - 1):\n        u, v = map(int, input().split())\n        u -= 1\n        v -= 1\n        adj[u].append(v)\n        adj[v].append(u)\n        edges.append((u, v))\n    \n    total_red = colors.count(1)\n    total_blue = colors.count(2)\n    \n    # Iterative DFS to get parent and orde"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "key": [
+        "F",
+        "taco",
+        "EASY"
+      ],
+      "value": {
+        "solutions": {
+          "taco_0363": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    p = [0, 0] + data[1:]  # p[i] is parent of i, 1-indexed\n\n    path = []\n    cur = n\n    while cur != 0:\n        path.append(cur)\n        if cur == 1:\n            break\n        cur = p[cur]\n\n    path.reverse()\n    sys.stdout.write(' '.join(map(str, path)))\n\nif __name__ == \"__main__\":\n    main()",
+          "taco_0831": "n = int(input())\nS = n * (n + 1) // 2\ntarget = S // 2\n\nin_group1 = [False] * (n + 1)\nsum1 = 0\nfor i in range(n, 0, -1):\n    if sum1 + i <= target:\n        in_group1[i] = True\n        sum1 += i\n\ndiff = abs(S - 2 * sum1)\ngroup1 = [i for i in range(1, n + 1) if in_group1[i]]\n\nprint(diff)\nprint(len(group1), *group1)",
+          "taco_0646": "import sys\nimport math\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    t = int(data[0])\n    idx = 1\n    out = []\n    \n    for case in range(t):\n        m = int(data[idx]); n = int(data[idx+1]); idx += 2\n        \n        if m < 2:\n            m = 2\n        \n        if m <= n:\n            limit = int(math.isqrt(n)) + 1\n            # simple sieve for primes up to sqrt(n)\n            sieve = bytearray(b'\\x01') * (limit + 1)\n            sieve[0:2] = b'\\x00\\x00'\n            for i in range(2, int(math.isqrt(limit)) + 1):\n                if sieve[i]:\n                    start = i * i\n                    sieve[start:limit+1:i] = b'\\x00' * (((limit - start) // i) + 1)\n            primes = [i for i in range(2, limit + 1) if sieve[i]]\n            \n            size = n - m + 1\n            segment = bytearray(b'\\x01') * size\n            \n            for p in primes:\n                start = max(p * p, ((m + p - 1) // p) * p)\n                if start > n:\n                    continue\n                segment[start - m:n - m + 1:p] = b'\\x00' * (((n - start) // p) + 1)\n            \n            for i in range(size):\n                if segment[i]:\n                    out.append(str(m + i))\n        \n        if case != t - 1:\n            out.append(\"\")\n    \n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+          "taco_0215": "def can_fit(bottles, h):\n    b = sorted(bottles, reverse=True)\n    total = 0\n    for i in range(0, len(b), 2):\n        total += b[i]\n        if total > h:\n            return False\n    return total <= h\n\nn, h = map(int, input().split())\na = list(map(int, input().split()))\n\nlo, hi = 1, n\nans = 1\nwhile lo <= hi:\n    mid = (lo + hi) // 2\n    if can_fit(a[:mid], h):\n        ans = mid\n        lo = mid + 1\n    else:\n        hi = mid - 1\n\nprint(ans)"
+        },
+        "by_benchmark": {
+          "taco": [
+            [
+              "taco_0363",
+              "Once upon a time there was only one router in the well-known company Bmail. Years went by and over time new routers were purchased. Every time they bought a new router, they connected it to one of the",
+              "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    p = [0, 0] + data[1:]  # p[i] is parent of i, 1-indexed\n\n    path = []\n    cur = n\n    while cur != 0:\n        path.append(cur)\n        if cur == 1:\n            break\n        cur = p[cur]\n\n    path.reverse()\n    sys.stdout.write(' '.join(map(str, path)))\n\nif __name__ == \"__main__\":\n    main()"
+            ],
+            [
+              "taco_0831",
+              "Petya has n integers: 1, 2, 3, ..., n. He wants to split these integers in two non-empty groups in such a way that the absolute difference of sums of integers in each group is as small as possible. \n\n",
+              "n = int(input())\nS = n * (n + 1) // 2\ntarget = S // 2\n\nin_group1 = [False] * (n + 1)\nsum1 = 0\nfor i in range(n, 0, -1):\n    if sum1 + i <= target:\n        in_group1[i] = True\n        sum1 += i\n\ndiff = abs(S - 2 * sum1)\ngroup1 = [i for i in range(1, n + 1) if in_group1[i]]\n\nprint(diff)\nprint(len(group1), *group1)"
+            ],
+            [
+              "taco_0646",
+              "Ram wants to generate some prime numbers for his cryptosystem. Help him please!\nYour task is to generate all prime numbers between two given numbers.\n\nWarning: large Input/Output data, be careful with",
+              "import sys\nimport math\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    t = int(data[0])\n    idx = 1\n    out = []\n    \n    for case in range(t):\n        m = int(data[idx]); n = int(data[idx+1]); idx += 2\n        \n        if m < 2:\n            m = 2\n        \n        if m <= n:\n            limit = int(math.isqrt(n)) + 1\n            # simple sieve for primes up to sqrt(n)\n            sieve = bytearray(b'\\x01') * (limit + 1)\n            sieve[0:2] = b'\\x00"
+            ],
+            [
+              "taco_0215",
+              "Alyona has recently bought a miniature fridge that can be represented as a matrix with $h$ rows and $2$ columns. Initially there is only one shelf at the bottom of the fridge, but Alyona can install a",
+              "def can_fit(bottles, h):\n    b = sorted(bottles, reverse=True)\n    total = 0\n    for i in range(0, len(b), 2):\n        total += b[i]\n        if total > h:\n            return False\n    return total <= h\n\nn, h = map(int, input().split())\na = list(map(int, input().split()))\n\nlo, hi = 1, n\nans = 1\nwhile lo <= hi:\n    mid = (lo + hi) // 2\n    if can_fit(a[:mid], h):\n        ans = mid\n        lo = mid + 1\n    else:\n        hi = mid - 1\n\nprint(ans)"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "key": [
+        "F",
+        "taco",
+        "VERY_HARD"
+      ],
+      "value": {
+        "solutions": {
+          "taco_0812": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    t = int(input_data[0])\n    idx = 1\n    INF = 10**9\n    out_lines = []\n    for _ in range(t):\n        N = int(input_data[idx]); idx += 1\n        M = int(input_data[idx]); idx += 1\n        Q = list(map(int, input_data[idx:idx+M])); idx += M\n        \n        first = [INF] * (N+1)\n        last = [-1] * (N+1)\n        for i, val in enumerate(Q, 1):\n            if first[val] == INF:\n                first[val] = i\n            last[val] = i\n        \n        min_last_from_first = [INF] * (M+2)\n        for v in range(1, N+1):\n            f = first[v]\n            l = last[v]\n            if l < min_last_from_first[f]:\n                min_last_from_first[f] = l\n        \n        suff_min = [INF] * (M+2)\n        for i in range(M, 0, -1):\n            suff_min[i] = min(min_last_from_first[i], suff_min[i+1])\n        \n        max_kept = 0\n        for l in range(1, M+1):\n            if suff_min[l] == INF:\n                max_r = M\n            else:\n                max_r = suff_min[l] - 1\n            kept = max_r - l + 1\n            if kept > max_kept:\n                max_kept = kept\n        \n        ans = M - max_kept\n        out_lines.append(str(ans))\n    \n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    solve()"
+        },
+        "by_benchmark": {
+          "taco": [
+            [
+              "taco_0812",
+              "Read problem statements in [Bengali], [Mandarin Chinese], [Russian], and [Vietnamese] as well.\n\nYou are given a double-ended queue $Q$. Initially, it contains elements $Q_{1}, Q_{2}, \\ldots, Q_{M}$ in",
+              "import sys\n\ndef solve():\n    input_data = sys.stdin.read().strip().split()\n    t = int(input_data[0])\n    idx = 1\n    INF = 10**9\n    out_lines = []\n    for _ in range(t):\n        N = int(input_data[idx]); idx += 1\n        M = int(input_data[idx]); idx += 1\n        Q = list(map(int, input_data[idx:idx+M])); idx += M\n        \n        first = [INF] * (N+1)\n        last = [-1] * (N+1)\n        for i, val in enumerate(Q, 1):\n            if first[val] == INF:\n                first[val] = i\n           "
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "budgets": {
+    "solve": {
+      "run_id": "s19f_stream17_20261024_01-solve",
+      "calls": 17,
+      "tool_calls": 68,
+      "charged_or_reserved_tokens": 41604,
+      "charged_or_reserved_cost_microusd": 275563,
+      "charged_or_reserved_tool_milliseconds": 2171,
+      "remaining_calls": 68,
+      "remaining_tokens": 3439996,
+      "remaining_tools": 1932,
+      "remaining_cost_microusd": 5724437,
+      "remaining_tool_milliseconds": 39997829,
+      "unknown_or_pending_requests": [],
+      "consumed_gate_shards": []
+    },
+    "learning": {
+      "run_id": "s19f_stream17_20261024_01-learning",
+      "calls": 0,
+      "tool_calls": 0,
+      "charged_or_reserved_tokens": 0,
+      "charged_or_reserved_cost_microusd": 0,
+      "charged_or_reserved_tool_milliseconds": 0,
+      "remaining_calls": 16,
+      "remaining_tokens": 655360,
+      "remaining_tools": 0,
+      "remaining_cost_microusd": 1000000,
+      "remaining_tool_milliseconds": 0,
+      "unknown_or_pending_requests": [],
+      "consumed_gate_shards": []
+    },
+    "validation": {
+      "run_id": "s19f_stream17_20261024_01-validation",
+      "calls": 0,
+      "tool_calls": 0,
+      "charged_or_reserved_tokens": 0,
+      "charged_or_reserved_cost_microusd": 0,
+      "charged_or_reserved_tool_milliseconds": 0,
+      "remaining_calls": 16,
+      "remaining_tokens": 655360,
+      "remaining_tools": 600,
+      "remaining_cost_microusd": 1000000,
+      "remaining_tool_milliseconds": 12000000,
+      "unknown_or_pending_requests": [],
+      "consumed_gate_shards": []
+    }
+  },
+  "evidence_kind": "real_experiment"
+}
