@@ -346,11 +346,25 @@ class LearningStream:
             except Exception as exc:
                 self.event('JOB_UNKNOWN',job_id=job['job_id'],reason=type(exc).__name__);raise
 
-    def run(self):
+    def finish_batch(self, completed):
+        if any(r['kind']=='BATCH_FINALIZED' and r['payload']['completed']==completed for r in self.log.records()):
+            return
+        self.boundary(completed)
+        self.runner.save()
+        self.event('BATCH_FINALIZED',completed=completed)
+
+    def run(self, *, stop_after_batch=None):
+        # Absolute batch number, not an additional number of batches on resume.
+        if stop_after_batch is not None and (type(stop_after_batch) is not int or stop_after_batch < 1):
+            raise ValueError('stop_after_batch must be a positive absolute batch number')
+        limit=len(self.tasks) if stop_after_batch is None else min(len(self.tasks),stop_after_batch*self.batch_size)
         for i,task in enumerate(self.tasks):
+            if i>=limit:
+                self.runner.save()
+                return
             rows=self.log.records();tid=task['task_id']
             if any(r['kind']=='TASK_FINALIZED' and r['payload']['task_id']==tid for r in rows):
-                if (i+1)%self.batch_size==0 or i+1==len(self.tasks):self.boundary(i+1)
+                if (i+1)%self.batch_size==0 or i+1==len(self.tasks):self.finish_batch(i+1)
                 continue
             if any(r['kind']=='TASK_STARTED' and r['payload']['task_id']==tid for r in rows):raise ValueError('interrupted task: fail closed, no paid replay')
             self.event('TASK_STARTED',task_id=tid);result=self.runner.solve(self.arm,task)
@@ -358,12 +372,12 @@ class LearningStream:
             # Persist native skills BEFORE completion marker, so restart cannot see
             # a completed task with an older success library.
             self.runner.save();self.finalize(task,result)
-            if (i+1)%self.batch_size==0 or i+1==len(self.tasks):self.boundary(i+1)
+            if (i+1)%self.batch_size==0 or i+1==len(self.tasks):self.finish_batch(i+1)
             self.runner.save()
         if not any(r['kind']=='ONLINE_LOCKED' for r in self.log.records()):self.event('ONLINE_LOCKED',task_ids=[t['task_id'] for t in self.tasks])
 
 
-def execute(plan_path,authorization_path,tasks_path,*,resume=False):
+def execute(plan_path,authorization_path,tasks_path,*,resume=False,stop_after_batch=None):
     from experiment_s16b2_source import sender_factory
     plan=e.read(plan_path);auth=e.read(authorization_path);tasks=e.read(tasks_path)
     expected=dict(run_id=plan['run_id'],protocol_hash=plan['protocol_hash'],model=plan['model'],budgets=plan['budgets'],allow_real_api=True)
@@ -375,10 +389,10 @@ def execute(plan_path,authorization_path,tasks_path,*,resume=False):
     configure_worker(plan['worker_environment'])
     folder=e.ROOT/'runs'/plan['run_id'];runner=e.ExperimentRunner(folder,plan,sender_factory,resume=resume)
     (folder/'tmp').mkdir(exist_ok=True);tempfile.tempdir=str(folder/'tmp')
-    try:LearningStream(runner,tasks,arm=plan['arm'],batch_size=plan['batch_size']).run()
+    try:LearningStream(runner,tasks,arm=plan['arm'],batch_size=plan['batch_size']).run(stop_after_batch=stop_after_batch)
     finally:runner.save()
 
 if __name__=='__main__':
     import argparse
-    p=argparse.ArgumentParser();p.add_argument('--plan',required=True);p.add_argument('--authorization',required=True);p.add_argument('--tasks',required=True);p.add_argument('--resume',action='store_true');a=p.parse_args()
-    execute(a.plan,a.authorization,a.tasks,resume=a.resume)
+    p=argparse.ArgumentParser();p.add_argument('--plan',required=True);p.add_argument('--authorization',required=True);p.add_argument('--tasks',required=True);p.add_argument('--resume',action='store_true');p.add_argument('--stop-after-batch',type=int);a=p.parse_args()
+    execute(a.plan,a.authorization,a.tasks,resume=a.resume,stop_after_batch=a.stop_after_batch)

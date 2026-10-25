@@ -42,6 +42,10 @@ class RepairChoiceHook:
             if action=='NATIVE':continue
             started=time.monotonic();before_budget=budget.snapshot()
             audit={'before_outcomes':self.current['ledger'][-1].get('audited_case_outcomes',{}) if self.current['ledger'] else {},'before_stage':self.current['ledger'][-1]['stage'] if self.current['ledger'] else None,'before_code':code,'before_sha256':hashlib.sha256(code.encode()).hexdigest(),'before_feedback':feedback.to_dict(),'generic_action':native,'changed_generic_action':action!=native,'candidate_id':key,'action':action,'at':at,'stage':stage,'status':'error'}
+            audit['checkpoint_budget']=dict(max_calls=budget.max_calls,max_tokens=budget.max_tokens,
+                max_tools=budget.max_tools,calls=budget.calls,used_tokens=budget.used_tokens,
+                tool_calls=budget.tool_calls,remaining_seconds=budget.remaining_seconds)
+            audit['checkpoint_task']=self.current['task'].to_dict()
             self.current['hooks'].append(audit)
             try:
                 if self.audit_requests:

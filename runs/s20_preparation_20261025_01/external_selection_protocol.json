@@ -1,0 +1,31 @@
+{
+  "version": "s20-external-admission-v1",
+  "model_calls": 0,
+  "sources": {
+    "apps": "test; interview/competition",
+    "contests": "test; Codeforces cf_rating >=1600",
+    "lcb": "official Lite release_v6; references prerequisite"
+  },
+  "order": "source rank APPS then CodeContests; original source row order, no model outcome ranking",
+  "max_candidates": {
+    "apps": 80,
+    "contests": 40
+  },
+  "target": {
+    "apps": 40,
+    "contests": 20,
+    "lcb": 30
+  },
+  "required_tests": "literal samples plus12 online developer and12 sealed; normalized input disjoint",
+  "reference_limit": 4,
+  "required_ast_distinct_references": 2,
+  "near_jaccard": 0.85,
+  "comparator": "existing s1 exact tokens; output contract review mandatory",
+  "role_seed": "S20-role-v1",
+  "reference_policy": "official Python3; no generated patches",
+  "prior_exposure": {
+    "urls": 1256,
+    "question_hashes": 1621,
+    "reference_hashes": 70295
+  }
+}

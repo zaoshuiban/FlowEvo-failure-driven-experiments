@@ -1,0 +1,55 @@
+{
+  "run_id": "s20-worker-batch",
+  "shared_protocol": "workflow-shared-protocol-v2",
+  "model": "deepseek-flash",
+  "evidence_kind": "engineering_fixture",
+  "operator_representation": "repair-choice-json-v2",
+  "frozen_files": {},
+  "budgets": {
+    "solve": {
+      "max_calls": 30,
+      "max_tokens": 1228800,
+      "max_tools": 2000,
+      "max_cost_microusd": 2000000,
+      "token_rate_microusd_per_million": 1200000,
+      "tool_cost_upper_microusd": 0,
+      "max_tool_milliseconds": 40000000,
+      "tool_milliseconds_upper": 20000,
+      "wall_seconds": 21600
+    },
+    "learning": {
+      "max_calls": 4,
+      "max_tokens": 163840,
+      "max_tools": 2000,
+      "max_cost_microusd": 2000000,
+      "token_rate_microusd_per_million": 1200000,
+      "tool_cost_upper_microusd": 0,
+      "max_tool_milliseconds": 40000000,
+      "tool_milliseconds_upper": 20000,
+      "wall_seconds": 21600
+    },
+    "validation": {
+      "max_calls": 10,
+      "max_tokens": 409600,
+      "max_tools": 2000,
+      "max_cost_microusd": 2000000,
+      "token_rate_microusd_per_million": 1200000,
+      "tool_cost_upper_microusd": 0,
+      "max_tool_milliseconds": 40000000,
+      "tool_milliseconds_upper": 20000,
+      "wall_seconds": 21600
+    }
+  },
+  "per_task": {
+    "max_calls": 3,
+    "max_tokens": 150000,
+    "max_tools": 20,
+    "wall_seconds": 600
+  },
+  "allow_bounded_trials": true,
+  "trial_opportunities": 2,
+  "protocol_hash": "2eedb24e2a40bfb7b596f6c82448d526e634727b23b2f630540dc0e2a50eff28",
+  "compile_protocol": "s19-compile-envelope-v2",
+  "scheduler_protocol": "evidence-diversity-v1",
+  "learning_evidence_protocol": "learning-evidence-bundle-v1"
+}

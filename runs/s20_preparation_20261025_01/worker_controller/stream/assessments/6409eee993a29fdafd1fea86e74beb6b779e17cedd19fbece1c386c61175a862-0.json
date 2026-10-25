@@ -1,0 +1,123 @@
+{
+  "level": "VERIFIED_BENEFIT",
+  "improved": [
+    "b7621495cb2827c0db92eda0a5196f1a6aad821dc8242a785180519987e82e52"
+  ],
+  "regressed": [],
+  "source_success": true,
+  "paired_efficiency": false,
+  "scope": "audited source checks only; no generalization or noninferiority claim",
+  "visibility": "public",
+  "kind": "SOURCE",
+  "source_event_id": "657a43c4f75c2b349ff643f7e0deb936ec17ac267d9d91fc5f0b42c1926abca1",
+  "before": {
+    "passed": false,
+    "status": "WRONG_ANSWER",
+    "tests_run": 2,
+    "tests_passed": 1,
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "0",
+        "actual": "0\n",
+        "exception_class": null,
+        "stderr": "",
+        "worker_status": "OK",
+        "correct": true,
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "1\n",
+        "expected": "1",
+        "actual": "0\n",
+        "exception_class": null,
+        "stderr": "",
+        "worker_status": "OK",
+        "correct": false,
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ],
+    "seconds": 0.18200333300046623,
+    "visibility": "public"
+  },
+  "after": {
+    "passed": true,
+    "status": "PUBLIC_PASS",
+    "tests_run": 2,
+    "tests_passed": 2,
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "0",
+        "actual": "0\n",
+        "exception_class": null,
+        "stderr": "",
+        "worker_status": "OK",
+        "correct": true,
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "1\n",
+        "expected": "1",
+        "actual": "1\n",
+        "exception_class": null,
+        "stderr": "",
+        "worker_status": "OK",
+        "correct": true,
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ],
+    "seconds": 0.1820061249891296,
+    "visibility": "public"
+  },
+  "response": {
+    "text": "```python\nprint(int(input()))\n```",
+    "usage": {
+      "prompt_tokens": 2,
+      "completion_tokens": 2,
+      "total_tokens": 4
+    },
+    "model": "deepseek-flash",
+    "finish_reason": "stop"
+  },
+  "proposed_code": "print(int(input()))",
+  "action": "REGENERATE_FRESH",
+  "safety": {
+    "contract": true,
+    "applicable": true,
+    "public_pass_refused": true,
+    "unknown_refused": true,
+    "zero_calls_refused": true,
+    "one_call_fallback_reserved": true,
+    "zero_tools_refused": true,
+    "missing_source_not_repaired": true,
+    "unknown_request_stops": true,
+    "native_fallback": true
+  },
+  "source_checkpoint_budget": {
+    "max_calls": 3,
+    "max_tokens": 150000,
+    "max_tools": 20,
+    "calls": 1,
+    "used_tokens": 4,
+    "tool_calls": 1,
+    "remaining_seconds": 599.6420307080261
+  },
+  "validation_budget_after": {
+    "calls": 2,
+    "charged_or_reserved_tokens": 8,
+    "tool_calls": 2
+  },
+  "diagnosis": "source public pass",
+  "cost": {
+    "model_calls": 1,
+    "tokens": 4,
+    "tool_seconds": 0.36400945798959583,
+    "actual_currency": null
+  },
+  "observed_at": 1792903508.4491
+}

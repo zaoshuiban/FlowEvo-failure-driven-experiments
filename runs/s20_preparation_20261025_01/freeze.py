@@ -1,0 +1,31 @@
+"""Freeze S20 proposals and accepted data; no authorization or model sender."""
+import pathlib,sys,json,shutil,hashlib,collections,subprocess
+P=pathlib.Path(__file__).parent.resolve();R=P.parents[1];sys.path.insert(0,str(R/'scripts'));import run_workflow_v2 as e
+from failure_evo.contracts import fingerprint,strict_stream_task
+OLD=R/'runs/s19g_train_expansion_20261024_01'
+for name in ('stream_tasks.json','sealed_final_tasks.json','task_lineage_manifest.json'):shutil.copyfile(OLD/name,P/name)
+plans={}
+for arm in ('G','M','F'):
+ p=e.read(OLD/f'plan_{arm}.json');old_hash=p['protocol_hash'];p['run_id']=f's20_taco80_{arm.lower()}_20261025_01';p['parent_plan_hash']=old_hash;p['batch_control']='absolute-stop-after-batch-v1';p['execution_order']='G1 M1 F1 G2 M2 F2 ... G8 M8 F8';p['source_commit']='2614b9274efcc8c4b0ff482dcdeba9bb9d5c245a'
+ for f in p['frozen_files']:p['frozen_files'][f]=e.sha(R/f)
+ for f in ('scripts/s20_action_pair_preflight.py',):p['frozen_files'][f]=e.sha(R/f)
+ p['protocol_hash']=fingerprint({k:v for k,v in p.items() if k!='protocol_hash'});e.write(P/f'plan_{arm}.json',p);plans[arm]={'run_id':p['run_id'],'protocol_hash':p['protocol_hash'],'budgets':p['budgets']}
+for name in ('stream_tasks.json','sealed_final_tasks.json','task_lineage_manifest.json'):assert e.sha(P/name)==e.sha(OLD/name)
+rows=e.read(P/'external_worker_results.json');accepted=e.read(P/'external_acceptance.json');selected=sum(accepted['selected'].values(),[]);cs={c['id']:c for c in e.read(P/'external_candidates.json')};public=[];sealed=[];lineage=[]
+for tid in selected:
+ c=cs[tid]
+ def case(x,role):
+  return dict(input=x['input'],expected=x['expected'],comparison='tokens',scorer='s1',visibility='public' if role!='sealed_final' else 'private',legal_verified=True,source=dict(kind='public_statement' if x in c['statement_samples'] else 'public_dataset',id=c['id']+'|'+x['provenance']+'|'+role,case_sha256=fingerprint([x['input'],x['expected']])))
+ examples=[case(x,'statement') for x in c['statement_samples']];t=dict(task_id=tid,dataset=c['dataset'],difficulty=c['difficulty'],task_public=dict(problem_id=tid,prompt=c['prompt'],starter_code='',function_name='',public_examples=examples),public_cases=[case(x,'online_development') for x in c['public']]);strict_stream_task(t);public.append(t)
+ sealed.append(dict(task_id=tid,role='sealed_final',cases=[dict(x,role='sealed_final') for x in c['review']]))
+ refs=[dict(path=str((P/'external_tasks'/tid/f'reference_{i}.py').relative_to(R)),sha256=e.sha(P/'external_tasks'/tid/f'reference_{i}.py')) for i in range(2)]
+ lineage.append(dict(task_id=tid,url=c['url'],original_row=c['row'],difficulty=c['difficulty'],question_sha256=c['question_hash'],references=refs,source_revision=e.read(P/('apps_source.json' if c['dataset']=='apps' else 'contests_source.json'))['sha'],original_test_provenance=[x['provenance'] for x in c['public']+c['review']],exposure='metadata and reference acceptance only; not target-model or Operator development',near_jaccard=c['near_jaccard']))
+ assert not {' '.join(x['input'].split()) for x in c['public']}&{' '.join(x['input'].split()) for x in c['review']}
+e.write(P/'external_public_tasks.json',public);e.write(P/'external_sealed_tasks.json',sealed);e.write(P/'external_lineage.json',lineage)
+e.write(P/'lcb_admission_status.json',dict(status='REFERENCE_PREREQUISITE_UNMET',actual_admitted=0,release='release_v6',variant='official code_generation_lite',revision=e.read(P/'lcb_source.json')['sha'],release_files=['test.jsonl','test2.jsonl','test3.jsonl','test4.jsonl','test5.jsonl','test6.jsonl'],locally_available_increment='test6:175 records already included in exposure baseline; not full release_v6',reason='Official schema supplies statements and public/private tests, but no reference solutions. No pair of independently auditable Python3 references supplied by this pinned source. Do not execute arbitrary pickle or substitute generated answers.',count_scope='0 passed this admission; not a claim no eligible LCB problem exists',next='Obtain provenance-preserved reference submissions before row-level admission. Do not promote auxiliary cases to main track.'))
+e.write(P/'pricing_review.json',dict(url='https://api-docs.deepseek.com/quick_start/pricing/',snapshot_sha256=e.sha(P/'pricing.html'),model='deepseek-flash',documented_version='DeepSeek-V4.1-Flash-1017',peak_usd_per_million=dict(cache_hit=.006,cache_miss=.30,output=1.20),offpeak_usd_per_million=dict(cache_hit=.003,cache_miss=.15,output=.60),reservation_usd_per_million_all_tokens=1.20,model_api_calls=0))
+e.write(P/'execution_proposal.json',dict(status='NOT_AUTHORIZED',authorized_usd=0,model_requests=0,taco_tasks=80,batches=8,batch_size=10,plans=plans,hard_cap_usd=66,max_requests=1280,conservative_reservation_usd=63.5437056,all_peak_full_usage_upper_usd=25.3231104,tasks_sha256=e.sha(P/'stream_tasks.json'),sealed_sha256=e.sha(P/'sealed_final_tasks.json'),external_admitted={**{k:len(v) for k,v in accepted['selected'].items()},'lcb':0},final_scoring='All three arms ONLINE_LOCKED before sealed results; no feedback to memory or learning.',paired_controls='Unsent preflight only. Additional same-prefix paid controls require separate frozen scope and budget, not part of $66.',unknown_requests='stop, reconcile; never resend automatically',batch_cli='--stop-after-batch N is absolute; --resume from batch2 onwards; same plan/task hashes',source_patch='production.patch'))
+patch=subprocess.check_output(['git','diff','--','scripts/run_learning_stream.py','FlowEvo/src/failure_evo/repair_choice_hook.py'],cwd=R);(P/'production.patch').write_bytes(patch)
+e.write(P/'source_dependencies.json',{f:e.sha(R/f) for f in sorted(set().union(*(e.read(P/f'plan_{a}.json')['frozen_files'] for a in ('G','M','F'))))})
+e.write(P/'freeze_checks.json',dict(passed=True,task_hashes_unchanged=True,online_cases=sum(len(t['public_cases']) for t in e.read(P/'stream_tasks.json')),sealed_cases=sum(len(t['cases']) for t in e.read(P/'sealed_final_tasks.json')),external_online=sum(len(t['public_cases']) for t in public),external_sealed=sum(len(t['cases']) for t in sealed),external_difficulty=dict(collections.Counter((t['dataset']+':'+t['difficulty']) for t in public)),real_model_requests=0))
+print(json.dumps(e.read(P/'freeze_checks.json'),indent=2))

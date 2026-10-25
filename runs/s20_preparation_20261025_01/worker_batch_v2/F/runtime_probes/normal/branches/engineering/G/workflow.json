@@ -1,0 +1,129 @@
+{
+  "problem_id": "engineering",
+  "status": "PUBLIC_ACCEPTED",
+  "selected": {
+    "stage": "l2a",
+    "code": "print(1)",
+    "code_sha256": "d287bb7f9d15abdc5b6e98536263815744b6ef21c8f3c839fc434ca70d8efe99"
+  },
+  "retained_candidates": [
+    "83886bbc5808db2ba6af44f6b236f39a741752dd47909a1b906a59a6d1adb0e0",
+    "d287bb7f9d15abdc5b6e98536263815744b6ef21c8f3c839fc434ca70d8efe99"
+  ],
+  "last_candidate": "print(1)",
+  "events": [
+    {
+      "stage": "l1",
+      "request": {
+        "task": {
+          "problem_id": "engineering",
+          "prompt": "Print one",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l1",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 59.99998583400156
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "print(0)",
+      "code_sha256": "83886bbc5808db2ba6af44f6b236f39a741752dd47909a1b906a59a6d1adb0e0",
+      "public_feedback": {
+        "status": "WRONG_ANSWER",
+        "summary": "Wrong answer on audited public checks.",
+        "public_cases": [
+          {
+            "actual": "0",
+            "expected": "1",
+            "input": ""
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 1,
+        "charged_or_reserved_tokens": 2,
+        "tool_calls": 1
+      },
+      "checkpoint_budget": {
+        "max_calls": 3,
+        "max_tokens": 150000,
+        "max_tools": 5,
+        "calls": 1,
+        "used_tokens": 2,
+        "tool_calls": 1,
+        "remaining_seconds": 59.99902441701852
+      }
+    },
+    {
+      "stage": "l2a",
+      "request": {
+        "task": {
+          "problem_id": "engineering",
+          "prompt": "Print one",
+          "starter_code": "",
+          "function_name": "",
+          "public_examples": []
+        },
+        "stage": "l2a",
+        "temperature": 0.5,
+        "max_tokens": 8192,
+        "previous_candidate": "print(0)",
+        "feedback": {
+          "status": "WRONG_ANSWER",
+          "summary": "Wrong answer on audited public checks.",
+          "public_cases": [
+            {
+              "actual": "0",
+              "expected": "1",
+              "input": ""
+            }
+          ],
+          "visibility": "public"
+        },
+        "timeout_seconds": 59.99901683401549
+      },
+      "operator_id": null,
+      "blocked": [],
+      "operator_status": null,
+      "code": "print(1)",
+      "code_sha256": "d287bb7f9d15abdc5b6e98536263815744b6ef21c8f3c839fc434ca70d8efe99",
+      "public_feedback": {
+        "status": "PUBLIC_PASS",
+        "summary": "Audited public checks passed; hidden correctness unknown.",
+        "public_cases": [
+          {
+            "actual": "1",
+            "expected": "1",
+            "input": ""
+          }
+        ],
+        "visibility": "public"
+      },
+      "budget": {
+        "calls": 2,
+        "charged_or_reserved_tokens": 4,
+        "tool_calls": 2
+      },
+      "checkpoint_budget": {
+        "max_calls": 3,
+        "max_tokens": 150000,
+        "max_tools": 5,
+        "calls": 2,
+        "used_tokens": 4,
+        "tool_calls": 2,
+        "remaining_seconds": 59.99812245904468
+      }
+    }
+  ],
+  "budget": {
+    "calls": 2,
+    "charged_or_reserved_tokens": 4,
+    "tool_calls": 2
+  },
+  "hidden_correctness": "NOT_QUERIED"
+}

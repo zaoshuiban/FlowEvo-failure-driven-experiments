@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/runs/s20_preparation_20261025_01/check_pair_worker.py", line 18, in <module>
+    pair=reconstruct(h);assert pair['branches']['learned']['wire_sha256']==h['request_distinctness']['actual_sent_wire_sha256'];pairs.append(pair)
+         ^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s20_action_pair_preflight.py", line 10, in reconstruct
+    task=hook['checkpoint_task'];strict_public_task(task)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/contracts.py", line 114, in strict_public_task
+    out['public_examples']=[strict_public_case(c) for c in examples]
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/contracts.py", line 114, in <listcomp>
+    out['public_examples']=[strict_public_case(c) for c in examples]
+                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/contracts.py", line 98, in strict_public_case
+    _fields(value,('input','expected','visibility','legal_verified','comparison','scorer','source','case_insensitive'),('input','expected','visibility','legal_verified'))
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/failure_evo/contracts.py", line 91, in _fields
+    raise ValueError('unknown/private/missing public field')
+ValueError: unknown/private/missing public field
