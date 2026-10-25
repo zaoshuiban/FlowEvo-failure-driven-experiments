@@ -1,0 +1,247 @@
+{
+  "task_id": "s19g_taco-test-549",
+  "original_id": "taco-test-549",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/758/C",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-549",
+    "prompt": "On the Literature lesson Sergei noticed an awful injustice, it seems that some students are asked more often than others.\n\nSeating in the class looks like a rectangle, where n rows with m pupils in each. \n\nThe teacher asks pupils in the following order: at first, she asks all pupils from the first row in the order of their seating, then she continues to ask pupils from the next row. If the teacher asked the last row, then the direction of the poll changes, it means that she asks the previous row. The order of asking the rows looks as follows: the 1-st row, the 2-nd row, ..., the n - 1-st row, the n-th row, the n - 1-st row, ..., the 2-nd row, the 1-st row, the 2-nd row, ...\n\nThe order of asking of pupils on the same row is always the same: the 1-st pupil, the 2-nd pupil, ..., the m-th pupil.\n\nDuring the lesson the teacher managed to ask exactly k questions from pupils in order described above. Sergei seats on the x-th row, on the y-th place in the row. Sergei decided to prove to the teacher that pupils are asked irregularly, help him count three values:  the maximum number of questions a particular pupil is asked,  the minimum number of questions a particular pupil is asked,  how many times the teacher asked Sergei. \n\nIf there is only one row in the class, then the teacher always asks children from this row.\n\n\n-----Input-----\n\nThe first and the only line contains five integers n, m, k, x and y (1 ≤ n, m ≤ 100, 1 ≤ k ≤ 10^18, 1 ≤ x ≤ n, 1 ≤ y ≤ m).\n\n\n-----Output-----\n\nPrint three integers:  the maximum number of questions a particular pupil is asked,  the minimum number of questions a particular pupil is asked,  how many times the teacher asked Sergei. \n\n\n-----Examples-----\nInput\n1 3 8 1 1\n\nOutput\n3 2 3\nInput\n4 2 9 4 2\n\nOutput\n2 1 1\nInput\n5 5 25 4 3\n\nOutput\n1 1 1\nInput\n100 100 1000000000000000000 100 100\n\nOutput\n101010101010101 50505050505051 50505050505051\n\n\n-----Note-----\n\nThe order of asking pupils in the first test:   the pupil from the first row who seats at the first table, it means it is Sergei;  the pupil from the first row who seats at the second table;  the pupil from the first row who seats at the third table;  the pupil from the first row who seats at the first table, it means it is Sergei;  the pupil from the first row who seats at the second table;  the pupil from the first row who seats at the third table;  the pupil from the first row who seats at the first table, it means it is Sergei;  the pupil from the first row who seats at the second table; \n\nThe order of asking pupils in the second test:   the pupil from the first row who seats at the first table;  the pupil from the first row who seats at the second table;  the pupil from the second row who seats at the first table;  the pupil from the second row who seats at the second table;  the pupil from the third row who seats at the first table;  the pupil from the third row who seats at the second table;  the pupil from the fourth row who seats at the first table;  the pupil from the fourth row who seats at the second table, it means it is Sergei;  the pupil from the third row who seats at the first table;",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "1 3 8 1 1\n",
+        "expected": "3 2 3",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "4 2 9 4 2\n",
+        "expected": "2 1 1",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "5 5 25 4 3\n",
+        "expected": "1 1 1",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "100 100 1000000000000000000 100 100\n",
+        "expected": "101010101010101 50505050505051 50505050505051",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "1 3 8 1 1\n",
+      "expected": "3 2 3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4 2 9 4 2\n",
+      "expected": "2 1 1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 5 25 4 3\n",
+      "expected": "1 1 1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "100 100 1000000000000000000 100 100\n",
+      "expected": "101010101010101 50505050505051 50505050505051",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 5 42 4 3\n",
+      "expected": "2 1 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "4 5 93 1 2\n",
+      "expected": "6 3 4",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 2 81 5 1\n",
+      "expected": "10 5 5",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 2 2 4 1\n",
+      "expected": "1 0 0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "100 100 1000000000 16 32\n",
+      "expected": "101011 50505 101010",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "100 100 10001 1 1\n",
+      "expected": "2 1 1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "9 62 756016805 7 55\n",
+      "expected": "1524228 762114 1524228\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "21 49 1000000000000000000 18 11\n",
+      "expected": "1020408163265307 510204081632653 1020408163265306",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "2 4 6 1 3\n",
+      "expected": "1 0 1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "91 15 237966754 78 6\n",
+      "expected": "176272 88136 176272",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "2 5 36 1 3\n",
+      "expected": "4 3 4",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "3 1 6 2 1\n",
+      "expected": "3 1 3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "2 2 3 2 1\n",
+      "expected": "1 0 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "3 5 88 1 5\n",
+      "expected": "9 4 5",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "3 62 675733187 1 33\n",
+      "expected": "5449461 2724730 2724731\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "58 66 199707458 15 9\n",
+      "expected": "53086 26543 53085",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "92 10 551902461 1 6\n",
+      "expected": "606487 303243 303244",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "100 100 1000000000000000000 31 2\n",
+      "expected": "101010101010101 50505050505051 101010101010101\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "66 21 203 4 16\n",
+      "expected": "1 0 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "4 1 8 3 1\n",
+      "expected": "3 1 2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "1 3 7 1 1\n",
+      "expected": "3 2 3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "2 59 400923999 2 35\n",
+      "expected": "3397662 3397661 3397661\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "1 35 1000000000000000000 1 9\n",
+      "expected": "28571428571428572 28571428571428571 28571428571428572\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "56 83 4572 35 22\n",
+      "expected": "1 0 1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "a7921a19e4e936c31665a533359c538c97552ee964d9edad14e8347b8e860b34",
+    "68e71291b80d94f9f1e5667c467e93d3b86fa846027843b8d9f7849984845d26"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

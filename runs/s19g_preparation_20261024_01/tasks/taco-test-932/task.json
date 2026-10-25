@@ -1,0 +1,221 @@
+{
+  "task_id": "s19g_taco-test-932",
+  "original_id": "taco-test-932",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1105/E",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-932",
+    "prompt": "Hiasat registered a new account in NeckoForces and when his friends found out about that, each one of them asked to use his name as Hiasat's handle.\n\nLuckily for Hiasat, he can change his handle in some points in time. Also he knows the exact moments friends will visit his profile page. Formally, you are given a sequence of events of two types:\n\n  $1$ — Hiasat can change his handle.  $2$ $s$ — friend $s$ visits Hiasat's profile. \n\nThe friend $s$ will be happy, if each time he visits Hiasat's profile his handle would be $s$.\n\nHiasat asks you to help him, find the maximum possible number of happy friends he can get.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $m$ ($1 \\le n \\le 10^5, 1 \\le m \\le 40$) — the number of events and the number of friends.\n\nThen $n$ lines follow, each denoting an event of one of two types:   $1$ — Hiasat can change his handle.  $2$ $s$ — friend $s$ ($1 \\le |s| \\le 40$) visits Hiasat's profile. \n\nIt's guaranteed, that each friend's name consists only of lowercase Latin letters.\n\nIt's guaranteed, that the first event is always of the first type and each friend will visit Hiasat's profile at least once.\n\n\n-----Output-----\n\nPrint a single integer — the maximum number of happy friends.\n\n\n-----Examples-----\nInput\n5 3\n1\n2 motarack\n2 mike\n1\n2 light\n\nOutput\n2\n\nInput\n4 3\n1\n2 alice\n2 bob\n2 tanyaromanova\n\nOutput\n1\n\n\n\n-----Note-----\n\nIn the first example, the best way is to change the handle to the \"motarack\" in the first event and to the \"light\" in the fourth event. This way, \"motarack\" and \"light\" will be happy, but \"mike\" will not.\n\nIn the second example, you can choose either \"alice\", \"bob\" or \"tanyaromanova\" and only that friend will be happy.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "5 3\n1\n2 motarack\n2 mike\n1\n2 light\n",
+        "expected": "2",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "4 3\n1\n2 alice\n2 bob\n2 tanyaromanova\n",
+        "expected": "1",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "5 3\n1\n2 motarack\n2 mike\n1\n2 light\n",
+      "expected": "2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4 3\n1\n2 alice\n2 bob\n2 tanyaromanova\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 3\n1\n2 abraham\n2 ishmael\n1\n2 isaac\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "21 6\n1\n2 d\n2 c\n1\n2 d\n2 e\n1\n2 a\n2 b\n1\n2 a\n2 f\n1\n2 c\n2 d\n1\n2 a\n2 f\n1\n2 f\n2 e\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "18 6\n1\n2 b\n2 b\n1\n2 d\n2 d\n1\n2 d\n2 f\n1\n2 e\n2 e\n1\n2 b\n2 c\n1\n2 f\n2 a\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 3\n1\n2 jacob\n2 jacob\n1\n2 max\n2 jacob\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "7 5\n1\n2 alice\n2 bob\n2 charlie\n2 bob\n1\n2 dave\n2 eve\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 3\n1\n2 motarack\n2 kime\n1\n2 light\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "4 2\n1\n2 alice\n2 bob\n2 bob\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "4 1\n1\n2 bob\n2 bob\n2 bob\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "8 3\n1\n2 lola\n1\n2 poppy\n2 lola\n1\n2 freddy\n2 poppy\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "7 3\n1\n2 harry\n2 hermione\n1\n2 ron\n1\n2 harry\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "9 4\n1\n2 a\n2 b\n1\n2 a\n2 d\n1\n2 b\n2 c\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 2\n1\n2 bob\n2 bob\n1\n2 alice\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "8 5\n1\n2 alice\n2 bob\n2 charlie\n2 bob\n1\n2 dave\n2 alice\n2 eve\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7 5\n1\n2 alice\n2 bob\n1\n2 charlie\n1\n2 daniel\n1\n2 eve\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "6 4\n1\n2 dusk\n2 dawn\n2 night\n2 day\n1\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "18 6\n1\n2 b\n2 b\n1\n2 d\n2 b\n1\n2 d\n2 e\n1\n2 e\n2 e\n1\n2 b\n2 c\n1\n2 f\n2 a\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7 3\n1\n2 bob\n2 alice\n2 charlie\n1\n2 alice\n1\n2 charlie\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "9 4\n1\n2 judas\n2 judas\n2 judas\n2 papal\n1\n2 papal\n2 papal\n2 papal\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "4 3\n1\n2 blicd\n2 bob\n2 tanyaromanova\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "6 3\n1\n2 sam\n2 sally\n2 sam\n1\n2 salman\n2 sally\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "9 2\n1\n2 alice\n1\n2 bob\n1\n2 alice\n1\n2 bob\n1\n2 alice\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "2 1\n1\n2 tester\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "5 4\n1\n2 alice\n2 bob\n2 charlie\n2 daniel\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "18 6\n1\n2 b\n2 b\n1\n2 d\n2 c\n1\n2 d\n2 e\n1\n2 e\n2 e\n1\n2 b\n2 c\n1\n2 f\n2 a\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "ede4d45a6a928e6558955f453051fa41feb840218414f84ebe66d40f8c8e448b",
+    "c0c55183c817e4aa7b444d857570974f0f052747827104ba3a6ad61de6904ab7"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

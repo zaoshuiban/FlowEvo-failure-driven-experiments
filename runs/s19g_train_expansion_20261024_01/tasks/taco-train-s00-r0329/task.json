@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r0329",
+  "original_id": "taco-train-s00-r0329",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/1438/E",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r0329",
+    "prompt": "Yurii is sure he can do everything. Can he solve this task, though?\n\nHe has an array $a$ consisting of $n$ positive integers. Let's call a subarray $a[l...r]$ good if the following conditions are simultaneously satisfied:   $l+1 \\leq r-1$, i. e. the subarray has length at least $3$;  $(a_l \\oplus a_r) = (a_{l+1}+a_{l+2}+\\ldots+a_{r-2}+a_{r-1})$, where $\\oplus$ denotes the bitwise XOR operation. \n\nIn other words, a subarray is good if the bitwise XOR of the two border elements is equal to the sum of the rest of the elements. \n\nYurii wants to calculate the total number of good subarrays. What is it equal to?\n\nAn array $c$ is a subarray of an array $d$ if $c$ can be obtained from $d$ by deletion of several (possibly, zero or all) elements from the beginning and several (possibly, zero or all) elements from the end.\n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($3 \\leq n \\leq 2\\cdot 10^5$) — the length of $a$. \n\nThe second line contains $n$ integers $a_1,a_2,\\ldots,a_n$ ($1 \\leq a_i \\lt 2^{30}$) — elements of $a$. \n\n\n-----Output-----\n\nOutput a single integer — the number of good subarrays. \n\n\n-----Examples-----\nInput\n8\n3 1 2 3 1 2 3 15\n\nOutput\n6\nInput\n10\n997230370 58052053 240970544 715275815 250707702 156801523 44100666 64791577 43523002 480196854\n\nOutput\n2\n\n\n-----Note-----\n\nThere are $6$ good subarrays in the example:   $[3,1,2]$ (twice) because $(3 \\oplus 2) = 1$;  $[1,2,3]$ (twice) because $(1 \\oplus 3) = 2$;  $[2,3,1]$ because $(2 \\oplus 1) = 3$;  $[3,1,2,3,1,2,3,15]$ because $(3 \\oplus 15) = (1+2+3+1+2+3)$.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "8\n3 1 2 3 1 2 3 15\n",
+        "expected": "6",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "10\n997230370 58052053 240970544 715275815 250707702 156801523 44100666 64791577 43523002 480196854\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "8\n3 1 2 3 1 2 3 15\n",
+      "expected": "6",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "10\n997230370 58052053 240970544 715275815 250707702 156801523 44100666 64791577 43523002 480196854\n",
+      "expected": "2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "10\n252370317 5858001 502029343 423464437 1022947864 244293674 452 368 1463 865\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n940720956 58052053 240970544 212328839 250707702 42457490 44100666 64791577 43523002 480196854\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 1022947864 131754458 452 216 953 822\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 1022947864 428172364 452 192 1463 822\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8\n3 1 2 3 1 2 3 3\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n997230370 58052053 240970544 212328839 250707702 42457490 44100666 64791577 43523002 480196854\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 502029343 423464437 1022947864 244293674 452 192 1731 865\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 606530482 244293674 194 19 1463 1377\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n512647258 29130422 386945218 423464437 1022947864 244293674 452 216 953 822\n",
+      "expected": "0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n940720956 58052053 240970544 123076536 250707702 42457490 44100666 64791577 51170082 480196854\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8\n3 1 2 2 1 1 3 11\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 1022947864 244293674 452 192 1903 865\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "10\n512647258 29130422 386945218 423464437 1022947864 244293674 452 216 953 533\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 1022947864 244293674 452 216 1216 1436\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n997230370 58052053 240970544 715275815 250707702 42457490 44100666 64791577 43523002 480196854\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 502029343 22019231 1022947864 244293674 848 192 1731 865\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 595315250 423464437 1022947864 244293674 452 216 1216 1436\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8\n4 1 2 2 1 1 3 11\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8\n3 1 2 2 1 4 3 15\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 1421655 386945218 423464437 42655514 244293674 452 192 1463 827\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 1022947864 244293674 452 216 1463 822\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 1022947864 244293674 452 216 1216 822\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 1022947864 244293674 452 192 1463 822\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n252370317 29130422 386945218 423464437 1022947864 244293674 452 18 1463 1377\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "0b50b827c6b03823bc800581d958e7df4282795d3932aa2a22930f7156ee3430",
+    "b4554011188da072da76d0cd8634c2ae9ca27ec5df7bfbaf09308376b96b9942"
+  ],
+  "reference_ast_hashes": [
+    "f11c461bd00b3d0e50df29bb95f15d19b33a851348990ee0697d77083fc024dd",
+    "1c236129063c1d4d29f3546b9c07b7d44b699c1c3ba2ccedcd2dc4a0dcda5f8d"
+  ],
+  "raw_source_row": 329,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "bed79bbbfe662791aafd6e89b8158775a7a397925ac4debdd31b5a33ef12e6f1"
+}

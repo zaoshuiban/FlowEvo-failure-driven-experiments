@@ -1,0 +1,221 @@
+{
+  "task_id": "s19g_taco-test-435",
+  "original_id": "taco-test-435",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/920/C",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-435",
+    "prompt": "You have an array a consisting of n integers. Each integer from 1 to n appears exactly once in this array.\n\nFor some indices i (1 ≤ i ≤ n - 1) it is possible to swap i-th element with (i + 1)-th, for other indices it is not possible. You may perform any number of swapping operations any order. There is no limit on the number of times you swap i-th element with (i + 1)-th (if the position is not forbidden).\n\nCan you make this array sorted in ascending order performing some sequence of swapping operations?\n\n\n-----Input-----\n\nThe first line contains one integer n (2 ≤ n ≤ 200000) — the number of elements in the array.\n\nThe second line contains n integers a_1, a_2, ..., a_{n} (1 ≤ a_{i} ≤ 200000) — the elements of the array. Each integer from 1 to n appears exactly once.\n\nThe third line contains a string of n - 1 characters, each character is either 0 or 1. If i-th character is 1, then you can swap i-th element with (i + 1)-th any number of times, otherwise it is forbidden to swap i-th element with (i + 1)-th.\n\n\n-----Output-----\n\nIf it is possible to sort the array in ascending order using any sequence of swaps you are allowed to make, print YES. Otherwise, print NO.\n\n\n-----Examples-----\nInput\n6\n1 2 5 3 4 6\n01110\n\nOutput\nYES\n\nInput\n6\n1 2 5 3 4 6\n01010\n\nOutput\nNO\n\n\n\n-----Note-----\n\nIn the first example you may swap a_3 and a_4, and then swap a_4 and a_5.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "6\n1 2 5 3 4 6\n01110\n",
+        "expected": "YES",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "6\n1 2 5 3 4 6\n01010\n",
+        "expected": "NO",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "6\n1 2 5 3 4 6\n01110\n",
+      "expected": "YES",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "6\n1 2 5 3 4 6\n01010\n",
+      "expected": "NO",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "6\n6 1 2 4 4 5\n10101\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "6\n4 6 5 3 2 1\n01011\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "6\n6 1 2 3 4 0\n10001\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5\n3 1 4 2 4\n1011\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "6\n2 3 1 1 5 4\n01111\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "2\n2 1\n0\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "20\n20 19 18 17 16 15 1 2 3 4 5 14 13 12 11 10 9 8 7 6\n1111111011111111111\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "3\n2 3 1\n01\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "10\n1 2 3 4 5 6 8 9 7 10\n000000000\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "6\n1 1 5 3 4 6\n01000\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "6\n5 6 1 2 3 6\n01111\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5\n4 5 1 2 3\n1011\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "5\n5 3 2 1 1\n0100\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "5\n3 1 4 5 2\n1001\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "3\n1 3 2\n01\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "5\n1 4 5 2 3\n1011\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "6\n6 2 2 3 4 5\n10001\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "10\n1 8 9 7 1 10 4 2 3 5\n101111101\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7\n1 2 7 3 4 5 6\n111011\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "6\n3 1 2 5 6 4\n10011\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "5\n2 3 5 1 4\n0011\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "10\n1 8 9 7 6 10 4 2 3 5\n111111101\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "5\n1 3 4 2 3\n0010\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "5\n5 2 3 1 4\n1011\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "e60e644fb4520628f8c6c096e6417a21f6f53cf5bf8a0dbefe0e37c35bcce8c3",
+    "adce6759137be23757257ae47922d7d30301f206719be7b4b2e06cbeb16d963f"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

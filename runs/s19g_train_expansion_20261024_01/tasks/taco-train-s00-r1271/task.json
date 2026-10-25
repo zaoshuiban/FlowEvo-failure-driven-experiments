@@ -1,0 +1,214 @@
+{
+  "task_id": "s19g_taco-train-s00-r1271",
+  "original_id": "taco-train-s00-r1271",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/1419/C",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1271",
+    "prompt": "A new agent called Killjoy invented a virus COVID-2069 that infects accounts on Codeforces. Each account has a rating, described by an integer (it can possibly be negative or very large).\n\nKilljoy's account is already infected and has a rating equal to $x$. Its rating is constant. There are $n$ accounts except hers, numbered from $1$ to $n$. The $i$-th account's initial rating is $a_i$. Any infected account (initially the only infected account is Killjoy's) instantly infects any uninfected account if their ratings are equal. This can happen at the beginning (before any rating changes) and after each contest. If an account is infected, it can not be healed.\n\nContests are regularly held on Codeforces. In each contest, any of these $n$ accounts (including infected ones) can participate. Killjoy can't participate. After each contest ratings are changed this way: each participant's rating is changed by an integer, but the sum of all changes must be equal to zero. New ratings can be any integer.\n\nFind out the minimal number of contests needed to infect all accounts. You can choose which accounts will participate in each contest and how the ratings will change.\n\nIt can be proven that all accounts can be infected in some finite number of contests.\n\n\n-----Input-----\n\nThe first line contains a single integer $t$ $(1 \\le t \\le 100)$ — the number of test cases. The next $2t$ lines contain the descriptions of all test cases.\n\nThe first line of each test case contains two integers $n$ and $x$ ($2 \\le n \\le 10^3$, $-4000 \\le x \\le 4000$) — the number of accounts on Codeforces and the rating of Killjoy's account.\n\nThe second line of each test case contains $n$ integers $a_1, a_2, \\dots, a_n$ $(-4000 \\le a_i \\le 4000)$ — the ratings of other accounts.\n\n\n-----Output-----\n\nFor each test case output the minimal number of contests needed to infect all accounts.\n\n\n-----Example-----\nInput\n3\n2 69\n68 70\n6 4\n4 4 4 4 4 4\n9 38\n-21 83 50 -59 -77 15 -71 -78 20\n\nOutput\n1\n0\n2\n\n\n\n-----Note-----\n\nIn the first test case it's possible to make all ratings equal to $69$. First account's rating will increase by $1$, and second account's rating will decrease by $1$, so the sum of all changes will be equal to zero.\n\nIn the second test case all accounts will be instantly infected, because all ratings (including Killjoy's account's rating) are equal to $4$.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "3\n2 69\n68 70\n6 4\n4 4 4 4 4 4\n9 38\n-21 83 50 -59 -77 15 -71 -78 20\n",
+        "expected": "1\n0\n2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "3\n2 69\n68 70\n6 4\n4 4 4 4 4 4\n9 38\n-21 83 50 -59 -77 15 -71 -78 20\n",
+      "expected": "1\n0\n2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1\n2 1\n-10 19\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 3\n0 0 6 4\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 3\n4 0 -1\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n2 7\n7 1313\n2 8\n8 1211\n2 9\n12 121\n2 121\n121 194\n2 164\n136 121\n2 7\n1313 7\n2 8\n1211 8\n",
+      "expected": "1\n1\n2\n1\n2\n1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n2 69\n68 70\n6 4\n4 4 4 4 4 4\n9 38\n-21 83 50 -59 -7 15 -71 -78 28\n",
+      "expected": "1\n0\n2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 3\n1 0 11 4\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 0\n5 4 5\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n2 7\n7 1313\n2 8\n8 1211\n2 9\n11 121\n2 121\n121 194\n2 164\n155 121\n2 7\n1313 7\n2 8\n1211 8\n",
+      "expected": "1\n1\n2\n1\n2\n1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n2 7\n7 1313\n2 14\n8 1211\n2 9\n12 121\n2 121\n121 312\n2 121\n136 121\n2 7\n1313 7\n2 8\n1211 8\n",
+      "expected": "1\n2\n2\n1\n1\n1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 2\n3 0 6 4\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 3\n4 2 -1\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n2 1\n-10 13\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "1\n3 4\n4 5 5\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 2\n3 0 6 3\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 2\n0 1 3 4\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 4\n3 11 7 2\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 4\n3 4 2 6\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 4\n1 6 6 2\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 3\n4 2 0\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 2\n0 0 6 3\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n2 7\n7 1313\n2 8\n8 1211\n2 9\n12 121\n2 121\n121 312\n2 121\n312 121\n2 7\n1313 7\n2 8\n1211 8\n",
+      "expected": "1\n1\n2\n1\n1\n1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n2 7\n7 1313\n2 8\n8 1211\n2 9\n21 121\n2 121\n121 312\n2 165\n312 121\n2 7\n1313 7\n2 8\n1211 8\n",
+      "expected": "1\n1\n2\n1\n2\n1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 2\n1 1 1 4\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n2 2\n1 8\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "bd19adac9eea3a33202e65318054a9f0e9b0d8dc265383a42688196ef61a8c24",
+    "e773f4a534eeed43d5df5621efe8d035c5bb8f1d0e3d6d008e4f48983bf6ae53"
+  ],
+  "reference_ast_hashes": [
+    "c905dd6f7d1a55fabae131a119f7546079e7290a42c52f4ce8b0ebf511c97f6c",
+    "65fd18656dfd1555f53ca1b4a71ebfe630049d685c989d20be9779a3c8a82aaf"
+  ],
+  "raw_source_row": 1271,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "055b5e0103d63c0cf3dde47fa4418634b75441f8cb41dde11525548e1ce3054a"
+}

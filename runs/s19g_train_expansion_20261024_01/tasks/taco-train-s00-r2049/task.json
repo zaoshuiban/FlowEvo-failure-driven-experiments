@@ -1,0 +1,242 @@
+{
+  "task_id": "s19g_taco-train-s00-r2049",
+  "original_id": "taco-train-s00-r2049",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/677/B",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2049",
+    "prompt": "Vanya smashes potato in a vertical food processor. At each moment of time the height of the potato in the processor doesn't exceed h and the processor smashes k centimeters of potato each second. If there are less than k centimeters remaining, than during this second processor smashes all the remaining potato.\n\nVanya has n pieces of potato, the height of the i-th piece is equal to a_{i}. He puts them in the food processor one by one starting from the piece number 1 and finishing with piece number n. Formally, each second the following happens:\n\n  If there is at least one piece of potato remaining, Vanya puts them in the processor one by one, until there is not enough space for the next piece.  Processor smashes k centimeters of potato (or just everything that is inside). \n\nProvided the information about the parameter of the food processor and the size of each potato in a row, compute how long will it take for all the potato to become smashed.\n\n\n-----Input-----\n\nThe first line of the input contains integers n, h and k (1 ≤ n ≤ 100 000, 1 ≤ k ≤ h ≤ 10^9) — the number of pieces of potato, the height of the food processor and the amount of potato being smashed each second, respectively.\n\nThe second line contains n integers a_{i} (1 ≤ a_{i} ≤ h) — the heights of the pieces.\n\n\n-----Output-----\n\nPrint a single integer — the number of seconds required to smash all the potatoes following the process described in the problem statement.\n\n\n-----Examples-----\nInput\n5 6 3\n5 4 3 2 1\n\nOutput\n5\n\nInput\n5 6 3\n5 5 5 5 5\n\nOutput\n10\n\nInput\n5 6 3\n1 2 1 1 1\n\nOutput\n2\n\n\n\n-----Note-----\n\nConsider the first sample.   First Vanya puts the piece of potato of height 5 into processor. At the end of the second there is only amount of height 2 remaining inside.  Now Vanya puts the piece of potato of height 4. At the end of the second there is amount of height 3 remaining.  Vanya puts the piece of height 3 inside and again there are only 3 centimeters remaining at the end of this second.  Vanya finally puts the pieces of height 2 and 1 inside. At the end of the second the height of potato in the processor is equal to 3.  During this second processor finally smashes all the remaining potato and the process finishes. \n\nIn the second sample, Vanya puts the piece of height 5 inside and waits for 2 seconds while it is completely smashed. Then he repeats the same process for 4 other pieces. The total time is equal to 2·5 = 10 seconds.\n\nIn the third sample, Vanya simply puts all the potato inside the processor and waits 2 seconds.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "5 6 3\n5 4 3 2 1\n",
+        "expected": "5",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "5 6 3\n5 5 5 5 5\n",
+        "expected": "10",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "5 6 3\n1 2 1 1 1\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "5 6 3\n5 4 3 2 1\n",
+      "expected": "5",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 6 3\n5 5 5 5 5\n",
+      "expected": "10",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 6 3\n1 2 1 1 1\n",
+      "expected": "2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1 1000000000 2\n1000000000\n",
+      "expected": "500000000\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 10 6\n2 5 9 5 5\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000000000 34\n467221100 490831561 793808758 450543931 364178715 95212706 16595820 92006075 424282318 384607226\n",
+      "expected": "105273183\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1001001000 3\n510204596 577280153 359230380 439745945 339143281 377447788 893030825 977110226 643733983 575665576\n",
+      "expected": "1897530918\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000000001 34\n262467899 899375241 793808758 450543931 364178715 95212706 7534121 92006075 548882383 436927280\n",
+      "expected": "116204033\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000000000 6\n510204596 367062507 635978332 260764751 339143281 377447788 397283329 977110226 643733983 575665576\n",
+      "expected": "847399062\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000000000 1\n999999999 999999999 999999999 999999999 999999999 999999999 999999999 999999999 999999999 999999999\n",
+      "expected": "9999999990\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000001000 3\n510204596 426858815 359230380 439745945 339143281 287382674 893030825 977110226 643733983 575665576\n",
+      "expected": "1817368767\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 2 6\n1 2 1 1 1\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000000000 34\n262467899 490831561 793808758 450543931 364178715 95212706 14245051 92006075 424282318 249077099\n",
+      "expected": "95195710\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 100 80\n76 27 73 71 76 74 73 70 78 75\n",
+      "expected": "9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 1000000100 2\n1000000000\n",
+      "expected": "500000000\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "5 6 3\n5 4 6 2 4\n",
+      "expected": "7\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000001000 3\n510204596 577280153 359230380 439745945 339143281 287382674 893030825 977110226 643733983 575665576\n",
+      "expected": "1867509213\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000000000 34\n467221100 490831561 93506312 63816102 364178715 95212706 16595820 92006075 339623259 234078450\n",
+      "expected": "66384415\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 100 32\n100 97 28 98 36 95 100 97 97 99\n",
+      "expected": "31\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 6 3\n1 2 4 2 1\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 100 80\n76 75 73 71 76 74 73 70 78 75\n",
+      "expected": "10\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 1000000000 6\n510204596 367062507 635978332 439745945 339143281 377447788 893030825 977110226 643733983 575665576\n",
+      "expected": "959853844\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 900000000 1\n900000000 900000000 900000000 900000000 900000000 900000000 900000000 900000000 900000000 900000000\n",
+      "expected": "9000000000\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 6 1\n5 3 6 1 4\n",
+      "expected": "19\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 17 10\n2 0 8 5 5\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 6 3\n2 5 5 5 5\n",
+      "expected": "9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 4 9\n1 2 1 1 1\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "0d7e53358c760ee54ea6bbe6e6b3f204310d5b36f69d95063a7a50f390a9c4ef",
+    "acfcc4410033ec87b5b837ad6d4ab1e451f622d1f060dc7b5131cdb17717ef73"
+  ],
+  "reference_ast_hashes": [
+    "06227f76a505c64be6e84b0fdae038cd6694ed26a393ab14d5facd1d3fb8fab3",
+    "4b953bb2da04e726ef2c603c11697075b76646fe6caf3115f9dc018cebf7b3b0"
+  ],
+  "raw_source_row": 2049,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "2a298f23e7f2a2a6e62837842deb73aaba2ef4741b61adb6d3208e0a113e40f8"
+}

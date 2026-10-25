@@ -1,0 +1,221 @@
+{
+  "task_id": "s19g_taco-test-758",
+  "original_id": "taco-test-758",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/630/M",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-758",
+    "prompt": "Vasya started working in a machine vision company of IT City. Vasya's team creates software and hardware for identification of people by their face.\n\nOne of the project's know-how is a camera rotating around its optical axis on shooting. People see an eye-catching gadget — a rotating camera — come up to it to see it better, look into it. And the camera takes their photo at that time. What could be better for high quality identification?\n\nBut not everything is so simple. The pictures from camera appear rotated too (on clockwise camera rotation frame the content becomes rotated counter-clockwise). But the identification algorithm can work only with faces that are just slightly deviated from vertical.\n\nVasya was entrusted to correct the situation — to rotate a captured image so that image would be minimally deviated from vertical. Requirements were severe. Firstly, the picture should be rotated only on angle divisible by 90 degrees to not lose a bit of information about the image. Secondly, the frames from the camera are so huge and FPS is so big that adequate rotation speed is provided by hardware FPGA solution only. And this solution can rotate only by 90 degrees clockwise. Of course, one can apply 90 degrees turn several times but for the sake of performance the number of turns should be minimized.\n\nHelp Vasya implement the program that by the given rotation angle of the camera can determine the minimum number of 90 degrees clockwise turns necessary to get a picture in which up direction deviation from vertical is minimum.\n\nThe next figure contains frames taken from an unrotated camera, then from rotated 90 degrees clockwise, then from rotated 90 degrees counter-clockwise. Arrows show direction to \"true up\". [Image] \n\nThe next figure shows 90 degrees clockwise turn by FPGA hardware. [Image] \n\n\n-----Input-----\n\nThe only line of the input contains one integer x ( - 10^18 ≤ x ≤ 10^18) — camera angle in degrees. Positive value denotes clockwise camera rotation, negative — counter-clockwise.\n\n\n-----Output-----\n\nOutput one integer — the minimum required number of 90 degrees clockwise turns.\n\n\n-----Examples-----\nInput\n60\n\nOutput\n1\n\nInput\n-60\n\nOutput\n3\n\n\n\n-----Note-----\n\nWhen the camera is rotated 60 degrees counter-clockwise (the second example), an image from it is rotated 60 degrees clockwise. One 90 degrees clockwise turn of the image result in 150 degrees clockwise total rotation and deviation from \"true up\" for one turn is 150 degrees. Two 90 degrees clockwise turns of the image result in 240 degrees clockwise total rotation and deviation from \"true up\" for two turns is 120 degrees because 240 degrees clockwise equal to 120 degrees counter-clockwise. Three 90 degrees clockwise turns of the image result in 330 degrees clockwise total rotation and deviation from \"true up\" for three turns is 30 degrees because 330 degrees clockwise equal to 30 degrees counter-clockwise.\n\nFrom 60, 150, 120 and 30 degrees deviations the smallest is 30, and it it achieved in three 90 degrees clockwise turns.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "60\n",
+        "expected": "1",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "-60\n",
+        "expected": "3",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "60\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "-60\n",
+      "expected": "3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "6678504591813508\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "-46566207526617020\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "-999999999999999595\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "187829167135459333\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "201035370138545377\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "225\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "-504\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "94\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "136\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "-1638150760258347909\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "-61\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "-580\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "272028913373922389\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "235722930896035434\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "999999999999999506\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "596\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "-63789947951473336\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "-999999999999999596\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "113\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "-221014111108243233\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "-479865961765156498\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "-77\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "-214320298455044899\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "266413096245385420\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "f61ce1ce5c114f6a81b43c166012308ae69c85fc055a7132bbf406506d4c517e",
+    "baca3adafbe27702fccfd01d22181dd580c6b971744db991d2fc07f758aedc7a"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

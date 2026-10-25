@@ -1,0 +1,242 @@
+{
+  "task_id": "s19g_taco-train-s00-r2225",
+  "original_id": "taco-train-s00-r2225",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/30/B",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2225",
+    "prompt": "The king Copa often has been reported about the Codeforces site, which is rapidly getting more and more popular among the brightest minds of the humanity, who are using it for training and competing. Recently Copa understood that to conquer the world he needs to organize the world Codeforces tournament. He hopes that after it the brightest minds will become his subordinates, and the toughest part of conquering the world will be completed.\n\nThe final round of the Codeforces World Finals 20YY is scheduled for DD.MM.YY, where DD is the day of the round, MM is the month and YY are the last two digits of the year. Bob is lucky to be the first finalist form Berland. But there is one problem: according to the rules of the competition, all participants must be at least 18 years old at the moment of the finals. Bob was born on BD.BM.BY. This date is recorded in his passport, the copy of which he has already mailed to the organizers. But Bob learned that in different countries the way, in which the dates are written, differs. For example, in the US the month is written first, then the day and finally the year. Bob wonders if it is possible to rearrange the numbers in his date of birth so that he will be at least 18 years old on the day DD.MM.YY. He can always tell that in his motherland dates are written differently. Help him.\n\nAccording to another strange rule, eligible participant must be born in the same century as the date of the finals. If the day of the finals is participant's 18-th birthday, he is allowed to participate. \n\nAs we are considering only the years from 2001 to 2099 for the year of the finals, use the following rule: the year is leap if it's number is divisible by four.\n\nInput\n\nThe first line contains the date DD.MM.YY, the second line contains the date BD.BM.BY. It is guaranteed that both dates are correct, and YY and BY are always in [01;99].\n\nIt could be that by passport Bob was born after the finals. In this case, he can still change the order of numbers in date.\n\nOutput\n\nIf it is possible to rearrange the numbers in the date of birth so that Bob will be at least 18 years old on the DD.MM.YY, output YES. In the other case, output NO. \n\nEach number contains exactly two digits and stands for day, month or year in a date. Note that it is permitted to rearrange only numbers, not digits.\n\nExamples\n\nInput\n\n01.01.98\n01.01.80\n\n\nOutput\n\nYES\n\n\nInput\n\n20.10.20\n10.02.30\n\n\nOutput\n\nNO\n\n\nInput\n\n28.02.74\n28.02.64\n\n\nOutput\n\nNO",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "01.01.98\n01.01.80\n",
+        "expected": "YES",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "20.10.20\n10.02.30\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "28.02.74\n28.02.64\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "01.01.98\n01.01.80\n",
+      "expected": "YES",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "20.10.20\n10.02.30\n",
+      "expected": "NO",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "28.02.74\n28.02.64\n",
+      "expected": "NO",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "21.02.59\n24.04.40\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "13.09.67\n07.09.48\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "12.10.81\n18.11.04\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "25.08.49\n22.10.05\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "14.08.89\n05.06.55\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "11.03.86\n20.08.91\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "28.02.74\n29.02.64\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "01.03.19\n01.03.29\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "08.07.21\n10.10.72\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "11.05.36\n24.11.25\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "12.11.87\n13.08.24\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "03.12.98\n11.12.80\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "10.02.37\n25.09.71\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "15.01.15\n01.08.58\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "01.01.47\n28.02.29\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "19.11.54\n19.11.53\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "19.11.54\n29.11.53\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "27.12.51\n26.06.22\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "17.01.94\n17.03.58\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "09.08.65\n21.06.46\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "01.06.84\n24.04.87\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "09.05.55\n25.09.42\n",
+      "expected": "NO\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "17.01.94\n17.02.57\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "06.08.91\n05.12.73\n",
+      "expected": "YES\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "92bfc863c38ce076559053156375e43b79c7e7de1c75dccb7f74cb19748ba1a4",
+    "89d16398b06dd3b2af019eead27297ae40842ca4a4c507436613f0055e3b5e34"
+  ],
+  "reference_ast_hashes": [
+    "a869aef84125870238a3904d19054cc92192acf49688d428f742f8f122a8c08b",
+    "0f4e4d962e49c6012a46f621d96d3c2cfe0f415682304504fe129b8219f3ebc0"
+  ],
+  "raw_source_row": 2225,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "10c5bb1e8be4e7642a3e2b6a13a1bd4a792ca8c90903cf321793118e5cfad31b"
+}

@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r0615",
+  "original_id": "taco-train-s00-r0615",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1011/E",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r0615",
+    "prompt": "Astronaut Natasha arrived on Mars. She knows that the Martians are very poor aliens. To ensure a better life for the Mars citizens, their emperor decided to take tax from every tourist who visited the planet. Natasha is the inhabitant of Earth, therefore she had to pay the tax to enter the territory of Mars.\n\nThere are n banknote denominations on Mars: the value of i-th banknote is a_i. Natasha has an infinite number of banknotes of each denomination.\n\nMartians have k fingers on their hands, so they use a number system with base k. In addition, the Martians consider the digit d (in the number system with base k) divine. Thus, if the last digit in Natasha's tax amount written in the number system with the base k is d, the Martians will be happy. Unfortunately, Natasha does not know the Martians' divine digit yet.\n\nDetermine for which values d Natasha can make the Martians happy.\n\nNatasha can use only her banknotes. Martians don't give her change.\n\nInput\n\nThe first line contains two integers n and k (1 ≤ n ≤ 100 000, 2 ≤ k ≤ 100 000) — the number of denominations of banknotes and the base of the number system on Mars.\n\nThe second line contains n integers a_1, a_2, …, a_n (1 ≤ a_i ≤ 10^9) — denominations of banknotes on Mars.\n\nAll numbers are given in decimal notation.\n\nOutput\n\nOn the first line output the number of values d for which Natasha can make the Martians happy.\n\nIn the second line, output all these values in increasing order.\n\nPrint all numbers in decimal notation.\n\nExamples\n\nInput\n\n2 8\n12 20\n\n\nOutput\n\n2\n0 4 \n\nInput\n\n3 10\n10 20 30\n\n\nOutput\n\n1\n0 \n\nNote\n\nConsider the first test case. It uses the octal number system.\n\nIf you take one banknote with the value of 12, you will get 14_8 in octal system. The last digit is 4_8.\n\nIf you take one banknote with the value of 12 and one banknote with the value of 20, the total value will be 32. In the octal system, it is 40_8. The last digit is 0_8.\n\nIf you take two banknotes with the value of 20, the total value will be 40, this is 50_8 in the octal system. The last digit is 0_8.\n\nNo other digits other than 0_8 and 4_8 can be obtained. Digits 0_8 and 4_8 could also be obtained in other ways.\n\nThe second test case uses the decimal number system. The nominals of all banknotes end with zero, so Natasha can give the Martians only the amount whose decimal notation also ends with zero.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "2 8\n12 20\n",
+        "expected": "2\n0 4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3 10\n10 20 30\n",
+        "expected": "1\n0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "2 8\n12 20\n",
+      "expected": "2\n0 4",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3 10\n10 20 30\n",
+      "expected": "1\n0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2 60\n3 15\n",
+      "expected": "20\n0 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "80 30\n30 80 40 40 60 60 40 80 70 80 30 30 60 80 30 70 60 10 10 30 70 60 70 20 40 20 30 10 60 70 70 50 60 70 70 30 70 60 60 70 20 60 10 60 70 80 20 30 30 20 60 50 40 40 80 70 70 20 40 80 30 50 40 10 40 20 70 10 80 10 50 40 50 70 40 80 10 40 60 60\n",
+      "expected": "3\n0 10 20 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 8\n6\n",
+      "expected": "4\n0 2 4 6 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 5\n3 5\n",
+      "expected": "5\n0 1 2 3 4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 10\n6 6 6\n",
+      "expected": "5\n0 2 4 6 8 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 2\n1\n",
+      "expected": "2\n0 1 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 10\n6 5\n",
+      "expected": "10\n0 1 2 3 4 5 6 7 8 9 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 105\n6 9\n",
+      "expected": "35\n0 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72 75 78 81 84 87 90 93 96 99 102\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "80 30\n30 80 40 40 60 60 40 80 70 80 30 30 60 80 30 70 60 10 10 30 70 60 70 20 40 20 30 10 60 70 70 50 60 70 70 30 70 60 60 70 20 60 10 60 70 80 20 30 30 20 60 50 40 40 80 70 70 20 40 80 30 50 40 10 40 20 70 10 80 10 50 40 50 70 40 80 13 40 60 60\n",
+      "expected": "30\n0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 35\n5 12\n",
+      "expected": "35\n0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 2\n1000000000\n",
+      "expected": "1\n0 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 3\n2\n",
+      "expected": "3\n0 1 2 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "1 15\n1\n",
+      "expected": "15\n0 1 2 3 4 5 6 7 8 9 10 11 12 13 14\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 30\n6 17\n",
+      "expected": "30\n0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 17\n6 8\n",
+      "expected": "17\n0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 5\n4 6 8 6 4 19 2 10 8 6\n",
+      "expected": "5\n0 1 2 3 4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 13\n4\n",
+      "expected": "13\n0 1 2 3 4 5 6 7 8 9 10 11 12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 10\n7 3\n",
+      "expected": "10\n0 1 2 3 4 5 6 7 8 9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 50\n15 3\n",
+      "expected": "50\n0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 18\n4 6\n",
+      "expected": "9\n0 2 4 6 8 10 12 14 16\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 4\n1000000010\n",
+      "expected": "2\n0 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 13\n5\n",
+      "expected": "13\n0 1 2 3 4 5 6 7 8 9 10 11 12 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 60\n2 15\n",
+      "expected": "60\n0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 7\n7\n",
+      "expected": "1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "ba32e8c1519b71c12021ad85c44b7541a59f5b87531e26968fb62771aa611596",
+    "5955fec679eefe726c15c40f21f51bb2ddecc4ff36a8a56035db99d9e60c8cd9"
+  ],
+  "reference_ast_hashes": [
+    "b6e7c585cfc1dae1ae92efb117843fea993392efb348a2122ae9c19fd20fa209",
+    "062a32a8e9382a7b3bde19d92299ddb4cd0c4571da1a4707635f7ea3ea1e824e"
+  ],
+  "raw_source_row": 615,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "9edb136c06ef83979aa191d8c3b10798b9a8c42826e43d15092b4efd7490f6e9"
+}

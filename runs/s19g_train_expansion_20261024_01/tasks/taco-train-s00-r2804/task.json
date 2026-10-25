@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r2804",
+  "original_id": "taco-train-s00-r2804",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1216/E1",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2804",
+    "prompt": "The only difference between the easy and the hard versions is the maximum value of $k$.\n\nYou are given an infinite sequence of form \"112123123412345$\\dots$\" which consist of blocks of all consecutive positive integers written one after another. The first block consists of all numbers from $1$ to $1$, the second one — from $1$ to $2$, the third one — from $1$ to $3$, $\\dots$, the $i$-th block consists of all numbers from $1$ to $i$. \n\nSo the first $56$ elements of the sequence are \"11212312341234512345612345671234567812345678912345678910\". Elements of the sequence are numbered from one. For example, the $1$-st element of the sequence is $1$, the $3$-rd element of the sequence is $2$, the $20$-th element of the sequence is $5$, the $38$-th element is $2$, the $56$-th element of the sequence is $0$.\n\nYour task is to answer $q$ independent queries. In the $i$-th query you are given one integer $k_i$. Calculate the digit at the position $k_i$ of the sequence.\n\n\n-----Input-----\n\nThe first line of the input contains one integer $q$ ($1 \\le q \\le 500$) — the number of queries.\n\nThe $i$-th of the following $q$ lines contains one integer $k_i$ $(1 \\le k_i \\le 10^9)$ — the description of the corresponding query.\n\n\n-----Output-----\n\nPrint $q$ lines. In the $i$-th line print one digit $x_i$ $(0 \\le x_i \\le 9)$ — the answer to the query $i$, i.e. $x_i$ should be equal to the element at the position $k_i$ of the sequence.\n\n\n-----Examples-----\nInput\n5\n1\n3\n20\n38\n56\n\nOutput\n1\n2\n5\n2\n0\n\nInput\n4\n2132\n506\n999999999\n1000000000\n\nOutput\n8\n2\n9\n8\n\n\n\n-----Note-----\n\nAnswers on queries from the first example are described in the problem statement.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "5\n1\n3\n20\n38\n56\n",
+        "expected": "1\n2\n5\n2\n0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "4\n2132\n506\n999999999\n1000000000\n",
+        "expected": "8\n2\n9\n8",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "5\n1\n3\n20\n38\n56\n",
+      "expected": "1\n2\n5\n2\n0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4\n2132\n506\n999999999\n1000000000\n",
+      "expected": "8\n2\n9\n8",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1\n72551\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n185272016789432415\n1395496\n",
+      "expected": "5\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n565468207604333237\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n25335\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9124\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n931813\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n308679339120671621\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n182970454676094390\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9602\n",
+      "expected": "9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n13891\n",
+      "expected": "9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n799956254854574834\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n309505582298755045\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "1\n795098499981805957\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n755045\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n277620016344322585\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n68931746846803205\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n1\n10\n100\n1000\n10000\n101000\n1000000\n10000000\n100000000\n1000000000\n",
+      "expected": "1\n4\n1\n4\n9\n6\n6\n2\n6\n8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n402363577523320421\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n1083995377\n1395496\n",
+      "expected": "1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n52232\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n1083995377\n646975\n",
+      "expected": "1\n5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n360450\n",
+      "expected": "9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n276944178593673352\n741198\n",
+      "expected": "1\n2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n1\n10\n100\n1000\n10000\n100000\n1000000\n10000000\n100000000\n1000000000\n",
+      "expected": "1\n4\n1\n4\n9\n2\n6\n2\n6\n8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "6ad2c14558d6a572f25461d0da903099c65a9d8b098a68a76001d84b5a22464b",
+    "48ea7cf62eb117cb5c5eef95408df33bbcb2a07e5e706d6b31026e1ca2f9eeb1"
+  ],
+  "reference_ast_hashes": [
+    "caaccd499c8a2a1c7be69ca42f56dde4ea90c075437bb7e08e93bf1dbcb838c3",
+    "70fd54d7151e890bfb178e6447352e864f4faaaade657fb2d2c18c7a7c9a3daf"
+  ],
+  "raw_source_row": 2804,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "abcfcba45bd926622f909ab25d0836ef8612578386dfd30733ead1bd9dfad600"
+}

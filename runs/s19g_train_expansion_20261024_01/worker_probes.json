@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "new_api_calls": 0,
+  "checks": [
+    {
+      "name": "normal",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": 42,
+        "seconds": 0.00821624998934567
+      }
+    },
+    {
+      "name": "runtime_error",
+      "passed": true,
+      "result": {
+        "status": "RUNTIME_ERROR",
+        "error": "ValueError: fixture",
+        "traceback": "Traceback (most recent call last):\n  File \"/worker.py\", line 108, in run\n    result = entry(*request[\"args\"])\n             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/candidate.py\", line 1, in probe\n    def probe(): raise ValueError(\"fixture\")\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: fixture\n",
+        "seconds": 0.013992500025779009
+      }
+    },
+    {
+      "name": "timeout",
+      "passed": true,
+      "result": {
+        "status": "TIME_LIMIT",
+        "seconds": 0.5000695009948686
+      }
+    },
+    {
+      "name": "host_file_hidden",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": true,
+        "seconds": 0.009145833988441154
+      }
+    },
+    {
+      "name": "credentials_absent",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": true,
+        "seconds": 0.00942375001613982
+      }
+    },
+    {
+      "name": "readonly_source",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": true,
+        "seconds": 0.015373833972262219
+      }
+    },
+    {
+      "name": "network_denied",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": true,
+        "seconds": 0.011969874991336837
+      }
+    },
+    {
+      "name": "nonroot_no_escalation",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": true,
+        "seconds": 0.00874225000734441
+      }
+    },
+    {
+      "name": "pids_cgroup",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": true,
+        "seconds": 0.008902500005206093
+      }
+    },
+    {
+      "name": "memory_cgroup",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": true,
+        "seconds": 0.009223834000295028
+      }
+    },
+    {
+      "name": "private_process_namespace",
+      "passed": true,
+      "result": {
+        "status": "OK",
+        "value": true,
+        "seconds": 0.008435708994511515
+      }
+    },
+    {
+      "name": "memory_limit",
+      "passed": true,
+      "result": {
+        "status": "EVALUATOR_ERROR",
+        "reason": "isolated_worker_exited"
+      }
+    }
+  ],
+  "image": "sha256:cce12316475d7d56d605f76e1d811d0dc4e7227f2d4afd29951521264f504ff8",
+  "worker_script_sha256": "a32629562386b360a162a69ecbc599a7e521dc69dd54aaccf158d5a0b1661493",
+  "adapter_sha256": "b6154f0d1676d934f820e744450d60d5eac5df7cfa720c64769dca814eef17a9"
+}

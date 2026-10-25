@@ -1,0 +1,242 @@
+{
+  "task_id": "s19g_taco-train-s00-r2452",
+  "original_id": "taco-train-s00-r2452",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/609/C",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2452",
+    "prompt": "In the school computer room there are n servers which are responsible for processing several computing tasks. You know the number of scheduled tasks for each server: there are m_{i} tasks assigned to the i-th server.\n\nIn order to balance the load for each server, you want to reassign some tasks to make the difference between the most loaded server and the least loaded server as small as possible. In other words you want to minimize expression m_{a} - m_{b}, where a is the most loaded server and b is the least loaded one.\n\nIn one second you can reassign a single task. Thus in one second you can choose any pair of servers and move a single task from one server to another.\n\nWrite a program to find the minimum number of seconds needed to balance the load of servers.\n\n\n-----Input-----\n\nThe first line contains positive number n (1 ≤ n ≤ 10^5) — the number of the servers. \n\nThe second line contains the sequence of non-negative integers m_1, m_2, ..., m_{n} (0 ≤ m_{i} ≤ 2·10^4), where m_{i} is the number of tasks assigned to the i-th server.\n\n\n-----Output-----\n\nPrint the minimum number of seconds required to balance the load.\n\n\n-----Examples-----\nInput\n2\n1 6\n\nOutput\n2\n\nInput\n7\n10 11 10 11 10 11 11\n\nOutput\n0\n\nInput\n5\n1 2 3 4 5\n\nOutput\n3\n\n\n\n-----Note-----\n\nIn the first example two seconds are needed. In each second, a single task from server #2 should be moved to server #1. After two seconds there should be 3 tasks on server #1 and 4 tasks on server #2.\n\nIn the second example the load is already balanced.\n\nA possible sequence of task movements for the third example is:  move a task from server #4 to server #1 (the sequence m becomes: 2 2 3 3 5);  then move task from server #5 to server #1 (the sequence m becomes: 3 2 3 3 4);  then move task from server #5 to server #2 (the sequence m becomes: 3 3 3 3 3). \n\nThe above sequence is one of several possible ways to balance the load of servers in three seconds.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "2\n1 6\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "7\n10 11 10 11 10 11 11\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "5\n1 2 3 4 5\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "2\n1 6\n",
+      "expected": "2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "7\n10 11 10 11 10 11 11\n",
+      "expected": "0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5\n1 2 3 4 5\n",
+      "expected": "3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5\n1 1 2 3 7\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n2 2 0 2 2 3 7\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n8 9 5 5 6 0 11 6 4 9\n",
+      "expected": "10\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n4 3 0 3 2 3 5\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 10 31 1 18\n",
+      "expected": "24\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n20 4\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n2 2 2 2 2 2 4\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n8 5 5 5 6 6 6 6 5 5\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n20 10\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n10 8\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n8 5 5 5 6 11 6 6 5 5\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "1\n84434\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n11328 12605 20000 39539 29860 38695 12103 20000 24176 17191\n",
+      "expected": "42070\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n7457\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n2 00000 6841\n",
+      "expected": "4560\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n8 5 5 5 6 1 11 6 4 9\n",
+      "expected": "10\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n35933\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 10 31 1 16\n",
+      "expected": "23\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7\n2 3 0 3 2 3 5\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\n19999 19999 20000 39539 29860 20000 12103 20000 19999 17191\n",
+      "expected": "25661\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n5 4\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n1 10000 20000\n",
+      "expected": "9999\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "73ee5c31694746e2793e09e5d913d944fb195ccbd8385b68c79b9e2edaa7e37e",
+    "c7435233b689fadc4a30456c33bb3ef65a097324fead7a03a9b77cf9080b8f25"
+  ],
+  "reference_ast_hashes": [
+    "0e1deddf9503022f0a9aef31f915bedd655864f64ef2dc377070dfd36f1fe20d",
+    "7d6722b83a1d06845260fd6f9e7df83131387df4d506afb68dd0407341a7784c"
+  ],
+  "raw_source_row": 2452,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "84c5e2c0b994eced28e7a0aa290682ad95a74a40106ee3db475cd96ed687e0dd"
+}

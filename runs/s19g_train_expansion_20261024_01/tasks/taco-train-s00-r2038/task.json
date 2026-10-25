@@ -1,0 +1,256 @@
+{
+  "task_id": "s19g_taco-train-s00-r2038",
+  "original_id": "taco-train-s00-r2038",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/261/C",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2038",
+    "prompt": "Maxim loves to fill in a matrix in a special manner. Here is a pseudocode of filling in a matrix of size (m + 1) × (m + 1):\n\n[Image]\n\nMaxim asks you to count, how many numbers m (1 ≤ m ≤ n) are there, such that the sum of values in the cells in the row number m + 1 of the resulting matrix equals t.\n\nExpression (x xor y) means applying the operation of bitwise excluding \"OR\" to numbers x and y. The given operation exists in all modern programming languages. For example, in languages C++ and Java it is represented by character \"^\", in Pascal — by \"xor\".\n\n\n-----Input-----\n\nA single line contains two integers n and t (1 ≤ n, t ≤ 10^12, t ≤ n + 1).\n\nPlease, do not use the %lld specifier to read or write 64-bit integers in C++. It is preferred to use the cin, cout streams or the %I64d specifier.\n\n\n-----Output-----\n\nIn a single line print a single integer — the answer to the problem. \n\n\n-----Examples-----\nInput\n1 1\n\nOutput\n1\n\nInput\n3 2\n\nOutput\n1\n\nInput\n3 3\n\nOutput\n0\n\nInput\n1000000000000 1048576\n\nOutput\n118606527258",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "1 1\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3 2\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3 3\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "1000000000000 1048576\n",
+        "expected": "118606527258",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "1 1\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3 2\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3 3\n",
+      "expected": "0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1000000000000 1048576\n",
+      "expected": "118606527258",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "77993275 8\n",
+      "expected": "16950\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1000000000001 380772298167\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "119581441 33554432\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "473038165 2\n",
+      "expected": "406\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "303397385 180895773\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4890852 16\n",
+      "expected": "31009\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "987654321987 1048576\n",
+      "expected": "116961880791\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "758646694 67108864\n",
+      "expected": "460\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 3\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "39 63\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "758646694 101895702\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "102001611 33554432\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "170427799 16\n",
+      "expected": "94897\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "63 16\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "430970839 268435456\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "833693102 51422363\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "112400107 133531134\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "106364183 11031033\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1000000000000 380772298167\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "543649338 175236010\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "82 16\n",
+      "expected": "7\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "121749691 33554432\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "758646694 4397772\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "0000000000000 1000000010000\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "e72e688964b1b7bcc90abe1dafcbf02ae3f9c47144e6f7f026c820c4cfc11633",
+    "c11655ef87056aa534de2c1fcdbe49c50a476583d0686989a7bbbffc8e5999c6"
+  ],
+  "reference_ast_hashes": [
+    "7c5efc210d14a3adf9f2f6e7ce45ff5887d5a00e2386390210603e442450674a",
+    "2193ee0594ec8d52be78a6ad4a3724864e1a98f086ceb0eefdbbdacd587d7ba3"
+  ],
+  "raw_source_row": 2038,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "4cd98cf33390a4ba860dc876ac204e59bbd4ef452f70b147b8f4a075e31c22df"
+}

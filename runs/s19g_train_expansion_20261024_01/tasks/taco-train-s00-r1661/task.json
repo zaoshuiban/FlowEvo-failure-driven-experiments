@@ -1,0 +1,270 @@
+{
+  "task_id": "s19g_taco-train-s00-r1661",
+  "original_id": "taco-train-s00-r1661",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/436/B",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1661",
+    "prompt": "Om Nom really likes candies and doesn't like spiders as they frequently steal candies. One day Om Nom fancied a walk in a park. Unfortunately, the park has some spiders and Om Nom doesn't want to see them at all. [Image] \n\nThe park can be represented as a rectangular n × m field. The park has k spiders, each spider at time 0 is at some cell of the field. The spiders move all the time, and each spider always moves in one of the four directions (left, right, down, up). In a unit of time, a spider crawls from his cell to the side-adjacent cell in the corresponding direction. If there is no cell in the given direction, then the spider leaves the park. The spiders do not interfere with each other as they move. Specifically, one cell can have multiple spiders at the same time.\n\nOm Nom isn't yet sure where to start his walk from but he definitely wants:  to start walking at time 0 at an upper row cell of the field (it is guaranteed that the cells in this row do not contain any spiders);  to walk by moving down the field towards the lowest row (the walk ends when Om Nom leaves the boundaries of the park). \n\nWe know that Om Nom moves by jumping. One jump takes one time unit and transports the little monster from his cell to either a side-adjacent cell on the lower row or outside the park boundaries.\n\nEach time Om Nom lands in a cell he sees all the spiders that have come to that cell at this moment of time. Om Nom wants to choose the optimal cell to start the walk from. That's why he wonders: for each possible starting cell, how many spiders will he see during the walk if he starts from this cell? Help him and calculate the required value for each possible starting cell.\n\n\n-----Input-----\n\nThe first line contains three integers n, m, k (2 ≤ n, m ≤ 2000; 0 ≤ k ≤ m(n - 1)). \n\nEach of the next n lines contains m characters — the description of the park. The characters in the i-th line describe the i-th row of the park field. If the character in the line equals \".\", that means that the corresponding cell of the field is empty; otherwise, the character in the line will equal one of the four characters: \"L\" (meaning that this cell has a spider at time 0, moving left), \"R\" (a spider moving right), \"U\" (a spider moving up), \"D\" (a spider moving down). \n\nIt is guaranteed that the first row doesn't contain any spiders. It is guaranteed that the description of the field contains no extra characters. It is guaranteed that at time 0 the field contains exactly k spiders.\n\n\n-----Output-----\n\nPrint m integers: the j-th integer must show the number of spiders Om Nom will see if he starts his walk from the j-th cell of the first row. The cells in any row of the field are numbered from left to right.\n\n\n-----Examples-----\nInput\n3 3 4\n...\nR.L\nR.U\n\nOutput\n0 2 2 \nInput\n2 2 2\n..\nRL\n\nOutput\n1 1 \nInput\n2 2 2\n..\nLR\n\nOutput\n0 0 \nInput\n3 4 8\n....\nRRLL\nUUUU\n\nOutput\n1 3 3 1 \nInput\n2 2 2\n..\nUU\n\nOutput\n0 0 \n\n\n-----Note-----\n\nConsider the first sample. The notes below show how the spider arrangement changes on the field over time:\n\n...        ...        ..U       ...\n\nR.L   ->   .*U   ->   L.R   ->  ...\n\nR.U        .R.        ..R       ...\n\n\n\n\n\nCharacter \"*\" represents a cell that contains two spiders at the same time.  If Om Nom starts from the first cell of the first row, he won't see any spiders.  If he starts from the second cell, he will see two spiders at time 1.  If he starts from the third cell, he will see two spiders: one at time 1, the other one at time 2.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "3 3 4\n...\nR.L\nR.U\n",
+        "expected": "0 2 2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "2 2 2\n..\nRL\n",
+        "expected": "1 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "2 2 2\n..\nLR\n",
+        "expected": "0 0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3 4 8\n....\nRRLL\nUUUU\n",
+        "expected": "1 3 3 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "2 2 2\n..\nUU\n",
+        "expected": "0 0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "3 3 4\n...\nR.L\nR.U\n",
+      "expected": "0 2 2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2 2 2\n..\nRL\n",
+      "expected": "1 1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2 2 2\n..\nLR\n",
+      "expected": "0 0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3 4 8\n....\nRRLL\nUUUU\n",
+      "expected": "1 3 3 1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2 2 2\n..\nUU\n",
+      "expected": "0 0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "100 2 45\n..\n.D\nU.\n..\nU.\n..\n..\n..\nU.\n..\n..\nD.\nU.\n..\n..\n.D\nDU\n..\nUD\n..\n..\n..\n..\n..\n..\nD.\n.U\n..\n..\nD.\nU.\n..\n..\n..\nU.\n..\n..\n.D\n..\n..\n.D\n..\n..\n.D\n.U\nD.\n..\n.E\n..\n..\nUD\n..\nU.\n..\nU.\n..\nUD\n..\nU.\n..\nU.\n..\n..\n..\nU.\n.-\n..\nD.\n..\n..\nU.\n..\nU.\n..\nUU\n..\nU.\n..\nU.\n..\n..\n..\n..\n..\n..\n..\n..\n..\n.D\n..\n..\nD.\nU.\n.D\n..\n..\nU.\n.D\nU.\n..\n",
+      "expected": "22 4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 8 30\n........\n.L.LDRR.\nD.LDLR.U\n..RL.L..\nUR.UL...\n.D.....K\nR..UDULL\n........\nDD.U...D\n........\n",
+      "expected": "6 1 3 3 0 3 2 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 2 1\n..\nUU\n",
+      "expected": "0 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 8 30\n........\n.L.LDRR.\nD.LDLR.U\n..L/LR..\nUR.UL...\n.D.....K\nR..UDULL\n........\nDD.U...D\n........\n",
+      "expected": "5 2 2 3 0 2 2 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 8 30\n........\n.L.LDRR.\nU.RLDL.D\n..RL.L..\nUR.UL...\n.D.....K\nR..UDULL\n........\nDD.U...D\n........\n",
+      "expected": "6 2 2 4 1 3 2 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 5 15\n.....\nDRRLR\nDLDLU\nDLRQL\n",
+      "expected": "0 2 2 1 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "100 2 45\n..\n.D\nU.\n..\nU.\n..\n..\n..\nU.\n..\n..\nD.\nU.\n..\n..\n.D\nDU\n..\nUD\n..\n..\n..\n..\n..\n..\nD.\nU.\n..\n..\nD.\nU.\n..\n..\n..\nU.\n..\n..\n.D\n..\n..\n.D\n..\n..\n.D\n.U\nD.\n..\n.D\n..\n..\nUD\n..\nU.\n..\nU.\n..\nUD\n..\nU.\n..\nU.\n..\n..\n..\nU.\n..\n..\nD.\n..\n..\nU.\n..\nU.\n..\nUU\n..\nU.\n..\nU.\n..\n..\n..\n..\n..\n..\n..\n..\n..\n.D\n..\n..\nD.\nU.\n.D\n..\n..\nU.\n.D\nU.\n..\n",
+      "expected": "23 3 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 8 28\n........\n.L.LDRR.\nU.RLDL.D\n.-RL.L..\nUR.UL...\n.D.....K\nR..UDULL\n........\nDD.U...D\n........\n",
+      "expected": "6 2 2 4 1 3 2 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 8 30\n........\n.L.LDRR.\nD.LDLR.U\n..RL.L..\nUR.UL...\n.D.....L\nR..UDULL\n........\nUD.D...D\n........\n",
+      "expected": "7 1 4 2 0 3 2 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 5 15\n.....\nDRRLR\nULDLD\nDLRQL\n",
+      "expected": "1 2 2 1 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 10 47\n..........\n.R.LML.R.L\nR.LLUU.RUL\nRD..RL.L..\nRU.D....LU\n.LD..RRR..\n.DRUUD.ULD\n...D...LDD\n...UUU.U..\nR.....C...\n",
+      "expected": "2 2 5 3 7 2 0 4 4 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 5 15\n.....\nDRSLR\nDLDLU\nLRRDL\n",
+      "expected": "0 2 2 0 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "5 7 19\n.......\nRDLLLRL\nUUR..U.\n.D/DLLL\n..R..UU\n",
+      "expected": "1 4 2 2 1 3 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 5 15\n.....\nDRRLR\nDLDLU\nLQRDL\n",
+      "expected": "0 2 2 1 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 10 47\n..........\n.R.LLL.R.L\nR.ULUL.RUL\nRD..RL.L..\nRU.D....LU\n..RRR..DL.\n.DRUUD.ULD\n...D...LDD\n...UUU.U..\nR.....D...\n",
+      "expected": "1 2 6 6 7 1 0 5 5 4 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 10 47\n..........\n.R.LML.R.L\nR.ULUL.RUL\nRD..RL.L..\nRU.D....LU\n..RRR..DL.\n.DRUUD.ULD\n...D...LDD\n...UUU.U..\nR.....D...\n",
+      "expected": "1 2 6 5 7 1 0 5 5 4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 6 20\n......\n.UURD.\nLUD.RR\nU.LDDD\nDDLDDU\n",
+      "expected": "0 1 0 0 1 1 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 8 28\n........\n.L.LDRR.\nU.RLDL.D\n.-RL.L..\nUR.UL...\n.D.....K\nR..UDULL\n........\nDD.U...D\n........\n",
+      "expected": "5 1 2 2 1 2 1 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8 9 28\n.........\n.R.LDR.D.\n....UULU.\nR.D..DL.L\nUDULD..R.\nR........\n.URU...UU\n.....D.L.\n",
+      "expected": "2 1 3 3 2 3 1 2 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 8 30\n........\n.L.LDRR.\nD.LDLR.U\n..RL.L..\nUR.UL...\n.D.....L\nR..UDULL\n........\nDD.U...D\n........\n",
+      "expected": "6 1 4 3 0 3 2 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 10 47\n..........\n.R.LML.R.L\nR.ULUL.RUL\nRD..RL.L..\nRU.D....LU\n.LD..RRR..\n.DRUUD.ULD\n...D...LDD\n...UUU.U..\nR.....D...\n",
+      "expected": "1 2 6 4 7 1 0 4 4 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 8 28\n........\n.L.LDRR.\nU.RLDL.D\n..RL.L..\nUR.UL...\n.D.....K\nR..UDULL\n........\nDD.U...D\n........\n",
+      "expected": "6 2 2 4 1 3 2 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 8 30\n........\n.L-LDRR.\nD.LDLR.U\n..RL.L..\nUR.UL...\n.D.....K\nR..UDULL\n........\nDD.U...D\n........\n",
+      "expected": "6 1 3 3 0 3 2 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 7 19\n.......\nRDLLLRL\nUUR..U.\n.D.DLLL\n..R..UU\n",
+      "expected": "1 4 2 2 1 3 3 ",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "7493809af0abf434ad36f0a52ba00235be56d8799dbc7a55a65b607ed85aa40e",
+    "622515db6e09889cd2e90151e16dce8b81e0526145eaafbf7ae5fe1315d62c3e"
+  ],
+  "reference_ast_hashes": [
+    "0e7145c228a65993f6a92b80f511842a09a394066478da2d00fd6bae954b6130",
+    "8f90d438d3d9d1225d7d481f07a85acdc21a04a385917eded87fe7fb4233c662"
+  ],
+  "raw_source_row": 1661,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "2b1ec4ff1f566618d566caaa20840f8dc24bf0b2794a08bd2f60c74daeb0a151"
+}

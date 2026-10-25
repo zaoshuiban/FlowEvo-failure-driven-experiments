@@ -1,0 +1,214 @@
+{
+  "task_id": "s19g_taco-train-s00-r0077",
+  "original_id": "taco-train-s00-r0077",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/474/F",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r0077",
+    "prompt": "Mole is hungry again. He found one ant colony, consisting of n ants, ordered in a row. Each ant i (1 ≤ i ≤ n) has a strength si.\n\nIn order to make his dinner more interesting, Mole organizes a version of «Hunger Games» for the ants. He chooses two numbers l and r (1 ≤ l ≤ r ≤ n) and each pair of ants with indices between l and r (inclusively) will fight. When two ants i and j fight, ant i gets one battle point only if si divides sj (also, ant j gets one battle point only if sj divides si). \n\nAfter all fights have been finished, Mole makes the ranking. An ant i, with vi battle points obtained, is going to be freed only if vi = r - l, or in other words only if it took a point in every fight it participated. After that, Mole eats the rest of the ants. Note that there can be many ants freed or even none.\n\nIn order to choose the best sequence, Mole gives you t segments [li, ri] and asks for each of them how many ants is he going to eat if those ants fight.\n\nInput\n\nThe first line contains one integer n (1 ≤ n ≤ 105), the size of the ant colony. \n\nThe second line contains n integers s1, s2, ..., sn (1 ≤ si ≤ 109), the strengths of the ants. \n\nThe third line contains one integer t (1 ≤ t ≤ 105), the number of test cases. \n\nEach of the next t lines contains two integers li and ri (1 ≤ li ≤ ri ≤ n), describing one query.\n\nOutput\n\nPrint to the standard output t lines. The i-th line contains number of ants that Mole eats from the segment [li, ri].\n\nExamples\n\nInput\n\n5\n1 3 2 4 2\n4\n1 5\n2 5\n3 5\n4 5\n\n\nOutput\n\n4\n4\n1\n1\n\nNote\n\nIn the first test battle points for each ant are v = [4, 0, 2, 0, 2], so ant number 1 is freed. Mole eats the ants 2, 3, 4, 5.\n\nIn the second test case battle points are v = [0, 2, 0, 2], so no ant is freed and all of them are eaten by Mole.\n\nIn the third test case battle points are v = [2, 0, 2], so ants number 3 and 5 are freed. Mole eats only the ant 4.\n\nIn the fourth test case battle points are v = [0, 1], so ant number 5 is freed. Mole eats the ant 4.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "5\n1 3 2 4 2\n4\n1 5\n2 5\n3 5\n4 5\n",
+        "expected": "4\n4\n1\n1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "5\n1 3 2 4 2\n4\n1 5\n2 5\n3 5\n4 5\n",
+      "expected": "4\n4\n1\n1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5\n1 3 4 2 4\n4\n1 5\n2 5\n3 5\n2 5\n",
+      "expected": "4\n4\n2\n4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3 4 1 2\n4\n1 5\n3 5\n3 4\n2 5\n",
+      "expected": "3\n2\n1\n3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 6 8 4 3\n4\n1 5\n2 5\n1 5\n3 5\n",
+      "expected": "4\n4\n4\n3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 4 4 2 2\n4\n1 5\n2 5\n1 5\n3 5\n",
+      "expected": "4\n2\n4\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 5 2 4 2\n4\n1 3\n2 5\n3 5\n2 5\n",
+      "expected": "2\n4\n1\n4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3 4 1 2\n4\n1 5\n3 5\n1 1\n4 5\n",
+      "expected": "3\n2\n0\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 6 4 4 2\n4\n1 3\n3 5\n2 5\n4 5\n",
+      "expected": "2\n2\n3\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 6 1 4 2\n4\n1 3\n2 5\n3 5\n4 5\n",
+      "expected": "1\n3\n2\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3 4 4 2\n4\n1 5\n2 5\n1 5\n4 5\n",
+      "expected": "4\n4\n4\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 5 2 4 2\n4\n1 3\n2 5\n3 5\n4 5\n",
+      "expected": "2\n4\n1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 6 2 4 2\n4\n1 3\n3 5\n3 5\n4 5\n",
+      "expected": "2\n1\n1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3 4 2 2\n4\n1 5\n2 5\n3 5\n2 5\n",
+      "expected": "4\n4\n1\n4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "5\n1 3 8 4 2\n4\n1 5\n2 5\n1 5\n3 5\n",
+      "expected": "4\n4\n4\n2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n2 6 2 4 2\n4\n1 3\n3 5\n3 5\n4 5\n",
+      "expected": "1\n1\n1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 2 4 4 2\n4\n1 5\n3 5\n1 4\n4 5\n",
+      "expected": "4\n2\n3\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n2 3 4 1 3\n4\n1 1\n4 5\n3 5\n2 4\n",
+      "expected": "0\n1\n2\n2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3 4 4 2\n4\n1 5\n5 5\n3 5\n2 5\n",
+      "expected": "4\n0\n2\n4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3 4 4 2\n4\n1 5\n3 5\n1 5\n4 5\n",
+      "expected": "4\n2\n4\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 5 4 4 2\n4\n1 5\n2 5\n3 5\n4 5\n",
+      "expected": "4\n4\n2\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3 4 4 2\n4\n1 5\n2 5\n3 5\n2 5\n",
+      "expected": "4\n4\n2\n4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n2 3 4 1 3\n4\n1 1\n3 5\n3 5\n2 5\n",
+      "expected": "0\n2\n2\n3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3 4 1 3\n4\n1 1\n3 5\n3 5\n2 5\n",
+      "expected": "0\n2\n2\n3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 6 2 4 2\n4\n1 3\n3 5\n2 5\n4 5\n",
+      "expected": "2\n1\n2\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 5 4 4 2\n4\n1 5\n2 5\n3 5\n5 5\n",
+      "expected": "4\n4\n2\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "3207abfc62fcc407de4eeecaf257431ea3479fc93ff0b7bf0ed7e0a45a251c8c",
+    "b55c26a583c165416d5529b16418425ba538ed59ec22f1ae94d31ee0461a00d9"
+  ],
+  "reference_ast_hashes": [
+    "468c362db5e6a9b664486e60eb65034cae0d85b16a3f56aca6ee151b7cb8e7af",
+    "77f159afdd5f96635ce9d46bf3f106466d5dce596411401c49c386d39095a283"
+  ],
+  "raw_source_row": 77,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "ffce3b171d5b343ddd0bbf09c859b58bad6227b4c00df01857452b354a2c0cdc"
+}

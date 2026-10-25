@@ -1,0 +1,214 @@
+{
+  "task_id": "s19g_taco-train-s00-r2292",
+  "original_id": "taco-train-s00-r2292",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1303/D",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2292",
+    "prompt": "You have a bag of size $n$. Also you have $m$ boxes. The size of $i$-th box is $a_i$, where each $a_i$ is an integer non-negative power of two.\n\nYou can divide boxes into two parts of equal size. Your goal is to fill the bag completely.\n\nFor example, if $n = 10$ and $a = [1, 1, 32]$ then you have to divide the box of size $32$ into two parts of size $16$, and then divide the box of size $16$. So you can fill the bag with boxes of size $1$, $1$ and $8$.\n\nCalculate the minimum number of divisions required to fill the bag of size $n$.\n\n\n-----Input-----\n\nThe first line contains one integer $t$ ($1 \\le t \\le 1000$) — the number of test cases.\n\nThe first line of each test case contains two integers $n$ and $m$ ($1 \\le n \\le 10^{18}, 1 \\le m \\le 10^5$) — the size of bag and the number of boxes, respectively.\n\nThe second line of each test case contains $m$ integers $a_1, a_2, \\dots , a_m$ ($1 \\le a_i \\le 10^9$) — the sizes of boxes. It is guaranteed that each $a_i$ is a power of two.\n\nIt is also guaranteed that sum of all $m$ over all test cases does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each test case print one integer — the minimum number of divisions required to fill the bag of size $n$ (or $-1$, if it is impossible).\n\n\n-----Example-----\nInput\n3\n10 3\n1 32 1\n23 4\n16 1 4 1\n20 5\n2 1 16 1 8\n\nOutput\n2\n-1\n0",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "3\n10 3\n1 32 1\n23 4\n16 1 4 1\n20 5\n2 1 16 1 8\n",
+        "expected": "2\n-1\n0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "3\n10 3\n1 32 1\n23 4\n16 1 4 1\n20 5\n2 1 16 1 8\n",
+      "expected": "2\n-1\n0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3\n8 3\n2 32 1\n23 4\n16 1 4 1\n6 5\n2 2 16 1 4\n",
+      "expected": "2\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n27 3\n1 32 2\n14 4\n16 1 4 1\n26 5\n2 1 16 2 8\n",
+      "expected": "2\n1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n14 3\n1 32 1\n23 4\n16 1 4 1\n20 5\n2 1 16 2 8\n",
+      "expected": "3\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n2 3\n1 32 1\n23 4\n16 1 4 1\n19 5\n2 1 16 1 8\n",
+      "expected": "0\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n0 3\n1 64 1\n6 4\n16 2 4 1\n23 5\n2 1 16 1 8\n",
+      "expected": "0\n0\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n2 32 1\n23 4\n16 1 4 1\n6 5\n2 2 16 1 8\n",
+      "expected": "2\n-1\n1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 3\n1 32 2\n14 4\n16 1 4 1\n40 5\n2 1 16 2 8\n",
+      "expected": "0\n1\n-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n2 32 1\n45 4\n16 1 4 1\n3 5\n2 1 16 2 8\n",
+      "expected": "2\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n1 32 1\n15 4\n16 1 4 1\n26 5\n2 1 16 2 8\n",
+      "expected": "2\n3\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n1 32 2\n15 4\n16 1 8 1\n26 5\n2 1 16 2 8\n",
+      "expected": "2\n3\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n10 3\n1 32 1\n23 4\n16 1 4 1\n20 5\n2 2 16 1 8\n",
+      "expected": "2\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n1 32 1\n23 4\n16 1 4 1\n20 5\n2 1 16 2 1\n",
+      "expected": "2\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "3\n8 3\n1 32 1\n23 4\n16 2 4 1\n20 5\n2 2 16 1 8\n",
+      "expected": "2\n0\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n16 3\n1 32 1\n23 4\n16 1 4 2\n20 5\n2 2 16 2 8\n",
+      "expected": "1\n0\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n1 32 1\n23 4\n16 2 4 1\n16 5\n2 2 16 1 8\n",
+      "expected": "2\n0\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n2 32 1\n41 4\n16 1 4 1\n19 5\n2 1 16 1 8\n",
+      "expected": "2\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n2 32 1\n23 4\n16 1 4 1\n6 5\n4 2 16 1 8\n",
+      "expected": "2\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n1 32 1\n15 4\n16 1 8 1\n26 5\n2 1 16 2 8\n",
+      "expected": "2\n3\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n2 32 1\n45 4\n16 1 4 1\n21 5\n2 1 16 4 8\n",
+      "expected": "2\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n15 3\n1 32 1\n14 4\n16 1 4 1\n26 5\n2 1 4 2 8\n",
+      "expected": "4\n1\n-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n20 3\n1 64 1\n14 4\n16 1 4 1\n26 5\n2 1 16 2 8\n",
+      "expected": "4\n1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n8 3\n1 32 1\n23 4\n16 1 4 1\n19 5\n2 1 16 1 8\n",
+      "expected": "2\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n10 3\n1 32 1\n22 4\n16 1 4 1\n20 5\n2 1 16 1 8\n",
+      "expected": "2\n0\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 3\n2 32 1\n23 4\n16 1 4 1\n6 5\n2 2 16 1 4\n",
+      "expected": "0\n-1\n0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "b478e0d479557572dc76b64b6d616b8f55e94d6dda737491089cf79bc1717389",
+    "e8490d35234c38d04b33a185fcc345d4a360dc8fe2cdabf0e1ab849067f40576"
+  ],
+  "reference_ast_hashes": [
+    "d7c9bdba2ffe577e370bcbe1c221cf522e189a16e56becd819b5fc49c3ee820c",
+    "fad6af3e0a399ee8ca62da40ea56a8ac82489d07ac550e4ff5a14477ecefa277"
+  ],
+  "raw_source_row": 2292,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "3353aa8e33cb402ce0cbbe7598ddc93551a093f4ce0f205d4a3574f2e0b6eb59"
+}

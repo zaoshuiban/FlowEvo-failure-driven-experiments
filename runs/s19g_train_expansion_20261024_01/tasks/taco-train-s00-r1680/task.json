@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r1680",
+  "original_id": "taco-train-s00-r1680",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/276/C",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1680",
+    "prompt": "The little girl loves the problems on array queries very much.\n\nOne day she came across a rather well-known problem: you've got an array of n elements (the elements of the array are indexed starting from 1); also, there are q queries, each one is defined by a pair of integers l_{i}, r_{i} (1 ≤ l_{i} ≤ r_{i} ≤ n). You need to find for each query the sum of elements of the array with indexes from l_{i} to r_{i}, inclusive.\n\nThe little girl found the problem rather boring. She decided to reorder the array elements before replying to the queries in a way that makes the sum of query replies maximum possible. Your task is to find the value of this maximum sum.\n\n\n-----Input-----\n\nThe first line contains two space-separated integers n (1 ≤ n ≤ 2·10^5) and q (1 ≤ q ≤ 2·10^5) — the number of elements in the array and the number of queries, correspondingly.\n\nThe next line contains n space-separated integers a_{i} (1 ≤ a_{i} ≤ 2·10^5) — the array elements.\n\nEach of the following q lines contains two space-separated integers l_{i} and r_{i} (1 ≤ l_{i} ≤ r_{i} ≤ n) — the i-th query.\n\n\n-----Output-----\n\nIn a single line print a single integer — the maximum sum of query replies after the array elements are reordered.\n\nPlease, do not use the %lld specifier to read or write 64-bit integers in С++. It is preferred to use the cin, cout streams or the %I64d specifier.\n\n\n-----Examples-----\nInput\n3 3\n5 3 2\n1 2\n2 3\n1 3\n\nOutput\n25\n\nInput\n5 3\n5 2 4 1 3\n1 5\n2 3\n2 3\n\nOutput\n33",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "3 3\n5 3 2\n1 2\n2 3\n1 3\n",
+        "expected": "25",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "5 3\n5 2 4 1 3\n1 5\n2 3\n2 3\n",
+        "expected": "33",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "3 3\n5 3 2\n1 2\n2 3\n1 3\n",
+      "expected": "25",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 3\n5 2 4 1 3\n1 5\n2 3\n2 3\n",
+      "expected": "33",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "22 6\n31 41 40 41 37 62 46 16 83 47 30 10 32 9 20 14 47 9 22 1 35 1\n1 10\n10 20\n4 5\n1 8\n2 12\n5 7\n2 9\n",
+      "expected": "1943\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "22 7\n31 41 40 41 37 42 4 16 50 47 30 7 32 6 20 14 47 25 11 1 35 12\n2 10\n10 20\n4 6\n1 8\n2 12\n8 8\n2 16\n",
+      "expected": "2092\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "16 13\n40 32 15 16 35 36 45 23 30 42 25 8 29 21 39 23\n2 9\n3 11\n8 9\n4 14\n1 6\n5 4\n5 14\n5 11\n13 13\n2 8\n9 16\n6 10\n7 13\n",
+      "expected": "2762\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 3\n5 1 0 1 3\n1 5\n2 3\n2 4\n",
+      "expected": "27\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "16 13\n40 53 15 16 35 36 45 23 30 42 25 8 29 21 39 29\n2 9\n3 11\n8 9\n4 14\n1 7\n5 4\n5 14\n5 11\n13 13\n2 8\n9 16\n6 10\n7 13\n",
+      "expected": "2997\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 3\n5 3 0\n1 2\n2 3\n1 3\n",
+      "expected": "21\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "22 7\n31 41 40 41 37 42 46 16 50 47 30 7 32 6 20 14 47 31 11 1 35 12\n1 10\n10 20\n4 5\n1 8\n2 12\n8 8\n2 16\n",
+      "expected": "2172\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "16 13\n40 32 15 16 35 36 45 23 30 42 24 8 29 21 39 23\n2 9\n3 11\n8 9\n4 14\n1 6\n5 4\n5 14\n5 11\n13 13\n2 8\n9 16\n6 10\n7 13\n",
+      "expected": "2758\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "16 13\n40 53 15 16 35 36 45 23 30 42 25 8 29 21 39 29\n2 9\n3 11\n8 9\n4 14\n1 7\n5 4\n5 14\n5 11\n13 13\n2 8\n9 16\n9 10\n7 13\n",
+      "expected": "2870\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "22 6\n31 41 40 41 37 62 46 16 50 47 30 10 32 9 20 14 47 25 22 1 35 12\n1 10\n10 20\n4 5\n1 8\n2 12\n8 7\n2 16\n",
+      "expected": "1653\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 3\n9 1 0 1 3\n1 5\n2 3\n2 4\n",
+      "expected": "39\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "31 48\n45 19 16 42 38 18 50 7 28 40 39 25 45 14 36 18 27 30 16 4 22 6 1 23 16 47 14 35 27 47 2\n6 16\n11 28\n4 30\n25 26\n11 30\n5 9\n4 17\n15 17\n10 25\n15 26\n1 3\n9 26\n8 29\n16 30\n5 24\n27 30\n9 10\n22 29\n2 6\n15 24\n6 21\n19 29\n4 28\n1 7\n18 21\n10 22\n6 15\n14 28\n4 29\n12 13\n19 29\n5 6\n13 31\n21 27\n9 25\n6 18\n6 8\n28 30\n2 4\n15 21\n1 1\n8 30\n3 31\n11 27\n28 29\n6 22\n20 22\n9 25\n",
+      "expected": "17679\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "22 7\n44 41 40 41 37 42 46 16 50 47 30 7 32 6 20 0 53 25 11 1 43 12\n1 10\n10 20\n4 5\n1 8\n2 12\n8 8\n2 16\n",
+      "expected": "2250\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "22 6\n31 41 40 41 37 62 46 16 50 47 30 7 32 6 20 14 47 25 11 1 35 12\n1 10\n10 20\n4 5\n1 8\n2 12\n8 11\n2 16\n",
+      "expected": "1805\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 3\n5 1 5 2 5\n1 5\n2 3\n2 5\n",
+      "expected": "45\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 3\n5 2 4 1 3\n1 5\n3 3\n2 3\n",
+      "expected": "29\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "31 48\n45 19 16 42 38 18 50 7 28 40 39 25 45 14 36 18 27 30 16 4 22 6 1 23 16 47 14 35 27 47 2\n6 17\n11 28\n4 30\n25 26\n11 30\n5 9\n4 17\n15 17\n10 25\n15 26\n1 3\n9 26\n8 29\n16 30\n5 24\n27 30\n9 10\n22 29\n2 6\n15 24\n6 21\n19 21\n4 28\n1 7\n18 21\n10 22\n6 15\n14 28\n4 29\n12 13\n19 29\n5 6\n13 31\n21 27\n9 25\n6 18\n6 8\n28 30\n2 4\n15 19\n1 1\n8 30\n3 31\n11 27\n28 29\n6 22\n20 22\n9 25\n",
+      "expected": "17421\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 3\n5 2 4 1 5\n1 5\n2 3\n2 5\n",
+      "expected": "43\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "22 7\n31 41 40 41 37 42 4 16 50 47 30 7 32 6 20 14 47 25 11 1 35 12\n1 10\n10 20\n4 5\n1 8\n2 12\n8 8\n2 16\n",
+      "expected": "2064\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "34 21\n23 38 16 49 44 50 48 34 33 19 18 31 11 15 20 47 44 30 39 33 45 46 1 13 27 16 31 36 6 23 38 5 30 16\n8 16\n14 27\n8 26\n1 8\n5 6\n23 28\n4 33\n13 30\n12 30\n11 30\n9 21\n1 14\n15 22\n4 11\n5 30\n8 20\n17 33\n6 9\n3 14\n25 34\n10 17\n",
+      "expected": "9499\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "31 48\n45 19 16 42 38 18 50 7 28 40 39 25 45 14 36 18 27 30 16 4 22 6 1 23 16 47 14 35 27 47 2\n6 16\n11 28\n4 30\n25 26\n11 30\n5 9\n4 17\n15 17\n10 25\n15 26\n1 3\n9 26\n8 29\n16 30\n6 24\n27 30\n9 10\n22 29\n2 6\n15 24\n6 21\n19 21\n4 28\n1 7\n18 21\n10 22\n6 15\n14 20\n4 19\n12 13\n19 29\n5 6\n13 31\n21 27\n9 25\n6 18\n6 8\n28 30\n2 4\n15 19\n1 1\n8 30\n3 31\n11 27\n28 29\n6 22\n20 22\n9 25\n",
+      "expected": "16853\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "31 48\n45 19 16 42 38 18 50 7 28 40 39 25 45 14 36 18 27 30 16 4 22 6 1 23 16 47 14 35 27 47 2\n6 16\n11 28\n4 30\n25 26\n11 30\n5 9\n4 17\n15 17\n10 25\n15 26\n1 3\n9 26\n8 29\n16 30\n5 24\n27 30\n9 10\n22 29\n2 6\n15 24\n6 21\n19 21\n4 28\n1 7\n18 21\n10 22\n6 15\n14 28\n4 29\n12 13\n19 29\n5 6\n13 31\n21 27\n9 25\n6 18\n6 8\n28 30\n2 4\n15 19\n1 1\n8 30\n3 31\n11 27\n28 29\n6 22\n20 22\n9 25\n",
+      "expected": "17376\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "22 7\n44 41 40 41 37 42 46 16 50 47 30 7 32 6 20 14 47 25 11 1 35 12\n1 10\n10 20\n4 5\n1 8\n2 12\n8 8\n2 16\n",
+      "expected": "2202\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "22 7\n31 41 40 41 37 62 46 16 50 47 30 7 32 6 20 14 47 25 11 2 35 12\n1 10\n10 19\n4 5\n1 8\n2 12\n8 8\n2 16\n",
+      "expected": "2248\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "4ff7b9bff4c567f694008962cc46538db965ec7242e6fea96b6a21ac7782383b",
+    "f5e43e61546bab57c52058d197de5b4ac0b894e8f4acc6d73815b5a0e5c73b0c"
+  ],
+  "reference_ast_hashes": [
+    "3acb5ef7666af282db66f4d7fe606215d4df893d76dfdf001b092446f14e750c",
+    "a9815e0466d90d3fd2305a279dbe5262a66dc898d06a5af50692a2d63a23a8db"
+  ],
+  "raw_source_row": 1680,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "1f8e6758960197bcdf7642afbf2213e9253c2526c645949693c069d17b1e77a1"
+}

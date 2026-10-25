@@ -1,0 +1,221 @@
+{
+  "task_id": "s19g_taco-test-69",
+  "original_id": "taco-test-69",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/768/B",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-69",
+    "prompt": "Jon fought bravely to rescue the wildlings who were attacked by the white-walkers at Hardhome. On his arrival, Sam tells him that he wants to go to Oldtown to train at the Citadel to become a maester, so he can return and take the deceased Aemon's place as maester of Castle Black. Jon agrees to Sam's proposal and Sam sets off his journey to the Citadel. However becoming a trainee at the Citadel is not a cakewalk and hence the maesters at the Citadel gave Sam a problem to test his eligibility. \n\nInitially Sam has a list with a single element n. Then he has to perform certain operations on this list. In each operation Sam must remove any element x, such that x > 1, from the list and insert at the same position $\\lfloor \\frac{x}{2} \\rfloor$, $x \\operatorname{mod} 2$, $\\lfloor \\frac{x}{2} \\rfloor$ sequentially. He must continue with these operations until all the elements in the list are either 0 or 1.\n\nNow the masters want the total number of 1s in the range l to r (1-indexed). Sam wants to become a maester but unfortunately he cannot solve this problem. Can you help Sam to pass the eligibility test?\n\n\n-----Input-----\n\nThe first line contains three integers n, l, r (0 ≤ n < 2^50, 0 ≤ r - l ≤ 10^5, r ≥ 1, l ≥ 1) – initial element and the range l to r.\n\nIt is guaranteed that r is not greater than the length of the final list.\n\n\n-----Output-----\n\nOutput the total number of 1s in the range l to r in the final sequence.\n\n\n-----Examples-----\nInput\n7 2 5\n\nOutput\n4\n\nInput\n10 3 10\n\nOutput\n5\n\n\n\n-----Note-----\n\nConsider first example:\n\n$[ 7 ] \\rightarrow [ 3,1,3 ] \\rightarrow [ 1,1,1,1,3 ] \\rightarrow [ 1,1,1,1,1,1,1 ] \\rightarrow [ 1,1,1,1,1,1,1 ]$\n\nElements on positions from 2-nd to 5-th in list is [1, 1, 1, 1]. The number of ones is 4.\n\nFor the second example:\n\n$[ 10 ] \\rightarrow [ 1,0,1,1,1,0,1,0,1,0,1,1,1,0,1 ]$\n\nElements on positions from 3-rd to 10-th in list is [1, 1, 1, 0, 1, 0, 1, 0]. The number of ones is 5.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "7 2 5\n",
+        "expected": "4",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "10 3 10\n",
+        "expected": "5",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "7 2 5\n",
+      "expected": "4",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "10 3 10\n",
+      "expected": "5",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "900000 1 2\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "100 20 35\n",
+      "expected": "12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "19000 8 21486\n",
+      "expected": "12454\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "50 10 20\n",
+      "expected": "9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "34266225468351 32529564319236 32529564342569\n",
+      "expected": "22725\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "21 8 21\n",
+      "expected": "10\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "4 1 4\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1125899906842623 1 100001\n",
+      "expected": "100001\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "29 15 19\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "9056 216 896\n",
+      "expected": "377\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "15 7 10\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "34 14 26\n",
+      "expected": "7\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "1011 1 001\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "777 3 7\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "195488557 207804787 207866400\n",
+      "expected": "44871\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "1632824195 175922161 176000556\n",
+      "expected": "59609\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "12897 100 2636\n",
+      "expected": "1996\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "500000 7 10\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "26 5 10\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "13 6 11\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "250000 5 9\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "100 5 15\n",
+      "expected": "9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "5 2 5\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "30 2 6\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "0b3f4e0db8e19a3281f943ca21618d6b5f3122bffb860c36f2453c2f998e382f",
+    "84b8068f8af77ba9cd0b6bdf95f683abc67095e1bff3815b3610e8ca25d0608f"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

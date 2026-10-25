@@ -1,0 +1,214 @@
+{
+  "task_id": "s19g_taco-train-s00-r0354",
+  "original_id": "taco-train-s00-r0354",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/946/E",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r0354",
+    "prompt": "Yes, that's another problem with definition of \"beautiful\" numbers.\n\nLet's call a positive integer x beautiful if its decimal representation without leading zeroes contains even number of digits, and there exists a permutation of this representation which is palindromic. For example, 4242 is a beautiful number, since it contains 4 digits, and there exists a palindromic permutation 2442.\n\nGiven a positive integer s, find the largest beautiful number which is less than s.\n\nInput\n\nThe first line contains one integer t (1 ≤ t ≤ 105) — the number of testcases you have to solve.\n\nThen t lines follow, each representing one testcase and containing one string which is the decimal representation of number s. It is guaranteed that this string has even length, contains no leading zeroes, and there exists at least one beautiful number less than s.\n\nThe sum of lengths of s over all testcases doesn't exceed 2·105.\n\nOutput\n\nFor each testcase print one line containing the largest beautiful number which is less than s (it is guaranteed that the answer exists).\n\nExample\n\nInput\n\n4\n89\n88\n1000\n28923845\n\n\nOutput\n\n88\n77\n99\n28923839",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "4\n89\n88\n1000\n28923845\n",
+        "expected": "88\n77\n99\n28923839",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "4\n89\n88\n1000\n28923845\n",
+      "expected": "88\n77\n99\n28923839",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3\n100001\n100100\n141925\n",
+      "expected": "9999\n100010\n141884\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "11\n12\n3030\n3112\n9900\n10000000000000000000000000000000000000000000\n99771122997711229977112299778700000006\n9999999999999999999999999999999999\n1282388888999998888888888988\n10101010999999999999999999\n45071747464255807178\n938883833333333333\n",
+      "expected": "11\n3003\n3030\n9898\n999999999999999999999999999999999999999999\n99771122997711229977112299778699999986\n9999999999999999999999999999999988\n1282388888999998888888888931\n10101010999999999999999988\n45071747464255765210\n938883833333333292\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n110001\n100010\n209181\n",
+      "expected": "110000\n100001\n209092\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n110001\n100010\n273266\n",
+      "expected": "110000\n100001\n273237\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n100001\n100010\n100002\n",
+      "expected": "9999\n100001\n100001\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n110001\n100010\n100002\n",
+      "expected": "110000\n100001\n100001\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n7372\n",
+      "expected": "7337\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n100100\n",
+      "expected": "100010\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4\n64\n63\n1000\n20223544\n",
+      "expected": "55\n55\n99\n20223320\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n1110\n100000\n",
+      "expected": "1100\n9999\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n111001\n100000\n209181\n",
+      "expected": "110990\n9999\n209092\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n1011\n100001\n",
+      "expected": "1010\n9999\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "3\n110001\n101010\n100002\n",
+      "expected": "110000\n101000\n100001\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n1001\n",
+      "expected": "99\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "60\n799032\n1880\n489633\n167604\n641858\n521214\n951107\n121088\n952294\n514428\n890184\n883033\n317778\n456130\n373364\n404297\n757369\n815335\n317046\n148887\n834163\n990592\n721319\n402371\n458279\n570263\n887791\n365893\n433095\n463049\n457336\n669570\n233766\n178817\n214599\n213431\n730046\n399711\n416813\n943019\n190514\n191883\n233594\n830330\n529328\n986218\n678464\n825445\n854483\n730167\n418496\n603658\n981987\n700630\n272130\n174137\n261250\n199466\n179582\n931425\n",
+      "expected": "799007\n1818\n489498\n167176\n641641\n521152\n950950\n121020\n952259\n514415\n890098\n883030\n317731\n455994\n373337\n404220\n757353\n815185\n316631\n148841\n833998\n990550\n721271\n402240\n457754\n570075\n887788\n365653\n433040\n462642\n456654\n669559\n233727\n178781\n214421\n213321\n730037\n399663\n416641\n942942\n190190\n191797\n233552\n830308\n529295\n985985\n677996\n825285\n854458\n730073\n418481\n603630\n981981\n700575\n272117\n173731\n261216\n199441\n179197\n931391\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n100001\n100000\n141925\n",
+      "expected": "9999\n9999\n141884\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n5748\n",
+      "expected": "5665\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "60\n799032\n1880\n489633\n167604\n641858\n521214\n951107\n121088\n952294\n514428\n890184\n883033\n317778\n456130\n373364\n404297\n757369\n815335\n317046\n148887\n834163\n990592\n721319\n402371\n458279\n570263\n887791\n365893\n433095\n532460\n457336\n669570\n803506\n178817\n214599\n213431\n730046\n399711\n416813\n943019\n190514\n191883\n233594\n830330\n529328\n986218\n678464\n825445\n854483\n730167\n418496\n603658\n981987\n700630\n272130\n174137\n220085\n199466\n179582\n931425\n",
+      "expected": "799007\n1818\n489498\n167176\n641641\n521152\n950950\n121020\n952259\n514415\n890098\n883030\n317731\n455994\n373337\n404220\n757353\n815185\n316631\n148841\n833998\n990550\n721271\n402240\n457754\n570075\n887788\n365653\n433040\n532352\n456654\n669559\n803380\n178781\n214421\n213321\n730037\n399663\n416641\n942942\n190190\n191797\n233552\n830308\n529295\n985985\n677996\n825285\n854458\n730073\n418481\n603630\n981981\n700575\n272117\n173731\n220077\n199441\n179197\n931391\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n1101\n",
+      "expected": "1100\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4\n12\n1000\n1001\n1002\n",
+      "expected": "11\n99\n99\n1001\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n1001\n100001\n",
+      "expected": "99\n9999\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4\n89\n63\n1001\n28923845\n",
+      "expected": "88\n55\n99\n28923839\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4\n64\n63\n1000\n28923845\n",
+      "expected": "55\n55\n99\n28923839\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6\n12\n10000000000000000000000000000000000000000000\n3030\n3112\n99771122997711229977112299778700000006\n99771122997711229977112299778699999996\n",
+      "expected": "11\n999999999999999999999999999999999999999999\n3003\n3030\n99771122997711229977112299778699999986\n99771122997711229977112299778699999986\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "f60087e8679bf053a79096950a4a68dea93406743ae10c158edee2c9fd949ca0",
+    "95fc4756908da24c5b47a070f7752731b7c7fa60768af1dff8bfdf6729ed0386"
+  ],
+  "reference_ast_hashes": [
+    "ca3cb33f5560660ef243a63549865c3876ba9719923ec42fbe02d9e3ba7c4418",
+    "c26471b039d0db1d4cf03a9c26e47270226912c0f5ee533c30602024dcfbc765"
+  ],
+  "raw_source_row": 354,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "f5fbd5f53941fd36a9c72b8282dea0b68601c953f61d2be63d6dcfa01f5bd892"
+}

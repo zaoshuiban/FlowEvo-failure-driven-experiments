@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r1806",
+  "original_id": "taco-train-s00-r1806",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/337/C",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1806",
+    "prompt": "Manao is taking part in a quiz. The quiz consists of n consecutive questions. A correct answer gives one point to the player. The game also has a counter of consecutive correct answers. When the player answers a question correctly, the number on this counter increases by 1. If the player answers a question incorrectly, the counter is reset, that is, the number on it reduces to 0. If after an answer the counter reaches the number k, then it is reset, and the player's score is doubled. Note that in this case, first 1 point is added to the player's score, and then the total score is doubled. At the beginning of the game, both the player's score and the counter of consecutive correct answers are set to zero.\n\nManao remembers that he has answered exactly m questions correctly. But he does not remember the order in which the questions came. He's trying to figure out what his minimum score may be. Help him and compute the remainder of the corresponding number after division by 1000000009 (10^9 + 9).\n\n\n-----Input-----\n\nThe single line contains three space-separated integers n, m and k (2 ≤ k ≤ n ≤ 10^9; 0 ≤ m ≤ n).\n\n\n-----Output-----\n\nPrint a single integer — the remainder from division of Manao's minimum possible score in the quiz by 1000000009 (10^9 + 9).\n\n\n-----Examples-----\nInput\n5 3 2\n\nOutput\n3\n\nInput\n5 4 2\n\nOutput\n6\n\n\n\n-----Note-----\n\nSample 1. Manao answered 3 questions out of 5, and his score would double for each two consecutive correct answers. If Manao had answered the first, third and fifth questions, he would have scored as much as 3 points.\n\nSample 2. Now Manao answered 4 questions. The minimum possible score is obtained when the only wrong answer is to the question 4.\n\nAlso note that you are asked to minimize the score and not the remainder of the score modulo 1000000009. For example, if Manao could obtain either 2000000000 or 2000000020 points, the answer is 2000000000 mod 1000000009, even though 2000000020 mod 1000000009 is a smaller number.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "5 3 2\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "5 4 2\n",
+        "expected": "6",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "5 3 2\n",
+      "expected": "3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 4 2\n",
+      "expected": "6",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "983534310 875000000 7\n",
+      "expected": "675236082\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "21664295 19928497 4\n",
+      "expected": "311808132\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "999998212 999998020 381072520\n",
+      "expected": "999998020\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "972 101 2\n",
+      "expected": "101\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 1 3\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1000000000 1000000000 8\n",
+      "expected": "1000000001\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "291527 253014 7\n",
+      "expected": "572614130\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1000000000 0100001000 2\n",
+      "expected": "100001000\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 8 5\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "300000000 300000000 6228101\n",
+      "expected": "233056780\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "120009 21681 2\n",
+      "expected": "21681\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "23888888 23862367 1600\n",
+      "expected": "23862367\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "972 900 4\n",
+      "expected": "473803848\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "23888888 19928497 8\n",
+      "expected": "19928497\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "23888888 23862367 812\n",
+      "expected": "648068609\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1000000000 1000000000 2\n",
+      "expected": "750000003\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "21664295 19928497 3\n",
+      "expected": "444282894\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1000000000 0000000000 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "87413058 85571952 12\n",
+      "expected": "903327586\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "999998212 999998211 91028731\n",
+      "expected": "212101877\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "901024556 901000000 1013\n",
+      "expected": "840398451\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "901024556 900000000 152\n",
+      "expected": "180869610\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1000000000 800000000 2\n",
+      "expected": "785468433\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 2 3\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "11486c954201b4c53142eef5a209038c07517de29197118fa84ca8d695247792",
+    "2b1fae43fbb175eac457a2c24882c3d570c7cccd62cc52a7090107c0c0edfca0"
+  ],
+  "reference_ast_hashes": [
+    "33e271d4346a4e42415f935e7d455bc0b2716505b3dfe2a95c8143edb6c19ba0",
+    "d099deb01bb8bb526d9ed710853092fc43c6f76ce050c7940c6f1e4426c3046c"
+  ],
+  "raw_source_row": 1806,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "51794225421db4aad2d12dfad993ba9d962ebdd09d05d91f32eef322e20eb9f6"
+}

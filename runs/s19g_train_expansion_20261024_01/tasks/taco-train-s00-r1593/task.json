@@ -1,0 +1,214 @@
+{
+  "task_id": "s19g_taco-train-s00-r1593",
+  "original_id": "taco-train-s00-r1593",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/15/B",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1593",
+    "prompt": "Petya is the most responsible worker in the Research Institute. So he was asked to make a very important experiment: to melt the chocolate bar with a new laser device. The device consists of a rectangular field of n × m cells and a robotic arm. Each cell of the field is a 1 × 1 square. The robotic arm has two lasers pointed at the field perpendicularly to its surface. At any one time lasers are pointed at the centres of some two cells. Since the lasers are on the robotic hand, their movements are synchronized — if you move one of the lasers by a vector, another one moves by the same vector.\n\nThe following facts about the experiment are known: \n\n  * initially the whole field is covered with a chocolate bar of the size n × m, both lasers are located above the field and are active; \n  * the chocolate melts within one cell of the field at which the laser is pointed; \n  * all moves of the robotic arm should be parallel to the sides of the field, after each move the lasers should be pointed at the centres of some two cells; \n  * at any one time both lasers should be pointed at the field. Petya doesn't want to become a second Gordon Freeman. \n\n\n\nYou are given n, m and the cells (x1, y1) and (x2, y2), where the lasers are initially pointed at (xi is a column number, yi is a row number). Rows are numbered from 1 to m from top to bottom and columns are numbered from 1 to n from left to right. You are to find the amount of cells of the field on which the chocolate can't be melted in the given conditions.\n\nInput\n\nThe first line contains one integer number t (1 ≤ t ≤ 10000) — the number of test sets. Each of the following t lines describes one test set. Each line contains integer numbers n, m, x1, y1, x2, y2, separated by a space (2 ≤ n, m ≤ 109, 1 ≤ x1, x2 ≤ n, 1 ≤ y1, y2 ≤ m). Cells (x1, y1) and (x2, y2) are distinct.\n\nOutput\n\nEach of the t lines of the output should contain the answer to the corresponding input test set.\n\nExamples\n\nInput\n\n2\n4 4 1 1 3 3\n4 3 1 1 2 2\n\n\nOutput\n\n8\n2",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "2\n4 4 1 1 3 3\n4 3 1 1 2 2\n",
+        "expected": "8\n2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "2\n4 4 1 1 3 3\n4 3 1 1 2 2\n",
+      "expected": "8\n2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1\n9 5 7 1 4 1\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n2 5 1 5 2 1\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 5 3 2 4 4\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n10 3 2 3 2 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 5 2 2 4 4\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n6 3 2 2 4 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 6 3 4 4 2\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n24 3 2 2 4 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9 3 7 2 5 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n4 5 4 2 4 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9 6 6 1 4 1\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n2 6 2 6 2 3\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "1\n7 3 5 1 5 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n6 3 2 2 2 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n24 3 2 3 2 2\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 6 3 5 2 4\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 4 1 1 1 1\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n2 5 1 5 2 2\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 6 2 5 2 1\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n10 3 2 3 2 3\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n14 6 6 5 2 1\n",
+      "expected": "44\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 3 3 2 1 1\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9 6 6 5 3 1\n",
+      "expected": "30\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n3 6 3 5 2 1\n",
+      "expected": "10\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "1fe285e76ca0d5bb72a69be2112d4c9e989de8db7a0c096c61a313a8ba2a77a3",
+    "c6a769a74fb0e91e5d9a70bc1c7db06eca8fa78f781183c8f41a0b8013862dd5"
+  ],
+  "reference_ast_hashes": [
+    "e8b437d840d1ef1996bb6d81767ed6a1873e4cb6d710c7bb891090ad39ac5fc4",
+    "0d855cfcb8abe8a1b254f9de4a157b9e0b3bf54d909da235bba2211fa8940d15"
+  ],
+  "raw_source_row": 1593,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "0595b6bac303a29a743f980783c4bb592b2fd077f3b792c493293a361903049c"
+}

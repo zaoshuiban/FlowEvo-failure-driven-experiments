@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r2748",
+  "original_id": "taco-train-s00-r2748",
+  "dataset": "taco",
+  "difficulty": "VERY_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1194/F",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2748",
+    "prompt": "Today Adilbek is taking his probability theory test. Unfortunately, when Adilbek arrived at the university, there had already been a long queue of students wanting to take the same test. Adilbek has estimated that he will be able to start the test only $T$ seconds after coming. \n\nFortunately, Adilbek can spend time without revising any boring theorems or formulas. He has an app on this smartphone which contains $n$ Japanese crosswords to solve. Adilbek has decided to solve them all one by one in the order they are listed in the app, without skipping any crossword. For each crossword, a number $t_i$ is given that represents the time it takes an average crossword expert to solve this crossword (the time is given in seconds).\n\nAdilbek is a true crossword expert, but, unfortunately, he is sometimes unlucky in choosing the way to solve the crossword. So, it takes him either $t_i$ seconds or $t_i + 1$ seconds to solve the $i$-th crossword, equiprobably (with probability $\\frac{1}{2}$ he solves the crossword in exactly $t_i$ seconds, and with probability $\\frac{1}{2}$ he has to spend an additional second to finish the crossword). All these events are independent.\n\nAfter $T$ seconds pass (or after solving the last crossword, if he manages to do it in less than $T$ seconds), Adilbek closes the app (if he finishes some crossword at the same moment, that crossword is considered solved; otherwise Adilbek does not finish solving the current crossword at all). He thinks it would be an interesting probability theory problem to calculate $E$ — the expected number of crosswords he will be able to solve completely. Can you calculate it? \n\nRecall that the expected value of a discrete random variable is the probability-weighted average of all possible values — in this problem it means that the expected value of the number of solved crosswords can be calculated as $E = \\sum \\limits_{i = 0}^{n} i p_i$, where $p_i$ is the probability that Adilbek will solve exactly $i$ crosswords. \n\nWe can represent $E$ as rational fraction $\\frac{P}{Q}$ with $Q > 0$. To give the answer, you should print $P \\cdot Q^{-1} \\bmod (10^9 + 7)$.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $T$ ($1 \\le n \\le 2 \\cdot 10^5$, $1 \\le T \\le 2 \\cdot 10^{14}$) — the number of crosswords and the time Adilbek has to spend, respectively.\n\nThe second line contains $n$ integers $t_1, t_2, \\dots, t_n$ ($1 \\le t_i \\le 10^9$), where $t_i$ is the time it takes a crossword expert to solve the $i$-th crossword.\n\nNote that Adilbek solves the crosswords in the order they are given in the input without skipping any of them.\n\n\n-----Output-----\n\nPrint one integer — the expected value of the number of crosswords Adilbek solves in $T$ seconds, expressed in the form of $P \\cdot Q^{-1} \\bmod (10^9 + 7)$.\n\n\n-----Examples-----\nInput\n3 5\n2 2 2\n\nOutput\n750000007\n\nInput\n3 5\n2 1 2\n\nOutput\n125000003\n\n\n\n-----Note-----\n\nThe answer for the first sample is equal to $\\frac{14}{8}$.\n\nThe answer for the second sample is equal to $\\frac{17}{8}$.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "3 5\n2 2 2\n",
+        "expected": "750000007",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3 5\n2 1 2\n",
+        "expected": "125000003",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "3 5\n2 2 2\n",
+      "expected": "750000007",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3 5\n2 1 2\n",
+      "expected": "125000003",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "20 29\n1 2 1 2 2 1 0 1 2 2 2 2 1 2 1 1 2 2 2 2\n",
+      "expected": "379091280\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 34\n2 2 2 1 2 1 2 3 2 3 1 2 2 2 2 1 1 1 2 2\n",
+      "expected": "759798069\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 31\n2 1 1 2 1 0 2 2 2 2 1 2 1 2 1 1 1 5 1 2\n",
+      "expected": "476097126\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 26\n1 3 1 1 0 2 1 1 2 2 4 1 2 2 2 2 1 4 2 1\n",
+      "expected": "424194351\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 26\n1 2 1 1 1 2 1 1 2 2 4 1 2 2 2 1 1 4 2 1\n",
+      "expected": "909683246\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 32\n2 0 1 0 1 2 2 2 1 1 1 1 2 1 2 4 2 2 4 1\n",
+      "expected": "874344848\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 4\n3 2 0\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 31\n2 2 1 2 1 1 2 1 2 2 1 2 1 2 1 1 1 2 1 2\n",
+      "expected": "153515832\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 5\n0 1 1 3 2\n",
+      "expected": "562500007\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 30\n2 1 1 2 1 1 1 1 2 1 1 1 1 1 2 2 1 1 1 2\n",
+      "expected": "888820671\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 26\n1 3 1 1 0 2 1 1 2 2 4 1 2 2 2 1 1 4 2 1\n",
+      "expected": "909683246\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 26\n1 3 1 1 0 2 1 1 2 2 4 1 2 2 2 2 1 0 2 1\n",
+      "expected": "424194351\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "20 29\n1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1\n",
+      "expected": "534345649\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 25\n1 1 1 1 0 2 2 2 1 1 2 1 2 2 1 2 1 1 2 2\n",
+      "expected": "846324940\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 30\n1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n",
+      "expected": "310937903\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 26\n1 3 1 1 1 2 1 1 2 2 4 1 2 2 2 1 1 4 2 1\n",
+      "expected": "897491473\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 10\n2 2 2 2 1\n",
+      "expected": "875000010\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 4\n3 2 2\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 33\n1 2 2 1 1 2 1 1 1 2 0 2 1 0 2 2 2 1 2 1\n",
+      "expected": "165332813\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 31\n2 1 1 2 1 1 2 1 2 2 1 2 1 2 1 1 1 2 1 2\n",
+      "expected": "948458694\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 29\n2 2 1 2 2 1 0 1 2 2 2 2 1 2 1 1 2 2 2 2\n",
+      "expected": "649578113\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 31\n1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n",
+      "expected": "333612464\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 28\n2 1 1 2 2 1 2 2 2 1 2 1 1 1 1 2 1 1 2 1\n",
+      "expected": "81361785\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "20 32\n2 1 1 0 1 2 2 2 1 1 1 1 2 1 2 1 2 2 2 1\n",
+      "expected": "118091601\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "146274ccf15612234765019c58b95acad7284232722afe7ea7351d02203149d0",
+    "b8b8b97a1100c1c2d06c0c2a6922c1be5bb132b9822c2471e00bd3379d65b3ad"
+  ],
+  "reference_ast_hashes": [
+    "55c830357ca4f32511692b56b300957bcff79c44712185eb64e68b33817de7ca",
+    "abe9c3bc5a803dcc5f9af3e5fa97687fb481625325a5bdb8d145669fa22c50e4"
+  ],
+  "raw_source_row": 2748,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "6cb92e0c489df269e5a89c5c6bd5a40feac0c03ad1f88930f490b63cdbc76a7b"
+}

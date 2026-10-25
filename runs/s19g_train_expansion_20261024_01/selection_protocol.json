@@ -1,0 +1,25 @@
+{
+  "version": "S19G-train-admission-v1",
+  "created_at": 1792897491.167105,
+  "seed": "S19G-train-expansion-v1",
+  "source_revision": "d593ed0a2becbbc952230bb89be09189bf1056dc",
+  "shards": [
+    "ALL/train-00000-of-00009.parquet"
+  ],
+  "target_new": 61,
+  "target_total": 80,
+  "max_admissions": 200,
+  "ordering": "MEDIUM/MEDIUM_HARD/HARD/VERY_HARD round robin, within stratum SHA256(seed|canonical_url|question_hash)",
+  "selection_uses_model_outputs": false,
+  "exclude": "all1000 original TACO test identities conservatively; available LCB and project task identities; near duplicate Jaccard>=.85; exact/AST reference overlap; interactive/image/ambiguous output; malformed cases",
+  "sample_parser": "literal dashed or standalone Example(s)/Input/Output headings; no altered content",
+  "cases": "12 online developer tests +12 final tests by frozen hash after input dedup; statement samples excluded; all from official benchmark, not newly claimed statement examples",
+  "comparator": "unchanged tokens/s1; no floating tolerance or SPJ",
+  "public_bytes_max": 16000,
+  "reference_limit": 4,
+  "required_references": 2,
+  "reference_distinctness": "different normalized AST; no claim independent algorithms",
+  "negative": "constant impossible sentinel must fail all tests",
+  "max_reference_seconds_per_case": 5,
+  "model_requests": 0
+}

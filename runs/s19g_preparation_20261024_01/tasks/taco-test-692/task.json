@@ -1,0 +1,234 @@
+{
+  "task_id": "s19g_taco-test-692",
+  "original_id": "taco-test-692",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1139/D",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-692",
+    "prompt": "Vivek initially has an empty array $a$ and some integer constant $m$.\n\nHe performs the following algorithm:  Select a random integer $x$ uniformly in range from $1$ to $m$ and append it to the end of $a$.  Compute the greatest common divisor of integers in $a$.  In case it equals to $1$, break  Otherwise, return to step $1$. \n\nFind the expected length of $a$. It can be shown that it can be represented as $\\frac{P}{Q}$ where $P$ and $Q$ are coprime integers and $Q\\neq 0 \\pmod{10^9+7}$. Print the value of $P \\cdot Q^{-1} \\pmod{10^9+7}$.\n\n\n-----Input-----\n\nThe first and only line contains a single integer $m$ ($1 \\leq m \\leq 100000$).\n\n\n-----Output-----\n\nPrint a single integer — the expected length of the array $a$ written as $P \\cdot Q^{-1} \\pmod{10^9+7}$.\n\n\n-----Examples-----\nInput\n1\n\nOutput\n1\n\nInput\n2\n\nOutput\n2\n\nInput\n4\n\nOutput\n333333338\n\n\n\n-----Note-----\n\nIn the first example, since Vivek can choose only integers from $1$ to $1$, he will have $a=[1]$ after the first append operation, and after that quit the algorithm. Hence the length of $a$ is always $1$, so its expected value is $1$ as well.\n\nIn the second example, Vivek each time will append either $1$ or $2$, so after finishing the algorithm he will end up having some number of $2$'s (possibly zero), and a single $1$ in the end. The expected length of the list is $1\\cdot \\frac{1}{2} + 2\\cdot \\frac{1}{2^2} + 3\\cdot \\frac{1}{2^3} + \\ldots = 2$.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "1\n",
+        "expected": "1",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "2\n",
+        "expected": "2",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "4\n",
+        "expected": "333333338",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "1\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2\n",
+      "expected": "2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4\n",
+      "expected": "333333338",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "611\n",
+      "expected": "328389339\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "10859\n",
+      "expected": "380490066\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "9018\n",
+      "expected": "424164205\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "6706\n",
+      "expected": "428227625\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "99594\n",
+      "expected": "166105505\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "13\n",
+      "expected": "468253974\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "12167\n",
+      "expected": "831671589\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "48457\n",
+      "expected": "559402589\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "88373\n",
+      "expected": "857337836\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "28\n",
+      "expected": "746334443\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "33442\n",
+      "expected": "819541613\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "41764\n",
+      "expected": "65880203\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "99936\n",
+      "expected": "129595366\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "44126\n",
+      "expected": "494136113\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "75232\n",
+      "expected": "376862836\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "93493\n",
+      "expected": "606807336\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "94998\n",
+      "expected": "123894686\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "24\n",
+      "expected": "642857150\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "15015\n",
+      "expected": "618014296\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "99622\n",
+      "expected": "109597446\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "91286\n",
+      "expected": "843541605\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "10\n",
+      "expected": "567460324\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "64444\n",
+      "expected": "249303275\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "99911\n",
+      "expected": "55921825\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "9d7204203373006977a9804ed9263f93e7c2425e5bfb9d73ec4b32eb4fa152bc",
+    "f1dd32d5a4a8edbc6d1cd215f4e2842efde14c9fcba4629789c652b7d9a45451"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

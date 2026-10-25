@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r1817",
+  "original_id": "taco-train-s00-r1817",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/580/B",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1817",
+    "prompt": "Kefa wants to celebrate his first big salary by going to restaurant. However, he needs company. \n\nKefa has n friends, each friend will agree to go to the restaurant if Kefa asks. Each friend is characterized by the amount of money he has and the friendship factor in respect to Kefa. The parrot doesn't want any friend to feel poor compared to somebody else in the company (Kefa doesn't count). A friend feels poor if in the company there is someone who has at least d units of money more than he does. Also, Kefa wants the total friendship factor of the members of the company to be maximum. Help him invite an optimal company!\n\n\n-----Input-----\n\nThe first line of the input contains two space-separated integers, n and d (1 ≤ n ≤ 10^5, $1 \\leq d \\leq 10^{9}$) — the number of Kefa's friends and the minimum difference between the amount of money in order to feel poor, respectively.\n\nNext n lines contain the descriptions of Kefa's friends, the (i + 1)-th line contains the description of the i-th friend of type m_{i}, s_{i} (0 ≤ m_{i}, s_{i} ≤ 10^9) — the amount of money and the friendship factor, respectively. \n\n\n-----Output-----\n\nPrint the maximum total friendship factir that can be reached.\n\n\n-----Examples-----\nInput\n4 5\n75 5\n0 100\n150 20\n75 1\n\nOutput\n100\n\nInput\n5 100\n0 7\n11 32\n99 10\n46 8\n87 54\n\nOutput\n111\n\n\n\n-----Note-----\n\nIn the first sample test the most profitable strategy is to form a company from only the second friend. At all other variants the total degree of friendship will be worse.\n\nIn the second sample test we can take all the friends.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "4 5\n75 5\n0 100\n150 20\n75 1\n",
+        "expected": "100",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "5 100\n0 7\n11 32\n99 10\n46 8\n87 54\n",
+        "expected": "111",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "4 5\n75 5\n0 100\n150 20\n75 1\n",
+      "expected": "100",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 100\n0 7\n11 32\n99 10\n46 8\n87 54\n",
+      "expected": "111",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2 1\n2 4\n2 2\n1 6\n3 2\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 1000000000\n19 20\n",
+      "expected": "20\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 6\n5 11\n10 11\n11 11\n12 11\n100 1\n",
+      "expected": "33\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "15 1234\n2738 365370390\n1160 680412079\n2594 902749351\n3126 324754476\n3151 177963947\n3424 396145897\n5578 737768323\n3755 687640543\n381 848813098\n1058 197211286\n936 829986595\n1025 776492538\n3598 142176544\n3595 680519527\n1191 32199940\n",
+      "expected": "3677320675\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 7\n75 5\n0 110\n179 20\n75 1\n",
+      "expected": "110\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8 5\n3 227589091\n12 131068951\n8 291000839\n20 25503219\n11 6972428\n20 585402296\n12 114701518\n1 225083234\n",
+      "expected": "610905515\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 5\n75 5\n0 000\n179 20\n75 1\n",
+      "expected": "20\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 1000000000\n15 1\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "15 1234\n2738 365370390\n1160 970909702\n2594 145443401\n3126 324754476\n3151 177963947\n3424 396145897\n5578 737768323\n3423 687640543\n381 848813098\n1058 197211286\n936 650181776\n1025 776492538\n3598 142176544\n3595 680519527\n1191 32199940\n",
+      "expected": "3475808340\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 100\n0 7\n11 32\n99 10\n46 2\n87 54\n",
+      "expected": "105\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 9\n0 98\n2 1000000000\n8 0000000000\n5 999999999\n3 1489916668\n",
+      "expected": "3489916765\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8 5\n3 227589091\n13 131068951\n8 291000839\n20 918918112\n11 6972428\n20 585402296\n12 220234661\n1 225083234\n",
+      "expected": "1504320408\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "4 5\n75 5\n0 100\n150 20\n75 2\n",
+      "expected": "100\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 3\n4 15\n0 17\n6 11\n",
+      "expected": "26\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 1\n2 6\n2 2\n3 3\n3 3\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8 5\n3 227589091\n12 19086443\n8 291000839\n58 25503219\n9 8756474\n20 585402296\n12 172711181\n1 225083234\n",
+      "expected": "585402296\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "15 1234\n2738 365370390\n1160 680412079\n2594 902749351\n3126 347138217\n3151 177963947\n3424 396145897\n5578 737768323\n3755 687640543\n381 848813098\n1058 197211286\n936 829986595\n1025 776492538\n3598 142176544\n3595 680519527\n1191 32199940\n",
+      "expected": "3699704416\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 10\n8 90\n1009 1000000\n14 121\n10 298\n0 109092\n",
+      "expected": "1000000\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 3\n801 10100\n1454 134509124\n801 1\n",
+      "expected": "134509124\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8 5\n3 227589091\n12 131068951\n8 291000839\n20 918918112\n11 6972428\n20 585402296\n12 114701518\n1 225083234\n",
+      "expected": "1504320408\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 9\n0 98\n2 1000000000\n8 1000000000\n5 999999999\n3 1489916668\n",
+      "expected": "4489916765\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 5\n75 5\n0 110\n179 20\n75 1\n",
+      "expected": "110\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 5\n75 1\n0 110\n179 20\n100 1\n",
+      "expected": "110\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "15 1234\n2738 365370390\n1160 68890665\n2594 902749351\n3126 324754476\n3151 177963947\n3424 396145897\n5578 737768323\n3423 687640543\n381 848813098\n1058 197211286\n936 829986595\n1025 776492538\n3598 142176544\n3595 680519527\n1191 32199940\n",
+      "expected": "3677320675\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "d65f77bcf02662d84ff7f988f307e75f9efe862d0c941551a7d619f081632e55",
+    "e9b92e2f57dce8313bb590985489a04a39faa2e172ba28bfde9f8aeb1d268db6"
+  ],
+  "reference_ast_hashes": [
+    "400794cf1ef0c51896ced474c2683bafff623b9ab0d00aeb149343ff016964fb",
+    "aee381a8f333e824291d6e6d761267bac9161cb014e2d8684443a42174393f3b"
+  ],
+  "raw_source_row": 1817,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "0f53c638932f03f3c3e62dd74051027ee2e8dd43395e7a450fd95a597ce2b863"
+}

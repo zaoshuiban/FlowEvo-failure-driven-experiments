@@ -1,0 +1,242 @@
+{
+  "task_id": "s19g_taco-train-s00-r0384",
+  "original_id": "taco-train-s00-r0384",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1082/B",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r0384",
+    "prompt": "Vova has won $n$ trophies in different competitions. Each trophy is either golden or silver. The trophies are arranged in a row.\n\nThe beauty of the arrangement is the length of the longest subsegment consisting of golden trophies. Vova wants to swap two trophies (not necessarily adjacent ones) to make the arrangement as beautiful as possible — that means, to maximize the length of the longest such subsegment.\n\nHelp Vova! Tell him the maximum possible beauty of the arrangement if he is allowed to do at most one swap.\n\n\n-----Input-----\n\nThe first line contains one integer $n$ ($2 \\le n \\le 10^5$) — the number of trophies.\n\nThe second line contains $n$ characters, each of them is either G or S. If the $i$-th character is G, then the $i$-th trophy is a golden one, otherwise it's a silver trophy. \n\n\n-----Output-----\n\nPrint the maximum possible length of a subsegment of golden trophies, if Vova is allowed to do at most one swap.\n\n\n-----Examples-----\nInput\n10\nGGGSGGGSGG\n\nOutput\n7\n\nInput\n4\nGGGG\n\nOutput\n4\n\nInput\n3\nSSS\n\nOutput\n0\n\n\n\n-----Note-----\n\nIn the first example Vova has to swap trophies with indices $4$ and $10$. Thus he will obtain the sequence \"GGGGGGGSGS\", the length of the longest subsegment of golden trophies is $7$. \n\nIn the second example Vova can make no swaps at all. The length of the longest subsegment of golden trophies in the sequence is $4$. \n\nIn the third example Vova cannot do anything to make the length of the longest subsegment of golden trophies in the sequence greater than $0$.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "10\nGGGSGGGSGG\n",
+        "expected": "7",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "4\nGGGG\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3\nSSS\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "10\nGGGSGGGSGG\n",
+      "expected": "7",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4\nGGGG\n",
+      "expected": "4",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3\nSSS\n",
+      "expected": "0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4\nSSGG\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\nGGSGG\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6\nGGSSSG\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "12\nSSSGGSSSGGGG\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8\nSGGSGGSS\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "11\nSGGGGSGGSGG\n",
+      "expected": "7\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "183\nGSSGGSSSSSGSGGGGGSGSGGGSSSSGSGSGSGSGGGSSSGSGGSSGSGSSGSSSSSSSSSSGSGSSSGGSGGGSGSSSGGGSSGGGGSGGGGSGSSGGGGGSGSGGSGSGSGSSSGSGSGSSSGGGSGGSGSGSGGSGSSSSGSGSSSGGGSSSSGGGSSGSGGGGGSSGSGSSGGSSSSG\n",
+      "expected": "9\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "33\nGGGGSSSGGSSSGGGGGGGSGGGGSGGGGGGGG\n",
+      "expected": "13\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6\nSGGSGG\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "30\nGGSSSGGSSSGSSGSSGSSSGGSSGGGGGG\n",
+      "expected": "7\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6\nSGSGSS\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9\nGGSGGSGGS\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "8\nGGSSSSSG\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8\nSSGGSGGS\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "11\nGSSSSGGGGGS\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "11\nGSSGGGSSSSG\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "17\nGGGSGSGSGSGSGSSSS\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "89\nSGGSGSGGSSGGSGGSGGGGSSGSSSSSGGGGGGGGGGSSSSGGGGSSSSSGSSSSSGSGSGSGGGSSSGSGGGSSSGSGSGSSGSSGS\n",
+      "expected": "11\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "26\nSGSSGSSSSSSGSSSSSSSGSSGSSG\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "300\nSSGSGSSSGSGSSSSGGSGSSGGSGSGGSSSGSSGSGGSSGGSGSSGGSGGSSGSSSGSGSGSSGSGGSSSGSSGSSGGGGSSGSSGSSGSGGSSSSGGGGSSGSSSSSSSSGSSSSGSGSSSSSSSSGSGSSSSGSSGGSSGSGSSSSSSGSGSSSGGSSGSGSSGSSSSSSGGGSSSGSGSGSGGSGGGSSGSGSSSGSSGGSSGSSGGGGSGSSGSSSSGGSSSSGGSGSSSSSSGSSSGGGSGSGGSSGSSSSSSGGSSSGSSSSGGGSSGSSSGSGGGSSSSGSSSGSGSGGGGS\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10\nSSGSSGGGSS\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8\nGSGSGGGG\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8\nSGSGSGSG\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "11\nGSSSSGGGSSG\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "3ed8d4fc3793c53d86ee10336ac1fc652fa16a8ebc6b776190979062d884463b",
+    "06d0b6476161e2be44d83c6031414a9533a8d8410c9688443a06c8a7c536a0c5"
+  ],
+  "reference_ast_hashes": [
+    "18fd2b127f0f2ca51a33cefa19479a688151f0186956db8fc7e8a4dd4bf62462",
+    "5d6d09cfb1a2bf1d3cb24e43ed6702c377a17887511c4d0ddd15e729a1581308"
+  ],
+  "raw_source_row": 384,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "2afd6a557a3b6ee06fc8e6566d5e48ae60279b380b462459578d46f5d25fd1eb"
+}

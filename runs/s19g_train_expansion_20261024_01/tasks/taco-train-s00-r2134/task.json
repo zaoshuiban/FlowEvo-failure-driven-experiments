@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r2134",
+  "original_id": "taco-train-s00-r2134",
+  "dataset": "taco",
+  "difficulty": "VERY_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/961/G",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2134",
+    "prompt": "You are given a set of n elements indexed from 1 to n. The weight of i-th element is w_{i}. The weight of some subset of a given set is denoted as $W(S) =|S|\\cdot \\sum_{i \\in S} w_{i}$. The weight of some partition R of a given set into k subsets is $W(R) = \\sum_{S \\in R} W(S)$ (recall that a partition of a given set is a set of its subsets such that every element of the given set belongs to exactly one subset in partition).\n\nCalculate the sum of weights of all partitions of a given set into exactly k non-empty subsets, and print it modulo 10^9 + 7. Two partitions are considered different iff there exist two elements x and y such that they belong to the same set in one of the partitions, and to different sets in another partition.\n\n\n-----Input-----\n\nThe first line contains two integers n and k (1 ≤ k ≤ n ≤ 2·10^5) — the number of elements and the number of subsets in each partition, respectively.\n\nThe second line contains n integers w_{i} (1 ≤ w_{i} ≤ 10^9)— weights of elements of the set.\n\n\n-----Output-----\n\nPrint one integer — the sum of weights of all partitions of a given set into k non-empty subsets, taken modulo 10^9 + 7.\n\n\n-----Examples-----\nInput\n4 2\n2 3 2 3\n\nOutput\n160\n\nInput\n5 2\n1 2 3 4 5\n\nOutput\n645\n\n\n\n-----Note-----\n\nPossible partitions in the first sample:  {{1, 2, 3}, {4}}, W(R) = 3·(w_1 + w_2 + w_3) + 1·w_4 = 24;  {{1, 2, 4}, {3}}, W(R) = 26;  {{1, 3, 4}, {2}}, W(R) = 24;  {{1, 2}, {3, 4}}, W(R) = 2·(w_1 + w_2) + 2·(w_3 + w_4) = 20;  {{1, 3}, {2, 4}}, W(R) = 20;  {{1, 4}, {2, 3}}, W(R) = 20;  {{1}, {2, 3, 4}}, W(R) = 26; \n\nPossible partitions in the second sample:  {{1, 2, 3, 4}, {5}}, W(R) = 45;  {{1, 2, 3, 5}, {4}}, W(R) = 48;  {{1, 2, 4, 5}, {3}}, W(R) = 51;  {{1, 3, 4, 5}, {2}}, W(R) = 54;  {{2, 3, 4, 5}, {1}}, W(R) = 57;  {{1, 2, 3}, {4, 5}}, W(R) = 36;  {{1, 2, 4}, {3, 5}}, W(R) = 37;  {{1, 2, 5}, {3, 4}}, W(R) = 38;  {{1, 3, 4}, {2, 5}}, W(R) = 38;  {{1, 3, 5}, {2, 4}}, W(R) = 39;  {{1, 4, 5}, {2, 3}}, W(R) = 40;  {{2, 3, 4}, {1, 5}}, W(R) = 39;  {{2, 3, 5}, {1, 4}}, W(R) = 40;  {{2, 4, 5}, {1, 3}}, W(R) = 41;  {{3, 4, 5}, {1, 2}}, W(R) = 42.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "4 2\n2 3 2 3\n",
+        "expected": "160",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "5 2\n1 2 3 4 5\n",
+        "expected": "645",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "4 2\n2 3 2 3\n",
+      "expected": "160",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "5 2\n1 2 3 4 5\n",
+      "expected": "645",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4 2\n6803 1550 6447 556\n",
+      "expected": "245696\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 2\n1839 868 440 5390 6970\n",
+      "expected": "666801\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 1\n1867 5670 374 4815\n",
+      "expected": "50904\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n6803 1550 6447 3695\n",
+      "expected": "295920\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 3\n1 2 3 4 5\n",
+      "expected": "735\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 3\n4759 3250 7401 8003 2501 6345\n",
+      "expected": "6935685\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 2\n2578 226 2255 6020 7152 9486\n",
+      "expected": "2938002\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 1\n2255 7048 8360 9845 7229 5331\n",
+      "expected": "240408\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 1\n2403 4573 3678\n",
+      "expected": "31962\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 4\n8429 7912 6178 6883 9193 501\n",
+      "expected": "4496040\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 3\n4062 8888 5423\n",
+      "expected": "18373\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 5\n7906 9870 6443 8406 477 2200\n",
+      "expected": "706040\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "5 3\n1 2 3 7 5\n",
+      "expected": "882\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 4\n9900 6535 4300 1853\n",
+      "expected": "22588\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n4049 2220 6447 3695\n",
+      "expected": "262576\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 4\n9364 2224 2185 920 7650\n",
+      "expected": "312802\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 3\n4062 8888 9175\n",
+      "expected": "22125\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 3\n3526 1473 9416 2974\n",
+      "expected": "156501\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n3526 1473 9416 2974\n",
+      "expected": "278224\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 1\n3100 7048 8360 9845 7229 5331\n",
+      "expected": "245478\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n4049 1550 6447 3695\n",
+      "expected": "251856\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 1\n1867 2225 374 4815\n",
+      "expected": "37124\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 2\n1880 3827 4482\n",
+      "expected": "50945\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 1\n6740 1291 1663 8074 8377\n",
+      "expected": "130725\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "6e753871b31b5b3ab0fd82596ede5b6a2eaaa6eba11cce74b217733a65beffc3",
+    "b1b2cb5b8a94ac2917c291fd8f4371467c579a17871b4d6fad730b225dcba386"
+  ],
+  "reference_ast_hashes": [
+    "71af33ae953096f7b51504faf07f1cf1e09088650eb6eb6e2fa639a712d49bb0",
+    "9a20f7da52147814737112d731ca9890a9ace2b86b10a053e28f23be9a476379"
+  ],
+  "raw_source_row": 2134,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "d98b8216f5de61d64aa54cd51c50bbc6626fed80b8e664c087c809fa2f8e2f04"
+}

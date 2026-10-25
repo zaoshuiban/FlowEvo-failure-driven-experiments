@@ -1,0 +1,208 @@
+{
+  "task_id": "s19g_taco-test-670",
+  "original_id": "taco-test-670",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1348/C",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-670",
+    "prompt": "Phoenix has a string $s$ consisting of lowercase Latin letters. He wants to distribute all the letters of his string into $k$ non-empty strings $a_1, a_2, \\dots, a_k$ such that every letter of $s$ goes to exactly one of the strings $a_i$. The strings $a_i$ do not need to be substrings of $s$. Phoenix can distribute letters of $s$ and rearrange the letters within each string $a_i$ however he wants.\n\nFor example, if $s = $ baba and $k=2$, Phoenix may distribute the letters of his string in many ways, such as:   ba and ba  a and abb  ab and ab  aa and bb \n\nBut these ways are invalid:   baa and ba  b and ba  baba and empty string ($a_i$ should be non-empty) \n\nPhoenix wants to distribute the letters of his string $s$ into $k$ strings $a_1, a_2, \\dots, a_k$ to minimize the lexicographically maximum string among them, i. e. minimize $max(a_1, a_2, \\dots, a_k)$. Help him find the optimal distribution and print the minimal possible value of $max(a_1, a_2, \\dots, a_k)$.\n\nString $x$ is lexicographically less than string $y$ if either $x$ is a prefix of $y$ and $x \\ne y$, or there exists an index $i$ ($1 \\le i \\le min(|x|, |y|))$ such that $x_i$ < $y_i$ and for every $j$ $(1 \\le j < i)$ $x_j = y_j$. Here $|x|$ denotes the length of the string $x$.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains an integer $t$ ($1 \\le t \\le 1000$) — the number of test cases. Each test case consists of two lines.\n\nThe first line of each test case consists of two integers $n$ and $k$ ($1 \\le k \\le n \\le 10^5$) — the length of string $s$ and the number of non-empty strings, into which Phoenix wants to distribute letters of $s$, respectively.\n\nThe second line of each test case contains a string $s$ of length $n$ consisting only of lowercase Latin letters.\n\nIt is guaranteed that the sum of $n$ over all test cases is $\\le 10^5$.\n\n\n-----Output-----\n\nPrint $t$ answers — one per test case. The $i$-th answer should be the minimal possible value of $max(a_1, a_2, \\dots, a_k)$ in the $i$-th test case.\n\n\n-----Example-----\nInput\n6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n\nOutput\nab\nabbc\nb\naa\nx\nehinopx\n\n\n\n-----Note-----\n\nIn the first test case, one optimal solution is to distribute baba into ab and ab. \n\nIn the second test case, one optimal solution is to distribute baacb into abbc and a.\n\nIn the third test case, one optimal solution is to distribute baacb into ac, ab, and b.\n\nIn the fourth test case, one optimal solution is to distribute aaaaa into aa, aa, and a.\n\nIn the fifth test case, one optimal solution is to distribute aaxxzz into az, az, x, and x.\n\nIn the sixth test case, one optimal solution is to distribute phoenix into ehinopx.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n",
+        "expected": "ab\nabbc\nb\naa\nx\nehinopx",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n",
+      "expected": "ab\nabbc\nb\naa\nx\nehinopx",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1\n12 11\nmononeuropathy\n",
+      "expected": "r\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1\n5 3\nbaacb\n",
+      "expected": "b\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "4\n5 1\napple\n6 2\norange\n7 3\nbanana\n8 4\npineapple\n",
+      "expected": "aelpp\ne\nabnn\ni\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "2\n7 4\ndistort\n8 2\nravaging\n",
+      "expected": "r\nagginrv\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1\n9 3\nwannamake\n",
+      "expected": "aekmnnw\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "9\n8 6\nchefspam\n11 9\nmonkeyeight\n8 2\nvcubingx\n6 1\namazed\n4 4\nhbes\n8 1\narolakiv\n9 7\nhiuavidhd\n33 13\ngosubtovcubingxheneedssubscribers\n7 4\nhiimbad\n",
+      "expected": "m\no\nc\naademz\ns\naaiklorv\ni\ng\nh\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "3\n5 2\naabbv\n6 2\nchcabc\n7 1\nyyaazd\n",
+      "expected": "abbv\nb\naadyyz\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "3\n8 4\nabcdabcd\n9 5\nabcabcabc\n10 6\nababababab\n",
+      "expected": "b\nb\nb\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1\n6 3\nabcabc\n",
+      "expected": "b\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1\n6 4\nakhfgj\n",
+      "expected": "h\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1\n4 4\nhebs\n",
+      "expected": "s\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5\n5 4\nabcde\n6 2\naabbcc\n8 3\naasdfghj\n10 5\nasdfghjklq\n8 1\nzyxvutsr\n",
+      "expected": "d\nabbcc\nd\nh\nrstuvxyz\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "1\n10 1\ncodeforces\n",
+      "expected": "ccdeefoors\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "1\n10 3\nchloroquine\n",
+      "expected": "h\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "1\n8 2\nchefspam\n",
+      "expected": "c\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "1\n4 2\ncode\n",
+      "expected": "d\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "9\n8 3\nchefspam\n11 7\nmonkeyeight\n8 2\nvcubingx\n6 1\namazed\n4 4\nhebs\n8 1\narolaliv\n9 7\nhiuavidhd\n33 17\ngosubtovcubingxheneedssubscribers\n7 4\nhiimbad\n",
+      "expected": "e\nm\nc\naademz\ns\naaillorv\ni\nn\nh\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "1\n6 4\naabbcc\n",
+      "expected": "b\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "2\n15 8\nolukaihonulaohanuku\n10 5\nalohamahalo\n",
+      "expected": "k\nh\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "9\n8 3\nchefspam\n11 9\nmonkeyeight\n8 2\nvcubingx\n6 1\nanazed\n4 4\nhebs\n8 1\narolaliv\n9 7\nhiuavidhd\n33 17\ngosubtovcubingxheneedssubscribers\n7 5\nhiimbad\n",
+      "expected": "e\no\nc\naadenz\ns\naaillorv\ni\nn\ni\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "9\n8 3\nchefspam\n11 7\nmonkeyeight\n8 2\nvcubingx\n6 1\namazed\n4 4\nhebs\n8 1\narolakiv\n9 7\nhiuavidhd\n33 13\ngosubtovcubingxheneedssubscribers\n7 4\nhiimbad\n",
+      "expected": "e\nm\nc\naademz\ns\naaiklorv\ni\ng\nh\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "6\n9 4\nbbbccceee\n13 5\njhfgkkkzqqppp\n10 6\ndddcccbbbnn\n15 4\naaaaiiiijjjjsss\n8 7\neeeooopi\n16 8\nfffihhhhgggzzzzj\n",
+      "expected": "c\nk\nc\naiiiijjjjsss\no\nh\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "3\n3 2\nabc\n4 2\nabca\n7 3\naaabbbc\n",
+      "expected": "b\nabc\nabbbc\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "2\n4 2\nbbbb\n4 2\nabab\n",
+      "expected": "bb\nab\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "a3880acc0cba384980f400df7721fb72e614f3cb9a288e1e9c4ab59b8bacd95d",
+    "bb635d0ba99820b359da00f84cf6e8b7841a5059a2cc2b0e094e6fc7a94375dc"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

@@ -1,0 +1,256 @@
+{
+  "task_id": "s19g_taco-train-s00-r1225",
+  "original_id": "taco-train-s00-r1225",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/388/C",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1225",
+    "prompt": "Fox Ciel is playing a card game with her friend Fox Jiro. There are n piles of cards on the table. And there is a positive integer on each card.\n\nThe players take turns and Ciel takes the first turn. In Ciel's turn she takes a card from the top of any non-empty pile, and in Jiro's turn he takes a card from the bottom of any non-empty pile. Each player wants to maximize the total sum of the cards he took. The game ends when all piles become empty.\n\nSuppose Ciel and Jiro play optimally, what is the score of the game?\n\n\n-----Input-----\n\nThe first line contain an integer n (1 ≤ n ≤ 100). Each of the next n lines contains a description of the pile: the first integer in the line is s_{i} (1 ≤ s_{i} ≤ 100) — the number of cards in the i-th pile; then follow s_{i} positive integers c_1, c_2, ..., c_{k}, ..., c_{s}_{i} (1 ≤ c_{k} ≤ 1000) — the sequence of the numbers on the cards listed from top of the current pile to bottom of the pile.\n\n\n-----Output-----\n\nPrint two integers: the sum of Ciel's cards and the sum of Jiro's cards if they play optimally.\n\n\n-----Examples-----\nInput\n2\n1 100\n2 1 10\n\nOutput\n101 10\n\nInput\n1\n9 2 8 6 5 9 4 7 1 3\n\nOutput\n30 15\n\nInput\n3\n3 1 3 2\n3 5 4 6\n2 8 7\n\nOutput\n18 18\n\nInput\n3\n3 1000 1000 1000\n6 1000 1000 1000 1000 1000 1000\n5 1000 1000 1000 1000 1000\n\nOutput\n7000 7000\n\n\n\n-----Note-----\n\nIn the first example, Ciel will take the cards with number 100 and 1, Jiro will take the card with number 10.\n\nIn the second example, Ciel will take cards with numbers 2, 8, 6, 5, 9 and Jiro will take cards with numbers 4, 7, 1, 3.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "2\n1 100\n2 1 10\n",
+        "expected": "101 10",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "1\n9 2 8 6 5 9 4 7 1 3\n",
+        "expected": "30 15",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3\n3 1 3 2\n3 5 4 6\n2 8 7\n",
+        "expected": "18 18",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3\n3 1000 1000 1000\n6 1000 1000 1000 1000 1000 1000\n5 1000 1000 1000 1000 1000\n",
+        "expected": "7000 7000",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "2\n1 100\n2 1 10\n",
+      "expected": "101 10",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1\n9 2 8 6 5 9 4 7 1 3\n",
+      "expected": "30 15",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3\n3 1 3 2\n3 5 4 6\n2 8 7\n",
+      "expected": "18 18",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3\n3 1000 1000 1000\n6 1000 1000 1000 1000 1000 1000\n5 1000 1000 1000 1000 1000\n",
+      "expected": "7000 7000",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4\n3 1 5 100\n3 1 5 100\n3 100 1 2\n3 100 1 1\n",
+      "expected": "208 209\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 1000 1000 1001\n6 1000 1000 1000 1000 1000 1000\n5 1000 1000 1000 1000 1000\n",
+      "expected": "7000 7001\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 1 3 2\n3 5 5 6\n2 8 7\n",
+      "expected": "19 18\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6\n2 1 1\n2 2 2\n2 3 1\n2 4 4\n2 5 5\n2 10 6\n",
+      "expected": "25 19\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4\n3 1 5 100\n3 1 5 110\n3 100 1 2\n3 100 1 0\n",
+      "expected": "208 218\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4\n3 1 7 100\n3 1 5 110\n3 100 1 2\n3 100 1 0\n",
+      "expected": "210 218\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9 1 8 6 2 9 4 4 1 3\n",
+      "expected": "26 12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n5 2 2 3 0 5\n4 1 2 3 4\n8 1 1 3 4 5 6 10 8\n",
+      "expected": "19 41\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 1000 1000 1001\n6 1000 1000 1000 1000 1000 1001\n5 1000 1010 1000 1001 1000\n",
+      "expected": "7010 7003\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9 1 8 6 1 9 4 4 1 3\n",
+      "expected": "25 12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 1000 1001 1000\n6 1000 1000 1000 1000 1000 1000\n5 1000 1000 1000 1000 1100\n",
+      "expected": "7001 7100\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4\n3 1 5 100\n3 1 5 110\n3 100 1 0\n3 100 1 1\n",
+      "expected": "208 217\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "3\n3 1000 1000 1001\n6 1000 0000 1000 1000 1000 1001\n5 1100 1010 1000 1011 1000\n",
+      "expected": "6110 7013\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 1000 1000 1001\n6 1000 1000 1000 1000 1000 1001\n5 1000 1010 1000 1000 1000\n",
+      "expected": "7010 7002\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n5 1 2 3 4 5\n4 1 2 3 4\n8 1 2 3 4 5 2 7 8\n",
+      "expected": "19 38\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 1000 1000 1001\n6 1000 1000 1000 1000 1000 1010\n5 1000 1000 1000 1000 1000\n",
+      "expected": "7000 7011\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5\n1 3\n1 2\n1 8\n1 1\n1 4\n",
+      "expected": "12 6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9 2 8 9 1 9 4 4 1 3\n",
+      "expected": "29 12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6\n2 1 1\n2 2 2\n2 3 3\n2 4 4\n2 5 5\n2 6 6\n",
+      "expected": "21 21\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n1 100\n2 1 20\n",
+      "expected": "101 20\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2\n1 101\n2 1 20\n",
+      "expected": "102 20\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n5 1 2 3 4 5\n4 1 2 3 4\n8 1 2 3 4 5 6 7 8\n",
+      "expected": "19 42\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3\n3 1000 1000 1001\n6 1000 1000 1000 1000 1000 1001\n5 1000 1010 1000 1011 1000\n",
+      "expected": "7010 7013\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1\n9 2 8 18 1 9 4 4 1 3\n",
+      "expected": "38 12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "e181e4e493797a149c10fb86bc6d96dd4ed09225367b9fd89ade40506a5b1ab7",
+    "adfbf68a5c4ca592f19059e695e2f4856f92b86c91c5e335b6c4a15b763b0041"
+  ],
+  "reference_ast_hashes": [
+    "06db41d52f82932b19bcbddaf2c6e60754f9a12f2ab4bd72cca39e3ea78e9014",
+    "4be149f6ed022ad6728a1562638338f7601229337e67ce0ad1c7876a665b954a"
+  ],
+  "raw_source_row": 1225,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "461edfe7499ee1f2462153fb7dfce31d670c4f1416c413ce3eba854ba83e9d65"
+}

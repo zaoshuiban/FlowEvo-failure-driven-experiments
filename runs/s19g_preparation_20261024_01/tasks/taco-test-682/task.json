@@ -1,0 +1,221 @@
+{
+  "task_id": "s19g_taco-test-682",
+  "original_id": "taco-test-682",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/289/B",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-682",
+    "prompt": "Little penguin Polo has an n × m matrix, consisting of integers. Let's index the matrix rows from 1 to n from top to bottom and let's index the columns from 1 to m from left to right. Let's represent the matrix element on the intersection of row i and column j as a_{ij}.\n\nIn one move the penguin can add or subtract number d from some matrix element. Find the minimum number of moves needed to make all matrix elements equal. If the described plan is impossible to carry out, say so.\n\n\n-----Input-----\n\nThe first line contains three integers n, m and d (1 ≤ n, m ≤ 100, 1 ≤ d ≤ 10^4) — the matrix sizes and the d parameter. Next n lines contain the matrix: the j-th integer in the i-th row is the matrix element a_{ij} (1 ≤ a_{ij} ≤ 10^4).\n\n\n-----Output-----\n\nIn a single line print a single integer — the minimum number of moves the penguin needs to make all matrix elements equal. If that is impossible, print \"-1\" (without the quotes).\n\n\n-----Examples-----\nInput\n2 2 2\n2 4\n6 8\n\nOutput\n4\n\nInput\n1 2 7\n6 7\n\nOutput\n-1",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "2 2 2\n2 4\n6 8\n",
+        "expected": "4",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "1 2 7\n6 7\n",
+        "expected": "-1",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "2 2 2\n2 4\n6 8\n",
+      "expected": "4",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1 2 7\n6 7\n",
+      "expected": "-1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3 3 3\n3 3 3\n3 3 3\n3 3 3\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1 3 3\n3 6 9\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 2 3\n2 2\n4 4\n6 6\n8 8\n10 10\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 1 5\n5\n10\n15\n20\n25\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "2 2 10\n1 11\n21 31\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 1 2\n4\n6\n8\n10\n12\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "7 7 47\n91 91 91 91 91 91 91\n91 91 91 91 91 91 91\n91 91 91 91 91 91 91\n91 91 91 91 91 91 156\n91 91 91 91 91 91 91\n91 4 91 91 91 91 91\n91 91 91 91 63 91 91\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "7 7 47\n113 91 91 91 91 91 91\n91 91 91 91 91 91 91\n91 91 91 91 91 91 91\n91 91 152 91 91 91 91\n91 91 91 91 91 91 91\n91 4 91 91 91 91 91\n91 91 91 91 91 91 91\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "7 7 47\n47 47 47 47 47 47 47\n47 47 47 47 77 30 47\n47 47 47 47 47 47 47\n47 47 47 47 47 47 47\n47 47 47 47 51 47 47\n47 47 47 47 47 79 47\n47 47 47 47 47 127 47\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 5 2\n2 4 6 8 10\n12 14 16 18 20\n22 24 26 28 30\n32 34 36 38 40\n42 44 46 48 50\n",
+      "expected": "156\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1 2 7\n7 0\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "3 3 3\n5 8 5\n11 11 17\n14 5 2\n",
+      "expected": "12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "3 3 3\n5 8 5\n15 11 5\n14 5 2\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "2 2 5\n5 10\n15 20\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7 4 5\n7 7 7 12\n7 12 20 7\n7 7 7 7\n7 7 12 1\n7 0 12 12\n12 12 7 12\n7 7 7 7\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "3 2 1\n1 11\n1 1\n5 100\n",
+      "expected": "113\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7 4 5\n7 7 7 12\n5 12 12 7\n7 7 7 7\n7 7 12 7\n7 0 12 12\n12 12 7 12\n7 7 7 7\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7 7 47\n47 47 47 47 47 47 47\n47 47 47 55 77 47 47\n47 47 47 47 47 47 47\n47 47 47 47 47 47 47\n47 47 47 47 47 47 47\n47 47 47 47 47 47 47\n47 47 47 47 47 127 47\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "2 5 5\n5 10 15 20 25\n30 35 40 45 50\n",
+      "expected": "25\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "1 5 1\n1 2 3 4 5\n",
+      "expected": "6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "3 2 1\n5 7\n1 2\n5 100\n",
+      "expected": "104\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7 7 47\n47 47 47 47 47 47 47\n47 47 47 47 77 30 47\n47 47 47 46 47 47 66\n47 47 47 47 47 47 93\n47 47 47 47 51 47 47\n47 47 47 47 47 79 47\n47 47 47 47 47 127 47\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7 7 47\n47 47 47 47 47 47 47\n47 47 47 47 77 30 47\n47 47 47 47 47 47 66\n47 47 47 47 47 47 47\n47 47 47 47 51 47 47\n47 47 47 47 47 79 47\n47 47 47 47 47 127 47\n",
+      "expected": "-1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "3 5 7\n7 14 21 28 35\n42 49 56 63 70\n77 84 91 98 105\n",
+      "expected": "56\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "7e9df467e285880f731eefd69cb1f24a0a93abf31e1ab51c5c4108269244ef15",
+    "24fea5646e01663acb86b992c0e9ed43c3f11bf5dcd43ddff529892156fcb153"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

@@ -1,0 +1,242 @@
+{
+  "task_id": "s19g_taco-train-s00-r1475",
+  "original_id": "taco-train-s00-r1475",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/321/B",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1475",
+    "prompt": "Fox Ciel is playing a card game with her friend Jiro.\n\nJiro has n cards, each one has two attributes: position (Attack or Defense) and strength. Fox Ciel has m cards, each one has these two attributes too. It's known that position of all Ciel's cards is Attack.\n\nNow is Ciel's battle phase, Ciel can do the following operation many times:  Choose one of her cards X. This card mustn't be chosen before.  If Jiro has no alive cards at that moment, he gets the damage equal to (X's strength). Otherwise, Ciel needs to choose one Jiro's alive card Y, then:   If Y's position is Attack, then (X's strength)  ≥  (Y's strength) must hold. After this attack, card Y dies, and Jiro gets the damage equal to (X's strength) - (Y's strength).  If Y's position is Defense, then (X's strength)  >  (Y's strength) must hold. After this attack, card Y dies, but Jiro gets no damage.  \n\nCiel can end her battle phase at any moment (so, she can use not all her cards). Help the Fox to calculate the maximal sum of damage Jiro can get.\n\n\n-----Input-----\n\nThe first line contains two integers n and m (1 ≤ n, m ≤ 100) — the number of cards Jiro and Ciel have.\n\nEach of the next n lines contains a string position and an integer strength (0 ≤ strength ≤ 8000) — the position and strength of Jiro's current card. Position is the string \"ATK\" for attack, and the string \"DEF\" for defense.\n\nEach of the next m lines contains an integer strength (0 ≤ strength ≤ 8000) — the strength of Ciel's current card.\n\n\n-----Output-----\n\nOutput an integer: the maximal damage Jiro can get.\n\n\n-----Examples-----\nInput\n2 3\nATK 2000\nDEF 1700\n2500\n2500\n2500\n\nOutput\n3000\n\nInput\n3 4\nATK 10\nATK 100\nATK 1000\n1\n11\n101\n1001\n\nOutput\n992\n\nInput\n2 4\nDEF 0\nATK 0\n0\n0\n1\n1\n\nOutput\n1\n\n\n\n-----Note-----\n\nIn the first test case, Ciel has 3 cards with same strength. The best strategy is as follows. First she uses one of these 3 cards to attack \"ATK 2000\" card first, this attack destroys that card and Jiro gets 2500 - 2000 = 500 damage. Then she uses the second card to destroy the \"DEF 1700\" card. Jiro doesn't get damage that time. Now Jiro has no cards so she can use the third card to attack and Jiro gets 2500 damage. So the answer is 500 + 2500 = 3000.\n\nIn the second test case, she should use the \"1001\" card to attack the \"ATK 100\" card, then use the \"101\" card to attack the \"ATK 10\" card. Now Ciel still has cards but she can choose to end her battle phase. The total damage equals (1001 - 100) + (101 - 10) = 992.\n\nIn the third test case note that she can destroy the \"ATK 0\" card by a card with strength equal to 0, but she can't destroy a \"DEF 0\" card with that card.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "2 3\nATK 2000\nDEF 1700\n2500\n2500\n2500\n",
+        "expected": "3000",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "3 4\nATK 10\nATK 100\nATK 1000\n1\n11\n101\n1001\n",
+        "expected": "992",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "2 4\nDEF 0\nATK 0\n0\n0\n1\n1\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "2 3\nATK 2000\nDEF 1700\n2500\n2500\n2500\n",
+      "expected": "3000",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "3 4\nATK 10\nATK 100\nATK 1000\n1\n11\n101\n1001\n",
+      "expected": "992",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2 4\nDEF 0\nATK 0\n0\n0\n1\n1\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "17 42\nDEF 4824\nDEF 2829\nEEF 4496\nATK 3932\nDEF 6130\nDEF 4005\nATK 5807\nDEF 4434\nDEF 5122\nATK 5553\nDEF 4617\nDEF 5329\nDEF 6169\nATK 4046\nATK 3612\n@TK 5689\nDEF 5226\n735\n802\n19\n1556\n312\n271\n850\n1511\n1196\n784\n1192\n387\n1470\n1441\n1487\n797\n477\n207\n1119\n1311\n527\n97\n1153\n1197\n1558\n1394\n82\n619\n494\n777\n765\n487\n3019\n581\n1403\n1012\n144\n1537\n1282\n973\n1507\n928\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "17 42\nDEF 4824\nDEF 2829\nEEF 4496\nATK 3932\nDEF 6130\nDEF 4005\nATK 5807\nDEF 4434\nDEF 5122\nATK 5553\nDEF 4617\nDEF 5329\nDEF 6169\nATK 4046\nATK 3612\n@TK 5689\nDEF 5226\n735\n802\n19\n1556\n312\n271\n850\n1511\n1196\n811\n1192\n387\n1470\n1441\n1487\n797\n477\n207\n1119\n1311\n527\n97\n1153\n1197\n1558\n1394\n82\n619\n494\n777\n765\n487\n1236\n581\n1403\n1012\n144\n1537\n1282\n973\n1507\n928\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 4\nATK 19\nATK 100\nATK 1000\n1\n2\n111\n1001\n",
+      "expected": "993\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 25\nATK 3519\nATK 2186\nATK 3219\nATK 3116\nATK 2170\nATK 3236\nATK 3013\nDEF 1188\nATK 1914\nATK 2838\n1335\n725\n752\n1254\n414\n1653\n439\n784\n649\n586\n759\n1666\n417\n1316\n392\n799\n534\n1402\n515\n1334\n1435\n898\n1214\n1427\n1820\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 42\nDEF 88\nDEF 92\nDEF 108\nDEF 94\nDEF 96\nDEF 78\n437\n1623\n2354\n2090\n802\n2500\n1512\n2691\n1521\n1087\n1415\n2081\n670\n1955\n3107\n2991\n1865\n2727\n1422\n2345\n2754\n1226\n3153\n3025\n1094\n2943\n2516\n1770\n1401\n157\n3292\n979\n840\n746\n1767\n696\n620\n2533\n2364\n2550\n916\n625\n",
+      "expected": "71957\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "39 22\nDEF 5748\nDEF 5028\nDEF 1873\nDEF 6817\nDEF 5727\nDEF 4386\nDEF 4549\nDEF 5498\nDEF 1506\nDEF 2805\nATK 3186\nDEF 6202\nDEF 2129\nDEF 1646\nDEF 5367\nDEF 5754\nDEF 6195\nDEF 3131\nDEF 1837\nEEF 6575\nDEF 1139\nDEF 3141\nDEF 4494\nATK 3300\nDEF 4290\nDEF 6751\nFED 3802\nDEF 5067\nDEF 2907\nDEF 3643\nDEF 6442\nDEF 4856\nDEF 4226\nDEF 3835\nDEF 1790\nDEF 5415\nDEF 6668\nDEF 5320\nDEF 1787\n252\n237\n304\n525\n99\n322\n280\n341\n215\n73\n303\n436\n153\n283\n400\n192\n425\n513\n138\n427\n514\n470\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 8\nDEF 100\nDEF 200\nDEF 69\nATK 100\n100\n101\n72\n301\n1\n1\n2\n1\n",
+      "expected": "201\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "13 14\nATK 2896\nATK 2919\nATK 2117\nATK 2423\nATK 2636\nATK 2003\nATK 2614\nATK 2857\nATK 2326\nATK 2958\nATK 2928\nATK 3017\nATK 2788\n3245\n3274\n3035\n3113\n2982\n3312\n3129\n2934\n3427\n3316\n3232\n3368\n3314\n3040\n",
+      "expected": "10239\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "14 23\nDEF 2361\nDEF 2253\nDEF 2442\nATK 2530\nDEF 2608\nDEF 2717\nDEF 2274\nDEF 2308\nATK 1200\nDEF 2244\nDEF 2678\nDEF 2338\nDEF 2383\nDEF 2563\n2640\n6118\n2613\n3441\n3607\n5502\n4425\n4368\n4059\n4264\n3979\n5098\n2413\n3564\n6118\n6075\n6049\n2524\n5245\n5004\n5560\n2877\n3450\n",
+      "expected": "55832\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "39 22\nDEF 5748\nDEF 5028\nDEF 1873\nDEF 6817\nDEF 5727\nDEF 4386\nDEF 4549\nDEF 5498\nDEF 1506\nDEF 2805\nATK 3186\nDEF 6202\nDEF 2129\nDEF 1646\nDEF 5367\nDEF 5754\nDEF 6195\nDEF 3131\nDEF 1837\nEEF 6575\nDEF 2842\nDEF 3141\nDEF 4494\nATK 3300\nDEF 4290\nDEF 6751\nFED 3802\nDEF 5067\nDEF 1463\nDEF 3643\nDEF 6442\nDEF 4856\nDEF 4226\nDEF 3835\nDEF 1790\nDEF 5415\nDEF 6668\nDEF 5320\nDEF 1787\n252\n237\n304\n525\n99\n322\n280\n341\n215\n132\n303\n436\n80\n283\n400\n192\n425\n513\n138\n427\n514\n470\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "22 37\nDEF 3258\nDEF 3379\nATK 883\nATK 3945\nATK 4382\nATK 554\nDEF 3374\nDEF 3051\nDEF 2943\nATK 462\nATK 5098\nDEF 2986\nDEF 2957\nATK 1267\nATK 1296\nATK 4178\nDEF 2805\nDEF 3388\nATK 957\nDEF 3102\nDEF 3121\nATK 2875\n2214\n665\n561\n2503\n1329\n2353\n2529\n2932\n940\n2044\n2483\n575\n1980\n2930\n926\n2894\n1395\n577\n2813\n529\n327\n2911\n455\n948\n716\n1741\n2668\n536\n481\n980\n1208\n2680\n2036\n1618\n2718\n2280\n711\n",
+      "expected": "11779\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 8\nDEF 100\nDEF 200\nDEF 69\nATK 100\n100\n101\n72\n301\n1\n1\n1\n1\n",
+      "expected": "201\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "17 42\nDEF 4824\nDEF 4258\nEEF 4496\nATK 3932\nDEF 6130\nDEF 4005\nATK 5807\nDEF 4434\nDEF 5122\nATK 5553\nDEF 4617\nDEF 5329\nDEF 6169\nATK 4046\nATK 3612\n@TK 5689\nDEF 5226\n735\n802\n19\n1556\n312\n271\n850\n1511\n1196\n811\n1192\n387\n1470\n1441\n1487\n797\n477\n207\n1119\n1311\n527\n97\n1153\n1197\n1558\n1394\n82\n619\n494\n777\n765\n487\n1236\n581\n1403\n1012\n144\n1537\n1282\n973\n1507\n928\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "34 10\nDEF 1740\nDEF 2236\nATK 3210\nATK 3468\nATK 4789\nDEF 1392\nATK 3639\nATK 1789\nDEF 3386\nDEF 1301\nDEF 2047\nDEF 1892\nATK 4845\nATK 4182\nATK 4504\nDEF 1557\nDEF 1537\nDEF 910\nATK 1548\nATK 3045\nATK 2660\nDEF 2097\nATK 2157\nDEF 2299\nDEF 2282\nATK 1956\nDEF 1812\nATK 3347\nDEF 1714\nATK 5446\nDEF 1326\nATK 3275\nDEF 907\nATK 3655\n1316\n1332\n1283\n652\n939\n1175\n944\n1433\n1435\n1165\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "17 42\nDEF 4824\nDEF 4258\nDEF 4496\nATK 3932\nDEF 6130\nDEF 4005\nATK 5807\nDEF 4434\nDEF 5122\nATK 3904\nDEF 4617\nDEF 5329\nDEF 6169\nATK 4046\nATK 3612\nATK 5689\nDEF 5226\n735\n1278\n19\n1556\n312\n271\n850\n1511\n1196\n811\n1192\n387\n1470\n1441\n1330\n797\n477\n207\n1119\n1311\n527\n97\n1153\n1197\n1558\n1394\n82\n619\n494\n777\n765\n487\n1236\n581\n1403\n1012\n144\n1537\n1282\n973\n1507\n928\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 8\nDEF 100\nDEF 200\nDEF 300\nATK 100\n100\n101\n72\n301\n1\n1\n1\n1\n",
+      "expected": "201\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 1\nATK 100\n99\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 45\nATK 2374\nATK 2298\nATK 2591\nATK 2383\nATK 2523\nATK 2587\n2899\n3569\n3034\n3728\n3331\n3323\n3901\n3905\n2655\n2959\n3438\n3477\n4190\n3024\n3952\n3413\n3970\n3079\n3306\n3005\n4148\n4267\n4129\n4112\n4388\n3392\n3344\n2602\n4300\n3464\n4142\n3469\n4367\n4530\n3032\n3290\n3009\n3049\n4467\n4256\n3423\n2917\n3627\n2759\n4287\n",
+      "expected": "146172\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 8\nDEF 100\nDEF 200\nDEF 300\nATK 100\n100\n101\n201\n301\n1\n1\n1\n1\n",
+      "expected": "201\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "6 45\nATK 2374\nATK 2298\nATK 2591\nATK 2383\nATK 2523\nATK 2587\n2899\n3569\n4299\n3728\n3331\n3323\n3901\n3905\n2655\n2959\n3438\n3477\n4190\n3024\n3952\n3413\n3970\n3079\n3306\n3005\n4148\n4267\n4129\n4112\n4388\n3392\n3344\n2602\n4300\n3464\n4142\n3469\n4367\n4530\n3032\n3290\n3009\n3049\n4467\n4256\n3423\n2917\n3627\n2759\n4287\n",
+      "expected": "147437\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 13\nDEF 4509\nDEF 4646\n4842\n3280\n7418\n3477\n5876\n5601\n3134\n5939\n6653\n878\n5552\n2956\n4127\n",
+      "expected": "49339\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "17 42\nDEF 4824\nDEF 4258\nDEF 4496\nATK 3932\nDEF 6130\nDEF 4005\nATK 5807\nDEF 4434\nDEF 5122\nATK 3904\nDEF 4617\nDEF 5329\nDEF 6169\nATK 4046\nATK 3612\n@TK 5689\nDEF 5226\n735\n802\n19\n1556\n312\n271\n850\n1511\n1196\n811\n1192\n387\n1470\n1441\n1330\n797\n477\n207\n1119\n1311\n527\n97\n1153\n1197\n1558\n1394\n82\n619\n494\n777\n765\n487\n1236\n581\n1403\n1012\n144\n1537\n1282\n973\n1507\n928\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "39 11\nDEF 5456\nATK 801\nDEF 4013\nATK 798\nATK 1119\nDEF 2283\nDEF 2400\nDEF 3847\nDEF 5386\nDEF 2839\nDEF 3577\nDEF 4050\nDEF 5623\nATK 1061\nDEF 4331\nDEF 4036\nDEF 5138\nDEF 4552\nATK 929\nDEF 3221\nDEF 3645\nDEF 3523\nATK 1147\nDEF 3490\nATK 1030\nDEF 2689\nATK 1265\nDEF 2533\nDEF 3181\nDEF 5582\nATK 790\nDEF 5623\nATK 1254\nATK 1145\nDEF 2873\nDEF 4117\nDEF 2589\nDEF 5471\nDEF 2977\n2454\n5681\n6267\n2680\n5560\n5394\n5419\n4350\n3803\n6003\n5502\n",
+      "expected": "41774\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 25\nATK 3519\nATK 2186\nATK 3219\nATK 3116\nATK 2170\nATK 3236\nATK 3013\nDEF 1188\nATK 1914\nATK 2838\n1335\n725\n752\n1254\n414\n1653\n439\n784\n649\n477\n759\n1666\n417\n1316\n392\n799\n534\n1402\n515\n1334\n1435\n898\n1214\n1427\n1820\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "430b05ccabedeac07c445c820c9f64d10ce6eae3ca1f96d1790e48997a6199bb",
+    "132725330cf1bbd214b3614a90df4fffa537e5586d26222af0eb123a29fee366"
+  ],
+  "reference_ast_hashes": [
+    "b96b1ac48d0b246324013974f0495daf9992c370a832bfff959144f4dd66fcd4",
+    "582c1b8f1661d20896b42163de74793bb10f56d7d24f7351d3876f557bbef2e6"
+  ],
+  "raw_source_row": 1475,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "961f3dbd7aa0c6052f0c88da81da9a3bd743023ff8a335452f472657815fb210"
+}

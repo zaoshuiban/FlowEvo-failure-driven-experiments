@@ -1,0 +1,234 @@
+{
+  "task_id": "s19g_taco-test-361",
+  "original_id": "taco-test-361",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/507/B",
+  "role": "long_stream_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-test-361",
+    "prompt": "Amr loves Geometry. One day he came up with a very interesting problem.\n\nAmr has a circle of radius r and center in point (x, y). He wants the circle center to be in new position (x', y').\n\nIn one step Amr can put a pin to the border of the circle in a certain point, then rotate the circle around that pin by any angle and finally remove the pin.\n\nHelp Amr to achieve his goal in minimum number of steps.\n\n\n-----Input-----\n\nInput consists of 5 space-separated integers r, x, y, x' y' (1 ≤ r ≤ 10^5,  - 10^5 ≤ x, y, x', y' ≤ 10^5), circle radius, coordinates of original center of the circle and coordinates of destination center of the circle respectively.\n\n\n-----Output-----\n\nOutput a single integer — minimum number of steps required to move the center of the circle to the destination point.\n\n\n-----Examples-----\nInput\n2 0 0 0 4\n\nOutput\n1\n\nInput\n1 1 1 4 4\n\nOutput\n3\n\nInput\n4 5 6 5 6\n\nOutput\n0\n\n\n\n-----Note-----\n\nIn the first sample test the optimal way is to put a pin at point (0, 2) and rotate the circle by 180 degrees counter-clockwise (or clockwise, no matter).\n\n[Image]",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "2 0 0 0 4\n",
+        "expected": "1",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "1 1 1 4 4\n",
+        "expected": "3",
+        "visibility": "public",
+        "legal_verified": true
+      },
+      {
+        "input": "4 5 6 5 6\n",
+        "expected": "0",
+        "visibility": "public",
+        "legal_verified": true
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "2 0 0 0 4\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "1 1 1 4 4\n",
+      "expected": "3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4 5 6 5 6\n",
+      "expected": "0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "14 0 0 14 0\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "9 4 4 13 4\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1 14 30 30 14\n",
+      "expected": "12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "249 -54242 -30537 -45023 -89682\n",
+      "expected": "121\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "24 130 14786 6148 4076\n",
+      "expected": "256\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "999 999 999 -999 -999\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "4 0 0 4 0\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "5 2 2 5 5\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "1 1 2 4 4\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "10 38 0 82 0\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "67377 -80131 -90254 -57320 14102\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    },
+    {
+      "input": "9361 19470 14858 58064 62231\n",
+      "expected": "4\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "benchmark judge input predesignated online-visible development; not statement sample"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "1 1 2 3 4\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "18510 37184 -71137 75650 -3655\n",
+      "expected": "3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "7 1 2 2 2\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "100000 0 0 0 50000\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "9 11 11 22 22\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "2 -2 -2 0 0\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "3 2 1 4 5\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "2229 7339 19155 -90534 -60666\n",
+      "expected": "29\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "4578 100 1000 -2000 -5000\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "50000 50000 50000 -50000 -50000\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "41 -54242 -30537 -45023 -132620\n",
+      "expected": "1250\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    },
+    {
+      "input": "100000 100000 1 -100000 0\n",
+      "expected": "2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official raw evaluator-only case"
+    }
+  ],
+  "reference_hashes": [
+    "f39a9a8ca1ec7dd543a4ef8d50378834b942f2cf72bb9a34f3651ce02b800963",
+    "dae622b504d3f9ea6b6aa0c77412b96446cc016212531e52aec091c0294b2868"
+  ],
+  "prior_metadata_only": true,
+  "prior_project_execution_found": false,
+  "limits": "cross-project exposure audit limited to available saved records; no claim model-training cleanliness; two distinct references may share algorithm lineage"
+}

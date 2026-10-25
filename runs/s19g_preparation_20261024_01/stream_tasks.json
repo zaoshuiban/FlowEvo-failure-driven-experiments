@@ -1,0 +1,4362 @@
+[
+  {
+    "task_id": "s19g_taco-test-80",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-80",
+      "prompt": "One industrial factory is reforming working plan. The director suggested to set a mythical detail production norm. If at the beginning of the day there were x details in the factory storage, then by the end of the day the factory has to produce $x \\operatorname{mod} m$ (remainder after dividing x by m) more details. Unfortunately, no customer has ever bought any mythical detail, so all the details produced stay on the factory. \n\nThe board of directors are worried that the production by the given plan may eventually stop (that means that there will be а moment when the current number of details on the factory is divisible by m). \n\nGiven the number of details a on the first day and number m check if the production stops at some moment.\n\n\n-----Input-----\n\nThe first line contains two integers a and m (1 ≤ a, m ≤ 10^5).\n\n\n-----Output-----\n\nPrint \"Yes\" (without quotes) if the production will eventually stop, otherwise print \"No\".\n\n\n-----Examples-----\nInput\n1 5\n\nOutput\nNo\n\nInput\n3 6\n\nOutput\nYes",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "1 5\n",
+          "expected": "No",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-80",
+            "case_sha256": "d8379837d7a8ee22e8066468100c30901844b8072f16ed9edf2d03c29af2eea6"
+          }
+        },
+        {
+          "input": "3 6\n",
+          "expected": "Yes",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-80",
+            "case_sha256": "abcb1d17965ace683df77a3d29f0b4bdeb47b8889f8c2477efe0aed17993d9e6"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "1 5\n",
+        "expected": "No",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-80",
+          "case_sha256": "d8379837d7a8ee22e8066468100c30901844b8072f16ed9edf2d03c29af2eea6"
+        }
+      },
+      {
+        "input": "3 6\n",
+        "expected": "Yes",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-80",
+          "case_sha256": "abcb1d17965ace683df77a3d29f0b4bdeb47b8889f8c2477efe0aed17993d9e6"
+        }
+      },
+      {
+        "input": "6 20\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "e2ae0aa28af6a17f2370f05d92806589a69b705571e3a434934249fff52c7f5d"
+        }
+      },
+      {
+        "input": "16 32\n",
+        "expected": "Yes\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "598de4fc6888cea791e40161762a57c572e95c27e8dbd486f43c6c43078a33ff"
+        }
+      },
+      {
+        "input": "8 15775\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "658858187aae916cc98afff8889094d4522e29e3586d647f2a043939945ac4bb"
+        }
+      },
+      {
+        "input": "2 13\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "858e8c1094c708a25fdeafebe5eaf3f07b61fbf542b7b8a72d1c200e3dfabe0c"
+        }
+      },
+      {
+        "input": "500 100\n",
+        "expected": "Yes\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "d3f770452d5065fe781099e1268958e14222083adb676d06ac79cdd40df32f10"
+        }
+      },
+      {
+        "input": "90714 155\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "62950659169cc813ef47085ceed72d5b30d31c4854d54a9a5a1c0ab2f2f3c079"
+        }
+      },
+      {
+        "input": "53 5\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "9b99ece9b5364ab1f4632d4facd19c9c0b87d338fb6159dd799f25d77397d782"
+        }
+      },
+      {
+        "input": "43260 94561\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "ee8495fa5706c894e011f7d01ac06ffc2dad0338d765317e8e91a522670432f1"
+        }
+      },
+      {
+        "input": "1 20383\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "29605fab300cd0b782f36fd79d7fb1b4f4605bdccb2135effbf4c89245e89234"
+        }
+      },
+      {
+        "input": "3 78073\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "3b72588db56bf16cdf8b70cfbe0d65560e8ea212e9fbadfafd97b206c6423c38"
+        }
+      },
+      {
+        "input": "1232 3250\n",
+        "expected": "No\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "8679612589c1a5fa04bf3f5847045e0d271ebdda963bb66fd83e1d0339dabaf4"
+        }
+      },
+      {
+        "input": "512 4\n",
+        "expected": "Yes\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-80",
+          "case_sha256": "40b326b0df6aa2a61d82da60f2b5ca5ee8a57e5386d7f4cf375c6efc29066e73"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-758",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-758",
+      "prompt": "Vasya started working in a machine vision company of IT City. Vasya's team creates software and hardware for identification of people by their face.\n\nOne of the project's know-how is a camera rotating around its optical axis on shooting. People see an eye-catching gadget — a rotating camera — come up to it to see it better, look into it. And the camera takes their photo at that time. What could be better for high quality identification?\n\nBut not everything is so simple. The pictures from camera appear rotated too (on clockwise camera rotation frame the content becomes rotated counter-clockwise). But the identification algorithm can work only with faces that are just slightly deviated from vertical.\n\nVasya was entrusted to correct the situation — to rotate a captured image so that image would be minimally deviated from vertical. Requirements were severe. Firstly, the picture should be rotated only on angle divisible by 90 degrees to not lose a bit of information about the image. Secondly, the frames from the camera are so huge and FPS is so big that adequate rotation speed is provided by hardware FPGA solution only. And this solution can rotate only by 90 degrees clockwise. Of course, one can apply 90 degrees turn several times but for the sake of performance the number of turns should be minimized.\n\nHelp Vasya implement the program that by the given rotation angle of the camera can determine the minimum number of 90 degrees clockwise turns necessary to get a picture in which up direction deviation from vertical is minimum.\n\nThe next figure contains frames taken from an unrotated camera, then from rotated 90 degrees clockwise, then from rotated 90 degrees counter-clockwise. Arrows show direction to \"true up\". [Image] \n\nThe next figure shows 90 degrees clockwise turn by FPGA hardware. [Image] \n\n\n-----Input-----\n\nThe only line of the input contains one integer x ( - 10^18 ≤ x ≤ 10^18) — camera angle in degrees. Positive value denotes clockwise camera rotation, negative — counter-clockwise.\n\n\n-----Output-----\n\nOutput one integer — the minimum required number of 90 degrees clockwise turns.\n\n\n-----Examples-----\nInput\n60\n\nOutput\n1\n\nInput\n-60\n\nOutput\n3\n\n\n\n-----Note-----\n\nWhen the camera is rotated 60 degrees counter-clockwise (the second example), an image from it is rotated 60 degrees clockwise. One 90 degrees clockwise turn of the image result in 150 degrees clockwise total rotation and deviation from \"true up\" for one turn is 150 degrees. Two 90 degrees clockwise turns of the image result in 240 degrees clockwise total rotation and deviation from \"true up\" for two turns is 120 degrees because 240 degrees clockwise equal to 120 degrees counter-clockwise. Three 90 degrees clockwise turns of the image result in 330 degrees clockwise total rotation and deviation from \"true up\" for three turns is 30 degrees because 330 degrees clockwise equal to 30 degrees counter-clockwise.\n\nFrom 60, 150, 120 and 30 degrees deviations the smallest is 30, and it it achieved in three 90 degrees clockwise turns.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "60\n",
+          "expected": "1",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-758",
+            "case_sha256": "d412de14b79731ece064a4b5be266bcc0b1dd850fbd130f7be00c638aa273956"
+          }
+        },
+        {
+          "input": "-60\n",
+          "expected": "3",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-758",
+            "case_sha256": "6adb1715518abace73fd4aab86258ea741d8cd4a19c09395fa8399e9a3be9236"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "60\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-758",
+          "case_sha256": "d412de14b79731ece064a4b5be266bcc0b1dd850fbd130f7be00c638aa273956"
+        }
+      },
+      {
+        "input": "-60\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-758",
+          "case_sha256": "6adb1715518abace73fd4aab86258ea741d8cd4a19c09395fa8399e9a3be9236"
+        }
+      },
+      {
+        "input": "6678504591813508\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "72b2bb2f07c40893794ff7016442d1b48c57d8516c5b3a48f721321d9233b404"
+        }
+      },
+      {
+        "input": "-46566207526617020\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "11e2131b9571417a7be44501cc7527fe66a716743c1a79f94e1a026566bbf939"
+        }
+      },
+      {
+        "input": "-999999999999999595\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "d7c89c09534bf6abb5ac0404a83c2210d984057aceb0c436cee0dbe1560ef09d"
+        }
+      },
+      {
+        "input": "187829167135459333\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "dc68c4153c9b9bb69be6b3f6fe2cf884cf6ed604e66dd05028473caa7194df49"
+        }
+      },
+      {
+        "input": "201035370138545377\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "0d2e7d7c20a2c9b5bd39cf30517f88c90876e2bf53dcd4b63b07d43415722a9a"
+        }
+      },
+      {
+        "input": "225\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "349ab8f1023c79ba2a3bb54b25e1706973f6015e9e5a78fcc6d0a65d17527b90"
+        }
+      },
+      {
+        "input": "-504\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "af9d74ba7e50a841a8b65f129c8592141f38dc6336efcec25732808b0de690b3"
+        }
+      },
+      {
+        "input": "94\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "4b2096598b3c122f943d8becdba9b27e1860e933e987b87247a6be3bf3a4606b"
+        }
+      },
+      {
+        "input": "136\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "b36e7617a88bb8f80e90c26923a882b57648cd6610d8e3d175a113eec1a66989"
+        }
+      },
+      {
+        "input": "-1638150760258347909\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "7de6525735dc14b88714b7f98fdbd38f404bb175391ce3ef0cec60617330c7c4"
+        }
+      },
+      {
+        "input": "-61\n",
+        "expected": "3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "f2cb1c03a6a87fd8073fb25c5edaaa9c63c45244018cdf991c6d5dae15da032e"
+        }
+      },
+      {
+        "input": "-580\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-758",
+          "case_sha256": "73940660770a0ea1a9ab144231dadfc772c839da5ef5fb0cac5ebef1a94d1cfb"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-692",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-692",
+      "prompt": "Vivek initially has an empty array $a$ and some integer constant $m$.\n\nHe performs the following algorithm:  Select a random integer $x$ uniformly in range from $1$ to $m$ and append it to the end of $a$.  Compute the greatest common divisor of integers in $a$.  In case it equals to $1$, break  Otherwise, return to step $1$. \n\nFind the expected length of $a$. It can be shown that it can be represented as $\\frac{P}{Q}$ where $P$ and $Q$ are coprime integers and $Q\\neq 0 \\pmod{10^9+7}$. Print the value of $P \\cdot Q^{-1} \\pmod{10^9+7}$.\n\n\n-----Input-----\n\nThe first and only line contains a single integer $m$ ($1 \\leq m \\leq 100000$).\n\n\n-----Output-----\n\nPrint a single integer — the expected length of the array $a$ written as $P \\cdot Q^{-1} \\pmod{10^9+7}$.\n\n\n-----Examples-----\nInput\n1\n\nOutput\n1\n\nInput\n2\n\nOutput\n2\n\nInput\n4\n\nOutput\n333333338\n\n\n\n-----Note-----\n\nIn the first example, since Vivek can choose only integers from $1$ to $1$, he will have $a=[1]$ after the first append operation, and after that quit the algorithm. Hence the length of $a$ is always $1$, so its expected value is $1$ as well.\n\nIn the second example, Vivek each time will append either $1$ or $2$, so after finishing the algorithm he will end up having some number of $2$'s (possibly zero), and a single $1$ in the end. The expected length of the list is $1\\cdot \\frac{1}{2} + 2\\cdot \\frac{1}{2^2} + 3\\cdot \\frac{1}{2^3} + \\ldots = 2$.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "1\n",
+          "expected": "1",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-692",
+            "case_sha256": "b7621495cb2827c0db92eda0a5196f1a6aad821dc8242a785180519987e82e52"
+          }
+        },
+        {
+          "input": "2\n",
+          "expected": "2",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-692",
+            "case_sha256": "82524e1df349470e7e7846d4a38f6ac81ff225e4d87be87ddfa65446f210a6f0"
+          }
+        },
+        {
+          "input": "4\n",
+          "expected": "333333338",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-692",
+            "case_sha256": "f4c163793d3ff9971aacc693eb0699e97533823563e08a829fb69e864505e6e9"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "1\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-692",
+          "case_sha256": "b7621495cb2827c0db92eda0a5196f1a6aad821dc8242a785180519987e82e52"
+        }
+      },
+      {
+        "input": "2\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-692",
+          "case_sha256": "82524e1df349470e7e7846d4a38f6ac81ff225e4d87be87ddfa65446f210a6f0"
+        }
+      },
+      {
+        "input": "4\n",
+        "expected": "333333338",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-692",
+          "case_sha256": "f4c163793d3ff9971aacc693eb0699e97533823563e08a829fb69e864505e6e9"
+        }
+      },
+      {
+        "input": "611\n",
+        "expected": "328389339\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "81d7e33f4c17d626a7b9fabaa683b3402269c0988fa839064b4c7a38c55028de"
+        }
+      },
+      {
+        "input": "10859\n",
+        "expected": "380490066\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "c13c1efd9557cd8478d323f0270adab4d3a601aaa4280eddc5c2e9ed85e9fab0"
+        }
+      },
+      {
+        "input": "9018\n",
+        "expected": "424164205\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "585c31740134ca7960ccd9d194341c42bf44acc7aeea949d8fe2dea59fd23a0a"
+        }
+      },
+      {
+        "input": "6706\n",
+        "expected": "428227625\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "142363b96f0e4252b50773a613556a6b47c7c042e37294c806f6764f71f8a373"
+        }
+      },
+      {
+        "input": "99594\n",
+        "expected": "166105505\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "7965d759638de683dd6ca3bcc61510eaa86bbfffebcec2d7d7936754a1b6955a"
+        }
+      },
+      {
+        "input": "13\n",
+        "expected": "468253974\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "6375ea1ece13218a0cbb098026888ecd54d247d4bf49deaee860e051cb9bc16f"
+        }
+      },
+      {
+        "input": "12167\n",
+        "expected": "831671589\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "22325f105be6debb115275165e5d8a5880689056aa53caa6e6c525283950c599"
+        }
+      },
+      {
+        "input": "48457\n",
+        "expected": "559402589\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "c0089a6bb86bd1f909bfa62e16c61a8bcd64a5b163211f112e15b9bdfd377ab1"
+        }
+      },
+      {
+        "input": "88373\n",
+        "expected": "857337836\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "dbbe1fb6270993f4d5be262f0c526f89d67cd4a8097546f8a0c0e22a23282429"
+        }
+      },
+      {
+        "input": "28\n",
+        "expected": "746334443\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "a61238fb8804e9e995aae796e0ad097a7edd9df44a4e0b80485edd3a8a9cbb9f"
+        }
+      },
+      {
+        "input": "33442\n",
+        "expected": "819541613\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "1de4b48ee48dde3ab0864e605db83addb07e191eacf4c14ce4bc0dcdcdcc8476"
+        }
+      },
+      {
+        "input": "41764\n",
+        "expected": "65880203\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-692",
+          "case_sha256": "f9dbae0ecb003c71ec181a655cadcc81242261401d38f6e133dddc64bbc62ab8"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-21",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-21",
+      "prompt": "Monocarp and Polycarp are working as waiters in Berpizza, a pizzeria located near the center of Bertown. Since they are waiters, their job is to serve the customers, but they choose whom they serve first differently.\n\nAt the start of the working day, there are no customers at the Berpizza. They come there one by one. When a customer comes into the pizzeria, she sits and waits for Monocarp or Polycarp to serve her. Monocarp has been working in Berpizza for just two weeks, so whenever he serves a customer, he simply chooses the one who came to Berpizza first, and serves that customer.\n\nOn the other hand, Polycarp is an experienced waiter at Berpizza, and he knows which customers are going to spend a lot of money at the pizzeria (and which aren't) as soon as he sees them. For each customer, Polycarp estimates the amount of money this customer can spend, and when he serves a customer, he chooses the one that is expected to leave the most money at Berpizza (in case there are several such customers, he chooses the one who came first among them).\n\nObviously, no customer can be served twice, so Monocarp and Polycarp choose which customer to serve only among those who haven't been served yet.\n\nWhen the number of customers gets really high, it becomes difficult for both Monocarp and Polycarp to choose the customer they are going to serve. Your task is to write a program that makes these choices for them. Formally, your program should be able to process three types of queries:\n\n$1$ $m$ — a customer comes to Berpizza, and Polycarp estimates the amount of money that they will spend as $m$;\n\n$2$ — Monocarp serves a customer which came to the pizzeria first;\n\n$3$ — Polycarp serves a customer which is expected to spend the largest amount of money at the pizzeria (if there are several such customers, the one that came to the pizzeria first is chosen).\n\nFor each query of types $2$ and $3$, report the number of the customer who was served (the customers are numbered in the order they come to the pizzeria, starting from $1$).\n\n\n-----Input-----\n\nThe first line contains one integer $q$ ($2 \\le q \\le 5 \\cdot 10^5$) — the number of queries.\n\nThen $q$ lines follow, each describing a query in one of the following formats:\n\n$1$ $m$ ($1 \\le m \\le 5 \\cdot 10^5$) — a customer comes to Berpizza, and Polycarp estimates the amount of money that they will spend as $m$;\n\n$2$ — Monocarp serves a customer which came to the pizzeria first;\n\n$3$ — Polycarp serves a customer which is expected to spend the largest amount of money at the pizzeria (if there are multiple such customers, the one that came to the pizzeria first is chosen).\n\nQueries of type $2$ and $3$ are asked only when there exists at least one customer that hasn't been served yet. There is at least one query of type $2$ or $3$ in the input.\n\n\n-----Output-----\n\nFor each query of type $2$ or $3$, print one integer — the number of the customer that has been served in that event. The customers are numbered in the order in which they come to the pizzeria, starting from $1$.\n\n\n-----Examples-----\n\nInput\n8\n1 8\n1 10\n1 6\n3\n2\n1 9\n2\n3\nOutput\n2 1 3 4\nInput\n6\n1 8\n1 10\n1 8\n3\n3\n3\nOutput\n2 1 3\nInput\n8\n1 103913\n3\n1 103913\n1 103913\n3\n1 103913\n1 103913\n2\nOutput\n1 2 3\n\n\n-----Note-----\n\nNone",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "8\n1 8\n1 10\n1 6\n3\n2\n1 9\n2\n3\n",
+          "expected": "2 1 3 4",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-21",
+            "case_sha256": "7380ddaf9fcb7a375fd1c1dbaf75a9efd9fe60c28f4cc2cc04b1aeba852c2c5b"
+          }
+        },
+        {
+          "input": "6\n1 8\n1 10\n1 8\n3\n3\n3\n",
+          "expected": "2 1 3",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-21",
+            "case_sha256": "398e5d8d36c2b57bd21de7652f0b25475b5f0ecbcd49b5c490eb7a14b314ea39"
+          }
+        },
+        {
+          "input": "8\n1 103913\n3\n1 103913\n1 103913\n3\n1 103913\n1 103913\n2\n",
+          "expected": "1 2 3",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-21",
+            "case_sha256": "793eca0b096e4701cfe3b144bf3f3408dd995d1fad5e6cbe408a44420266eaf3"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "8\n1 8\n1 10\n1 6\n3\n2\n1 9\n2\n3\n",
+        "expected": "2 1 3 4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-21",
+          "case_sha256": "7380ddaf9fcb7a375fd1c1dbaf75a9efd9fe60c28f4cc2cc04b1aeba852c2c5b"
+        }
+      },
+      {
+        "input": "6\n1 8\n1 10\n1 8\n3\n3\n3\n",
+        "expected": "2 1 3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-21",
+          "case_sha256": "398e5d8d36c2b57bd21de7652f0b25475b5f0ecbcd49b5c490eb7a14b314ea39"
+        }
+      },
+      {
+        "input": "8\n1 103913\n3\n1 103913\n1 103913\n3\n1 103913\n1 103913\n2\n",
+        "expected": "1 2 3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-21",
+          "case_sha256": "793eca0b096e4701cfe3b144bf3f3408dd995d1fad5e6cbe408a44420266eaf3"
+        }
+      },
+      {
+        "input": "2\n1 9\n2\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "6ca95be822326366e67628695872699809f08b3fce54cbe41f88f7973a67c7d6"
+        }
+      },
+      {
+        "input": "2\n1 12\n2\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "2630245987ee5c3bced3382fc9273684daf2a0d832bdea5d65b180fa3ec7b35d"
+        }
+      },
+      {
+        "input": "2\n1 28\n2\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "1fd0fe0f96f8fc6e80a9cdf9ef893cbc0cc5ae267caebd9d0a6b701fc5bf0d30"
+        }
+      },
+      {
+        "input": "6\n1 6\n1 7\n1 3\n3\n2\n3\n",
+        "expected": "2 1 3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "d6ceb953bec7c81b5475f243c96dce7f43575fc431a9755140fd1a283e4b573c"
+        }
+      },
+      {
+        "input": "6\n1 5\n1 8\n1 2\n3\n3\n2\n",
+        "expected": "2 1 3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "5b296bbd5efe6454beb313a3cfd05a0abab8e40c96c615f416a0b154eb960f0d"
+        }
+      },
+      {
+        "input": "2\n1 22\n2\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "9da25ed598e37131eb16f1178d769b0424626a9910c06712edd84160ee093787"
+        }
+      },
+      {
+        "input": "6\n1 12\n1 5\n1 8\n3\n3\n3\n",
+        "expected": "1 3 2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "6395d266ceb41210365fc78df11d63cc7abc4211b46bf01eb0c1cd7fc6f1c2b3"
+        }
+      },
+      {
+        "input": "2\n1 136\n2\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "ad7e7bdc1d5e385911c4f7d370f5e5b458ffe9790842e2114b73bff06c09d65d"
+        }
+      },
+      {
+        "input": "6\n1 8\n1 18\n1 8\n3\n3\n3\n",
+        "expected": "2 1 3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "bf2ef4b019a1223f91ae369e4a4cefb083b4d84ed99477ecae545a7b5387263d"
+        }
+      },
+      {
+        "input": "2\n1 35\n2\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "37ebef5f7314dc6384ef1a11aa3f96b650e6ee44f26b38863ccad5bfe326fc1c"
+        }
+      },
+      {
+        "input": "6\n1 5\n1 20\n1 2\n3\n3\n2\n",
+        "expected": "2 1 3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "68e5b5f5a722d1517044877116d7a60e189180eb399ad2355795fee345c311cd"
+        }
+      },
+      {
+        "input": "6\n1 5\n1 7\n1 2\n3\n3\n3\n",
+        "expected": "2 1 3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-21",
+          "case_sha256": "07f74b647ffd00b18484c47a973fb643388d6f1400e3e0e2b02276f5eae6c0e2"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-670",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-670",
+      "prompt": "Phoenix has a string $s$ consisting of lowercase Latin letters. He wants to distribute all the letters of his string into $k$ non-empty strings $a_1, a_2, \\dots, a_k$ such that every letter of $s$ goes to exactly one of the strings $a_i$. The strings $a_i$ do not need to be substrings of $s$. Phoenix can distribute letters of $s$ and rearrange the letters within each string $a_i$ however he wants.\n\nFor example, if $s = $ baba and $k=2$, Phoenix may distribute the letters of his string in many ways, such as:   ba and ba  a and abb  ab and ab  aa and bb \n\nBut these ways are invalid:   baa and ba  b and ba  baba and empty string ($a_i$ should be non-empty) \n\nPhoenix wants to distribute the letters of his string $s$ into $k$ strings $a_1, a_2, \\dots, a_k$ to minimize the lexicographically maximum string among them, i. e. minimize $max(a_1, a_2, \\dots, a_k)$. Help him find the optimal distribution and print the minimal possible value of $max(a_1, a_2, \\dots, a_k)$.\n\nString $x$ is lexicographically less than string $y$ if either $x$ is a prefix of $y$ and $x \\ne y$, or there exists an index $i$ ($1 \\le i \\le min(|x|, |y|))$ such that $x_i$ < $y_i$ and for every $j$ $(1 \\le j < i)$ $x_j = y_j$. Here $|x|$ denotes the length of the string $x$.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains an integer $t$ ($1 \\le t \\le 1000$) — the number of test cases. Each test case consists of two lines.\n\nThe first line of each test case consists of two integers $n$ and $k$ ($1 \\le k \\le n \\le 10^5$) — the length of string $s$ and the number of non-empty strings, into which Phoenix wants to distribute letters of $s$, respectively.\n\nThe second line of each test case contains a string $s$ of length $n$ consisting only of lowercase Latin letters.\n\nIt is guaranteed that the sum of $n$ over all test cases is $\\le 10^5$.\n\n\n-----Output-----\n\nPrint $t$ answers — one per test case. The $i$-th answer should be the minimal possible value of $max(a_1, a_2, \\dots, a_k)$ in the $i$-th test case.\n\n\n-----Example-----\nInput\n6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n\nOutput\nab\nabbc\nb\naa\nx\nehinopx\n\n\n\n-----Note-----\n\nIn the first test case, one optimal solution is to distribute baba into ab and ab. \n\nIn the second test case, one optimal solution is to distribute baacb into abbc and a.\n\nIn the third test case, one optimal solution is to distribute baacb into ac, ab, and b.\n\nIn the fourth test case, one optimal solution is to distribute aaaaa into aa, aa, and a.\n\nIn the fifth test case, one optimal solution is to distribute aaxxzz into az, az, x, and x.\n\nIn the sixth test case, one optimal solution is to distribute phoenix into ehinopx.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n",
+          "expected": "ab\nabbc\nb\naa\nx\nehinopx",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-670",
+            "case_sha256": "bf025bf231674afdddac6c2225e458d6c2d86b5760b38fdb7d98b739a49e8c66"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n",
+        "expected": "ab\nabbc\nb\naa\nx\nehinopx",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-670",
+          "case_sha256": "bf025bf231674afdddac6c2225e458d6c2d86b5760b38fdb7d98b739a49e8c66"
+        }
+      },
+      {
+        "input": "1\n12 11\nmononeuropathy\n",
+        "expected": "r\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "ee41d5232924c15269a4c47edc2a95216fc76f22f3afd2c0f3d028559df25d18"
+        }
+      },
+      {
+        "input": "1\n5 3\nbaacb\n",
+        "expected": "b\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "0ce88bb9c179bcb795391185e53cb11c75101d0c3cd908891ea5e4833969aabc"
+        }
+      },
+      {
+        "input": "4\n5 1\napple\n6 2\norange\n7 3\nbanana\n8 4\npineapple\n",
+        "expected": "aelpp\ne\nabnn\ni\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "417d994143c38e98fed23fe1db50b6b0ae5ab9e7040d2f223b887cac6df73af4"
+        }
+      },
+      {
+        "input": "2\n7 4\ndistort\n8 2\nravaging\n",
+        "expected": "r\nagginrv\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "96c2f7bf6f2ba4c63a474381b78cad143a5aae3d002abdf77f3d03f94506356f"
+        }
+      },
+      {
+        "input": "1\n9 3\nwannamake\n",
+        "expected": "aekmnnw\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "af101ef56dbae47e32e7d6113095853abc069dc1b92402ffc514e5080dcb8487"
+        }
+      },
+      {
+        "input": "9\n8 6\nchefspam\n11 9\nmonkeyeight\n8 2\nvcubingx\n6 1\namazed\n4 4\nhbes\n8 1\narolakiv\n9 7\nhiuavidhd\n33 13\ngosubtovcubingxheneedssubscribers\n7 4\nhiimbad\n",
+        "expected": "m\no\nc\naademz\ns\naaiklorv\ni\ng\nh\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "de1317d9ea8e82e184568ba24268ac578edc996d1c0caf68937cb0031e7652b2"
+        }
+      },
+      {
+        "input": "3\n5 2\naabbv\n6 2\nchcabc\n7 1\nyyaazd\n",
+        "expected": "abbv\nb\naadyyz\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "3a1da0c354a87fee1904e8c49a77b3cf1cb17acc88dd6e09a0fa829862757906"
+        }
+      },
+      {
+        "input": "3\n8 4\nabcdabcd\n9 5\nabcabcabc\n10 6\nababababab\n",
+        "expected": "b\nb\nb\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "6249c715fe058b272f138e71c44c3e58818967d68e98618cd86db812d9f12ca2"
+        }
+      },
+      {
+        "input": "1\n6 3\nabcabc\n",
+        "expected": "b\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "ca77c62c201af09b3942bfc0680e310c40ae32a2baebf0969e0936eb6f3bbe34"
+        }
+      },
+      {
+        "input": "1\n6 4\nakhfgj\n",
+        "expected": "h\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "dea5bd0a6ced20f497107375f870bd0e5cfee6b83a8d5faae1e3e571e9bbe805"
+        }
+      },
+      {
+        "input": "1\n4 4\nhebs\n",
+        "expected": "s\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "4f6ac1c7020065dd126c3afd1042b43a34c0c3b7849b906db18c08db95b5d741"
+        }
+      },
+      {
+        "input": "5\n5 4\nabcde\n6 2\naabbcc\n8 3\naasdfghj\n10 5\nasdfghjklq\n8 1\nzyxvutsr\n",
+        "expected": "d\nabbcc\nd\nh\nrstuvxyz\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-670",
+          "case_sha256": "0da8aa5d42886c9bde40ff3bfa52b8cb5936846de3f5472b3ba4eb81980b1971"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-897",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-897",
+      "prompt": "You are given a bracket sequence $s$ (not necessarily a regular one). A bracket sequence is a string containing only characters '(' and ')'.\n\nA regular bracket sequence is a bracket sequence that can be transformed into a correct arithmetic expression by inserting characters '1' and '+' between the original characters of the sequence. For example, bracket sequences \"()()\" and \"(())\" are regular (the resulting expressions are: \"(1)+(1)\" and \"((1+1)+1)\"), and \")(\", \"(\" and \")\" are not.\n\nYour problem is to calculate the number of regular bracket sequences of length $2n$ containing the given bracket sequence $s$ as a substring (consecutive sequence of characters) modulo $10^9+7$ ($1000000007$).\n\n\n-----Input-----\n\nThe first line of the input contains one integer $n$ ($1 \\le n \\le 100$) — the half-length of the resulting regular bracket sequences (the resulting sequences must have length equal to $2n$).\n\nThe second line of the input contains one string $s$ ($1 \\le |s| \\le 200$) — the string $s$ that should be a substring in each of the resulting regular bracket sequences ($|s|$ is the length of $s$).\n\n\n-----Output-----\n\nPrint only one integer — the number of regular bracket sequences containing the given bracket sequence $s$ as a substring. Since this number can be huge, print it modulo $10^9+7$ ($1000000007$).\n\n\n-----Examples-----\nInput\n5\n()))()\n\nOutput\n5\n\nInput\n3\n(()\n\nOutput\n4\n\nInput\n2\n(((\n\nOutput\n0\n\n\n\n-----Note-----\n\nAll regular bracket sequences satisfying the conditions above for the first example:   \"(((()))())\";  \"((()()))()\";  \"((()))()()\";  \"(()(()))()\";  \"()((()))()\". \n\nAll regular bracket sequences satisfying the conditions above for the second example:   \"((()))\";  \"(()())\";  \"(())()\";  \"()(())\". \n\nAnd there is no regular bracket sequences of length $4$ containing \"(((\" as a substring in the third example.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "5\n()))()\n",
+          "expected": "5",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-897",
+            "case_sha256": "94ff27f4522aa9bab7ef96b1dc82983dadcc2715222a1c2b1967659ab0c89b44"
+          }
+        },
+        {
+          "input": "3\n(()\n",
+          "expected": "4",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-897",
+            "case_sha256": "328f14b004de5f39aa598fe342b4259544cd13de4af49e38c5ee8f4302111990"
+          }
+        },
+        {
+          "input": "2\n(((\n",
+          "expected": "0",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-897",
+            "case_sha256": "2c61eb11582fc1a36b98b02c5ea2144a31cd51ac296ee4626198b26e41e99435"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "5\n()))()\n",
+        "expected": "5",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-897",
+          "case_sha256": "94ff27f4522aa9bab7ef96b1dc82983dadcc2715222a1c2b1967659ab0c89b44"
+        }
+      },
+      {
+        "input": "3\n(()\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-897",
+          "case_sha256": "328f14b004de5f39aa598fe342b4259544cd13de4af49e38c5ee8f4302111990"
+        }
+      },
+      {
+        "input": "2\n(((\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-897",
+          "case_sha256": "2c61eb11582fc1a36b98b02c5ea2144a31cd51ac296ee4626198b26e41e99435"
+        }
+      },
+      {
+        "input": "10\n))((())((\n",
+        "expected": "219\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "65ec2643d84aa5b31b4919c47b8c713c42a83ac76780ba46299c7f7e3fdc2baf"
+        }
+      },
+      {
+        "input": "1\n()\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "94a6d6c7aa867f654b92e2311198b482a75a037ca78cbed1b0eb50aed51a2cbd"
+        }
+      },
+      {
+        "input": "12\n))((()((())(\n",
+        "expected": "286\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "85a65d39f81958ce0c35fbc436c7cdfc8a921b8381e147a8f405daedb14981a1"
+        }
+      },
+      {
+        "input": "10\n()()()()()\n",
+        "expected": "336\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "df1df06d4a7abf512288723bd0140a79c6b858e0a64b9554ae14522ab95ec267"
+        }
+      },
+      {
+        "input": "100\n((((((((((((((((((((((((((((((((((((((((((((((((((((((((((()((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((()((((((((((((((((((((((((((((((((\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "a22df805351ae10e19ab72b723303ebdac71500e02c07cdc378e523b93372692"
+        }
+      },
+      {
+        "input": "10\n(()(()))()\n",
+        "expected": "461\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "ff80cf8ad884e97c6737150f601269600d9992d7240f963ee859273c44968abc"
+        }
+      },
+      {
+        "input": "2\n)\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "24ab121c36b0f12b034fd856707d5225e35314a649c9d874bbc82015d8396b4f"
+        }
+      },
+      {
+        "input": "2\n()(()\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "a051e0c781cdad4836d13038d974b55ae5f1bff4d5e29f019b2c78d077fe99af"
+        }
+      },
+      {
+        "input": "5\n))()())())))(\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "348feb1b241e723958f2cd35c59d61e0c4f923812334ce407680fc376f5d1da9"
+        }
+      },
+      {
+        "input": "20\n))()))(()()))(())()))()(((((((((()((())((((('())(())(()())))(()()((())(()()()()(()())()()))))))())((\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "5fb4b457addd84a7e3e099f03b45a89e5447a63792de518ce13b0720952b2c20"
+        }
+      },
+      {
+        "input": "1\n))\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "82b818340c560e67c15061bc92da8a438127c39865b50304b9486086aba15f01"
+        }
+      },
+      {
+        "input": "20\n((())()(()))((()))\n",
+        "expected": "1352048\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-897",
+          "case_sha256": "a2180698e6978119e4d22f780713742587d88416e629a89a33f481c56731f204"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-549",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-549",
+      "prompt": "On the Literature lesson Sergei noticed an awful injustice, it seems that some students are asked more often than others.\n\nSeating in the class looks like a rectangle, where n rows with m pupils in each. \n\nThe teacher asks pupils in the following order: at first, she asks all pupils from the first row in the order of their seating, then she continues to ask pupils from the next row. If the teacher asked the last row, then the direction of the poll changes, it means that she asks the previous row. The order of asking the rows looks as follows: the 1-st row, the 2-nd row, ..., the n - 1-st row, the n-th row, the n - 1-st row, ..., the 2-nd row, the 1-st row, the 2-nd row, ...\n\nThe order of asking of pupils on the same row is always the same: the 1-st pupil, the 2-nd pupil, ..., the m-th pupil.\n\nDuring the lesson the teacher managed to ask exactly k questions from pupils in order described above. Sergei seats on the x-th row, on the y-th place in the row. Sergei decided to prove to the teacher that pupils are asked irregularly, help him count three values:  the maximum number of questions a particular pupil is asked,  the minimum number of questions a particular pupil is asked,  how many times the teacher asked Sergei. \n\nIf there is only one row in the class, then the teacher always asks children from this row.\n\n\n-----Input-----\n\nThe first and the only line contains five integers n, m, k, x and y (1 ≤ n, m ≤ 100, 1 ≤ k ≤ 10^18, 1 ≤ x ≤ n, 1 ≤ y ≤ m).\n\n\n-----Output-----\n\nPrint three integers:  the maximum number of questions a particular pupil is asked,  the minimum number of questions a particular pupil is asked,  how many times the teacher asked Sergei. \n\n\n-----Examples-----\nInput\n1 3 8 1 1\n\nOutput\n3 2 3\nInput\n4 2 9 4 2\n\nOutput\n2 1 1\nInput\n5 5 25 4 3\n\nOutput\n1 1 1\nInput\n100 100 1000000000000000000 100 100\n\nOutput\n101010101010101 50505050505051 50505050505051\n\n\n-----Note-----\n\nThe order of asking pupils in the first test:   the pupil from the first row who seats at the first table, it means it is Sergei;  the pupil from the first row who seats at the second table;  the pupil from the first row who seats at the third table;  the pupil from the first row who seats at the first table, it means it is Sergei;  the pupil from the first row who seats at the second table;  the pupil from the first row who seats at the third table;  the pupil from the first row who seats at the first table, it means it is Sergei;  the pupil from the first row who seats at the second table; \n\nThe order of asking pupils in the second test:   the pupil from the first row who seats at the first table;  the pupil from the first row who seats at the second table;  the pupil from the second row who seats at the first table;  the pupil from the second row who seats at the second table;  the pupil from the third row who seats at the first table;  the pupil from the third row who seats at the second table;  the pupil from the fourth row who seats at the first table;  the pupil from the fourth row who seats at the second table, it means it is Sergei;  the pupil from the third row who seats at the first table;",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "1 3 8 1 1\n",
+          "expected": "3 2 3",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-549",
+            "case_sha256": "8ec2618811bee28c249f53eafa9c1565fba3a0c43f2ff51d48d32bdc7809857c"
+          }
+        },
+        {
+          "input": "4 2 9 4 2\n",
+          "expected": "2 1 1",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-549",
+            "case_sha256": "7d6f1c742116aa9b9e925729ed1f877ddf1f1000aac4f4c197329d7385e3d2b6"
+          }
+        },
+        {
+          "input": "5 5 25 4 3\n",
+          "expected": "1 1 1",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-549",
+            "case_sha256": "95bbf052dabebd2a65897fcf60e7a319c02a766c8f9b08b8ec8ca3127a86eb74"
+          }
+        },
+        {
+          "input": "100 100 1000000000000000000 100 100\n",
+          "expected": "101010101010101 50505050505051 50505050505051",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-549",
+            "case_sha256": "5b66ae0cebae771b5e12b661a25c08489dd84a422c2f992adafdd79e749f9970"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "1 3 8 1 1\n",
+        "expected": "3 2 3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-549",
+          "case_sha256": "8ec2618811bee28c249f53eafa9c1565fba3a0c43f2ff51d48d32bdc7809857c"
+        }
+      },
+      {
+        "input": "4 2 9 4 2\n",
+        "expected": "2 1 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-549",
+          "case_sha256": "7d6f1c742116aa9b9e925729ed1f877ddf1f1000aac4f4c197329d7385e3d2b6"
+        }
+      },
+      {
+        "input": "5 5 25 4 3\n",
+        "expected": "1 1 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-549",
+          "case_sha256": "95bbf052dabebd2a65897fcf60e7a319c02a766c8f9b08b8ec8ca3127a86eb74"
+        }
+      },
+      {
+        "input": "100 100 1000000000000000000 100 100\n",
+        "expected": "101010101010101 50505050505051 50505050505051",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-549",
+          "case_sha256": "5b66ae0cebae771b5e12b661a25c08489dd84a422c2f992adafdd79e749f9970"
+        }
+      },
+      {
+        "input": "5 5 42 4 3\n",
+        "expected": "2 1 2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "fe96ed4adde284708c3b0ad1904a4a5c634526721e52b6108f643a945751c843"
+        }
+      },
+      {
+        "input": "4 5 93 1 2\n",
+        "expected": "6 3 4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "4fed08fa743301405c541db29168d7e917f14669dfddfdef7c4c5e9d2e02afba"
+        }
+      },
+      {
+        "input": "5 2 81 5 1\n",
+        "expected": "10 5 5",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "89fc39aa5680a80bf9543b1156be39e2bede6454d7f5dfff4d1f9b9b501ea744"
+        }
+      },
+      {
+        "input": "5 2 2 4 1\n",
+        "expected": "1 0 0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "2b6f7725001b72511a19d07f3d130b1c3b031ef5a00a5f17cb00e6ac203715c8"
+        }
+      },
+      {
+        "input": "100 100 1000000000 16 32\n",
+        "expected": "101011 50505 101010",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "f1976411a5505414dffd23533d5901d5c6103d7d6318de82f6c55c263d3def53"
+        }
+      },
+      {
+        "input": "100 100 10001 1 1\n",
+        "expected": "2 1 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "1daf748bec55ef1d10333c59efd79d51e4bdbbab559d10fea3c1c471b7ad2f81"
+        }
+      },
+      {
+        "input": "9 62 756016805 7 55\n",
+        "expected": "1524228 762114 1524228\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "a1775959d02be4e9ed76454dfaa8410a7ec6045de1c9ebe53c6bf57743a0e92b"
+        }
+      },
+      {
+        "input": "21 49 1000000000000000000 18 11\n",
+        "expected": "1020408163265307 510204081632653 1020408163265306",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "c3321461401ec23a49c628e7a6be855fffce585985e8b7d8258f47d0acd62402"
+        }
+      },
+      {
+        "input": "2 4 6 1 3\n",
+        "expected": "1 0 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "8730a65d98a98b24e6451b92ee5d29c445c9c5ccf726e2c00ed74fe71aa20106"
+        }
+      },
+      {
+        "input": "91 15 237966754 78 6\n",
+        "expected": "176272 88136 176272",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "4540c67e4da2ae58616e0c64e0c67f4ce212b3bad25f63f322032d96d49c0f47"
+        }
+      },
+      {
+        "input": "2 5 36 1 3\n",
+        "expected": "4 3 4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "a6c94a50344401ebc928ee8d31daed80189d54f6a5aa1863e62c36f88b82aebe"
+        }
+      },
+      {
+        "input": "3 1 6 2 1\n",
+        "expected": "3 1 3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-549",
+          "case_sha256": "a580e3c4c80988080d364f9f19d31b00ded4ebe9f52d295dbbfd6d8cab46885a"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-788",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-788",
+      "prompt": "All of us love treasures, right? That's why young Vasya is heading for a Treasure Island.\n\nTreasure Island may be represented as a rectangular table $n \\times m$ which is surrounded by the ocean. Let us number rows of the field with consecutive integers from $1$ to $n$ from top to bottom and columns with consecutive integers from $1$ to $m$ from left to right. Denote the cell in $r$-th row and $c$-th column as $(r, c)$. Some of the island cells contain impassable forests, and some cells are free and passable. Treasure is hidden in cell $(n, m)$.\n\nVasya got off the ship in cell $(1, 1)$. Now he wants to reach the treasure. He is hurrying up, so he can move only from cell to the cell in next row (downwards) or next column (rightwards), i.e. from cell $(x, y)$ he can move only to cells $(x+1, y)$ and $(x, y+1)$. Of course Vasya can't move through cells with impassable forests.\n\nEvil Witch is aware of Vasya's journey and she is going to prevent him from reaching the treasure. Before Vasya's first move she is able to grow using her evil magic impassable forests in previously free cells. Witch is able to grow a forest in any number of any free cells except cells $(1, 1)$ where Vasya got off his ship and $(n, m)$ where the treasure is hidden.\n\nHelp Evil Witch by finding out the minimum number of cells she has to turn into impassable forests so that Vasya is no longer able to reach the treasure.\n\n\n-----Input-----\n\nFirst line of input contains two positive integers $n$, $m$ ($3 \\le n \\cdot m \\le 1\\,000\\,000$), sizes of the island.\n\nFollowing $n$ lines contains strings $s_i$ of length $m$ describing the island, $j$-th character of string $s_i$ equals \"#\" if cell $(i, j)$ contains an impassable forest and \".\" if the cell is free and passable. Let us remind you that Vasya gets of his ship at the cell $(1, 1)$, i.e. the first cell of the first row, and he wants to reach cell $(n, m)$, i.e. the last cell of the last row.\n\nIt's guaranteed, that cells $(1, 1)$ and $(n, m)$ are empty.\n\n\n-----Output-----\n\nPrint the only integer $k$, which is the minimum number of cells Evil Witch has to turn into impassable forest in order to prevent Vasya from reaching the treasure.\n\n\n-----Examples-----\nInput\n2 2\n..\n..\n\nOutput\n2\n\nInput\n4 4\n....\n#.#.\n....\n.#..\n\nOutput\n1\n\nInput\n3 4\n....\n.##.\n....\n\nOutput\n2\n\n\n\n-----Note-----\n\nThe following picture illustrates the island in the third example. Blue arrows show possible paths Vasya may use to go from $(1, 1)$ to $(n, m)$. Red illustrates one possible set of cells for the Witch to turn into impassable forest to make Vasya's trip from $(1, 1)$ to $(n, m)$ impossible. [Image]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "2 2\n..\n..\n",
+          "expected": "2",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-788",
+            "case_sha256": "74d2a26a60867a8dc464525b4958a02852446aaa85f6e4d751e2830cc0205b49"
+          }
+        },
+        {
+          "input": "4 4\n....\n#.#.\n....\n.#..\n",
+          "expected": "1",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-788",
+            "case_sha256": "b1f4934afbf2d1388ad9cda4031e65b6e119ce08ec83b9cd58906c5686e8a33c"
+          }
+        },
+        {
+          "input": "3 4\n....\n.##.\n....\n",
+          "expected": "2",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-788",
+            "case_sha256": "5227ac1b361f92901c0170e24fd03fc3893aa0f0b3157fef52079070112c08b7"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "2 2\n..\n..\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-788",
+          "case_sha256": "74d2a26a60867a8dc464525b4958a02852446aaa85f6e4d751e2830cc0205b49"
+        }
+      },
+      {
+        "input": "4 4\n....\n#.#.\n....\n.#..\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-788",
+          "case_sha256": "b1f4934afbf2d1388ad9cda4031e65b6e119ce08ec83b9cd58906c5686e8a33c"
+        }
+      },
+      {
+        "input": "3 4\n....\n.##.\n....\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-788",
+          "case_sha256": "5227ac1b361f92901c0170e24fd03fc3893aa0f0b3157fef52079070112c08b7"
+        }
+      },
+      {
+        "input": "4 4\n....\n#...\n....\n....\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "dc22598f7e818579328b678093e5a164cb55058911d4461f2b091ad39439ef50"
+        }
+      },
+      {
+        "input": "4 4\n..##\n.#..\n....\n.#..\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "d776db81c57231cb2d193c49c708e1ef3a73e9c88523839794e3008c7694d261"
+        }
+      },
+      {
+        "input": "5 5\n.....\n.....\n.....\n.....\n...#.\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "8fcb3a54b3cc9cf1a9092781bcc7c5968e1222be95abaabbbea16364024671b3"
+        }
+      },
+      {
+        "input": "5 5\n.....\n#....\n.....\n....#\n.....\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "760cb0fe048d189a62fd8a3dbba9e5542152ad01210806eb7d497e58ed1b59b7"
+        }
+      },
+      {
+        "input": "5 5\n.....\n.....\n.....\n.....\n.#...\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "a2782c3b8c07cef6183842d7107f2b29db97b7ce01a707c81925ee7658c01647"
+        }
+      },
+      {
+        "input": "6 3\n...\n.#.\n...\n...\n...\n...\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "439f8f411ab849aff20d38af5381568d187912357c6d5d8398b7fa298b04147a"
+        }
+      },
+      {
+        "input": "5 6\n......\n..##..\n......\n......\n......\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "9635b81c510ae84fdb1c1303f00850b7124d68dcf837c440c7192aa1b9dc55be"
+        }
+      },
+      {
+        "input": "4 4\n...#\n...#\n...#\n....\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "71970eb516c4ff20031c6bcdb2508bb95fe17aff5d08ef687a79082d101ed698"
+        }
+      },
+      {
+        "input": "3 6\n.....#\n.....#\n......\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "2f1427fae326ae5a8da065373a5a2befe068b37342504ad841b49ae70f1168ef"
+        }
+      },
+      {
+        "input": "3 4\n....\n....\n....\n....\n....\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "ff6333509ec7a975df6d2ff3799195d349a0bcbc816865bae531c3a28570e922"
+        }
+      },
+      {
+        "input": "4 4\n.#...\n.#...\n.#...\n.....\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "0510ca7b7ccbbd5e8d570e826d38414d9d20e16c7d84c94a3362f135fadc91c2"
+        }
+      },
+      {
+        "input": "6 3\n...\n#..\n..#\n...\n#.#\n#..\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-788",
+          "case_sha256": "0165e7ce43129f6ed643b023519476ff743bd6939cc26103270ab8c85748d7ff"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-682",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-682",
+      "prompt": "Little penguin Polo has an n × m matrix, consisting of integers. Let's index the matrix rows from 1 to n from top to bottom and let's index the columns from 1 to m from left to right. Let's represent the matrix element on the intersection of row i and column j as a_{ij}.\n\nIn one move the penguin can add or subtract number d from some matrix element. Find the minimum number of moves needed to make all matrix elements equal. If the described plan is impossible to carry out, say so.\n\n\n-----Input-----\n\nThe first line contains three integers n, m and d (1 ≤ n, m ≤ 100, 1 ≤ d ≤ 10^4) — the matrix sizes and the d parameter. Next n lines contain the matrix: the j-th integer in the i-th row is the matrix element a_{ij} (1 ≤ a_{ij} ≤ 10^4).\n\n\n-----Output-----\n\nIn a single line print a single integer — the minimum number of moves the penguin needs to make all matrix elements equal. If that is impossible, print \"-1\" (without the quotes).\n\n\n-----Examples-----\nInput\n2 2 2\n2 4\n6 8\n\nOutput\n4\n\nInput\n1 2 7\n6 7\n\nOutput\n-1",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "2 2 2\n2 4\n6 8\n",
+          "expected": "4",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-682",
+            "case_sha256": "e070fd61de6ea57247e5af9efcc01ce89f5c34a0ac56306a8935c4f35faa840d"
+          }
+        },
+        {
+          "input": "1 2 7\n6 7\n",
+          "expected": "-1",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-682",
+            "case_sha256": "4ca58ce3c64dbacce8dcb023b1b0e6905dd19e083a699f1ee44be852cd4214aa"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "2 2 2\n2 4\n6 8\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-682",
+          "case_sha256": "e070fd61de6ea57247e5af9efcc01ce89f5c34a0ac56306a8935c4f35faa840d"
+        }
+      },
+      {
+        "input": "1 2 7\n6 7\n",
+        "expected": "-1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-682",
+          "case_sha256": "4ca58ce3c64dbacce8dcb023b1b0e6905dd19e083a699f1ee44be852cd4214aa"
+        }
+      },
+      {
+        "input": "3 3 3\n3 3 3\n3 3 3\n3 3 3\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "7af8d464d892903545e9f9b83b198f2ace67e140a78b67e182ecd063cda2a967"
+        }
+      },
+      {
+        "input": "1 3 3\n3 6 9\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "9d13bc4c557131c8657ae4a31126318952b84fa98b0ad674af17b036ec901143"
+        }
+      },
+      {
+        "input": "5 2 3\n2 2\n4 4\n6 6\n8 8\n10 10\n",
+        "expected": "-1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "bf4397eb528257292538f1f734765fb2e44fb80d9bc26d0a82de501b3dae6c15"
+        }
+      },
+      {
+        "input": "5 1 5\n5\n10\n15\n20\n25\n",
+        "expected": "6\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "fdc200048515cf8bd68a7ede5c05bc88cba77e475a378f7e167d01740b1a579b"
+        }
+      },
+      {
+        "input": "2 2 10\n1 11\n21 31\n",
+        "expected": "4\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "9de1e42ea29fe9fc29d6b11009f4575519798cd49d6a9de6b0a7e45b1807cedd"
+        }
+      },
+      {
+        "input": "5 1 2\n4\n6\n8\n10\n12\n",
+        "expected": "6\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "7d62f582d9fe4fb580a24701d4fa7cce8452331abafc5829fdac299e2926b498"
+        }
+      },
+      {
+        "input": "7 7 47\n91 91 91 91 91 91 91\n91 91 91 91 91 91 91\n91 91 91 91 91 91 91\n91 91 91 91 91 91 156\n91 91 91 91 91 91 91\n91 4 91 91 91 91 91\n91 91 91 91 63 91 91\n",
+        "expected": "-1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "36563664713b87a7cabf197c4d0d8e62c5cec97d6ada3944975d2ade3b9a6777"
+        }
+      },
+      {
+        "input": "7 7 47\n113 91 91 91 91 91 91\n91 91 91 91 91 91 91\n91 91 91 91 91 91 91\n91 91 152 91 91 91 91\n91 91 91 91 91 91 91\n91 4 91 91 91 91 91\n91 91 91 91 91 91 91\n",
+        "expected": "-1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "bdeb30ed870ad36b35f9f0830b6bc894fd16c32cd9275a07029f326435309cf5"
+        }
+      },
+      {
+        "input": "7 7 47\n47 47 47 47 47 47 47\n47 47 47 47 77 30 47\n47 47 47 47 47 47 47\n47 47 47 47 47 47 47\n47 47 47 47 51 47 47\n47 47 47 47 47 79 47\n47 47 47 47 47 127 47\n",
+        "expected": "-1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "e3059bcba3f1ac311ff80b62916d68a4781ff337dfbd799d52a8748b33862ea3"
+        }
+      },
+      {
+        "input": "5 5 2\n2 4 6 8 10\n12 14 16 18 20\n22 24 26 28 30\n32 34 36 38 40\n42 44 46 48 50\n",
+        "expected": "156\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "4d241aea7ba0eadc0211b9d7baa91cdac1943ec61ea7ff334a1d2d4e1540b144"
+        }
+      },
+      {
+        "input": "1 2 7\n7 0\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "157ca725354381d14035bc57c8fe53dc647a76c91a29a5b2051c424318d9108f"
+        }
+      },
+      {
+        "input": "3 3 3\n5 8 5\n11 11 17\n14 5 2\n",
+        "expected": "12\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-682",
+          "case_sha256": "90e4fe23956453903691a202d72b7927007d7ff1297a06200e65266ca813d9bc"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-69",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-69",
+      "prompt": "Jon fought bravely to rescue the wildlings who were attacked by the white-walkers at Hardhome. On his arrival, Sam tells him that he wants to go to Oldtown to train at the Citadel to become a maester, so he can return and take the deceased Aemon's place as maester of Castle Black. Jon agrees to Sam's proposal and Sam sets off his journey to the Citadel. However becoming a trainee at the Citadel is not a cakewalk and hence the maesters at the Citadel gave Sam a problem to test his eligibility. \n\nInitially Sam has a list with a single element n. Then he has to perform certain operations on this list. In each operation Sam must remove any element x, such that x > 1, from the list and insert at the same position $\\lfloor \\frac{x}{2} \\rfloor$, $x \\operatorname{mod} 2$, $\\lfloor \\frac{x}{2} \\rfloor$ sequentially. He must continue with these operations until all the elements in the list are either 0 or 1.\n\nNow the masters want the total number of 1s in the range l to r (1-indexed). Sam wants to become a maester but unfortunately he cannot solve this problem. Can you help Sam to pass the eligibility test?\n\n\n-----Input-----\n\nThe first line contains three integers n, l, r (0 ≤ n < 2^50, 0 ≤ r - l ≤ 10^5, r ≥ 1, l ≥ 1) – initial element and the range l to r.\n\nIt is guaranteed that r is not greater than the length of the final list.\n\n\n-----Output-----\n\nOutput the total number of 1s in the range l to r in the final sequence.\n\n\n-----Examples-----\nInput\n7 2 5\n\nOutput\n4\n\nInput\n10 3 10\n\nOutput\n5\n\n\n\n-----Note-----\n\nConsider first example:\n\n$[ 7 ] \\rightarrow [ 3,1,3 ] \\rightarrow [ 1,1,1,1,3 ] \\rightarrow [ 1,1,1,1,1,1,1 ] \\rightarrow [ 1,1,1,1,1,1,1 ]$\n\nElements on positions from 2-nd to 5-th in list is [1, 1, 1, 1]. The number of ones is 4.\n\nFor the second example:\n\n$[ 10 ] \\rightarrow [ 1,0,1,1,1,0,1,0,1,0,1,1,1,0,1 ]$\n\nElements on positions from 3-rd to 10-th in list is [1, 1, 1, 0, 1, 0, 1, 0]. The number of ones is 5.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "7 2 5\n",
+          "expected": "4",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-69",
+            "case_sha256": "f46b63e54f1b1a601c1285212f44432468b967de9c2cf52077fa87c41629c8b6"
+          }
+        },
+        {
+          "input": "10 3 10\n",
+          "expected": "5",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-69",
+            "case_sha256": "591cc331094dabbaeba2ff1691f97f43045782cf85d5ffd6a1e369cfe7ab2f05"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "7 2 5\n",
+        "expected": "4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-69",
+          "case_sha256": "f46b63e54f1b1a601c1285212f44432468b967de9c2cf52077fa87c41629c8b6"
+        }
+      },
+      {
+        "input": "10 3 10\n",
+        "expected": "5",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-69",
+          "case_sha256": "591cc331094dabbaeba2ff1691f97f43045782cf85d5ffd6a1e369cfe7ab2f05"
+        }
+      },
+      {
+        "input": "900000 1 2\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "20a8f1152116b3fe83316f1b668236945686f751dadbac9186794d33a412eb1a"
+        }
+      },
+      {
+        "input": "100 20 35\n",
+        "expected": "12\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "be0c0b8c9e39f06c4a4d9730995b89fb753837a767bce8110d647f2ba39292c0"
+        }
+      },
+      {
+        "input": "19000 8 21486\n",
+        "expected": "12454\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "02574b62adaa746c82d454a795721b14bd80662361d22de3b5ec89d7c67dddaa"
+        }
+      },
+      {
+        "input": "50 10 20\n",
+        "expected": "9\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "6575ce3e4c93d6f6beb2580e98d10a8eb076c260fd24c6dcdae0c3fa7f2f2e2f"
+        }
+      },
+      {
+        "input": "34266225468351 32529564319236 32529564342569\n",
+        "expected": "22725\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "ec14fb66d2ce95af939157811dd38dcea92e186767aab01f04b1309b93c0079e"
+        }
+      },
+      {
+        "input": "21 8 21\n",
+        "expected": "10\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "3427b3dfa2fa611174675b06d59f1135b4edbc299397a19153ded3ab44cea352"
+        }
+      },
+      {
+        "input": "4 1 4\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "cbe4d1d39a52f3bd0b7357e69ed57c22770b472daa4a56666e54851359cae1f9"
+        }
+      },
+      {
+        "input": "1125899906842623 1 100001\n",
+        "expected": "100001\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "20a71e1046939cf5fd5f99450cd584f753b157bc672c79e11369ca5e00ca0398"
+        }
+      },
+      {
+        "input": "29 15 19\n",
+        "expected": "5\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "6623b462bef7c34b8e3a33bb4d716a351096206c210faeea295f0ecad3f9e5e5"
+        }
+      },
+      {
+        "input": "9056 216 896\n",
+        "expected": "377\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "a382e85feab1ed46f2d6d1084606d5793f9394a8d2abd67c5b96244ece307731"
+        }
+      },
+      {
+        "input": "15 7 10\n",
+        "expected": "4\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "51c49dd191852498b1bdd5abb79526836f0c41995078cf2d37ba2678f187944a"
+        }
+      },
+      {
+        "input": "34 14 26\n",
+        "expected": "7\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-69",
+          "case_sha256": "fe62890bb7449507201c010c5b63a683db581e1ef4b73ca25bb7066a4660c25d"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-68",
+    "dataset": "taco",
+    "difficulty": "MEDIUM_HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-68",
+      "prompt": "Polycarp has just attempted to pass the driving test. He ran over the straight road with the signs of four types.\n\n  speed limit: this sign comes with a positive integer number — maximal speed of the car after the sign (cancel the action of the previous sign of this type);  overtake is allowed: this sign means that after some car meets it, it can overtake any other car;  no speed limit: this sign cancels speed limit if any (car can move with arbitrary speed after this sign);  no overtake allowed: some car can't overtake any other car after this sign. \n\nPolycarp goes past the signs consequentially, each new sign cancels the action of all the previous signs of it's kind (speed limit/overtake). It is possible that two or more \"no overtake allowed\" signs go one after another with zero \"overtake is allowed\" signs between them. It works with \"no speed limit\" and \"overtake is allowed\" signs as well.\n\nIn the beginning of the ride overtake is allowed and there is no speed limit.\n\nYou are given the sequence of events in chronological order — events which happened to Polycarp during the ride. There are events of following types:\n\n  Polycarp changes the speed of his car to specified (this event comes with a positive integer number);  Polycarp's car overtakes the other car;  Polycarp's car goes past the \"speed limit\" sign (this sign comes with a positive integer);  Polycarp's car goes past the \"overtake is allowed\" sign;  Polycarp's car goes past the \"no speed limit\";  Polycarp's car goes past the \"no overtake allowed\"; \n\nIt is guaranteed that the first event in chronological order is the event of type 1 (Polycarp changed the speed of his car to specified).\n\nAfter the exam Polycarp can justify his rule violations by telling the driving instructor that he just didn't notice some of the signs. What is the minimal number of signs Polycarp should say he didn't notice, so that he would make no rule violations from his point of view?\n\n\n-----Input-----\n\nThe first line contains one integer number n (1 ≤ n ≤ 2·10^5) — number of events.\n\nEach of the next n lines starts with integer t (1 ≤ t ≤ 6) — the type of the event.\n\nAn integer s (1 ≤ s ≤ 300) follows in the query of the first and the third type (if it is the query of first type, then it's new speed of Polycarp's car, if it is the query of third type, then it's new speed limit).\n\nIt is guaranteed that the first event in chronological order is the event of type 1 (Polycarp changed the speed of his car to specified).\n\n\n-----Output-----\n\nPrint the minimal number of road signs Polycarp should say he didn't notice, so that he would make no rule violations from his point of view.\n\n\n-----Examples-----\nInput\n11\n1 100\n3 70\n4\n2\n3 120\n5\n3 120\n6\n1 150\n4\n3 300\n\nOutput\n2\n\nInput\n5\n1 100\n3 200\n2\n4\n5\n\nOutput\n0\n\nInput\n7\n1 20\n2\n6\n4\n6\n6\n2\n\nOutput\n2\n\n\n\n-----Note-----\n\nIn the first example Polycarp should say he didn't notice the \"speed limit\" sign with the limit of 70 and the second \"speed limit\" sign with the limit of 120.\n\nIn the second example Polycarp didn't make any rule violation.\n\nIn the third example Polycarp should say he didn't notice both \"no overtake allowed\" that came after \"overtake is allowed\" sign.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "11\n1 100\n3 70\n4\n2\n3 120\n5\n3 120\n6\n1 150\n4\n3 300\n",
+          "expected": "2",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-68",
+            "case_sha256": "4fb9402a53e613e6bee02c21b88f7df91504dd04b18935d3c4c5310aca036d30"
+          }
+        },
+        {
+          "input": "5\n1 100\n3 200\n2\n4\n5\n",
+          "expected": "0",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-68",
+            "case_sha256": "95b82609832265cb95baf96f082cce194038282b5d7e0e90e06cd11b8f51c8d6"
+          }
+        },
+        {
+          "input": "7\n1 20\n2\n6\n4\n6\n6\n2\n",
+          "expected": "2",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-68",
+            "case_sha256": "32ac1f657f75dba5f3bb3e4b888f5fc996002e1b251fe16f193852582d790a3e"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "11\n1 100\n3 70\n4\n2\n3 120\n5\n3 120\n6\n1 150\n4\n3 300\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-68",
+          "case_sha256": "4fb9402a53e613e6bee02c21b88f7df91504dd04b18935d3c4c5310aca036d30"
+        }
+      },
+      {
+        "input": "5\n1 100\n3 200\n2\n4\n5\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-68",
+          "case_sha256": "95b82609832265cb95baf96f082cce194038282b5d7e0e90e06cd11b8f51c8d6"
+        }
+      },
+      {
+        "input": "7\n1 20\n2\n6\n4\n6\n6\n2\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-68",
+          "case_sha256": "32ac1f657f75dba5f3bb3e4b888f5fc996002e1b251fe16f193852582d790a3e"
+        }
+      },
+      {
+        "input": "7\n1 34\n2\n6\n4\n6\n6\n2\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "96fd736c1dd15ea19d4664cfe3c97a19c5eaea740836e7fb983659a5e699114e"
+        }
+      },
+      {
+        "input": "3\n1 40\n3 50\n2\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "7cd99783bfdf645f86bcd8630af7d56bc2e6babfb293179829bc8aea5b785188"
+        }
+      },
+      {
+        "input": "8\n1 20\n3 10\n5\n2\n1 30\n4\n3 20\n2\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "6a9f522a73c7b1d51684eaae14a7c0a5392b7e1a6a7c0581a9900d141bb12556"
+        }
+      },
+      {
+        "input": "9\n1 80\n5\n2\n6\n5\n4\n3 100\n4\n2\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "ecfebaaaa9d4bf1197ec4353087ce3f4f2be970fbfc525896fc0d4a5e56c4e86"
+        }
+      },
+      {
+        "input": "10\n1 37\n6\n5\n2\n5\n4\n5\n2\n4\n2\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "b8fe38e59edf8814606596c4c710b68cdbd8c7e49602df4ac1412b8ea403925d"
+        }
+      },
+      {
+        "input": "10\n1 2\n4\n5\n4\n1 2\n6\n1 10\n1 1\n2\n3 1\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "c0c7380ef8d695b47d1efa01a63480d275f2992063976f9c698fc584b2e93131"
+        }
+      },
+      {
+        "input": "3\n1 50\n3 100\n2\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "4479301e15b06174a9556366eb5f82b2052807bbce2d27c60fb8e97c3c9154e4"
+        }
+      },
+      {
+        "input": "8\n1 300\n3 270\n2\n3 260\n5\n1 280\n3 290\n6\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "936f047b8ec9b775beecf2f22cb13ab2de7eab6b149f4484245b7a8b8447ab73"
+        }
+      },
+      {
+        "input": "5\n1 30\n3 40\n2\n6\n4\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "925b0adb879415d551c5de1ba62adb1c2349c9aad04c93c87e7c75b25e4f4efb"
+        }
+      },
+      {
+        "input": "6\n1 120\n3 60\n2\n3 80\n5\n1 100\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "d24acdb65942a5e6ec57fa2bb85f587b8427e456e8fa615e152edf24fbedbba9"
+        }
+      },
+      {
+        "input": "10\n1 50\n4\n2\n6\n5\n3 150\n2\n4\n3 200\n6\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "c57e99492100162bd84037ddfac93224f57aff18139f328cc29bb1d599e9ce19"
+        }
+      },
+      {
+        "input": "12\n1 300\n3 200\n4\n2\n5\n2\n3 250\n6\n1 100\n4\n2\n5\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-68",
+          "case_sha256": "f06a6288f1c72b5e00a6b8af3aeef6a1f51bfdbe84db4ef4d1aeb90ac5d95ea4"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-361",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-361",
+      "prompt": "Amr loves Geometry. One day he came up with a very interesting problem.\n\nAmr has a circle of radius r and center in point (x, y). He wants the circle center to be in new position (x', y').\n\nIn one step Amr can put a pin to the border of the circle in a certain point, then rotate the circle around that pin by any angle and finally remove the pin.\n\nHelp Amr to achieve his goal in minimum number of steps.\n\n\n-----Input-----\n\nInput consists of 5 space-separated integers r, x, y, x' y' (1 ≤ r ≤ 10^5,  - 10^5 ≤ x, y, x', y' ≤ 10^5), circle radius, coordinates of original center of the circle and coordinates of destination center of the circle respectively.\n\n\n-----Output-----\n\nOutput a single integer — minimum number of steps required to move the center of the circle to the destination point.\n\n\n-----Examples-----\nInput\n2 0 0 0 4\n\nOutput\n1\n\nInput\n1 1 1 4 4\n\nOutput\n3\n\nInput\n4 5 6 5 6\n\nOutput\n0\n\n\n\n-----Note-----\n\nIn the first sample test the optimal way is to put a pin at point (0, 2) and rotate the circle by 180 degrees counter-clockwise (or clockwise, no matter).\n\n[Image]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "2 0 0 0 4\n",
+          "expected": "1",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-361",
+            "case_sha256": "99772cfc3d62f80134e0300ba8ce69c22a83fa8c8360c02b2454bb0d081960a1"
+          }
+        },
+        {
+          "input": "1 1 1 4 4\n",
+          "expected": "3",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-361",
+            "case_sha256": "4ff603aa8523862716030d8ce653f5b70b7213ae999c48621b7248a3cfbeef39"
+          }
+        },
+        {
+          "input": "4 5 6 5 6\n",
+          "expected": "0",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-361",
+            "case_sha256": "561bf79fbfdd656606a8ca16f0476c72e2cb906be9bfcaa841f7cd38723f8ef2"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "2 0 0 0 4\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-361",
+          "case_sha256": "99772cfc3d62f80134e0300ba8ce69c22a83fa8c8360c02b2454bb0d081960a1"
+        }
+      },
+      {
+        "input": "1 1 1 4 4\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-361",
+          "case_sha256": "4ff603aa8523862716030d8ce653f5b70b7213ae999c48621b7248a3cfbeef39"
+        }
+      },
+      {
+        "input": "4 5 6 5 6\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-361",
+          "case_sha256": "561bf79fbfdd656606a8ca16f0476c72e2cb906be9bfcaa841f7cd38723f8ef2"
+        }
+      },
+      {
+        "input": "14 0 0 14 0\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "4629936ee334a8f199752f69022e6f42f5083b4c19561e8f01fb614c1325edf1"
+        }
+      },
+      {
+        "input": "9 4 4 13 4\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "7fd4d8db26d910c5bce92b3d6e33c988a76aec677d4759494ca790fdf24e1e33"
+        }
+      },
+      {
+        "input": "1 14 30 30 14\n",
+        "expected": "12\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "dd122804089dcbbe7478622ca5278adf81a665b710ee045453fd30019e77a892"
+        }
+      },
+      {
+        "input": "249 -54242 -30537 -45023 -89682\n",
+        "expected": "121\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "35326bb19af99526a106ae4f7be903899ea0877efe6ccc0ca1acba497164970f"
+        }
+      },
+      {
+        "input": "24 130 14786 6148 4076\n",
+        "expected": "256\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "c56358d54549dfe4d86fae1ab019047d1b322d18772aded7d778f49d6a6e1698"
+        }
+      },
+      {
+        "input": "999 999 999 -999 -999\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "d7fb7333f0df675fa93212309007e379f5d74570216b13808ed47dc6ac9aecdd"
+        }
+      },
+      {
+        "input": "4 0 0 4 0\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "f92ea3d8239a74f0dbaf6731e0f3f9882c9b1dc50ff4ab107c0360603a0371c3"
+        }
+      },
+      {
+        "input": "5 2 2 5 5\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "73adea3e76afa8e50de7fb5375dc52afb23db0c489b7e2bd778b36c65951554e"
+        }
+      },
+      {
+        "input": "1 1 2 4 4\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "4610320144e518b1209927ad8364e78c88cb205b1e7efb291a2447a301fdd313"
+        }
+      },
+      {
+        "input": "10 38 0 82 0\n",
+        "expected": "3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "f9b2fa688c6dc4f3816d75ba01304085f2d13e87c90a1e9b57ff2dc212224484"
+        }
+      },
+      {
+        "input": "67377 -80131 -90254 -57320 14102\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "c164648855c787a319e33f1ff01364075880cc5874c4084d559a5a6ed1e84d54"
+        }
+      },
+      {
+        "input": "9361 19470 14858 58064 62231\n",
+        "expected": "4\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-361",
+          "case_sha256": "84aeeb4edb0130e22b7234a22a3d4c5a8601de6c45134a1a11a9f738878cf786"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-803",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-803",
+      "prompt": "You are given an array a consisting of n elements. The imbalance value of some subsegment of this array is the difference between the maximum and minimum element from this segment. The imbalance value of the array is the sum of imbalance values of all subsegments of this array.\n\nFor example, the imbalance value of array [1, 4, 1] is 9, because there are 6 different subsegments of this array:   [1] (from index 1 to index 1), imbalance value is 0;  [1, 4] (from index 1 to index 2), imbalance value is 3;  [1, 4, 1] (from index 1 to index 3), imbalance value is 3;  [4] (from index 2 to index 2), imbalance value is 0;  [4, 1] (from index 2 to index 3), imbalance value is 3;  [1] (from index 3 to index 3), imbalance value is 0; \n\nYou have to determine the imbalance value of the array a.\n\n\n-----Input-----\n\nThe first line contains one integer n (1 ≤ n ≤ 10^6) — size of the array a.\n\nThe second line contains n integers a_1, a_2... a_{n} (1 ≤ a_{i} ≤ 10^6) — elements of the array.\n\n\n-----Output-----\n\nPrint one integer — the imbalance value of a.\n\n\n-----Example-----\nInput\n3\n1 4 1\n\nOutput\n9",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "3\n1 4 1\n",
+          "expected": "9",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-803",
+            "case_sha256": "6446c09a04cf10e2bcbdbae5b6b6881a905f284c511b4838fc6de9a2c6298a45"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "3\n1 4 1\n",
+        "expected": "9",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-803",
+          "case_sha256": "6446c09a04cf10e2bcbdbae5b6b6881a905f284c511b4838fc6de9a2c6298a45"
+        }
+      },
+      {
+        "input": "6\n6 6 6 6 6 6\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "266b8d0ee032adca089ef37dcea1c8a513d5898d7357429ecd65a945f5ce2697"
+        }
+      },
+      {
+        "input": "4\n10 10 10 10\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "d11ece7501bec569f01cf712a622c81790574e2cf7c34c6db7d7b92d901db835"
+        }
+      },
+      {
+        "input": "4\n2 2 2 2\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "69675369771099512637e32a567debde1937f1035f367fa0fae6cf263c90bd0f"
+        }
+      },
+      {
+        "input": "7\n7 1 3 5 2 4 6\n",
+        "expected": "85\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "838b8a248598335caaeb60e0f3fab0cf853ea70c5b63f90c67e21a29b526ce5a"
+        }
+      },
+      {
+        "input": "4\n4 3 2 1\n",
+        "expected": "10\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "09e4a12ad3977a324fa933f45acb0df070c2a0fe6c408becb8b8145ffd17bdf5"
+        }
+      },
+      {
+        "input": "7\n5 1 3 4 2 1 5\n",
+        "expected": "67\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "1ba4443cac7b085dc6714d8a1ef36b8eb9bd8a72e17c9def1d681de25aafd009"
+        }
+      },
+      {
+        "input": "3\n3 3 3\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "d3ce9fcee72d3cd60a9edea464f53d65ff1f18686678f98a4654f3b211896190"
+        }
+      },
+      {
+        "input": "5\n5 6 7 8 9\n",
+        "expected": "20\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "854ae2f5190cee6cb90fe637496c707ce1f9e533ffa2c7b7244e4596be970049"
+        }
+      },
+      {
+        "input": "4\n1 2 3 4\n",
+        "expected": "10\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "fa6c2070560baea004afa8a922b002a9f765e6881b397a720f9bbec1ea7cd648"
+        }
+      },
+      {
+        "input": "4\n2 7 2 3\n",
+        "expected": "26\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "97002ebcba0e0d02091d5b71161acc1cb7907dde695525a5e65a1b0434350530"
+        }
+      },
+      {
+        "input": "9\n1 6 4 2 5 3 9 7 8\n",
+        "expected": "183\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "bef07abb6744558ed865dd4c3ade5bc0c41d56a37679f06d3fd08b84d1adee56"
+        }
+      },
+      {
+        "input": "4\n9 3 5 1\n",
+        "expected": "30\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-803",
+          "case_sha256": "93b15e5b48ab05d559b20faf6b592de5d2a4823f45f5d8c9d7a07c9aa5e1cbea"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-612",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-612",
+      "prompt": "Yaroslav is playing a game called \"Time\". The game has a timer showing the lifespan he's got left. As soon as the timer shows 0, Yaroslav's character dies and the game ends. Also, the game has n clock stations, station number i is at point (x_{i}, y_{i}) of the plane. As the player visits station number i, he increases the current time on his timer by a_{i}. The stations are for one-time use only, so if the player visits some station another time, the time on his timer won't grow.\n\nA player spends d·dist time units to move between stations, where dist is the distance the player has covered and d is some constant. The distance between stations i and j is determined as |x_{i} - x_{j}| + |y_{i} - y_{j}|.\n\nInitially, the player is at station number 1, and the player has strictly more than zero and strictly less than one units of time. At station number 1 one unit of money can increase the time on the timer by one time unit (you can buy only integer number of time units).\n\nNow Yaroslav is wondering, how much money he needs to get to station n. Help Yaroslav. Consider the time to buy and to increase the timer value negligibly small.\n\n\n-----Input-----\n\nThe first line contains integers n and d (3 ≤ n ≤ 100, 10^3 ≤ d ≤ 10^5) — the number of stations and the constant from the statement.\n\nThe second line contains n - 2 integers: a_2, a_3, ..., a_{n} - 1 (1 ≤ a_{i} ≤ 10^3). The next n lines contain the coordinates of the stations. The i-th of them contains two integers x_{i}, y_{i} (-100 ≤ x_{i}, y_{i} ≤ 100).\n\nIt is guaranteed that no two stations are located at the same point.\n\n\n-----Output-----\n\nIn a single line print an integer — the answer to the problem.\n\n\n-----Examples-----\nInput\n3 1000\n1000\n0 0\n0 1\n0 3\n\nOutput\n2000\n\nInput\n3 1000\n1000\n1 0\n1 1\n1 2\n\nOutput\n1000",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "3 1000\n1000\n0 0\n0 1\n0 3\n",
+          "expected": "2000",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-612",
+            "case_sha256": "758f3dfd02890711276f10ba9326e132779b772337d1456dac75f13df43bd9a7"
+          }
+        },
+        {
+          "input": "3 1000\n1000\n1 0\n1 1\n1 2\n",
+          "expected": "1000",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-612",
+            "case_sha256": "f4867608d9762ac909a5af79a8f59153d4657ddf8b80049552a7152b36ed529c"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "3 1000\n1000\n0 0\n0 1\n0 3\n",
+        "expected": "2000",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-612",
+          "case_sha256": "758f3dfd02890711276f10ba9326e132779b772337d1456dac75f13df43bd9a7"
+        }
+      },
+      {
+        "input": "3 1000\n1000\n1 0\n1 1\n1 2\n",
+        "expected": "1000",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-612",
+          "case_sha256": "f4867608d9762ac909a5af79a8f59153d4657ddf8b80049552a7152b36ed529c"
+        }
+      },
+      {
+        "input": "6 1000\n1 1065 254 869\n7 0\n95 38\n96 -20\n-7 134\n75 -45\n-80 -20\n",
+        "expected": "107000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "8ac19e525b385a6ca56d80bb12b5881bff6738045167327140135ecdd193235f"
+        }
+      },
+      {
+        "input": "5 2000\n500 600 700\n0 0\n0 1\n0 2\n0 3\n0 4\n",
+        "expected": "6200\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "0a47be631f6791600855320769d8559c8b686905886f9f64f583bb5dfa20ed76"
+        }
+      },
+      {
+        "input": "6 1000\n142 712 254 869\n7 0\n95 38\n96 -20\n-7 93\n75 -45\n-80 -20\n",
+        "expected": "107000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "e60b5adab0c91ed7f45eb3bc276946a9d0f7b7fd302135ffa7d8e37429feb6c7"
+        }
+      },
+      {
+        "input": "3 1000\n1000\n-1 0\n0 1\n0 3\n",
+        "expected": "3000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "3668bb51cb2580bd71789e9b6ef2b09a9999841c9c3da3304f5386b4c0fca6ec"
+        }
+      },
+      {
+        "input": "3 5000\n2500\n0 1\n0 2\n0 3\n",
+        "expected": "7500\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "2a24f713d0d4518508e605922cd28b38c10bff4192faee73b65bceb44b7ac452"
+        }
+      },
+      {
+        "input": "8 3000\n200 300 400 500 600 700\n0 0\n100 100\n200 200\n300 300\n400 400\n500 500\n600 600\n700 700\n",
+        "expected": "4197300\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "f1c378b2464fa31504b4e198034e7ce11052f0f39d791de46eb03c156a6b12b9"
+        }
+      },
+      {
+        "input": "4 2000\n1000 2000\n0 0\n0 1\n0 2\n0 3\n",
+        "expected": "3000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "a30982540d97030b70bcc2f3a6d7c07151be29e906250d3be091b313fd5e2c37"
+        }
+      },
+      {
+        "input": "10 1000\n759 222 589 423 947 507 31 427\n0 -48\n-31 -53\n24 28\n-11 -65\n-59 -49\n-42 -79\n85 -71\n-60 -17\n28 66\n74 2\n",
+        "expected": "124000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "9540feb09c7f3a20829b9964aeed92ed3e5d1966dcb8328e5559bdd1b0816ac3"
+        }
+      },
+      {
+        "input": "12 1542\n389 356 290 648 182 94 585 988 762 762\n-46 96\n1 88\n0 95\n-45 -100\n-42 -29\n45 -27\n-52 -34\n-62 27\n-19 46\n-100 95\n5 -55\n-36 -65\n",
+        "expected": "263034\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "b5dc359063e3b70586ad0515df8183da55f036779a98acd31c288d0dfe39db08"
+        }
+      },
+      {
+        "input": "4 1000\n1000 500\n0 0\n0 1\n0 3\n1 1\n",
+        "expected": "1000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "68416a63acc67d5c005e9e16478070cd57504a4e1524ecd7a6512ec74e8cbc6e"
+        }
+      },
+      {
+        "input": "10 1000\n759 222 589 423 947 507 31 414\n-4 -71\n-31 -53\n24 28\n-13 -65\n-59 -49\n-42 -79\n85 -71\n-60 -17\n28 66\n74 2\n",
+        "expected": "151000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "f702d2a31974e6f4d7292009368c5fc911803e5fb3b0c9b28af2a3db2119524f"
+        }
+      },
+      {
+        "input": "10 1000\n759 222 589 423 947 507 31 427\n0 -48\n-31 -53\n24 22\n-11 -65\n-59 -49\n-42 -79\n85 -71\n-60 -17\n28 66\n74 2\n",
+        "expected": "124000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-612",
+          "case_sha256": "58309e9712432b41171a371317099dff73ac146739fc317e1d4ad1f763465309"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-737",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-737",
+      "prompt": "Watchmen are in a danger and Doctor Manhattan together with his friend Daniel Dreiberg should warn them as soon as possible. There are n watchmen on a plane, the i-th watchman is located at point (x_{i}, y_{i}).\n\nThey need to arrange a plan, but there are some difficulties on their way. As you know, Doctor Manhattan considers the distance between watchmen i and j to be |x_{i} - x_{j}| + |y_{i} - y_{j}|. Daniel, as an ordinary person, calculates the distance using the formula $\\sqrt{(x_{i} - x_{j})^{2} +(y_{i} - y_{j})^{2}}$.\n\nThe success of the operation relies on the number of pairs (i, j) (1 ≤ i < j ≤ n), such that the distance between watchman i and watchmen j calculated by Doctor Manhattan is equal to the distance between them calculated by Daniel. You were asked to compute the number of such pairs.\n\n\n-----Input-----\n\nThe first line of the input contains the single integer n (1 ≤ n ≤ 200 000) — the number of watchmen.\n\nEach of the following n lines contains two integers x_{i} and y_{i} (|x_{i}|, |y_{i}| ≤ 10^9).\n\nSome positions may coincide.\n\n\n-----Output-----\n\nPrint the number of pairs of watchmen such that the distance between them calculated by Doctor Manhattan is equal to the distance calculated by Daniel.\n\n\n-----Examples-----\nInput\n3\n1 1\n7 5\n1 5\n\nOutput\n2\n\nInput\n6\n0 0\n0 1\n0 2\n-1 1\n0 1\n1 1\n\nOutput\n11\n\n\n\n-----Note-----\n\nIn the first sample, the distance between watchman 1 and watchman 2 is equal to |1 - 7| + |1 - 5| = 10 for Doctor Manhattan and $\\sqrt{(1 - 7)^{2} +(1 - 5)^{2}} = 2 \\cdot \\sqrt{13}$ for Daniel. For pairs (1, 1), (1, 5) and (7, 5), (1, 5) Doctor Manhattan and Daniel will calculate the same distances.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "3\n1 1\n7 5\n1 5\n",
+          "expected": "2",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-737",
+            "case_sha256": "629fcce1420c6c785b7fdfcfce34def9271f1b0b582a677fc0e38f5a1b2d4e2c"
+          }
+        },
+        {
+          "input": "6\n0 0\n0 1\n0 2\n-1 1\n0 1\n1 1\n",
+          "expected": "11",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-737",
+            "case_sha256": "4e7de71b6a90c143fab063342c6d366c15c7096253cb2cf1cf2786dc860020dc"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "3\n1 1\n7 5\n1 5\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-737",
+          "case_sha256": "629fcce1420c6c785b7fdfcfce34def9271f1b0b582a677fc0e38f5a1b2d4e2c"
+        }
+      },
+      {
+        "input": "6\n0 0\n0 1\n0 2\n-1 1\n0 1\n1 1\n",
+        "expected": "11",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-737",
+          "case_sha256": "4e7de71b6a90c143fab063342c6d366c15c7096253cb2cf1cf2786dc860020dc"
+        }
+      },
+      {
+        "input": "6\n1 0\n0 2\n1 1\n-1 1\n0 2\n0 1\n",
+        "expected": "7\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "b5a84254296108c59021c26af34873bcfac96af72d7375682309b7484c4cc8a4"
+        }
+      },
+      {
+        "input": "5\n0 0\n0 0\n0 0\n0 0\n0 0\n",
+        "expected": "10\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "94424d892d9a82d0412fb1eb78845dd18ad254da06531a8d3e2aa3447f5e982d"
+        }
+      },
+      {
+        "input": "4\n2 3\n2 3\n3 4\n3 4\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "5cf6cbbf84483099b40110cf2f1da8e7b7b272a74f57fba556cd03651860da97"
+        }
+      },
+      {
+        "input": "2\n1 1\n0 19990213\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "aedb6254c9b0f18c8d2839629af980aea7b7157de5e294dacd3d80de37e30981"
+        }
+      },
+      {
+        "input": "2\n0 1000011000\n0 -2\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "82ef49891c42e05defb9811b1c5b8a26fe1bde6f985ca69e89b7a890043b319a"
+        }
+      },
+      {
+        "input": "6\n0 0\n0 1\n1 0\n1 1\n2 2\n-1 -1\n",
+        "expected": "4\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "f1e37719d9f90d373c1750d2f99bfbfed3efa74a60807afae34151f412164f03"
+        }
+      },
+      {
+        "input": "3\n1 1\n7 9\n0 5\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "2361039b2f1c673c0e3882805d000e8a60d6a4bc0d110376423c8c0d82d0db6e"
+        }
+      },
+      {
+        "input": "3\n1 1\n5 7\n1 5\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "875aad65c1a05cda2e7a92855ceed1475a2c63c0dc650f5ea882b1ccf21d87a6"
+        }
+      },
+      {
+        "input": "10\n0 0\n2 2\n4 4\n6 6\n8 8\n10 10\n12 12\n14 14\n16 16\n18 18\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "fe4e2085086c687ddd5a5a32b0c96b70ec378400c652f765f1ee86782a22a414"
+        }
+      },
+      {
+        "input": "3\n2 2\n2 2\n2 2\n",
+        "expected": "3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "d916a600c3ceb02ec3d51fa0e639273b0709f2ee7f04585003c5956a7712d111"
+        }
+      },
+      {
+        "input": "2\n3 -1\n0 235415\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "91b6907cbda275711b0f9ecec2cdd53e8a38a4636eb7c3e6c9c9263e7920e6d3"
+        }
+      },
+      {
+        "input": "10\n46 -4\n46 45\n46 45\n83 -55\n46 45\n83 -55\n46 29\n83 45\n83 45\n46 -81\n",
+        "expected": "27\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-737",
+          "case_sha256": "b4525e140eb9240764892413a451b950d8d61985488a7ce5f9ca1b756a0ed3d2"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-932",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-932",
+      "prompt": "Hiasat registered a new account in NeckoForces and when his friends found out about that, each one of them asked to use his name as Hiasat's handle.\n\nLuckily for Hiasat, he can change his handle in some points in time. Also he knows the exact moments friends will visit his profile page. Formally, you are given a sequence of events of two types:\n\n  $1$ — Hiasat can change his handle.  $2$ $s$ — friend $s$ visits Hiasat's profile. \n\nThe friend $s$ will be happy, if each time he visits Hiasat's profile his handle would be $s$.\n\nHiasat asks you to help him, find the maximum possible number of happy friends he can get.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $m$ ($1 \\le n \\le 10^5, 1 \\le m \\le 40$) — the number of events and the number of friends.\n\nThen $n$ lines follow, each denoting an event of one of two types:   $1$ — Hiasat can change his handle.  $2$ $s$ — friend $s$ ($1 \\le |s| \\le 40$) visits Hiasat's profile. \n\nIt's guaranteed, that each friend's name consists only of lowercase Latin letters.\n\nIt's guaranteed, that the first event is always of the first type and each friend will visit Hiasat's profile at least once.\n\n\n-----Output-----\n\nPrint a single integer — the maximum number of happy friends.\n\n\n-----Examples-----\nInput\n5 3\n1\n2 motarack\n2 mike\n1\n2 light\n\nOutput\n2\n\nInput\n4 3\n1\n2 alice\n2 bob\n2 tanyaromanova\n\nOutput\n1\n\n\n\n-----Note-----\n\nIn the first example, the best way is to change the handle to the \"motarack\" in the first event and to the \"light\" in the fourth event. This way, \"motarack\" and \"light\" will be happy, but \"mike\" will not.\n\nIn the second example, you can choose either \"alice\", \"bob\" or \"tanyaromanova\" and only that friend will be happy.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "5 3\n1\n2 motarack\n2 mike\n1\n2 light\n",
+          "expected": "2",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-932",
+            "case_sha256": "66e15cbaf2ea53e97c5a2ef44378a6b0250dfd7995f15326bb8551d217b1fff6"
+          }
+        },
+        {
+          "input": "4 3\n1\n2 alice\n2 bob\n2 tanyaromanova\n",
+          "expected": "1",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-932",
+            "case_sha256": "a63f0956805ade3b7ca99944fde602b91ac7c7f7b92e067d5bab3b951cb7c748"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "5 3\n1\n2 motarack\n2 mike\n1\n2 light\n",
+        "expected": "2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-932",
+          "case_sha256": "66e15cbaf2ea53e97c5a2ef44378a6b0250dfd7995f15326bb8551d217b1fff6"
+        }
+      },
+      {
+        "input": "4 3\n1\n2 alice\n2 bob\n2 tanyaromanova\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-932",
+          "case_sha256": "a63f0956805ade3b7ca99944fde602b91ac7c7f7b92e067d5bab3b951cb7c748"
+        }
+      },
+      {
+        "input": "5 3\n1\n2 abraham\n2 ishmael\n1\n2 isaac\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "d19e0daab5bbfbb58240bda95cbabf968a30d354cf352c686389da7a8bb82e5a"
+        }
+      },
+      {
+        "input": "21 6\n1\n2 d\n2 c\n1\n2 d\n2 e\n1\n2 a\n2 b\n1\n2 a\n2 f\n1\n2 c\n2 d\n1\n2 a\n2 f\n1\n2 f\n2 e\n",
+        "expected": "3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "d79bd3e4d1ff04e73b2245018204f276519a3cf3c1f348dc91361b3e83dafde8"
+        }
+      },
+      {
+        "input": "18 6\n1\n2 b\n2 b\n1\n2 d\n2 d\n1\n2 d\n2 f\n1\n2 e\n2 e\n1\n2 b\n2 c\n1\n2 f\n2 a\n",
+        "expected": "4\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "0c9dafe7fe0e23748757f835e3df95ed65d35839c1eafb167596b7f1023b3525"
+        }
+      },
+      {
+        "input": "5 3\n1\n2 jacob\n2 jacob\n1\n2 max\n2 jacob\n",
+        "expected": "3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "7579c38d5c028bf176d14f66d36be2a760bd9569818571f71a5cedf348f830f9"
+        }
+      },
+      {
+        "input": "7 5\n1\n2 alice\n2 bob\n2 charlie\n2 bob\n1\n2 dave\n2 eve\n",
+        "expected": "3\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "44d3f0c767b9971e8714a7431d6a5a59298741bf6ebd68c544687d9b34cc8631"
+        }
+      },
+      {
+        "input": "5 3\n1\n2 motarack\n2 kime\n1\n2 light\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "9e3fa566f0afaf18771ef9db3dbca168961b8195898ac13befe547d611d5114a"
+        }
+      },
+      {
+        "input": "4 2\n1\n2 alice\n2 bob\n2 bob\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "3e559a66d3607294c00cc6a6f0399d73242d2479d4ace790bc67ce0e9cbc20b5"
+        }
+      },
+      {
+        "input": "4 1\n1\n2 bob\n2 bob\n2 bob\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "674e0d0174c0f5265b12fa03d11d03055edc751dcc4577225ad04402072b1d3a"
+        }
+      },
+      {
+        "input": "8 3\n1\n2 lola\n1\n2 poppy\n2 lola\n1\n2 freddy\n2 poppy\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "a8bf9c1007f682cb664215d176c5e4f886ea103cdd631bc32887fa4d1fff41f6"
+        }
+      },
+      {
+        "input": "7 3\n1\n2 harry\n2 hermione\n1\n2 ron\n1\n2 harry\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "55a6b1ecddf7b241250bf1c03eb030cecee0dc1261e314e20e973d97d9087081"
+        }
+      },
+      {
+        "input": "9 4\n1\n2 a\n2 b\n1\n2 a\n2 d\n1\n2 b\n2 c\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "a14ff90d52f4bffebe03fcdf3b937050b34a65d3daaa293689f891cfa69aa376"
+        }
+      },
+      {
+        "input": "5 2\n1\n2 bob\n2 bob\n1\n2 alice\n",
+        "expected": "2\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-932",
+          "case_sha256": "9bc3e868b76b6129812f8911ac25f4a74f4f06a573d4cb6481656a30eefeeb7c"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-126",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-126",
+      "prompt": "Inflation has occurred in Berlandia, so the store needs to change the price of goods.\n\nThe current price of good $n$ is given. It is allowed to increase the price of the good by $k$ times, with $1 \\le k \\le m$, k is an integer. Output the roundest possible new price of the good. That is, the one that has the maximum number of zeros at the end.\n\nFor example, the number 481000 is more round than the number 1000010 (three zeros at the end of 481000 and only one at the end of 1000010).\n\nIf there are several possible variants, output the one in which the new price is maximal.\n\nIf it is impossible to get a rounder price, output $n \\cdot m$ (that is, the maximum possible price).\n\n\n-----Input-----\n\nThe first line contains a single integer $t$ ($1 \\le t \\le 10^4$) —the number of test cases in the test.\n\nEach test case consists of one line.\n\nThis line contains two integers: $n$ and $m$ ($1 \\le n, m \\le 10^9$). Where $n$ is the old price of the good, and the number $m$ means that you can increase the price $n$ no more than $m$ times.\n\n\n-----Output-----\n\nFor each test case, output on a separate line the roundest integer of the form $n \\cdot k$ ($1 \\le k \\le m$, $k$ — an integer).\n\nIf there are several possible variants, output the one in which the new price (value $n \\cdot k$) is maximal.\n\nIf it is impossible to get a more rounded price, output $n \\cdot m$ (that is, the maximum possible price).\n\n\n-----Examples-----\n\nInput\n10\n6 11\n5 43\n13 5\n4 16\n10050 12345\n2 6\n4 30\n25 10\n2 81\n1 7\nOutput\n60\n200\n65\n60\n120600000\n10\n100\n200\n100\n7\n\n\n-----Note-----\n\nIn the first case $n = 6$, $m = 11$. We cannot get a number with two zeros or more at the end, because we need to increase the price $50$ times, but $50 > m = 11$. The maximum price multiple of $10$ would be $6 \\cdot 10 = 60$.\n\nIn the second case $n = 5$, $m = 43$. The maximum price multiple of $100$ would be $5 \\cdot 40 = 200$.\n\nIn the third case, $n = 13$, $m = 5$. All possible new prices will not end in $0$, then you should output $n \\cdot m = 65$.\n\nIn the fourth case, you should increase the price $15$ times.\n\nIn the fifth case, increase the price $12000$ times.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "10\n6 11\n5 43\n13 5\n4 16\n10050 12345\n2 6\n4 30\n25 10\n2 81\n1 7\n",
+          "expected": "60\n200\n65\n60\n120600000\n10\n100\n200\n100\n7",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-126",
+            "case_sha256": "c0b8ebcfc935112b1ca15fbada8e976146a7b2ce8f59cf9fd9aace3cd49b6f36"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "10\n6 11\n5 43\n13 5\n4 16\n10050 12345\n2 6\n4 30\n25 10\n2 81\n1 7\n",
+        "expected": "60\n200\n65\n60\n120600000\n10\n100\n200\n100\n7",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-126",
+          "case_sha256": "c0b8ebcfc935112b1ca15fbada8e976146a7b2ce8f59cf9fd9aace3cd49b6f36"
+        }
+      },
+      {
+        "input": "10\n20 30\n25 35\n30 40\n35 45\n40 50\n45 55\n50 60\n55 65\n60 70\n65 75\n",
+        "expected": "600\n800\n1200\n1400\n2000\n1800\n3000\n3300\n3000\n3900\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "ca6897af0445a66c3f6fc0d9827fee398f232d349968dd20b2adc0bd765c3bd0"
+        }
+      },
+      {
+        "input": "10\n1 100\n2 100\n3 100\n4 100\n5 100\n6 100\n7 100\n8 100\n9 100\n10 100\n",
+        "expected": "100\n200\n300\n400\n500\n600\n700\n800\n900\n1000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "a00adb53dbb24dde497bd42a1544da6d71f1133c0f54945f51004dca795f8560"
+        }
+      },
+      {
+        "input": "5\n500000 1000\n1000000 2000\n1500000 3000\n2000000 4000\n2500000 5000\n",
+        "expected": "500000000\n2000000000\n3000000000\n8000000000\n10000000000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "d949068a50d3f58d832d99f56e48374decb8ce73e6fcd0cdf2961724a39be427"
+        }
+      },
+      {
+        "input": "4\n87 56\n78 38\n45 76\n23 47\n",
+        "expected": "4350\n2730\n2700\n920\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "3be530c998102fc6367021930ababcedcc0e72e7f6577ea3d0d09c0d2fe95dbc"
+        }
+      },
+      {
+        "input": "2\n1 5\n100 5\n",
+        "expected": "5\n500\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "f9d915f5ea3df2c251b2957aae230a5bd34ca22ed330d66d63b614dca650398c"
+        }
+      },
+      {
+        "input": "2\n15 300\n70 700\n",
+        "expected": "3000\n49000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "c603a8d25b17750ef1b687b090edd494710c53d90addca8664b89f8a78bbbefe"
+        }
+      },
+      {
+        "input": "2\n25 55\n830 65\n",
+        "expected": "1000\n49800\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "e8854154c5da68b40a68105f8a43b3a764f97e6a36202f6aac8e9a3074dc1a9c"
+        }
+      },
+      {
+        "input": "4\n50 51\n17 18\n36 37\n23 24\n",
+        "expected": "2000\n170\n900\n460\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "77dae7140c8bee86e95a8f744d65fe5fab9f023a937f739c0f6b5949781a1c50"
+        }
+      },
+      {
+        "input": "1\n1000000 1000000\n",
+        "expected": "1000000000000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "d45b6e2c322b1b99bea47dd44eeca9638e23fe695d250ba5dfb967e8bba4d66f"
+        }
+      },
+      {
+        "input": "1\n111111111 999999999\n",
+        "expected": "99999999900000000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "ca38e532a43521840bc4bf0c1d4fc6864b2209348137d3be65c25afd35b5c649"
+        }
+      },
+      {
+        "input": "1\n500 150\n",
+        "expected": "70000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "b77aa0c0676a98d55eb061752636acd236480a7ede708e06bef5880822518c19"
+        }
+      },
+      {
+        "input": "10\n1000000 1\n2500000 1\n5000000 1\n7500000 1\n10000000 1\n12500000 1\n15000000 1\n17500000 1\n20000000 1\n22500000 1\n",
+        "expected": "1000000\n2500000\n5000000\n7500000\n10000000\n12500000\n15000000\n17500000\n20000000\n22500000\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-126",
+          "case_sha256": "751a0669280f710fb5f4cf3c4c3b294c2b6b1b8436f3b7957559e23a5f5dbfce"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-435",
+    "dataset": "taco",
+    "difficulty": "MEDIUM",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-435",
+      "prompt": "You have an array a consisting of n integers. Each integer from 1 to n appears exactly once in this array.\n\nFor some indices i (1 ≤ i ≤ n - 1) it is possible to swap i-th element with (i + 1)-th, for other indices it is not possible. You may perform any number of swapping operations any order. There is no limit on the number of times you swap i-th element with (i + 1)-th (if the position is not forbidden).\n\nCan you make this array sorted in ascending order performing some sequence of swapping operations?\n\n\n-----Input-----\n\nThe first line contains one integer n (2 ≤ n ≤ 200000) — the number of elements in the array.\n\nThe second line contains n integers a_1, a_2, ..., a_{n} (1 ≤ a_{i} ≤ 200000) — the elements of the array. Each integer from 1 to n appears exactly once.\n\nThe third line contains a string of n - 1 characters, each character is either 0 or 1. If i-th character is 1, then you can swap i-th element with (i + 1)-th any number of times, otherwise it is forbidden to swap i-th element with (i + 1)-th.\n\n\n-----Output-----\n\nIf it is possible to sort the array in ascending order using any sequence of swaps you are allowed to make, print YES. Otherwise, print NO.\n\n\n-----Examples-----\nInput\n6\n1 2 5 3 4 6\n01110\n\nOutput\nYES\n\nInput\n6\n1 2 5 3 4 6\n01010\n\nOutput\nNO\n\n\n\n-----Note-----\n\nIn the first example you may swap a_3 and a_4, and then swap a_4 and a_5.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "6\n1 2 5 3 4 6\n01110\n",
+          "expected": "YES",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-435",
+            "case_sha256": "5e2991c66616f3ac6423526207b722f51d4968e1cd6e7b00630ef30eea03977b"
+          }
+        },
+        {
+          "input": "6\n1 2 5 3 4 6\n01010\n",
+          "expected": "NO",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-435",
+            "case_sha256": "a527e230663341c3c5d7b4cbf5b26a67e67b4535664ec761b08dd0aba81e7c70"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "6\n1 2 5 3 4 6\n01110\n",
+        "expected": "YES",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-435",
+          "case_sha256": "5e2991c66616f3ac6423526207b722f51d4968e1cd6e7b00630ef30eea03977b"
+        }
+      },
+      {
+        "input": "6\n1 2 5 3 4 6\n01010\n",
+        "expected": "NO",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-435",
+          "case_sha256": "a527e230663341c3c5d7b4cbf5b26a67e67b4535664ec761b08dd0aba81e7c70"
+        }
+      },
+      {
+        "input": "6\n6 1 2 4 4 5\n10101\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "b48f88c36887337a04f8ab755e6b7db48dda4fe635f29778e7b170e9372764af"
+        }
+      },
+      {
+        "input": "6\n4 6 5 3 2 1\n01011\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "0a2f6c16270111f5d6b5449fb826d4793989554e7d1d67b8a42fd6767d7bed74"
+        }
+      },
+      {
+        "input": "6\n6 1 2 3 4 0\n10001\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "9b9d59a116fa9979a5066869b0ea4ffc860f19c901416db5f75606c9fb2a89dc"
+        }
+      },
+      {
+        "input": "5\n3 1 4 2 4\n1011\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "39b31f5bf666e631e01c5c98ea024dbf96920d5e23e908db73d225ce6caadce7"
+        }
+      },
+      {
+        "input": "6\n2 3 1 1 5 4\n01111\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "853f58f03a97203c08e2498bf7934e5689834207b6b4364b53a8f9a5073bd925"
+        }
+      },
+      {
+        "input": "2\n2 1\n0\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "d8f5c32009e36216bc31460d4a161ee2c69d4c053e261fa654760ab43d27624c"
+        }
+      },
+      {
+        "input": "20\n20 19 18 17 16 15 1 2 3 4 5 14 13 12 11 10 9 8 7 6\n1111111011111111111\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "39aa05c58cdde65241a37544de93afe5745d3be7047b280e475fe12a6b8ffd38"
+        }
+      },
+      {
+        "input": "3\n2 3 1\n01\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "0e3b3013575a0559474011f9e43c517c98d301199bf9cc4f0e33cdc64e433bf1"
+        }
+      },
+      {
+        "input": "10\n1 2 3 4 5 6 8 9 7 10\n000000000\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "824b5a3fd24ef96d2c24b7dc5a838c43775f852784b71f14c2ea53ef03affa3b"
+        }
+      },
+      {
+        "input": "6\n1 1 5 3 4 6\n01000\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "9a19c03d8ca00c27bafe31997d6a3318465db286dbb0c59a0c182d8443fd5d58"
+        }
+      },
+      {
+        "input": "6\n5 6 1 2 3 6\n01111\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "df93f526154b5af92f4f6a6b19d17d2434af0456b2c553d7637130db502820b1"
+        }
+      },
+      {
+        "input": "5\n4 5 1 2 3\n1011\n",
+        "expected": "NO\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-435",
+          "case_sha256": "8e5b4435257a0a4d00b2d6bbcee0a85664589a952cbf0b224fd06f1e44a76aed"
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "s19g_taco-test-281",
+    "dataset": "taco",
+    "difficulty": "HARD",
+    "role": "prospective_stream_candidate",
+    "task_public": {
+      "problem_id": "s19g_taco-test-281",
+      "prompt": "Cirno gave AquaMoon a chessboard of size $1 \\times n$. Its cells are numbered with integers from $1$ to $n$ from left to right. In the beginning, some of the cells are occupied with at most one pawn, and other cells are unoccupied.\n\nIn each operation, AquaMoon can choose a cell $i$ with a pawn, and do either of the following (if possible):\n\nMove pawn from it to the $(i+2)$-th cell, if $i+2 \\leq n$ and the $(i+1)$-th cell is occupied and the $(i+2)$-th cell is unoccupied.\n\nMove pawn from it to the $(i-2)$-th cell, if $i-2 \\geq 1$ and the $(i-1)$-th cell is occupied and the $(i-2)$-th cell is unoccupied.\n\nYou are given an initial state of the chessboard. AquaMoon wants to count the number of states reachable from the initial state with some sequence of operations. But she is not good at programming. Can you help her? As the answer can be large find it modulo $998\\,244\\,353$.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains a single integer $t$ ($1 \\leq t \\leq 10000$) — the number of test cases.\n\nThe first line contains a single integer $n$ ($1 \\leq n \\leq 10^5$) — the size of the chessboard.\n\nThe second line contains a string of $n$ characters, consists of characters \"0\" and \"1\". If the $i$-th character is \"1\", the $i$-th cell is initially occupied; otherwise, the $i$-th cell is initially unoccupied.\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each test case, print the number of states that reachable from the initial state with some sequence of operations modulo $998\\,244\\,353$.\n\n\n-----Examples-----\n\nInput\n6\n4\n0110\n6\n011011\n5\n01010\n20\n10001111110110111000\n20\n00110110100110111101\n20\n11101111011000100010\nOutput\n3\n6\n1\n1287\n1287\n715\n\n\n-----Note-----\n\nIn the first test case the strings \"1100\", \"0110\" and \"0011\" are reachable from the initial state with some sequence of operations.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "6\n4\n0110\n6\n011011\n5\n01010\n20\n10001111110110111000\n20\n00110110100110111101\n20\n11101111011000100010\n",
+          "expected": "3\n6\n1\n1287\n1287\n715",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-test-281",
+            "case_sha256": "9233f454af1e3ff64cf29fe9aec9430492779ff08996e7a9dc882ba4f46b4be3"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "6\n4\n0110\n6\n011011\n5\n01010\n20\n10001111110110111000\n20\n00110110100110111101\n20\n11101111011000100010\n",
+        "expected": "3\n6\n1\n1287\n1287\n715",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-281",
+          "case_sha256": "9233f454af1e3ff64cf29fe9aec9430492779ff08996e7a9dc882ba4f46b4be3"
+        }
+      },
+      {
+        "input": "6\n4\n0110\n6\n110111\n5\n00010\n20\n10001111110111111000\n20\n00010110100110111101\n20\n11101111011000100010\n",
+        "expected": "3\n3\n1\n1716\n715\n715\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "7ef53ab8e66d152d808397ac2bb543fa2dc5ea740607a0bbfb85d08b24b47510"
+        }
+      },
+      {
+        "input": "1\n15\n101010101010101\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "083be8694d77e957432ff3feda90e3c5c21b1e2de9aad2644afcc711b0e15798"
+        }
+      },
+      {
+        "input": "2\n10\n0000000000\n5\n11111\n",
+        "expected": "1\n1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "824c465be5af264b6bffb3e390ad2a941e39ee9d34b60f8a19fcecaed15e89c6"
+        }
+      },
+      {
+        "input": "2\n9\n111000111\n9\n000111000\n",
+        "expected": "10\n7\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "5cc7a07713015d7d546fc3db1e1b82bb1c3666990ac3ff3130a84f63859cb999"
+        }
+      },
+      {
+        "input": "4\n5\n11111\n10\n0000000000\n15\n111000111000111\n20\n10101010101010101010\n",
+        "expected": "1\n1\n84\n1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "632b8ed7aa9e1c87820106133f14c2be3bc1140a50440dc180d73b2a67a093fb"
+        }
+      },
+      {
+        "input": "2\n5\n01010\n6\n101010\n",
+        "expected": "1\n1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "cd0c5dd44a86d7cf5166a1a9a8c81f438bb4d0630f2dd1b66e60f4e5e99e2f9d"
+        }
+      },
+      {
+        "input": "4\n4\n0000\n4\n1111\n4\n1010\n4\n0101\n",
+        "expected": "1\n1\n1\n1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "cee8368ab6c248ec12d738544f790c9e4dbb592d109f6f684103228b79e3ecba"
+        }
+      },
+      {
+        "input": "6\n4\n0110\n6\n011011\n5\n00010\n20\n10001111110110111000\n20\n00100110100110111101\n20\n11101110011000100010\n",
+        "expected": "3\n6\n1\n1287\n715\n286\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "a9c0064a9f34a787b023557ca12d45bcbc90d74eb00ba9eb95e0859b4e1e907f"
+        }
+      },
+      {
+        "input": "6\n4\n1011\n6\n011011\n5\n11010\n20\n10001110110110111000\n20\n00110100100110111101\n20\n11101010011010100011\n",
+        "expected": "2\n6\n3\n715\n715\n220\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "637ca949825f13b427d9a5f97dc6f898c9636f71bce53c237d2e346b68599f6a"
+        }
+      },
+      {
+        "input": "6\n4\n0010\n6\n111111\n5\n00010\n20\n10001111110110111000\n20\n00010110100110111101\n20\n11101111011000100010\n",
+        "expected": "1\n1\n1\n1287\n715\n715\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "0a83796dcc0d338c3fe3b5eb920e420ec940c87fdb21946beaa2f23231a9a25f"
+        }
+      },
+      {
+        "input": "10\n1\n1\n1\n0\n2\n00\n2\n01\n2\n10\n2\n11\n3\n000\n3\n001\n3\n100\n3\n101\n3\n111\n",
+        "expected": "1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "dc3846f7456827ff12ad1cd78d3e1cca4c383fa364c7d8295cbcf0781bb0dac7"
+        }
+      },
+      {
+        "input": "3\n5\n11000\n6\n101010\n7\n1110000\n",
+        "expected": "4\n1\n5\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-test-281",
+          "case_sha256": "6357a98e8fd010bcd1fa4fb3a0ba409deba6c8571aeee185254a1ede047df8c6"
+        }
+      }
+    ]
+  }
+]

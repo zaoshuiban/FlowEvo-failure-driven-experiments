@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r0324",
+  "original_id": "taco-train-s00-r0324",
+  "dataset": "taco",
+  "difficulty": "MEDIUM",
+  "original_url": "https://codeforces.com/problemset/problem/978/F",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r0324",
+    "prompt": "In BerSoft $n$ programmers work, the programmer $i$ is characterized by a skill $r_i$.\n\nA programmer $a$ can be a mentor of a programmer $b$ if and only if the skill of the programmer $a$ is strictly greater than the skill of the programmer $b$ $(r_a > r_b)$ and programmers $a$ and $b$ are not in a quarrel.\n\nYou are given the skills of each programmers and a list of $k$ pairs of the programmers, which are in a quarrel (pairs are unordered). For each programmer $i$, find the number of programmers, for which the programmer $i$ can be a mentor.\n\n\n-----Input-----\n\nThe first line contains two integers $n$ and $k$ $(2 \\le n \\le 2 \\cdot 10^5$, $0 \\le k \\le \\min(2 \\cdot 10^5, \\frac{n \\cdot (n - 1)}{2}))$ — total number of programmers and number of pairs of programmers which are in a quarrel.\n\nThe second line contains a sequence of integers $r_1, r_2, \\dots, r_n$ $(1 \\le r_i \\le 10^{9})$, where $r_i$ equals to the skill of the $i$-th programmer.\n\nEach of the following $k$ lines contains two distinct integers $x$, $y$ $(1 \\le x, y \\le n$, $x \\ne y)$ — pair of programmers in a quarrel. The pairs are unordered, it means that if $x$ is in a quarrel with $y$ then $y$ is in a quarrel with $x$. Guaranteed, that for each pair $(x, y)$ there are no other pairs $(x, y)$ and $(y, x)$ in the input.\n\n\n-----Output-----\n\nPrint $n$ integers, the $i$-th number should be equal to the number of programmers, for which the $i$-th programmer can be a mentor. Programmers are numbered in the same order that their skills are given in the input.\n\n\n-----Examples-----\nInput\n4 2\n10 4 10 15\n1 2\n4 3\n\nOutput\n0 0 1 2 \n\nInput\n10 4\n5 4 1 5 4 3 7 1 2 5\n4 6\n2 1\n10 8\n3 5\n\nOutput\n5 4 0 5 3 3 9 0 2 5 \n\n\n\n-----Note-----\n\nIn the first example, the first programmer can not be mentor of any other (because only the second programmer has a skill, lower than first programmer skill, but they are in a quarrel). The second programmer can not be mentor of any other programmer, because his skill is minimal among others. The third programmer can be a mentor of the second programmer. The fourth programmer can be a mentor of the first and of the second programmers. He can not be a mentor of the third programmer, because they are in a quarrel.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "4 2\n10 4 10 15\n1 2\n4 3\n",
+        "expected": "0 0 1 2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "10 4\n5 4 1 5 4 3 7 1 2 5\n4 6\n2 1\n10 8\n3 5\n",
+        "expected": "5 4 0 5 3 3 9 0 2 5",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "4 2\n10 4 10 15\n1 2\n4 3\n",
+      "expected": "0 0 1 2",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "10 4\n5 4 1 5 4 3 7 1 2 5\n4 6\n2 1\n10 8\n3 5\n",
+      "expected": "5 4 0 5 3 3 9 0 2 5",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "4 2\n10 5 3 15\n1 2\n4 3\n",
+      "expected": "1 1 0 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 4\n5 4 1 5 4 3 12 1 2 1\n4 10\n2 1\n6 8\n3 8\n",
+      "expected": "6 5 0 6 5 3 9 0 3 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n6 4 10 15\n1 2\n1 3\n",
+      "expected": "0 0 1 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n10 5 8 18\n1 2\n4 3\n",
+      "expected": "1 0 1 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 35\n322022227 751269818 629795150 11826084 344607287 250044294 476897672 184054549 573663582 917181121\n6 3\n7 3\n1 9\n7 9\n10 7\n3 4\n8 6\n7 4\n6 10\n7 2\n3 5\n6 9\n3 10\n8 7\n6 5\n8 1\n8 5\n1 7\n8 10\n8 2\n1 5\n10 4\n6 7\n4 6\n2 6\n5 4\n9 10\n9 2\n4 8\n5 9\n4 1\n3 2\n2 1\n4 2\n9 9\n",
+      "expected": "1 1 3 0 0 0 1 0 2 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 4\n5 4 1 5 5 5 12 2 2 1\n4 6\n2 1\n10 8\n3 8\n",
+      "expected": "4 4 0 5 5 5 9 0 2 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n10 5 8 15\n1 2\n4 3\n",
+      "expected": "1 0 1 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 4\n5 4 1 1 4 3 7 1 2 5\n1 6\n2 1\n10 8\n3 5\n",
+      "expected": "5 5 0 0 4 4 9 0 3 6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 4\n5 4 1 5 4 3 7 1 2 1\n4 6\n2 1\n6 8\n3 8\n",
+      "expected": "6 5 0 6 5 3 9 0 3 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n10 4 10 23\n2 1\n4 3\n",
+      "expected": "0 0 1 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 0\n3 3\n",
+      "expected": "0 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 4\n5 6 1 5 5 5 20 2 2 1\n4 6\n2 1\n10 8\n3 8\n",
+      "expected": "4 7 0 4 4 4 9 0 2 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "4 2\n10 4 10 15\n2 1\n4 3\n",
+      "expected": "0 0 1 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 4\n5 4 1 5 5 3 12 2 2 1\n4 6\n2 1\n10 8\n3 8\n",
+      "expected": "5 5 0 5 6 4 9 0 2 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 35\n322022227 751269818 629795150 369443545 344607287 250044294 476897672 184054549 573663582 917181121\n6 3\n7 3\n1 9\n7 9\n10 7\n3 4\n8 6\n7 4\n6 10\n7 2\n3 5\n6 9\n3 10\n8 7\n6 5\n8 1\n8 5\n1 7\n8 10\n8 2\n1 5\n10 4\n6 7\n4 6\n2 6\n5 4\n9 10\n9 2\n4 8\n5 9\n4 1\n3 2\n2 1\n4 2\n9 8\n",
+      "expected": "1 1 3 0 0 0 1 0 1 3\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n10 1 8 18\n1 2\n4 3\n",
+      "expected": "1 0 1 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n10 4 10 15\n2 2\n4 3\n",
+      "expected": "1 0 1 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n10 4 10 10\n2 2\n4 3\n",
+      "expected": "1 0 1 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 0\n3 1\n",
+      "expected": "1 0 \n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 0\n1 2\n",
+      "expected": "0 1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 4\n5 4 1 5 2 3 12 1 2 1\n4 6\n2 1\n6 8\n3 8\n",
+      "expected": "6 6 0 6 3 4 9 0 3 0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 4\n5 4 1 1 4 3 7 1 2 5\n4 6\n2 1\n10 8\n3 5\n",
+      "expected": "6 5 0 0 4 3 9 0 3 6\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n10 5 1 15\n1 2\n4 3\n",
+      "expected": "1 1 0 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "4 2\n7 5 10 36\n1 4\n1 3\n",
+      "expected": "1 0 1 2\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "5fc1b937a4522ea4015e3bc6cb7dfa5f692c85239ac45d22d12f944a79c7ac26",
+    "93cccc02f1016de1bc391910ad3b9fd44e061a6af70f282eb3e60f16b0d63760"
+  ],
+  "reference_ast_hashes": [
+    "3103557aa47960fc97f8dbac0110b09f6036751d0678feac6d63b3dba64358e1",
+    "df04e1309db4a558acdf83d195c24470cd79be6af976e992e905e687704c8e91"
+  ],
+  "raw_source_row": 324,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "d88f30500e3bb6ae169ba7bd16c3e3e1da4f64d7913a45d6bdd48bac84aa6bd8"
+}

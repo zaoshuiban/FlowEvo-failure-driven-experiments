@@ -1,0 +1,228 @@
+{
+  "task_id": "s19g_taco-train-s00-r1222",
+  "original_id": "taco-train-s00-r1222",
+  "dataset": "taco",
+  "difficulty": "MEDIUM_HARD",
+  "original_url": "https://codeforces.com/problemset/problem/958/E1",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1222",
+    "prompt": "The Rebel fleet is afraid that the Empire might want to strike back again. Princess Heidi needs to know if it is possible to assign R Rebel spaceships to guard B bases so that every base has exactly one guardian and each spaceship has exactly one assigned base (in other words, the assignment is a perfect matching). Since she knows how reckless her pilots are, she wants to be sure that any two (straight) paths – from a base to its assigned spaceship – do not intersect in the galaxy plane (that is, in 2D), and so there is no risk of collision.\n\n\n-----Input-----\n\nThe first line contains two space-separated integers R, B(1 ≤ R, B ≤ 10). For 1 ≤ i ≤ R, the i + 1-th line contains two space-separated integers x_{i} and y_{i} (|x_{i}|, |y_{i}| ≤ 10000) denoting the coordinates of the i-th Rebel spaceship. The following B lines have the same format, denoting the position of bases. It is guaranteed that no two points coincide and that no three points are on the same line.\n\n\n-----Output-----\n\nIf it is possible to connect Rebel spaceships and bases so as satisfy the constraint, output Yes, otherwise output No (without quote).\n\n\n-----Examples-----\nInput\n3 3\n0 0\n2 0\n3 1\n-2 1\n0 3\n2 2\n\nOutput\nYes\n\nInput\n2 1\n1 0\n2 2\n3 1\n\nOutput\nNo\n\n\n\n-----Note-----\n\nFor the first example, one possible way is to connect the Rebels and bases in order.\n\nFor the second example, there is no perfect matching between Rebels and bases.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "3 3\n0 0\n2 0\n3 1\n-2 1\n0 3\n2 2\n",
+        "expected": "Yes",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "2 1\n1 0\n2 2\n3 1\n",
+        "expected": "No",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "3 3\n0 0\n2 0\n3 1\n-2 1\n0 3\n2 2\n",
+      "expected": "Yes",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2 1\n1 0\n2 2\n3 1\n",
+      "expected": "No",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "2 5\n-9568 -3121\n-1408 2942\n-827 -7497\n4348 2432\n-7958 231\n6440 1896\n2647 -1305\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 10\n-3581 3894\n7385 3191\n-8820 6540\n-577 -5900\n2781 -5008\n8322 -7944\n-1251 -5779\n-3567 3140\n8835 -6406\n-2390 -1126\n7006 4553\n-174 -7023\n-6538 1530\n3318 2477\n7864 -9657\n-2379 -6961\n4456 9852\n1462 -5871\n-9931 6466\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 9\n-9001 -9868\n4207 1240\n-7826 1618\n-6755 3555\n-3214 -167\n4155 -4648\n-2316 259\n4801 -1679\n-6730 8048\n-4535 -9843\n4809 -5759\n4695 -8742\n9321 -5991\n2401 4133\n6468 6324\n1414 -9103\n-6613 3922\n5544 -5092\n-6777 -788\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 10\n8530 -3814\n-9330 -6035\n3951 -217\n-9276 8291\n636 -3118\n5024 -2403\n4601 7977\n-3620 -1428\n4954 -9632\n-9852 6553\n-3457 5430\n-8866 -7343\n1020 -5748\n5043 -3820\n-2832 1528\n-5058 -825\n2406 -3530\n9152 -7463\n-8547 7108\n2492 8953\n",
+      "expected": "Yes\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 2\n-355 -9579\n-1256 -4638\n-4890 7402\n-1420 -1297\n-1362 2290\n-879 9101\n9514 -6689\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 8\n8417 -444\n-5582 6386\n863 6992\n-4047 6751\n-5658 1788\n-1204 5862\n-6192 -2480\n813 -7056\n-9098 -1176\n-1715 -3292\n6866 -2905\n-7788 137\n7609 -774\n-7702 -6753\n-6622 -3090\n3089 -7006\n-9374 1882\n-481 -5698\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "10 2\n5945 8596\n-3658 -4459\n-7598 -7071\n3567 4132\n7060 -1835\n-6443 -4709\n4895 2211\n-4780 3546\n5266 7400\n2178 -472\n4922 -9643\n4163 6030\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 9\n5414 -8195\n-5171 -1634\n5012 4161\n-5888 -585\n9258 2646\n5548 1523\n7259 -8619\n9580 5738\n-8715 706\n-2232 -3280\n1866 1775\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 8\n7948 3490\n2779 3512\n3403 -3024\n-3180 -4831\n6815 4601\n7631 9772\n-6320 -21\n5592 606\n-785 4040\n8030 3272\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 9\n5414 -8195\n-5171 -1634\n5012 4161\n-5888 -846\n9258 2646\n5548 1523\n7259 -15643\n9580 5738\n-8715 706\n-2232 -3280\n1866 1775\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 2\n-355 -9579\n-1256 -4638\n-4890 7402\n-1420 -1297\n-1362 1469\n-879 11041\n9514 -6689\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 8\n-5325 1383\n-5441 3351\n-3870 1465\n669 -8381\n-4377 5913\n4360 -329\n8725 8620\n7810 -2479\n4019 4850\n14749 9911\n4130 -4668\n3744 2537\n-7171 -3933\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "5 3\n9670 8440\n1091 -9784\n6422 4884\n3314 -9610\n8523 -7107\n-2963 8293\n3092 -3950\n-4093 -6502\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 10\n-7100 -1623\n-3459 2172\n9676 1595\n-6053 4558\n-842 8819\n-6966 3144\n3440 -9112\n7034 4946\n4851 -2513\n430 4372\n-7175 -3497\n5719 381\n-13101 -1347\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 2\n5580 8167\n-7078 -4655\n3707 -9628\n2980 438\n1632 -9472\n-8850 -4346\n-6440 524\n-2841 923\n6515 -2658\n-2492 -8716\n8219 5104\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "5 1\n9621 -154\n6694 -2348\n944 -7225\n-1568 -5543\n-3805 -872\n1204 -3373\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 5\n-8143 -3121\n-1408 2942\n-827 -7497\n4348 2432\n-7958 231\n6440 1896\n2647 -1305\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 5\n-4347 -5222\n-2891 5618\n-4621 7404\n-4548 -6825\n3846 2340\n2640 3530\n-7965 4934\n-8617 -2950\n-9240 3508\n-718 6451\n-8251 -6379\n558 3484\n9861 -6432\n483 -7331\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "3 2\n9268 -9879\n4245 2515\n-9188 -3786\n-2458 -2165\n3420 463\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "1 3\n-8824 -10890\n-5646 -9767\n8123 9355\n-6203 -1643\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8 1\n-796 -1\n3591 -2510\n-6330 4706\n-7422 -9093\n7860 -7002\n5375 -6761\n3538 3108\n-9851 -9798\n-8884 -62\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8 8\n4260 1536\n-8545 6045\n-3702 3693\n-5185 -2228\n-5271 -5335\n-4027 4453\n-8790 8598\n7172 -5320\n-880 -4638\n-1630 -3452\n2076 8296\n-9116 -5599\n2461 9832\n4268 5116\n-7582 -805\n1170 3776\n",
+      "expected": "Yes\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "9 9\n3193 -2855\n787 -6399\n3479 9360\n5217 -9842\n1061 4755\n1748 -7142\n-6209 -2380\n6740 -4302\n-5482 5433\n3353 -5529\n664 1546\n8228 -9769\n-8409 -1650\n893 9365\n-9542 8585\n7245 -9972\n-475 -6359\n-3775 2139\n",
+      "expected": "Yes\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "8 2\n-3330 -1983\n-6621 -4800\n-4721 9630\n9871 -4847\n-2256 -8957\n3292 -6118\n4558 -6712\n-5863 5282\n-9373 3938\n-5179 -8073\n",
+      "expected": "No\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "b64b89130c4ae0c870d0ee904ab3d0a63823db3bd5e55179116e3bf17bd07656",
+    "d25191bb6d558ab1699dadb576fd697b4b69e1cb925db979fa0e23211ec95579"
+  ],
+  "reference_ast_hashes": [
+    "66dc3dec55dd1b19189c5f48d0bce10d2d0662cb14f43983139655b0f9f12660",
+    "5920235c14469003e64e7b627c880c03a4297735b3c1e60c1f0ff1d1d73caa21"
+  ],
+  "raw_source_row": 1222,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "f9e1e6cb3efb7c906af1ff994092322f1933e9ecd1b67ad5dc6c1a71db57d391"
+}

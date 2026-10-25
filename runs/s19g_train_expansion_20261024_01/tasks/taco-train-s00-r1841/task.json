@@ -1,0 +1,256 @@
+{
+  "task_id": "s19g_taco-train-s00-r1841",
+  "original_id": "taco-train-s00-r1841",
+  "dataset": "taco",
+  "difficulty": "HARD",
+  "original_url": "https://codeforces.com/problemset/problem/1409/F",
+  "role": "prospective_development_distribution",
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1841",
+    "prompt": "You are given two strings s and t consisting of lowercase Latin letters. The length of t is 2 (i.e. this string consists only of two characters).\n\nIn one move, you can choose any character of s and replace it with any lowercase Latin letter. More formally, you choose some i and replace s_i (the character at the position i) with some character from 'a' to 'z'.\n\nYou want to do no more than k replacements in such a way that maximizes the number of occurrences of t in s as a subsequence.\n\nRecall that a subsequence is a sequence that can be derived from the given sequence by deleting zero or more elements without changing the order of the remaining elements.\n\nInput\n\nThe first line of the input contains two integers n and k (2 ≤ n ≤ 200; 0 ≤ k ≤ n) — the length of s and the maximum number of moves you can make. The second line of the input contains the string s consisting of n lowercase Latin letters. The third line of the input contains the string t consisting of two lowercase Latin letters.\n\nOutput\n\nPrint one integer — the maximum possible number of occurrences of t in s as a subsequence if you replace no more than k characters in s optimally.\n\nExamples\n\nInput\n\n\n4 2\nbbaa\nab\n\n\nOutput\n\n\n3\n\n\nInput\n\n\n7 3\nasddsaf\nsd\n\n\nOutput\n\n\n10\n\n\nInput\n\n\n15 6\nqwertyhgfdsazxc\nqa\n\n\nOutput\n\n\n16\n\n\nInput\n\n\n7 2\nabacaba\naa\n\n\nOutput\n\n\n15\n\nNote\n\nIn the first example, you can obtain the string \"abab\" replacing s_1 with 'a' and s_4 with 'b'. Then the answer is 3.\n\nIn the second example, you can obtain the string \"ssddsdd\" and get the answer 10.\n\nIn the fourth example, you can obtain the string \"aaacaaa\" and get the answer 15.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "4 2\nbbaa\nab\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "7 3\nasddsaf\nsd\n",
+        "expected": "10",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "15 6\nqwertyhgfdsazxc\nqa\n",
+        "expected": "16",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      },
+      {
+        "input": "7 2\nabacaba\naa\n",
+        "expected": "15",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "provenance": "verbatim statement sample"
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "4 2\nbbaa\nab\n",
+      "expected": "3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "7 3\nasddsaf\nsd\n",
+      "expected": "10",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "15 6\nqwertyhgfdsazxc\nqa\n",
+      "expected": "16",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "7 2\nabacaba\naa\n",
+      "expected": "15",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "verbatim statement sample"
+    },
+    {
+      "input": "15 8\nqwertyhgfdsazxc\nqa\n",
+      "expected": "25\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 20\nbbbbaaaccacdddeebdbddaadeedcbbdcaedccebcbbabccecacaaacdcaeaaaadaadbaabbeceecacdadebdddadeeadeedccdaaaeeabdbaabeccbedcaaccbbdbabbcdbdbcadeceadaacaaaabaadedecaaaabceeecadbaaacceedaebaedbcbcaabcdabcbdbca\ncd\n",
+      "expected": "1435\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 150\nhbbfcgafgcfcgcaadbcgefbgafbdfdachggccbacgcddghbeeadafgbfggddefeaagchddbfebddaghaghbcfgebaadeaageefbgghgachabfcbadadhgbbegegehcgfhdghaedcffffbaghfdhfdhdgfcdfaaadbdgebffcegdfggeaheghafddfaeebeagfcbdhddh\ndg\n",
+      "expected": "9177\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 100\nbbbcccabbccabcccacabacbacaaabccbccbbcaabcbbbaaccbcbcaabbbbcbaaaabaccccbbabbaccacbaacababcbbbbcacaaabaccccbcbbaabcaaabbccbccbbcccabbcbbcccbbccccbcccbcbaabbbcbabcccbbbbcabacaccbcabccbacbbacbcabbacccaccc\nab\n",
+      "expected": "8984\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 100\nfxnagvrorsrdqqzdghturzeialybutkwgcknmzqxzfdwvhdazedxigpulvpccadnbqfwzzaereufekkmhvxlzcczdztjijypmwzdolgrsjulqqgohvnvjjotafmoignrbuxaytbgigvvnpgsmzkudwtbazrdhrszfckqtzzxyraardcocegrpskcplkvanczotwptqxc\nwt\n",
+      "expected": "3179\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 20\nebjicbdicahigdfhbgcjgbhchcfcbdjadhhgjeejagfgdbhabiedejcfdffafgfbfbaggdcjjhhdbhhjadgefgdffhcjchjgiagcfehhedgedbjjibcbhcddibejiifdhgfjchbdeefhbdeaifhceiibaggdcegfdafhfdhggjafacagddgeajichjbgidjcgbaiabfg\nbi\n",
+      "expected": "600\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 190\nghcebcdabheeeaeabfghdbegecabebhbahdhfchabchchbdcbcaebaebdbgebebhdadgegdahhdaaabehhgghchadfbggbgecahagdfceeffchfddecfgcdbbdhhecfhdfefdbeagcgaedahddbfffhecfcbbcdceghbfcggeaegcdhdchhebffhgchbgacddabcfbcg\nha\n",
+      "expected": "10000\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 14\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\nba\n",
+      "expected": "1351\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 60\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\nba\n",
+      "expected": "5100\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 45\njbihceccaifigibbjechghaceaffchfjbhajifehfgcadcahgfecahagefjbjdjfdcdehiaicicdgfcadiafbjhigfcidbhfcchfacaibjeijagdiceaadggjcahdfghifebcabccdahbgheacifeiidaagceechdfadhebdaehcjdebccjbjdahhfacihijgdgihhfb\nfd\n",
+      "expected": "1575\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 1\nas\nsa\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 200\naaaaaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaabaaaaaaaaaaaacaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbabbbbbbb\nba\n",
+      "expected": "10000\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "audit_cases": [
+    {
+      "input": "200 1\ncccbaacabcbbabbccbcaaabbbacacccbacaaababcabbaabacabaacbaacbaaccbcaabccabbaabcacabcaaaaaabaccbcacbbacabbaaccacabbcbcaaacaaccaccbabaaccbbccbaabbabbbaaaaacbacbcbaacbccabccbaacbacaaabbcbaaaacbccbbababacac\nac\n",
+      "expected": "2464\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "7 3\nasedsaf\nsd\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 1\nnryukcmomvckaoezqcowohrtnyyriiphwavhkluujzbjizrxqiqgmgpvqcdgjejxwvcpbbxspcgtixwvnstzyeqcekkkzsypvihejncvvirqzlktjoxocutwrqjorxwfzucxoowxyzooiabssvluagzehhsemtutsnrbbdbphmcqbybpxtgjerpeitdjhnwmvfynvsyu\nxg\n",
+      "expected": "32\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 100\nfxnagvrorsrdqqzdghturzeialybutkwgcknmzqxzfdwvhdazedxigpulvpccadnbqfwzzaereufekkmhvxlzcczdztjijypmwzdolgrsjulqqgohvnvjjotafmoignrbuxaytbgigvvnpgsmzkudwtbazrdhrszfckqtzzxyraardcocegrpskcplkvanczotwptqxc\nws\n",
+      "expected": "2979\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 1\nar\nas\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 45\njbihceccaifigibbjechghaceaffchfjbhajifehfgcadcahgfecahagefjbjdjfdcdehiaicicdgfcadiafbjhigfcidbhfcchfacaibjeijagdiceaadggjcahdfghifebcabccdahbgheacifeiidaagceechdfadhebdaehcjdebccjbjdahhfacihijgdgihhfb\ndf\n",
+      "expected": "1440\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "11 4\nbdfbdbccdad\nab\n",
+      "expected": "10\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 20\ngfbaiabgcjdigbjhcijaegddgacafajgghdfhfadfgecdggabiiechfiaedbhfeedbhcjfghdfiijebiddchbcbijjbdegdehhefcgaigjhcjchffdgfegdajhhbdhhjjcdggabfbfgfaffdfcjedeibahbdgfgajeejghhdajdbcfchchbgjcgbhfdgihacidbcijbe\nbi\n",
+      "expected": "555\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 100\nbcacabeccaceeedbbaacedacadeebbecedebbedeaccdbabeedbccbebabcaccdeeccbdddbabdeadaedadbbddbaedbbadbcbbbdbdaceeaddeaebbbaabedabceebcccbbdcbcdbbedbdccaeacdccdcdaeaccbaebabbecaeeccbdbbaeeccbacaaebadccdcdbbb\ndc\n",
+      "expected": "6428\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 1\nbbddbbcddeaaeacbdaabccdcacbddaaeaeddadcaedccdbadecabdeabecdbdddcacebaaeddecbedccdacedecabbadcacaaebbaaaeadccebbabddddbecebadaadeceaccdaceabadcebeaadacbadacbbbcdcacbdaaeadabaecdbcbbdbbbdabdeceeeacaadae\nec\n",
+      "expected": "564\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "200 0\naaaaabbbbaccbacabaacaaaccccaabbabaacbabcbabbcbcbbaaaacccaabaabbbcbccccbbccaaacbabbabbbaaaccabaabcababacccbbaccccbbacbaccaccccaabaabaabbabcaaacbcbaaabacaaccbacaacacbcababccccaabaaaabcbcbbaabcabcaccccbb\nca\n",
+      "expected": "2158\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    },
+    {
+      "input": "2 0\nar\n`s\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "provenance": "official benchmark judge test"
+    }
+  ],
+  "reference_hashes": [
+    "7157cc726e141770ae9efcd2af632a48b55988f54d8f4568faeb27b3c0ca0d4c",
+    "32a836544fed4270d574d967ec548d2eeb4c87175c847d3aaa9ceee23c707620"
+  ],
+  "reference_ast_hashes": [
+    "25c6ee065e353e69279877fa0b04c885c7fcd4e6c80fe428369e7c32c6a654e0",
+    "e04b42c6cdd45dc2934531328ef2422d53bd18c584936500c18739682c772894"
+  ],
+  "raw_source_row": 1841,
+  "source_sha256": "bee336c14dda183b1f700d54a149173418c7b3def295666159dd72c32aa8b326",
+  "source_split": "train",
+  "question_hash": "b609c7208e7086ca7087ceabb5ad753a6967c78f5a7e51f750ede502be085acf"
+}
