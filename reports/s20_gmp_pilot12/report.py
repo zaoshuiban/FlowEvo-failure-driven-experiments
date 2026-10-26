@@ -1,0 +1,15 @@
+import json,pathlib,hashlib
+R=pathlib.Path(__file__).resolve().parents[2];P=R/'runs/s20_gmp_pilot12_20261026_01';read=lambda f:json.loads((P/f).read_text());s=read('summary.json');p=read('plan.json');b=read('branches.json')
+lines=['# M固定记忆：12题G/M/P有限验证报告','',f"Run：`{p['run_id']}`；结论：`{s['decision']}`。",'', '## 范围与事前冻结','', '现有S20-A公开失败记录去除记忆来源、上一轮12题及专门调试来源后，仅18道不同原题符合本轮条件。按原冻结顺序取前12道，其余6道不运行。本轮未完成40–60题扩展，没有读取119题独立确认池，没有启动419题长流，没有生成F规则。', '', '每检查点G/M/P各一次修复请求；模型deepseek-flash、temperature=0、输出上限8192、共同底座和空成功经验库。固定M记忆；P为等字符长度的中性画廊描述，沿用相同注入标签。6种组内顺序轮换两次。全部36份请求在首次发送前冻结并预检。硬上限$2，最多36次请求。', '', f"协议哈希：`{p['protocol_hash']}`；记忆哈希：`{p['memory_sha256']}`。", '', '## 结果','', '|指标|G|M|P|','|---|---:|---:|---:|']
+for key,label in [('public_pass','公开全通过'),('sealed_pass','封存全通过'),('joint_pass','两者同时通过'),('calls','模型请求'),('input_tokens','输入Token'),('output_tokens','输出Token'),('tokens','在线总Token'),('estimated_usd','在线估算美元')]:
+ vals=[s['stats'][a][key] for a in 'GMP'];lines.append('|'+label+'|'+'|'.join(f'{v:.8f}' if key=='estimated_usd' else str(v) for v in vals)+'|')
+lines+=['',f"历史记忆构建：{s['learning_tokens']} Token，估算${s['learning_estimated_usd']:.8f}。本轮M在线加完整一次构建费用：${s['M_with_learning_estimated_usd']:.8f}。构建为历史真实支出，非本轮新增调用；跨轮累计时只能计一次。所有美元均为按冻结报价与响应计量估算，不是供应商账单。本地工具耗时不等于已货币化成本。",'', '|配对|前者独有成功|后者独有成功|精确McNemar p（未校正）|','|---|---:|---:|---:|']
+for k,v in s['contrasts'].items():lines.append(f"|{k}|{v['first_only']}|{v['second_only']}|{v['exact_mcnemar_p_unadjusted']:.6f}|")
+lines+=['','## 逐题复核','','数值为公开/封存通过个数；严格成功要求两集合全部通过。','','|原题|G|M|P|','|---|---|---|---|']
+for x in s['pairs']:
+ vals=[f"{x['arms'][a]['public_tests_passed']}/{x['arms'][a]['sealed_tests_passed']} ({'成功' if x['arms'][a]['joint'] else '未全过'})" for a in 'GMP'];lines.append('|'+x['task_id']+'|'+'|'.join(vals)+'|')
+lines+=['','## P对照局限与归因','','M新增输入Token集合：'+str(sorted(set(x['M_input_increment'] for x in s['pairs'])))+'；P新增输入Token集合：'+str(sorted(set(x['P_input_increment'] for x in s['pairs'])))+'。两组只匹配1675个Unicode字符，未精确匹配Token；P也不能保证语义上完全无效。因此本轮只能提供近似中性上下文对照，不能将M/P差异全部归因于失败知识。没有在观察Token后修改P或补跑。', '', '各分支一次模型采样，即使temperature=0也不是确定性因果证明。代码不同不等于记忆导致思路改变；独有成功需结合源码与可信测试作开发性解释。所有检查点为已有开发材料，不能称独立泛化。', '', '## 冻结决策点与后续','','运行前设置的操作性标准：至少3个M独有联合成功、M对P净成功为正、计构建后的M每成功成本不超过G的1.25倍。该标准由本次实施预先设定，是继续投入的操作规则，不是统计显著性或用户强制标准。', '', f"本轮判定：`{s['decision']}`。不自动追加保留6题，不扩大到419题。F维持NO_GO_CURRENT_CONDITIONAL_SELECTOR；此前零API审计的26/51合法替代动作不等于26个有收益决策。", '', '## 审计与文件','','最终复核仅在online_lock写入且36分支哈希核对通过后运行，无新增模型调用。公开检查和封存检查均复用Linux Worker。详细结果及预算快照见summary.json，完整模型请求、响应与源码见solve_requests.json、wire和branches.json。', '', f"封存评价墙钟：{s['sealed_seconds']:.3f}秒。工具预留与实际费用须区别，预算快照原样保存在summary.json。"]
+(P/'M_G_P_12题有限验证报告.md').write_text('\n'.join(lines)+'\n')
+files=['plan.json','memory.json','neutral.json','packets.json','frozen_wires.json','branches.json','online_lock.json','sealed_results.json','summary.json','M_G_P_12题有限验证报告.md']
+(P/'artifact_hashes.json').write_text(json.dumps({f:hashlib.sha256((P/f).read_bytes()).hexdigest() for f in files},indent=2)+'\n')
+print(P/'M_G_P_12题有限验证报告.md')

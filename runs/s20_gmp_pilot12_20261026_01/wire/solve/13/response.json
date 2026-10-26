@@ -1,0 +1,28 @@
+{
+  "id": "50ac87d3-f7fa-4674-9f68-63338aec8e9e",
+  "object": "chat.completion",
+  "created": 1792987474,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\nMOD = 1000000009\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    n, m, k = map(int, data[:3])\n\n    if m <= n - n // k:\n        print(m % MOD)\n        return\n\n    # Number of forced doubling groups\n    t = m - (n - n // k)\n    # Score = (2^k * (2^t - 1) + remaining) mod MOD\n    # Derivation: each forced group of k correct answers doubles score.\n    # Minimum score = (2^t * (k) - k) * 2? Let's use known formula:\n    # ans = (2^(t+1) - 2) * k? No, standard formula:\n    # Let x = number of doubled blocks. Score = (2^x * (k) - k) * 2? \n    # Correct known result: ans = (pow(2, t+1, MOD) - 2) * k + (m - t*k)\n    # Wait, standard CF 337C formula:\n    # ans = (pow(2, t+1, MOD) - 2) * k + (m - t*k)\n    # But careful: t here is number of full k-blocks that get doubled.\n    # Actually t = m - (n - n//k) is number of extra correct answers beyond safe.\n    # Each extra forces a doubling block. Number of doubled blocks = t.\n    # Score from doubled blocks: k * (2^(t+1) - 2)\n    # Remaining correct answers: m - t*k\n    ans = (pow(2, t + 1, MOD) - 2) % MOD\n    ans = (ans * k) % MOD\n    ans = (ans + (m - t * k)) % MOD\n    print(ans % MOD)\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1240,
+    "completion_tokens": 427,
+    "total_tokens": 1667,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1240
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

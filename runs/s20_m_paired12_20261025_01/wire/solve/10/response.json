@@ -1,0 +1,28 @@
+{
+  "id": "f40ab50e-42c1-421c-9563-16f70e4b6c58",
+  "object": "chat.completion",
+  "created": 1792986431,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    it = iter(data)\n    n = int(next(it))\n    m = int(next(it))\n    d = [int(next(it)) for _ in range(m)]\n    g = int(next(it))\n    r = int(next(it))\n\n    d.sort()\n    idx = {x: i for i, x in enumerate(d)}\n\n    INF = 10**18\n    dist = [[INF] * (g + 1) for _ in range(m)]\n    dist[0][0] = 0\n\n    dq = deque()\n    dq.append((0, 0))\n\n    while dq:\n        i, t = dq.popleft()\n        cur = dist[i][t]\n        if t == g:\n            nt = 0\n            if dist[i][nt] > cur + r:\n                dist[i][nt] = cur + r\n                dq.append((i, nt))\n            continue\n\n        for j in (i - 1, i + 1):\n            if 0 <= j < m:\n                w = abs(d[j] - d[i])\n                if t + w <= g:\n                    nt = t + w\n                    if dist[j][nt] > cur + w:\n                        dist[j][nt] = cur + w\n                        if w == 0:\n                            dq.appendleft((j, nt))\n                        else:\n                            dq.append((j, nt))\n\n    ans = INF\n    target = idx[n]\n    for t in range(g + 1):\n        if dist[target][t] < INF:\n            ans = min(ans, dist[target][t])\n\n    if ans == INF:\n        print(-1)\n    else:\n        print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1834,
+    "completion_tokens": 401,
+    "total_tokens": 2235,
+    "prompt_tokens_details": {
+      "cached_tokens": 1280
+    },
+    "prompt_cache_hit_tokens": 1280,
+    "prompt_cache_miss_tokens": 554
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

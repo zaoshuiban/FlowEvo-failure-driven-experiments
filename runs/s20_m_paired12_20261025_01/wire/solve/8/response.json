@@ -1,0 +1,28 @@
+{
+  "id": "2a2d55b2-79a6-45e3-b3c5-143c1d5f1ad9",
+  "object": "chat.completion",
+  "created": 1792986424,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split(b'\\n')\n    if not data:\n        return\n    k = int(data[0].strip())\n    text = data[1].strip() if len(data) > 1 else b''\n    \n    # Build tokens: each token is a piece that must stay together on a line.\n    # A word with hyphens is split into pieces: \"sa-le\" -> \"sa-\", \"le\"\n    # Spaces are attached to the preceding piece.\n    tokens = []\n    n = len(text)\n    i = 0\n    while i < n:\n        # read a word\n        j = i\n        while j < n and text[j] != 32:  # not space\n            j += 1\n        word = text[i:j]\n        # split word by hyphens, keeping hyphen at end of each part except last\n        start = 0\n        for p in range(len(word)):\n            if word[p] == 45:  # '-'\n                tokens.append(word[start:p+1])\n                start = p + 1\n        tokens.append(word[start:])\n        # attach space to last piece if there is a space after word\n        if j < n and text[j] == 32:\n            tokens[-1] = tokens[-1] + b' '\n            j += 1\n        i = j\n    \n    # Remove trailing space from last token\n    if tokens and tokens[-1].endswith(b' '):\n        tokens[-1] = tokens[-1][:-1]\n    \n    # Binary search minimal width\n    # Check if can fit in k lines with given width\n    def can_fit(width):\n        lines = 1\n        cur = 0\n        for tok in tokens:\n            L = len(tok)\n            if L > width:\n                return False\n            if cur == 0:\n                cur = L\n            elif cur + L <= width:\n                cur += L\n            else:\n                lines += 1\n                if lines > k:\n                    return False\n                cur = L\n        return lines <= k\n    \n    lo = 1\n    hi = n  # max possible width\n    # Find minimal width\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can_fit(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n    print(lo)\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 781,
+    "completion_tokens": 536,
+    "total_tokens": 1317,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 141
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

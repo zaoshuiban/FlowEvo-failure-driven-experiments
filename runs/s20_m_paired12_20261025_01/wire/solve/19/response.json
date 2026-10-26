@@ -1,0 +1,28 @@
+{
+  "id": "c55069aa-fcd5-407f-a7f5-2200e559517d",
+  "object": "chat.completion",
+  "created": 1792986509,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef len_block(n):\n    if n <= 0:\n        return 0\n    total = 0\n    start = 1\n    digits = 1\n    while start <= n:\n        end = min(n, start * 10 - 1)\n        count = end - start + 1\n        total += count * digits\n        start *= 10\n        digits += 1\n    return total\n\ndef total_len(m):\n    if m <= 0:\n        return 0\n    total = 0\n    start = 1\n    digits = 1\n    prev_len = 0\n    while start <= m:\n        end = min(m, start * 10 - 1)\n        count = end - start + 1\n        total += count * prev_len + digits * (count * (count + 1) // 2)\n        prev_len += count * digits\n        start *= 10\n        digits += 1\n    return total\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    q = int(data[0])\n    queries = list(map(int, data[1:1 + q]))\n    out = []\n    for k in queries:\n        lo, hi = 1, 1\n        while total_len(hi) < k:\n            hi *= 2\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if total_len(mid) >= k:\n                hi = mid\n            else:\n                lo = mid + 1\n        m = lo\n        pos_in_block = k - total_len(m - 1)\n\n        lo, hi = 1, m\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if len_block(mid) >= pos_in_block:\n                hi = mid\n            else:\n                lo = mid + 1\n        x = lo\n        pos_in_num = pos_in_block - len_block(x - 1)\n        out.append(str(x)[pos_in_num - 1])\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1854,
+    "completion_tokens": 470,
+    "total_tokens": 2324,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1854
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "0ad3e14b-6320-4877-be22-369685c22b9e",
+  "object": "chat.completion",
+  "created": 1792987446,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\nimport bisect\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    V = list(map(int, data[1:n+1]))\n    T = list(map(int, data[n+1:n+1+n]))\n\n    pref = [0] * (n + 1)\n    for i in range(n):\n        pref[i+1] = pref[i] + T[i]\n\n    ans = [0] * n\n    starts = []\n    vols = []\n\n    for i in range(n):\n        starts.append(i)\n        vols.append(V[i])\n\n        melted = 0\n        while starts:\n            s = starts[0]\n            v = vols[0]\n            total = pref[i+1] - pref[s]\n            if total >= v:\n                before = pref[i] - pref[s]\n                melted += v - before\n                starts.pop(0)\n                vols.pop(0)\n            else:\n                break\n\n        melted += len(starts) * T[i]\n        ans[i] = melted\n\n    sys.stdout.write(' '.join(map(str, ans)) + '\\n')\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2368,
+    "completion_tokens": 254,
+    "total_tokens": 2622,
+    "prompt_tokens_details": {
+      "cached_tokens": 1792
+    },
+    "prompt_cache_hit_tokens": 1792,
+    "prompt_cache_miss_tokens": 576
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

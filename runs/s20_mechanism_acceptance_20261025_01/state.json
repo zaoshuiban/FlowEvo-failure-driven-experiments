@@ -1,0 +1,132 @@
+{
+  "memory": "Public evidence summary (no measured savings claimed).\n\n1) Task s19g_taco-test-670 (string/character-count construction; stages l3 and l4): both events WRONG_ANSWER on the 6-case input \"6\\n4 2\\nbaba\\n5 2\\nbaacb\\n5 3\\nbaacb\\n5 3\\naaaaa\\n6 4\\naaxxzz\\n7 1\\nphoenix\\n\". Expected first line \"ab\"; actual first line \"aa\"; remaining five lines match. Both codes are the same 1181-byte fragment (identical sha256), truncated mid-statement at \"distinct = s\", so the observed wrong first line may be an artifact of incomplete code. Condition: do not conclude the counting logic is wrong from these events. Uncertainty: root cause not established. Stop rule: do not claim a fix or savings for this task without a complete-code run.\n\n2) Task s19g_taco-train-s00-r1653 (cube-state / move-cycle simulation; stages l3 and l4): both events WRONG_ANSWER on the 24-integer input \"2 5 4 6 1 3 6 2 5 5 1 2 3 5 3 1 1 2 4 6 6 4 3 4\\n\". Expected \"NO\" (2 bytes); actual \"NO\\n\" (3 bytes). Outputs match textually apart from trailing newline, so the mismatch may be formatting/whitespace or a harness artifact; treat as unresolved. Both codes are fragments (1488 and 1722 bytes) truncated mid-comment at \"A cyc\". Condition: the near-match does not prove correctness. Uncertainty: root cause not established.\n\nCross-cutting rules: All events are stage l3/l4 with fragments; no complete, verified solution appears in this evidence. Do not invent measured savings, speedups, or pass rates. Do not assert a root cause beyond what the outputs show. Refuse to claim any task is solved. Stop: if asked to generalize from these fragments to a full solution, decline and request complete code plus a clean run.",
+  "outputs": {
+    "6eec7dca2fca81b009209cf06d7104e0a574e19cac9979320fdb63c8df04cf6b": {
+      "updated": true,
+      "memory": "Public evidence summary (no measured savings claimed).\n\n1) Task s19g_taco-train-s00-r0236 (house-robber-style DP over value frequencies): three attempts (l1, l2a, l2b) all ended RUNTIME_ERROR on input \"2\\n1 2\\n\" (expected \"2\", actual \"2\"). The l1 code was a fragment (450 bytes) and the l2a/l2b code was a 504-byte fragment; both fragments are truncated mid-statement (dp[i] ...), so the observed runtime error may be an artifact of incomplete code rather than a logic defect. Condition: do not conclude the DP recurrence is wrong from these events; the fragments are structurally incomplete. Stop rule: do not claim a fix or savings for this task without a complete-code run.\n\n2) Task s19g_taco-train-s00-r0838 (perfectly balanced BST striped labelings, MOD 998244353): l1 had NO_COMPLETE_CODE (empty code). l2a produced WRONG_ANSWER on input \"4\\n\" (expected \"1\", actual \"0\"). Condition: the l2a code was a 5588-byte fragment; the wrong answer is real for that fragment but the fragment may be truncated. Uncertainty: root cause not established from public evidence alone.\n\n3) Task s19g_taco-train-s00-r1290 (stamina/terrain scheduling): l1 had NO_COMPLETE_CODE (empty code). l2a produced WRONG_ANSWER on input \"1\\n10\\nG\\n\" (expected \"30\", actual empty output). The l2a code was a 29054-byte fragment with artifact_state NO_ENTRY; empty actual output suggests the program produced no stdout (possible crash or missing entry point). Condition: do not infer the intended algorithm is wrong; the failure is consistent with no entry/exit path.\n\n4) Task s19g_taco-train-s00-r2038 (count integers with xor/popcount property, power-of-two check): l1 WRONG_ANSWER on input \"1 1\\n\" (expected \"1\", actual \"1\") — outputs match textually, so the mismatch may be formatting/whitespace or a harness artifact; treat as unresolved. l2a WRONG_ANSWER on the same input (expected \"1\", actual \"0\"). Both codes were fragments (1164 and 1942 bytes). Condition: the l1 \"match\" does not prove correctness; the l2a zero output is a real observed failure for that fragment.\n\nCross-cutting rules: All events are stage l1/l2a/l2b with fragments or empty code; no complete, verified solution appears in this evidence. Do not invent measured savings, speedups, or pass rates. Do not assert a root cause beyond what the outputs show. Refuse to claim any task is solved. Stop: if asked to generalize from these fragments to a full solution, decline and request complete code plus a clean run.",
+      "versions": [
+        {
+          "revision": 0,
+          "response": {
+            "text": "{\"memory\":\"Public evidence summary (no measured savings claimed).\\n\\n1) Task s19g_taco-train-s00-r0236 (house-robber-style DP over value frequencies): three attempts (l1, l2a, l2b) all ended RUNTIME_ERROR on input \\\"2\\\\n1 2\\\\n\\\" (expected \\\"2\\\", actual \\\"2\\\"). The l1 code was a fragment (450 bytes) and the l2a/l2b code was a 504-byte fragment; both fragments are truncated mid-statement (dp[i] ...), so the observed runtime error may be an artifact of incomplete code rather than a logic defect. Condition: do not conclude the DP recurrence is wrong from these events; the fragments are structurally incomplete. Stop rule: do not claim a fix or savings for this task without a complete-code run.\\n\\n2) Task s19g_taco-train-s00-r0838 (perfectly balanced BST striped labelings, MOD 998244353): l1 had NO_COMPLETE_CODE (empty code). l2a produced WRONG_ANSWER on input \\\"4\\\\n\\\" (expected \\\"1\\\", actual \\\"0\\\"). Condition: the l2a code was a 5588-byte fragment; the wrong answer is real for that fragment but the fragment may be truncated. Uncertainty: root cause not established from public evidence alone.\\n\\n3) Task s19g_taco-train-s00-r1290 (stamina/terrain scheduling): l1 had NO_COMPLETE_CODE (empty code). l2a produced WRONG_ANSWER on input \\\"1\\\\n10\\\\nG\\\\n\\\" (expected \\\"30\\\", actual empty output). The l2a code was a 29054-byte fragment with artifact_state NO_ENTRY; empty actual output suggests the program produced no stdout (possible crash or missing entry point). Condition: do not infer the intended algorithm is wrong; the failure is consistent with no entry/exit path.\\n\\n4) Task s19g_taco-train-s00-r2038 (count integers with xor/popcount property, power-of-two check): l1 WRONG_ANSWER on input \\\"1 1\\\\n\\\" (expected \\\"1\\\", actual \\\"1\\\") — outputs match textually, so the mismatch may be formatting/whitespace or a harness artifact; treat as unresolved. l2a WRONG_ANSWER on the same input (expected \\\"1\\\", actual \\\"0\\\"). Both codes were fragments (1164 and 1942 bytes). Condition: the l1 \\\"match\\\" does not prove correctness; the l2a zero output is a real observed failure for that fragment.\\n\\nCross-cutting rules: All events are stage l1/l2a/l2b with fragments or empty code; no complete, verified solution appears in this evidence. Do not invent measured savings, speedups, or pass rates. Do not assert a root cause beyond what the outputs show. Refuse to claim any task is solved. Stop: if asked to generalize from these fragments to a full solution, decline and request complete code plus a clean run.\"}",
+            "usage": {
+              "prompt_tokens": 6957,
+              "completion_tokens": 656,
+              "total_tokens": 7613,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "prompt_cache_hit_tokens": 0,
+              "prompt_cache_miss_tokens": 6957
+            },
+            "model": "deepseek-flash",
+            "finish_reason": "stop"
+          },
+          "diagnosis": {
+            "passed": true,
+            "hard_limit": 6000,
+            "request_state": "RESPONSE_RECEIVED",
+            "observed_characters": 2461,
+            "observed_utf8_bytes": 2463,
+            "memory": "Public evidence summary (no measured savings claimed).\n\n1) Task s19g_taco-train-s00-r0236 (house-robber-style DP over value frequencies): three attempts (l1, l2a, l2b) all ended RUNTIME_ERROR on input \"2\\n1 2\\n\" (expected \"2\", actual \"2\"). The l1 code was a fragment (450 bytes) and the l2a/l2b code was a 504-byte fragment; both fragments are truncated mid-statement (dp[i] ...), so the observed runtime error may be an artifact of incomplete code rather than a logic defect. Condition: do not conclude the DP recurrence is wrong from these events; the fragments are structurally incomplete. Stop rule: do not claim a fix or savings for this task without a complete-code run.\n\n2) Task s19g_taco-train-s00-r0838 (perfectly balanced BST striped labelings, MOD 998244353): l1 had NO_COMPLETE_CODE (empty code). l2a produced WRONG_ANSWER on input \"4\\n\" (expected \"1\", actual \"0\"). Condition: the l2a code was a 5588-byte fragment; the wrong answer is real for that fragment but the fragment may be truncated. Uncertainty: root cause not established from public evidence alone.\n\n3) Task s19g_taco-train-s00-r1290 (stamina/terrain scheduling): l1 had NO_COMPLETE_CODE (empty code). l2a produced WRONG_ANSWER on input \"1\\n10\\nG\\n\" (expected \"30\", actual empty output). The l2a code was a 29054-byte fragment with artifact_state NO_ENTRY; empty actual output suggests the program produced no stdout (possible crash or missing entry point). Condition: do not infer the intended algorithm is wrong; the failure is consistent with no entry/exit path.\n\n4) Task s19g_taco-train-s00-r2038 (count integers with xor/popcount property, power-of-two check): l1 WRONG_ANSWER on input \"1 1\\n\" (expected \"1\", actual \"1\") — outputs match textually, so the mismatch may be formatting/whitespace or a harness artifact; treat as unresolved. l2a WRONG_ANSWER on the same input (expected \"1\", actual \"0\"). Both codes were fragments (1164 and 1942 bytes). Condition: the l1 \"match\" does not prove correctness; the l2a zero output is a real observed failure for that fragment.\n\nCross-cutting rules: All events are stage l1/l2a/l2b with fragments or empty code; no complete, verified solution appears in this evidence. Do not invent measured savings, speedups, or pass rates. Do not assert a root cause beyond what the outputs show. Refuse to claim any task is solved. Stop: if asked to generalize from these fragments to a full solution, decline and request complete code plus a clean run."
+          },
+          "request_sha256": "84edf23831ff70d63b68c218b7b8254abd5ef17b485bf8c79c81544359529aaa"
+        }
+      ]
+    },
+    "3cf969968477fd3005af41254aaec9c214d3ff6dd981863a4d360a957391aacb": {
+      "updated": true,
+      "memory": "Public evidence summary (no measured savings claimed).\n\n1) Task s19g_taco-test-670 (string/character-count construction; stages l3 and l4): both events WRONG_ANSWER on the 6-case input \"6\\n4 2\\nbaba\\n5 2\\nbaacb\\n5 3\\nbaacb\\n5 3\\naaaaa\\n6 4\\naaxxzz\\n7 1\\nphoenix\\n\". Expected first line \"ab\"; actual first line \"aa\"; remaining five lines match. Both codes are the same 1181-byte fragment (identical sha256), truncated mid-statement at \"distinct = s\", so the observed wrong first line may be an artifact of incomplete code. Condition: do not conclude the counting logic is wrong from these events. Uncertainty: root cause not established. Stop rule: do not claim a fix or savings for this task without a complete-code run.\n\n2) Task s19g_taco-train-s00-r1653 (cube-state / move-cycle simulation; stages l3 and l4): both events WRONG_ANSWER on the 24-integer input \"2 5 4 6 1 3 6 2 5 5 1 2 3 5 3 1 1 2 4 6 6 4 3 4\\n\". Expected \"NO\" (2 bytes); actual \"NO\\n\" (3 bytes). Outputs match textually apart from trailing newline, so the mismatch may be formatting/whitespace or a harness artifact; treat as unresolved. Both codes are fragments (1488 and 1722 bytes) truncated mid-comment at \"A cyc\". Condition: the near-match does not prove correctness. Uncertainty: root cause not established.\n\nCross-cutting rules: All events are stage l3/l4 with fragments; no complete, verified solution appears in this evidence. Do not invent measured savings, speedups, or pass rates. Do not assert a root cause beyond what the outputs show. Refuse to claim any task is solved. Stop: if asked to generalize from these fragments to a full solution, decline and request complete code plus a clean run.",
+      "versions": [
+        {
+          "revision": 0,
+          "response": {
+            "text": "{\"memory\":\"Public evidence summary (no measured savings claimed).\\n\\n1) Task s19g_taco-test-670 (string/character-count construction; stages l3 and l4): both events WRONG_ANSWER on the 6-case input \\\"6\\\\n4 2\\\\nbaba\\\\n5 2\\\\nbaacb\\\\n5 3\\\\nbaacb\\\\n5 3\\\\naaaaa\\\\n6 4\\\\naaxxzz\\\\n7 1\\\\nphoenix\\\\n\\\". Expected first line \\\"ab\\\"; actual first line \\\"aa\\\"; remaining five lines match. Both codes are the same 1181-byte fragment (identical sha256), truncated mid-statement at \\\"distinct = s\\\", so the observed wrong first line may be an artifact of incomplete code. Condition: do not conclude the counting logic is wrong from these events. Uncertainty: root cause not established. Stop rule: do not claim a fix or savings for this task without a complete-code run.\\n\\n2) Task s19g_taco-train-s00-r1653 (cube-state / move-cycle simulation; stages l3 and l4): both events WRONG_ANSWER on the 24-integer input \\\"2 5 4 6 1 3 6 2 5 5 1 2 3 5 3 1 1 2 4 6 6 4 3 4\\\\n\\\". Expected \\\"NO\\\" (2 bytes); actual \\\"NO\\\\n\\\" (3 bytes). Outputs match textually apart from trailing newline, so the mismatch may be formatting/whitespace or a harness artifact; treat as unresolved. Both codes are fragments (1488 and 1722 bytes) truncated mid-comment at \\\"A cyc\\\". Condition: the near-match does not prove correctness. Uncertainty: root cause not established.\\n\\nCross-cutting rules: All events are stage l3/l4 with fragments; no complete, verified solution appears in this evidence. Do not invent measured savings, speedups, or pass rates. Do not assert a root cause beyond what the outputs show. Refuse to claim any task is solved. Stop: if asked to generalize from these fragments to a full solution, decline and request complete code plus a clean run.\"}",
+            "usage": {
+              "prompt_tokens": 4610,
+              "completion_tokens": 486,
+              "total_tokens": 5096,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "prompt_cache_hit_tokens": 0,
+              "prompt_cache_miss_tokens": 4610
+            },
+            "model": "deepseek-flash",
+            "finish_reason": "stop"
+          },
+          "diagnosis": {
+            "passed": true,
+            "hard_limit": 6000,
+            "request_state": "RESPONSE_RECEIVED",
+            "observed_characters": 1675,
+            "observed_utf8_bytes": 1675,
+            "memory": "Public evidence summary (no measured savings claimed).\n\n1) Task s19g_taco-test-670 (string/character-count construction; stages l3 and l4): both events WRONG_ANSWER on the 6-case input \"6\\n4 2\\nbaba\\n5 2\\nbaacb\\n5 3\\nbaacb\\n5 3\\naaaaa\\n6 4\\naaxxzz\\n7 1\\nphoenix\\n\". Expected first line \"ab\"; actual first line \"aa\"; remaining five lines match. Both codes are the same 1181-byte fragment (identical sha256), truncated mid-statement at \"distinct = s\", so the observed wrong first line may be an artifact of incomplete code. Condition: do not conclude the counting logic is wrong from these events. Uncertainty: root cause not established. Stop rule: do not claim a fix or savings for this task without a complete-code run.\n\n2) Task s19g_taco-train-s00-r1653 (cube-state / move-cycle simulation; stages l3 and l4): both events WRONG_ANSWER on the 24-integer input \"2 5 4 6 1 3 6 2 5 5 1 2 3 5 3 1 1 2 4 6 6 4 3 4\\n\". Expected \"NO\" (2 bytes); actual \"NO\\n\" (3 bytes). Outputs match textually apart from trailing newline, so the mismatch may be formatting/whitespace or a harness artifact; treat as unresolved. Both codes are fragments (1488 and 1722 bytes) truncated mid-comment at \"A cyc\". Condition: the near-match does not prove correctness. Uncertainty: root cause not established.\n\nCross-cutting rules: All events are stage l3/l4 with fragments; no complete, verified solution appears in this evidence. Do not invent measured savings, speedups, or pass rates. Do not assert a root cause beyond what the outputs show. Refuse to claim any task is solved. Stop: if asked to generalize from these fragments to a full solution, decline and request complete code plus a clean run."
+          },
+          "request_sha256": "8215b72c6eb62905fba9f0838d20d6921ce6276217347c30c4c6fe8a1faf6148"
+        }
+      ]
+    }
+  },
+  "libraries": [
+    {
+      "key": [
+        "M",
+        "taco",
+        "MEDIUM"
+      ],
+      "value": {
+        "solutions": {},
+        "by_benchmark": {}
+      }
+    }
+  ],
+  "budgets": {
+    "learning": {
+      "run_id": "s20_mechanism_acceptance_20261025_01-learning",
+      "calls": 4,
+      "tool_calls": 0,
+      "charged_or_reserved_tokens": 24115,
+      "charged_or_reserved_cost_microusd": 120981,
+      "charged_or_reserved_tool_milliseconds": 0,
+      "remaining_calls": 4,
+      "remaining_tokens": 303565,
+      "remaining_tools": 0,
+      "remaining_cost_microusd": 379019,
+      "remaining_tool_milliseconds": 0,
+      "unknown_or_pending_requests": [],
+      "consumed_gate_shards": []
+    },
+    "solve": {
+      "run_id": "s20_mechanism_acceptance_20261025_01-solve",
+      "calls": 1,
+      "tool_calls": 15,
+      "charged_or_reserved_tokens": 1722,
+      "charged_or_reserved_cost_microusd": 18826,
+      "charged_or_reserved_tool_milliseconds": 216,
+      "remaining_calls": 0,
+      "remaining_tokens": 39238,
+      "remaining_tools": 85,
+      "remaining_cost_microusd": 81174,
+      "remaining_tool_milliseconds": 1999784,
+      "unknown_or_pending_requests": [],
+      "consumed_gate_shards": []
+    },
+    "validation": {
+      "run_id": "s20_mechanism_acceptance_20261025_01-validation",
+      "calls": 0,
+      "tool_calls": 0,
+      "charged_or_reserved_tokens": 0,
+      "charged_or_reserved_cost_microusd": 0,
+      "charged_or_reserved_tool_milliseconds": 0,
+      "remaining_calls": 4,
+      "remaining_tokens": 163840,
+      "remaining_tools": 400,
+      "remaining_cost_microusd": 300000,
+      "remaining_tool_milliseconds": 8000000,
+      "unknown_or_pending_requests": [],
+      "consumed_gate_shards": []
+    }
+  },
+  "evidence_kind": "real_experiment"
+}

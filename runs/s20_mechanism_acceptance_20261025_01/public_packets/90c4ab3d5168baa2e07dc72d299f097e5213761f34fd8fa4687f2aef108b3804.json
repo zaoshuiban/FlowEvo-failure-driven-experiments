@@ -1,0 +1,241 @@
+{
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r0838",
+    "prompt": "Recall that a binary search tree is a rooted binary tree, whose nodes each store a key and each have at most two distinguished subtrees, left and right. The key in each node must be greater than any key stored in the left subtree, and less than any key stored in the right subtree.\n\nThe depth of a vertex is the number of edges on the simple path from the vertex to the root. In particular, the depth of the root is $0$.\n\nLet's call a binary search tree perfectly balanced if there doesn't exist a binary search tree with the same number of vertices that has a strictly smaller sum of depths of its vertices.\n\nLet's call a binary search tree with integer keys striped if both of the following conditions are satisfied for every vertex $v$:   If $v$ has a left subtree whose root is $u$, then the parity of the key of $v$ is different from the parity of the key of $u$.  If $v$ has a right subtree whose root is $w$, then the parity of the key of $v$ is the same as the parity of the key of $w$. \n\nYou are given a single integer $n$. Find the number of perfectly balanced striped binary search trees with $n$ vertices that have distinct integer keys between $1$ and $n$, inclusive. Output this number modulo $998\\,244\\,353$.\n\n\n-----Input-----\n\nThe only line contains a single integer $n$ ($1 \\le n \\le 10^6$), denoting the required number of vertices.\n\n\n-----Output-----\n\nOutput the number of perfectly balanced striped binary search trees with $n$ vertices and distinct integer keys between $1$ and $n$, inclusive, modulo $998\\,244\\,353$.\n\n\n-----Examples-----\nInput\n4\n\nOutput\n1\n\nInput\n3\n\nOutput\n0\n\n\n\n-----Note-----\n\nIn the first example, this is the only tree that satisfies the conditions: $\\left. \\begin{array}{l}{\\text{perfectly balanced}} \\\\{\\text{striped}} \\\\{\\text{binary search tree}} \\end{array} \\right.$\n\nIn the second example, here are various trees that don't satisfy some condition: [Image]",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "4\n",
+        "expected": "1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r0838::statement",
+          "case_sha256": "9fcea64bfeccc639d6e97ecf3dbb1bb05e721827941e76ecc4c21c2586427414"
+        }
+      },
+      {
+        "input": "3\n",
+        "expected": "0",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r0838::statement",
+          "case_sha256": "7dfaaef44043e296ad743829c1d61faf22a15fb024172b131f218a83c3264b80"
+        }
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "4\n",
+      "expected": "1",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-train-s00-r0838::statement",
+        "case_sha256": "9fcea64bfeccc639d6e97ecf3dbb1bb05e721827941e76ecc4c21c2586427414"
+      }
+    },
+    {
+      "input": "3\n",
+      "expected": "0",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-train-s00-r0838::statement",
+        "case_sha256": "7dfaaef44043e296ad743829c1d61faf22a15fb024172b131f218a83c3264b80"
+      }
+    },
+    {
+      "input": "87380\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "6f5228e05f41a7254d8ab67f13aeeaf5abc7832eab6ca31b1348f55ec47d3fe4"
+      }
+    },
+    {
+      "input": "153077\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "6852382679df68cca6b2823c66cadb31b72651a9e2b46f479b96fdf3979a9a32"
+      }
+    },
+    {
+      "input": "13\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "50ad90d8277a9d6993669949cf5a2488e74fd6ef7bf1a3cd42a34ccd2a708e35"
+      }
+    },
+    {
+      "input": "866004\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "8e34c0333d87b319953575ed8e0a3ff54512fd5bc4af35427d0532b50c7a5447"
+      }
+    },
+    {
+      "input": "95\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "9e731faf9798566d17945820a0137a74c00f77ed99c41bdb681801ec8c8d6d74"
+      }
+    },
+    {
+      "input": "85\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "d77df1927f04a89ee66722fd79e2944a8e5e93d1b9a1a3bdaf66633d10f71ac7"
+      }
+    },
+    {
+      "input": "87381\n",
+      "expected": "1\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "3d0b7c5f21a6495eb1b1e99968b61b7bca63cb4559d3cb57077246d7f3705548"
+      }
+    },
+    {
+      "input": "472032\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "5aabdf53ce724a01fbe316ba9c395ecadc0c78ea2e44dacbd4d618155a488363"
+      }
+    },
+    {
+      "input": "28\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "1d492ccf9cd9b28945f35d37c5c29e241d262871c717a337069af0895eb2192c"
+      }
+    },
+    {
+      "input": "170589\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "9d560149a5f7da2ed41b3c91b2e9b9dbeba879683d36ef5709686c183880bf34"
+      }
+    },
+    {
+      "input": "22\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "ed8b9e1fbadbd56ef57ec85b5cbb74882c816de6f88ea937c267617d75fc8f85"
+      }
+    },
+    {
+      "input": "183\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r0838::predesignated-online-development",
+        "case_sha256": "58d472e38d998c605275781de4057774edc47057420015896b4007740d395e5e"
+      }
+    }
+  ],
+  "code": "",
+  "feedback": {
+    "status": "NO_COMPLETE_CODE",
+    "summary": "No complete program was produced.",
+    "public_cases": [],
+    "visibility": "public"
+  },
+  "task_id": "s19g_taco-train-s00-r0838",
+  "stage": "l1",
+  "checkpoint_budget": {
+    "max_calls": 5,
+    "max_tokens": 204800,
+    "max_tools": 128,
+    "calls": 1,
+    "used_tokens": 8718,
+    "tool_calls": 0,
+    "remaining_seconds": 558.8678843749803
+  },
+  "event_id": "90c4ab3d5168baa2e07dc72d299f097e5213761f34fd8fa4687f2aef108b3804",
+  "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifact_state": "NO_COMPLETE_CODE"
+}

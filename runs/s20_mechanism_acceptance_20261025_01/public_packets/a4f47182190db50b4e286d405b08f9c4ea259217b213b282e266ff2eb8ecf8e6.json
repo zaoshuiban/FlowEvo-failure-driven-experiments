@@ -1,0 +1,293 @@
+{
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r1290",
+    "prompt": "Bob is a duck. He wants to get to Alice's nest, so that those two can duck! [Image] Duck is the ultimate animal! (Image courtesy of See Bang) \n\nThe journey can be represented as a straight line, consisting of $n$ segments. Bob is located to the left of the first segment, while Alice's nest is on the right of the last segment. Each segment has a length in meters, and also terrain type: grass, water or lava. \n\nBob has three movement types: swimming, walking and flying. He can switch between them or change his direction at any point in time (even when he is located at a non-integer coordinate), and doing so doesn't require any extra time. Bob can swim only on the water, walk only on the grass and fly over any terrain. Flying one meter takes $1$ second, swimming one meter takes $3$ seconds, and finally walking one meter takes $5$ seconds.\n\nBob has a finite amount of energy, called stamina. Swimming and walking is relaxing for him, so he gains $1$ stamina for every meter he walks or swims. On the other hand, flying is quite tiring, and he spends $1$ stamina for every meter flown. Staying in place does not influence his stamina at all. Of course, his stamina can never become negative. Initially, his stamina is zero.\n\nWhat is the shortest possible time in which he can reach Alice's nest? \n\n\n-----Input-----\n\nThe first line contains a single integer $n$ ($1 \\leq n \\leq 10^5$) — the number of segments of terrain. \n\nThe second line contains $n$ integers $l_1, l_2, \\dots, l_n$ ($1 \\leq l_i \\leq 10^{12}$). The $l_i$ represents the length of the $i$-th terrain segment in meters.\n\nThe third line contains a string $s$ consisting of $n$ characters \"G\", \"W\", \"L\", representing Grass, Water and Lava, respectively. \n\nIt is guaranteed that the first segment is not Lava.\n\n\n-----Output-----\n\nOutput a single integer $t$ — the minimum time Bob needs to reach Alice. \n\n\n-----Examples-----\nInput\n1\n10\nG\n\nOutput\n30\n\nInput\n2\n10 10\nWL\n\nOutput\n40\n\nInput\n2\n1 2\nWL\n\nOutput\n8\n\nInput\n3\n10 10 10\nGLW\n\nOutput\n80\n\n\n\n-----Note-----\n\nIn the first sample, Bob first walks $5$ meters in $25$ seconds. Then he flies the remaining $5$ meters in $5$ seconds.\n\nIn the second sample, Bob first swims $10$ meters in $30$ seconds. Then he flies over the patch of lava for $10$ seconds.\n\nIn the third sample, the water pond is much smaller. Bob first swims over the water pond, taking him $3$ seconds. However, he cannot fly over the lava just yet, as he only has one stamina while he needs two. So he swims back for half a meter, and then half a meter forward, taking him $3$ seconds in total. Now he has $2$ stamina, so he can spend $2$ seconds flying over the lava.\n\nIn the fourth sample, he walks for $50$ seconds, flies for $10$ seconds, swims for $15$ seconds, and finally flies for $5$ seconds.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "1\n10\nG\n",
+        "expected": "30",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r1290::statement",
+          "case_sha256": "35779ced676cf6b1ef03d4c5d874967e8f616804d684beb8864ecc9869cd34d5"
+        }
+      },
+      {
+        "input": "2\n10 10\nWL\n",
+        "expected": "40",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r1290::statement",
+          "case_sha256": "b2e47f603a7aef021a82d7c3ebd0c5b1916ee023d5b479e28df905faf78c7ed1"
+        }
+      },
+      {
+        "input": "2\n1 2\nWL\n",
+        "expected": "8",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r1290::statement",
+          "case_sha256": "e11181b68817ec66c22cddcf23036634d2d364c9d3d44812ab4d439b0a8a4c9f"
+        }
+      },
+      {
+        "input": "3\n10 10 10\nGLW\n",
+        "expected": "80",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r1290::statement",
+          "case_sha256": "471481c401815bd7968a5f646e3c4c3f5830771f630141dd828e57da47b4cfda"
+        }
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "1\n10\nG\n",
+      "expected": "30",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-train-s00-r1290::statement",
+        "case_sha256": "35779ced676cf6b1ef03d4c5d874967e8f616804d684beb8864ecc9869cd34d5"
+      }
+    },
+    {
+      "input": "2\n10 10\nWL\n",
+      "expected": "40",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-train-s00-r1290::statement",
+        "case_sha256": "b2e47f603a7aef021a82d7c3ebd0c5b1916ee023d5b479e28df905faf78c7ed1"
+      }
+    },
+    {
+      "input": "2\n1 2\nWL\n",
+      "expected": "8",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-train-s00-r1290::statement",
+        "case_sha256": "e11181b68817ec66c22cddcf23036634d2d364c9d3d44812ab4d439b0a8a4c9f"
+      }
+    },
+    {
+      "input": "3\n10 10 10\nGLW\n",
+      "expected": "80",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-train-s00-r1290::statement",
+        "case_sha256": "471481c401815bd7968a5f646e3c4c3f5830771f630141dd828e57da47b4cfda"
+      }
+    },
+    {
+      "input": "2\n10 10\nGL\n",
+      "expected": "60\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "865774828efb097b4966072e34ee965fe76922cc5aadbe311819b5dfb7bc3d08"
+      }
+    },
+    {
+      "input": "4\n0 2 2 0\nWGLW\n",
+      "expected": "12\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "20909327d79df914df719bf5e7daca2a06d882c3aec3d069d44b6e99ef8eb3df"
+      }
+    },
+    {
+      "input": "2\n1 10\nWL\n",
+      "expected": "40\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "0403dfd58924829bddb26341e68bcff9079d0e54b85be4b6be47720cc4f6106c"
+      }
+    },
+    {
+      "input": "1\n5\nG\n",
+      "expected": "15\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "f27a8df375772225259208cd68872fa189d1fff898059d4935b3425ffd82b31b"
+      }
+    },
+    {
+      "input": "3\n10 17 19\nGLW\n",
+      "expected": "140\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "b1320e903da7c4b3395abf9d428a1ef9f6fb6e2ec5285a73ba201b52784fb09c"
+      }
+    },
+    {
+      "input": "3\n10 11 0\nGLW\n",
+      "expected": "66\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "457980ab552814affb1872d50693104354aeca0a34c1a534e2d6b8815cb0a21e"
+      }
+    },
+    {
+      "input": "3\n10 9 10\nGLW\n",
+      "expected": "77\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "f418fefb164534a1474025fb434035888151a75b1ccc12b8548b92f138ea5f82"
+      }
+    },
+    {
+      "input": "1\n9\nW\n",
+      "expected": "18\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "58cc4cc9b8d2ababf0890ee16a09c3aa128781f6feb2c27ba4837852c54caf2a"
+      }
+    },
+    {
+      "input": "2\n1 1000000000100\nGW\n",
+      "expected": "2000000000203\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "64beb0787319f87dfa48d6dd5bf0b25ff1feb0f8f7909da686f5b0827f941322"
+      }
+    },
+    {
+      "input": "4\n0 1 1 1\nWGLW\n",
+      "expected": "8\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "1e59adc6eb75962889c0dc7c2afe586b278571994c5d555483631527fc278bac"
+      }
+    },
+    {
+      "input": "2\n101 100\nGW\n",
+      "expected": "503\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "b00b8ea9e8daa823e6918537d14ff6a26aea6b8062e5c0c370588cff83f9c2d7"
+      }
+    },
+    {
+      "input": "2\n100 100\nGW\n",
+      "expected": "500\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r1290::predesignated-online-development",
+        "case_sha256": "6d49ed56b30a78d4670fe1a9a842d7c4b21c3279579cf01c2da72dd970631247"
+      }
+    }
+  ],
+  "code": "",
+  "feedback": {
+    "status": "NO_COMPLETE_CODE",
+    "summary": "No complete program was produced.",
+    "public_cases": [],
+    "visibility": "public"
+  },
+  "task_id": "s19g_taco-train-s00-r1290",
+  "stage": "l1",
+  "checkpoint_budget": {
+    "max_calls": 5,
+    "max_tokens": 204800,
+    "max_tools": 128,
+    "calls": 1,
+    "used_tokens": 8991,
+    "tool_calls": 0,
+    "remaining_seconds": 563.6661590409931
+  },
+  "event_id": "a4f47182190db50b4e286d405b08f9c4ea259217b213b282e266ff2eb8ecf8e6",
+  "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifact_state": "NO_COMPLETE_CODE"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "013ab324-8c5e-40b4-b76c-215624f51e97",
+  "object": "chat.completion",
+  "created": 1793005025,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    s = data[0]\n    n = len(s)\n    m = int(data[1])\n    \n    # prefix balance and positions\n    # For each query [l, r], answer = 2 * number of matched pairs.\n    # Standard approach: use prefix sums and a segment tree / sparse table?\n    # n up to 1e6, m up to 1e5. Need O((n+m) log n) or O(n + m log n).\n    # We can use a segment tree over the string storing (open, close, pairs).\n    # But building a segment tree of size 1e6 in Python may be heavy but feasible with iterative segment tree.\n    # Alternatively, use the fact that answer = 2 * (number of '(' in [l,r] that can be matched with ')' in [l,r]).\n    # We can compute for each position the matching using a stack, then use prefix sums of matched pairs?\n    # Actually, the maximum correct bracket subsequence length in a substring is 2 * min( ... )? Not simply.\n    # Known technique: For each query, answer = 2 * (number of pairs formed by greedy matching within [l,r]).\n    # We can precompute for each position i the next unmatched ')' after matching? \n    # Use a segment tree with combine function. Iterative segment tree with size power of two.\n    # n=1e6 -> size 2^20=1048576, tree size 2*size ~ 2e6. Each node stores (open, close, pairs). Memory: 3 ints per node -> 6e6 ints, ~48MB per list of ints? Python ints are objects, huge memory.\n    # Better: use arrays from array module or lists of ints? Python list of ints for 2e6 elements ~ 16MB per list (pointers) + int objects. But small ints are cached? Not all.\n    # We can use three arrays of type 'i' (signed int) from array module: open, close, pairs. Each 2e6 * 4 bytes = 8MB per array, total 24MB. Good.\n    # Build iterative segment tree.\n    \n    size = 1\n    while size < n:\n        size <<= 1\n    \n    from array import array\n    open_arr = array('i', [0]) * (2 * size)\n    close_arr = array('i', [0]) * (2 * size)\n    pairs_arr = array('i', [0]) * (2 * size)\n    \n    # leaves\n    for i in range(n):\n        if s[i] == 40:  # '('\n            open_arr[size + i] = 1\n        else:\n            close_arr[size + i] = 1\n    # padding leaves remain 0\n    \n    # build\n    for i in range(size - 1, 0, -1):\n        l = i << 1\n        r = l | 1\n        lo = open_arr[l]\n        lc = close_arr[l]\n        lp = pairs_arr[l]\n        ro = open_arr[r]\n        rc = close_arr[r]\n        rp = pairs_arr[r]\n        matched = lo if lo < rc else rc\n        open_arr[i] = lo + ro - matched\n        close_arr[i] = lc + rc - matched\n        pairs_arr[i] = lp + rp + matched\n    \n    out = []\n    idx = 2\n    for _ in range(m):\n        l = int(data[idx]) - 1\n        r = int(data[idx + 1]) - 1\n        idx += 2\n        # query [l, r] inclusive\n        l += size\n        r += size + 1\n        # left accumulator and right accumulator\n        lo = lc = lp = 0\n        ro = rc = rp = 0\n        while l < r:\n            if l & 1:\n                # combine left_acc with node l\n                matched = lo if lo < close_arr[l] else close_arr[l]\n                lp = lp + pairs_arr[l] + matched\n                lo = lo + open_arr[l] - matched\n                lc = lc + close_arr[l] - matched\n                l += 1\n            if r & 1:\n                r -= 1\n                # combine node r with right_acc\n                matched = open_arr[r] if open_arr[r] < rc else rc\n                rp = pairs_arr[r] + rp + matched\n                ro = open_arr[r] + ro - matched\n                rc = close_arr[r] + rc - matched\n            l >>= 1\n            r >>= 1\n        # combine left_acc and right_acc\n        matched = lo if lo < rc else rc\n        total_pairs = lp + rp + matched\n        out.append(str(total_pairs * 2))\n    \n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 3521,
+    "completion_tokens": 1107,
+    "total_tokens": 4628,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 3521
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

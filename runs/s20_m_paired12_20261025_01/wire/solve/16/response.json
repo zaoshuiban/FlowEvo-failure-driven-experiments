@@ -1,0 +1,28 @@
+{
+  "id": "0fab1394-e0cd-4c8a-aa1c-1aac0c21d696",
+  "object": "chat.completion",
+  "created": 1792986482,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    k = int(data[1])\n    d = int(data[2])\n    a = list(map(int, data[3:3 + n]))\n    a.sort()\n\n    dp = [False] * (n + 1)\n    dp[0] = True\n    prefix = [0] * (n + 1)\n    prefix[0] = 1\n\n    left = 0\n    for i in range(1, n + 1):\n        while a[i - 1] - a[left] > d:\n            left += 1\n        if i - k >= left:\n            if prefix[i - k + 1] - prefix[left] > 0:\n                dp[i] = True\n        prefix[i] = prefix[i - 1] + (1 if dp[i] else 0)\n\n    print(\"YES\" if dp[n] else \"NO\")\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1865,
+    "completion_tokens": 234,
+    "total_tokens": 2099,
+    "prompt_tokens_details": {
+      "cached_tokens": 1664
+    },
+    "prompt_cache_hit_tokens": 1664,
+    "prompt_cache_miss_tokens": 201
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

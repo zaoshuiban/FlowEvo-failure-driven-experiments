@@ -1,0 +1,28 @@
+{
+  "id": "107a20a5-916a-4915-a368-04c0544f24f1",
+  "object": "chat.completion",
+  "created": 1793004930,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.buffer.readline\n    n, m = map(int, input().split())\n    grid = [input().strip() for _ in range(n)]\n\n    if n == 1 or m == 1:\n        print(0)\n        return\n\n    N = n * m\n    INF = 10**9\n\n    # Build graph implicitly. We need min vertex cut between (0,0) and (n-1,m-1)\n    # in a DAG with moves down/right. By Menger, equals max number of\n    # vertex-disjoint paths. Since graph is planar grid DAG, answer is at most 2.\n    # Compute max flow with vertex capacities 1 (except source/sink) using Dinic.\n\n    def idx(r, c):\n        return r * m + c\n\n    # Node splitting: in-node = 2*v, out-node = 2*v+1\n    # edge in->out capacity 1 (except source and sink: INF)\n    # move edges out(u) -> in(v) capacity INF\n\n    S = 2 * idx(0, 0) + 1  # out of source\n    T = 2 * idx(n - 1, m - 1)  # in of sink\n\n    # Dinic\n    graph = [[] for _ in range(2 * N)]\n\n    def add_edge(u, v, cap):\n        graph[u].append([v, cap, len(graph[v])])\n        graph[v].append([u, 0, len(graph[u]) - 1])\n\n    for r in range(n):\n        for c in range(m):\n            if grid[r][c] == ord('#'):\n                continue\n            v = idx(r, c)\n            cap = INF if (r == 0 and c == 0) or (r == n - 1 and c == m - 1) else 1\n            add_edge(2 * v, 2 * v + 1, cap)\n            if r + 1 < n and grid[r + 1][c] != ord('#'):\n                add_edge(2 * v + 1, 2 * idx(r + 1, c), INF)\n            if c + 1 < m and grid[r][c + 1] != ord('#'):\n                add_edge(2 * v + 1, 2 * idx(r, c + 1), INF)\n\n    # Check reachability first\n    # BFS on original grid\n    seen = [[False] * m for _ in range(n)]\n    if grid[0][0] != ord('#'):\n        dq = deque([(0, 0)])\n        seen[0][0] = True\n        while dq:\n            r, c = dq.popleft()\n            for nr, nc in ((r + 1, c), (r, c + 1)):\n                if nr < n and nc < m and not seen[nr][nc] and grid[nr][nc] != ord('#'):\n                    seen[nr][nc] = True\n                    dq.append((nr, nc))\n    if not seen[n - 1][m - 1]:\n        print(0)\n        return\n\n    # Dinic max flow\n    def bfs_level():\n        level = [-1] * (2 * N)\n        level[S] = 0\n        q = deque([S])\n        while q:\n            u = q.popleft()\n            for e in graph[u]:\n                if e[1] > 0 and level[e[0]] < 0:\n                    level[e[0]] = level[u] + 1\n                    q.append(e[0])\n        return level\n\n    def dfs(u, pushed, level, it):\n        if u == T:\n            return pushed\n        while it[u] < len(graph[u]):\n            e = graph[u][it[u]]\n            v = e[0]\n            if e[1] > 0 and level[v] == level[u] + 1:\n                tr = dfs(v, min(pushed, e[1]), level, it)\n                if tr > 0:\n                    e[1] -= tr\n                    graph[v][e[2]][1] += tr\n                    return tr\n            it[u] += 1\n        return 0\n\n    flow = 0\n    while True:\n        level = bfs_level()\n        if level[T] < 0:\n            break\n        it = [0] * (2 * N)\n        while True:\n            pushed = dfs(S, INF, level, it)\n            if pushed == 0:\n                break\n            flow += pushed\n        if flow >= 2:\n            break\n\n    print(flow)\n\nmain()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1549,
+    "completion_tokens": 1024,
+    "total_tokens": 2573,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 525
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

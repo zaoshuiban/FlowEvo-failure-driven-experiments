@@ -1,0 +1,28 @@
+{
+  "id": "7a4772c9-1654-41e1-8df1-7bb434a484d1",
+  "object": "chat.completion",
+  "created": 1792986414,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    idx = 1\n\n    ans = 0\n    speed = 0\n    limit = 10**9\n    overtake_allowed = True\n\n    # stack of active speed limits, with their event index\n    limits = []\n    # stack of active \"no overtake\" signs, with their event index\n    no_overtake = []\n\n    for i in range(n):\n        t = int(data[idx]); idx += 1\n        if t == 1:\n            speed = int(data[idx]); idx += 1\n        elif t == 2:\n            if not overtake_allowed:\n                ans += len(no_overtake)\n                no_overtake.clear()\n                overtake_allowed = True\n        elif t == 3:\n            s = int(data[idx]); idx += 1\n            limits.append((s, i))\n            limit = s\n        elif t == 4:\n            overtake_allowed = True\n            no_overtake.clear()\n        elif t == 5:\n            limits.clear()\n            limit = 10**9\n        elif t == 6:\n            if overtake_allowed:\n                overtake_allowed = False\n            no_overtake.append(i)\n\n        # remove speed limits that are no longer relevant\n        while limits and limits[-1][0] < speed:\n            limits.pop()\n        if limits:\n            limit = limits[-1][0]\n        else:\n            limit = 10**9\n\n        # if current speed exceeds the active limit, we must ignore that limit sign\n        if speed > limit:\n            # find the most recent limit that is below speed\n            # all limits below speed must be ignored\n            while limits and limits[-1][0] < speed:\n                ans += 1\n                limits.pop()\n            if limits:\n                limit = limits[-1][0]\n            else:\n                limit = 10**9\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1204,
+    "completion_tokens": 452,
+    "total_tokens": 1656,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1204
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

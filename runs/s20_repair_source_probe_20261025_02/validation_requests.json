@@ -1,0 +1,79 @@
+[
+  {
+    "conservative_input_token_upper": 4885,
+    "estimate_method": "UTF8 byte upper proxy plus envelope margin; NOT tokenizer count",
+    "limits": {
+      "envelope_margin": 2048,
+      "input_token_upper": 32768,
+      "output_tokens": 8192,
+      "wire_bytes": 262144
+    },
+    "output_token_upper": 8192,
+    "protocol": "workflow-shared-protocol-v2",
+    "provider_input_tokens": null,
+    "serialized_utf8_bytes": 2837,
+    "request_id": "source-delivery-only-1",
+    "request_sha256": "ed467bedfdb4c454efecb91b631c164a5c0841d0b9b1eab218d00f91e16b3c1b",
+    "status": "COMPLETED",
+    "provider_requests": 1,
+    "request": {
+      "max_tokens": 8192,
+      "messages": [
+        {
+          "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution.\nReturn only one python fenced block containing a COMPLETE executable program. No prose, algorithm discussion, or long reasoning comments. Preserve correctness and input/output requirements; do not special-case examples. This is a delivery constraint, not permission to guess an algorithm.",
+          "role": "system"
+        },
+        {
+          "content": "Develop a fresh solution from the problem and public examples; no previous implementation is supplied.\nReturn a complete executable Python program in one python fence. Avoid extended explanation. Do not special-case examples.\n{\"mode\":\"REGENERATE_FRESH\",\"public_feedback\":{\"public_cases\":[],\"status\":\"NO_COMPLETE_CODE\"},\"task\":{\"function_name\":\"\",\"problem_id\":\"s19g_taco-train-s00-r2749\",\"prompt\":\"A lot of frogs want to cross a river. A river is $w$ units width, but frogs can only jump $l$ units long, where $l < w$. Frogs can also jump on lengths shorter than $l$. but can't jump longer. Hopefully, there are some stones in the river to help them.\\n\\nThe stones are located at integer distances from the banks. There are $a_i$ stones at the distance of $i$ units from the bank the frogs are currently at. Each stone can only be used once by one frog, after that it drowns in the water.\\n\\nWhat is the maximum number of frogs that can cross the river, given that then can only jump on the stones?\\n\\n\\n-----Input-----\\n\\nThe first line contains two integers $w$ and $l$ ($1 \\\\le l < w \\\\le 10^5$) — the width of the river and the maximum length of a frog's jump.\\n\\nThe second line contains $w - 1$ integers $a_1, a_2, \\\\ldots, a_{w-1}$ ($0 \\\\le a_i \\\\le 10^4$), where $a_i$ is the number of stones at the distance $i$ from the bank the frogs are currently at.\\n\\n\\n-----Output-----\\n\\nPrint a single integer — the maximum number of frogs that can cross the river.\\n\\n\\n-----Examples-----\\nInput\\n10 5\\n0 0 1 0 2 0 0 1 0\\n\\nOutput\\n3\\n\\nInput\\n10 3\\n1 1 1 1 2 1 1 1 1\\n\\nOutput\\n3\\n\\n\\n\\n-----Note-----\\n\\nIn the first sample two frogs can use the different stones at the distance $5$, and one frog can use the stones at the distances $3$ and then $8$.\\n\\nIn the second sample although there are two stones at the distance $5$, that does not help. The three paths are: $0 \\\\to 3 \\\\to 6 \\\\to 9 \\\\to 10$, $0 \\\\to 2 \\\\to 5 \\\\to 8 \\\\to 10$, $0 \\\\to 1 \\\\to 4 \\\\to 7 \\\\to 10$.\",\"public_examples\":[{\"expected\":\"3\",\"input\":\"10 5\\n0 0 1 0 2 0 0 1 0\\n\"},{\"expected\":\"3\",\"input\":\"10 3\\n1 1 1 1 2 1 1 1 1\\n\"}],\"starter_code\":\"\"}}",
+          "role": "user"
+        }
+      ],
+      "model": "deepseek-flash",
+      "reasoning_effort": "none",
+      "stream": false,
+      "temperature": 0,
+      "thinking": {
+        "type": "disabled"
+      }
+    },
+    "raw_response": {
+      "id": "a6134931-64cc-4643-8075-5cf6047dc255",
+      "object": "chat.completion",
+      "created": 1792984918,
+      "model": "deepseek-flash",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    w, l = data[0], data[1]\n    a = data[2:2 + (w - 1)]\n    \n    # Nodes: 0 = left bank, 1..w-1 = positions, w = right bank\n    n = w + 1\n    # Build graph: from position i (0..w), can jump to j in (i, min(i+l, w)]\n    # We need max flow from 0 to w with vertex capacities (stones), banks infinite.\n    # Since l < w <= 1e5, edges could be O(w*l) too many. Use segment tree graph.\n    \n    # We'll use Dinic with segment tree to compress edges.\n    # Nodes: 0..w for positions, then segment tree nodes.\n    # Actually simpler: since jumps are forward only and interval [i+1, i+l],\n    # we can use a segment tree over positions 1..w-1 (stones) plus banks.\n    \n    # Let's index: 0 = source (left bank), 1..w-1 = stone positions, w = sink (right bank).\n    # Vertex capacity: source/sink = INF, position i has capacity a[i-1].\n    # Edge from i to j if 1 <= j-i <= l, or i=0 and 1<=j<=l, or j=w and w-i<=l.\n    # Also i=0 to w directly if w<=l (but l<w so no).\n    \n    # Max flow with vertex splitting: in-node and out-node for each position.\n    # in_i -> out_i capacity a[i-1] (for 1..w-1), INF for 0 and w.\n    # out_i -> in_j for jumps.\n    \n    # To avoid O(w*l) edges, use segment tree on positions 1..w-1.\n    # out_i connects to range [i+1, min(i+l, w-1)] in segment tree, and to sink if w-i<=l.\n    # Source connects to range [1, min(l, w-1)] and directly to sink if w<=l (not possible).\n    \n    INF = 10**18\n    \n    # Node numbering:\n    # 0: source out (left bank)\n    # 1..w-1: in-nodes for positions\n    # w..2w-2: out-nodes for positions (out_i = w + i - 1 for i in 1..w-1)\n    # sink: 2w-1\n    # segment tree nodes start at 2w\n    \n    S = 0\n    T = 2*w - 1\n    out_base = w  # out_i = w + (i-1) for i=1..w-1\n    \n    # Segment tree over positions 1..w-1\n    m = w - 1  # number of positions\n    # Build segment tree with nodes covering ranges\n    # We'll use iterative segment tree with size = next power of 2 >= m\n    size = 1\n    while size < m:\n        size *= 2\n    seg_base = 2*w  # first segment tree node index\n    # total nodes: seg_base + 2*size\n    total_nodes = seg_base + 2*size\n    \n    graph = [[] for _ in range(total_nodes)]\n    \n    def add_edge(u, v, cap):\n        graph[u].append([v, cap, len(graph[v])])\n        graph[v].append([u, 0, len(graph[u]) - 1])\n    \n    # Segment tree: parent -> children with INF capacity (flow goes down)\n    # Leaf for position i (1-indexed) is at seg_base + size + (i-1)\n    # Internal node k has children 2k, 2k+1 (using 1-indexed within tree)\n    # We'll use 0-indexed: node k (0..2*size-1), children 2k+1, 2k+2\n    # Root is 0.\n    \n    # Build tree edges: parent -> child INF\n    for k in range(size - 1):\n        add_edge(seg_base + k, seg_base + 2*k + 1, INF)\n        add_edge(seg_base + k, seg_base + 2*k + 2, INF)\n    \n    # Leaf -> in-node for positions\n    for i in range(1, w):\n        leaf = seg_base + size + (i - 1)\n        add_edge(leaf, i, INF)  # leaf to in-node\n    \n    # Vertex capacities: in_i -> out_i\n    for i in range(1, w):\n        add_edge(i, out_base + (i - 1), a[i-1])\n    \n    # Source edges: source -> range [1, min(l, w-1)]\n    # Source -> segment tree range query\n    def add_range_edge(from_node, left, right):\n        # add edge from from_node to all leaves in [left, right] (1-indexed positions)\n        # using segment tree decomposition\n        if left > right:\n            return\n        # iterative range decomposition\n        l = left - 1 + size\n        r = right - 1 + size\n        while l <= r:\n            if l % 2 == 1:\n                add_edge(from_node, seg_base + l, INF)\n                l += 1\n            if r % 2 == 0:\n                add_edge(from_node, seg_base + r, INF)\n                r -= 1\n            l //= 2\n            r //= 2\n    \n    # Source to positions 1..min(l, w-1)\n    add_range_edge(S, 1, min(l, w-1))\n    \n    # For each position i (1..w-1), out_i -> range [i+1, min(i+l, w-1)]\n    # and out_i -> sink if w-i <= l\n    for i in range(1, w):\n        out_i = out_base + (i - 1)\n        if w - i <= l:\n            add_edge(out_i, T, INF)\n        right = min(i + l, w - 1)\n        if i + 1 <= right:\n            add_range_edge(out_i, i + 1, right)\n    \n    # Dinic's algorithm\n    def bfs():\n        level = [-1] * total_nodes\n        level[S] = 0\n        q = deque([S])\n        while q:\n            u = q.popleft()\n            for e in graph[u]:\n                v, cap, _ = e\n                if cap > 0 and level[v] < 0:\n                    level[v] = level[u] + 1\n                    q.append(v)\n        return level\n    \n    def dfs(u, pushed, level, it):\n        if u == T:\n            return pushed\n        while it[u] < len(graph[u]):\n            e = graph[u][it[u]]\n            v, cap, rev = e\n            if cap > 0 and level[v] == level[u] + 1:\n                tr = dfs(v, min(pushed, cap), level, it)\n                if tr > 0:\n                    e[1] -= tr\n                    graph[v][rev][1] += tr\n                    return tr\n            it[u] += 1\n        return 0\n    \n    flow = 0\n    while True:\n        level = bfs()\n        if level[T] < 0:\n            break\n        it = [0] * total_nodes\n        while True:\n            pushed = dfs(S, INF, level, it)\n            if pushed == 0:\n                break\n            flow += pushed\n    \n    print(flow)\n\nif __name__ == \"__main__\":\n    main()\n```"
+          },
+          "logprobs": null,
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 727,
+        "completion_tokens": 1709,
+        "total_tokens": 2436,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 727
+      },
+      "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+    },
+    "usage": {
+      "prompt_tokens": 727,
+      "completion_tokens": 1709,
+      "total_tokens": 2436,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 727
+    },
+    "model": "deepseek-flash"
+  }
+]

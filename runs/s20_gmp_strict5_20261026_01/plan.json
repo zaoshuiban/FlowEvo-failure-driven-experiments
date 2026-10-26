@@ -1,0 +1,84 @@
+{
+  "run_id": "s20_gmp_strict5_20261026_01",
+  "shared_protocol": "workflow-shared-protocol-v2",
+  "model": "deepseek-flash",
+  "evidence_kind": "real_experiment",
+  "frozen_files": {
+    "reports/s20_gmp_strict5/execute.py": "1050d5a04b4f7601d66327fabefab7254b6d5f733d83a66effed66a9e07cefa9",
+    "reports/s20_gmp_strict5/evaluate.py": "43f704d197fc3d376bad1540f71c787a7776aef759e8cbf7929e1361d4753292",
+    "scripts/run_workflow_v2.py": "815a521b32b4aedad03b8456f601f1e5cafc1b081d1e43b124df49a403866d93",
+    "scripts/experiment_s16b2_source.py": "7ad3e75e6a8c2f2a28295f4dcbdd6caa6551da2dd186a22d7a17b6dafe4b997a",
+    "FlowEvo/src/failure_evo/workflow_protocol_v2.py": "234ef174c207eb9f96ebbf22279db676e06b84eec5da3fd26331037d38d5a56a",
+    "FlowEvo/src/failure_evo/persistent_budget.py": "307f39b060a26eff3e7dc6ee55e79b8ab7fddc1cfc8111feb41c16f4f4cceffd",
+    "reports/s20_gmp_attribution_v2/generic_advice.txt": "e3ff2c69d3c1a5e9291506f016b18fa51681d4a4a088729d373e494aec2e16dc",
+    "reports/s20_gmp_attribution_v2/frozen_wires.json": "2f37720dacd7ff31b713e9f80e4daa70e7b14f156f8eda6901d33db24bf7fab2"
+  },
+  "budgets": {
+    "solve": {
+      "max_calls": 15,
+      "max_tokens": 614400,
+      "max_tools": 1600,
+      "max_cost_microusd": 1000000,
+      "token_rate_microusd_per_million": 1200000,
+      "tool_cost_upper_microusd": 0,
+      "max_tool_milliseconds": 32000000,
+      "tool_milliseconds_upper": 20000,
+      "wall_seconds": 21600
+    }
+  },
+  "tasks": [
+    "s19g_taco-train-s00-r0770",
+    "s19g_taco-test-788",
+    "s19g_taco-train-s00-r0077",
+    "s19g_taco-train-s00-r2340",
+    "s19g_taco-test-692"
+  ],
+  "excluded": {
+    "task": "r2049",
+    "reason": "all three arms failed identical input preflight before new model requests"
+  },
+  "maximum_model_requests": 15,
+  "hard_usd": 1.0,
+  "per_branch_calls": 1,
+  "worker_environment": {
+    "docker_host": "unix:///Users/majiatong/.colima/default/docker.sock",
+    "docker_config": "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/runs/s12c_functional_20261021_01/docker_public",
+    "acceptance_path": "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/runs/s12c_functional_20261021_01/worker_acceptance.json",
+    "acceptance_sha256": "5204f297f02c955c408385f65ef99daf0386ce3eac89646eead94d70953991c6"
+  },
+  "source_protocol": "2f60e0c8367c4127737e9ec39b4256d8df96bf7cfcbcf02e23b2ffcb033827b3",
+  "memory_sha256": "566d9869388c2c4afbe9e37f032adcc1c42edea30c4af707ff4ebf8818e6c4c7",
+  "generic_sha256": "e3ff2c69d3c1a5e9291506f016b18fa51681d4a4a088729d373e494aec2e16dc",
+  "request_hashes": [
+    "10978e5901e2d4d619d32ee2462c3e02231d35ab9e548d179fc4b46ba38b273d",
+    "bf916bac8fa87347ac3bf344da95c8bb9445a41d8114c3f6cd123071aec7e92d",
+    "a4d3dfe7f4c6780030eebb90ffb42a63b94dcbd54c1cfd8490e8d9d93bcf4f72",
+    "d84747bc66a07c39452e090820e20b7971eb5a6f73ecd63280b46295b000d376",
+    "499726e05e8a914955cfd0e64856a42096da9e4e1d1781b36a880a3dc0bbe4e0",
+    "2a609f279cd3da5669a0f748b4eafbe2a5a8d9d60afef3bf34261b87201bfb6c",
+    "a9e4cef847e05578e811acba1506e5f673f88735d6192f25d68e048bc76a6b54",
+    "457e12b777701adfee1d1f8b929c3eda8ccc1f7071c10d328b1c40a17dd0f700",
+    "ffd9b66047316100600ca1e37ec87f175feaf7a1949b0303df14aa06d4493b81",
+    "8b0a9fe2a45b31b6e097c01094bdb2844641cecd007f1aae8357eca85c0a605b",
+    "055fffec45cbfadbb2f77bf12a120e293ad9926a6931c8a1a4fc322887278435",
+    "5c855dc5523214298351d410cf8a0bbd324064b0ae0c380549b15691ff8a7dea",
+    "8cb19d83d406abdcda74ba6170ad402dc7a2c0f4d9ea27b950f90497daadab8f",
+    "da086af4a1664ba5624830a05d324709f00cf1c146ca677bd09a65437ac54d25",
+    "83c876147c2070d8e336f52c804fdfdfb78f656d648d887cab6a9876399b79c3"
+  ],
+  "parameter_scope": "fixed original wires; temperature0 output8192; no memory updates; empty identical success libraries; original remaining task and arm order",
+  "decision_point": "Funding GO only when M-only vs P >=2 AND M-P net>0 AND M-G net>0 AND construction-inclusive M cost per joint success <=1.25x G. If G=0 or M=0 cost ratio is UNDEFINED and funding threshold not established; no infinity shortcut. Failure to meet is funding NO-GO, not scientific disproof. Infrastructure/token mismatch is INCOMPLETE. No automatic extension.",
+  "scoring": "public AND same-task sealed all pass; held-out evaluation only after online lock; development, not blind independent confirmation",
+  "stopping": [
+    "UNKNOWN",
+    "worker failure",
+    "data contamination",
+    "budget exhausted",
+    "hash mismatch",
+    "M/P provider input tokens differ"
+  ],
+  "old_run_untouched": true,
+  "confirmation_pool_used": false,
+  "F_enabled": false,
+  "protocol_hash": "1d45e0b390729b0eb8e7742b15a1ef52c7f6cb33ea8e2fcaa9332028918027f3"
+}

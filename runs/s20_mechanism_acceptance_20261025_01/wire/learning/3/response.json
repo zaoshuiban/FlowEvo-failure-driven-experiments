@@ -1,0 +1,28 @@
+{
+  "id": "179c2b01-0046-49c0-a2e7-dde42b94a258",
+  "object": "chat.completion",
+  "created": 1792985932,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"hypothesis\":{\"conditions\":\"Candidate state is NO_COMPLETE_CODE with an empty candidate (zero bytes) and finish_reason length, across multiple independent tasks, with at least one remaining call available.\",\"action\":\"REGENERATE_FRESH\",\"expected_improvement\":\"A fresh generation attempt may produce complete code instead of an empty truncated candidate, giving a chance at a valid submission where the prior attempt yielded nothing.\",\"refusal_conditions\":\"Refuse if no legal action is available, evidence is nonpublic or unavailable, or the original budget is insufficient.\",\"stop_conditions\":\"Stop after the single permitted revision or when remaining calls reach zero; retain Shadow without claimed benefit if regeneration does not yield complete code.\",\"unknowns\":\"Whether truncation is due to output length limits versus task difficulty; whether a fresh attempt will avoid the same length cutoff; hidden correctness of any produced code.\"},\"rule\":{\"when\":{\"candidate_state\":\"NO_COMPLETE_CODE\",\"public_result\":\"NO_COMPLETE_CODE\",\"remaining_calls_min\":1},\"action\":\"REGENERATE_FRESH\",\"fallback\":\"NATIVE\"}}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 3919,
+    "completion_tokens": 229,
+    "total_tokens": 4148,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 3919
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

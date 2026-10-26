@@ -1,0 +1,28 @@
+{
+  "id": "d454272a-49ef-41bf-822b-0ce9e1ec3302",
+  "object": "chat.completion",
+  "created": 1792986519,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    m = int(data[1])\n    idx = 2\n    atk = []\n    defense = []\n    for _ in range(n):\n        pos = data[idx]\n        strength = int(data[idx + 1])\n        idx += 2\n        if pos == \"ATK\":\n            atk.append(strength)\n        else:\n            defense.append(strength)\n    ciel = []\n    for _ in range(m):\n        ciel.append(int(data[idx]))\n        idx += 1\n\n    atk_sorted = sorted(atk)\n    ciel_sorted = sorted(ciel)\n    len_atk = len(atk_sorted)\n    len_ciel = len(ciel_sorted)\n\n    dp = [[0] * (len_ciel + 1) for _ in range(len_atk + 1)]\n    for i in range(1, len_atk + 1):\n        for j in range(1, len_ciel + 1):\n            dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\n            if ciel_sorted[j - 1] >= atk_sorted[i - 1]:\n                dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + ciel_sorted[j - 1] - atk_sorted[i - 1])\n    ans1 = dp[len_atk][len_ciel]\n\n    def_sorted = sorted(defense, reverse=True)\n    atk_sorted_desc = sorted(atk, reverse=True)\n    ciel_list = sorted(ciel)\n    possible = True\n\n    for d in def_sorted:\n        found = False\n        for i, c in enumerate(ciel_list):\n            if c > d:\n                ciel_list.pop(i)\n                found = True\n                break\n        if not found:\n            possible = False\n            break\n\n    if possible:\n        for a in atk_sorted_desc:\n            found = False\n            for i, c in enumerate(ciel_list):\n                if c >= a:\n                    ciel_list.pop(i)\n                    found = True\n                    break\n            if not found:\n                possible = False\n                break\n\n    ans2 = 0\n    if possible:\n        ans2 = sum(ciel_list)\n\n    print(max(ans1, ans2))\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1716,
+    "completion_tokens": 543,
+    "total_tokens": 2259,
+    "prompt_tokens_details": {
+      "cached_tokens": 1536
+    },
+    "prompt_cache_hit_tokens": 1536,
+    "prompt_cache_miss_tokens": 180
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

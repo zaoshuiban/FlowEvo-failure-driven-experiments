@@ -1,0 +1,28 @@
+{
+  "id": "8eed146b-a0ff-458b-bfd6-9dd071e11143",
+  "object": "chat.completion",
+  "created": 1792987457,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    strings = data[1:1+n]\n\n    pos = {}\n    neg = {}\n\n    for s in strings:\n        bal = 0\n        min_bal = 0\n        for ch in s:\n            if ch == 40:  # '('\n                bal += 1\n            else:\n                bal -= 1\n            if bal < min_bal:\n                min_bal = bal\n\n        if min_bal >= 0:\n            pos[bal] = pos.get(bal, 0) + 1\n        else:\n            bal2 = 0\n            min_bal2 = 0\n            for ch in reversed(s):\n                if ch == 41:  # ')'\n                    bal2 += 1\n                else:\n                    bal2 -= 1\n                if bal2 < min_bal2:\n                    min_bal2 = bal2\n            if min_bal2 >= 0:\n                need = bal2\n                neg[need] = neg.get(need, 0) + 1\n\n    ans = 0\n    for b, cnt in pos.items():\n        if b in neg:\n            ans += min(cnt, neg[b])\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2690,
+    "completion_tokens": 301,
+    "total_tokens": 2991,
+    "prompt_tokens_details": {
+      "cached_tokens": 2176
+    },
+    "prompt_cache_hit_tokens": 2176,
+    "prompt_cache_miss_tokens": 514
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

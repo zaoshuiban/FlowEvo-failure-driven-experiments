@@ -1,0 +1,28 @@
+{
+  "id": "92c38cf2-fcab-460c-87e8-d562fe982888",
+  "object": "chat.completion",
+  "created": 1792986525,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.buffer.read().split()\n    t = int(input_data[0])\n    idx = 1\n    out = []\n    for _ in range(t):\n        n = int(input_data[idx]); m = int(input_data[idx+1]); idx += 2\n        cnt = [0]*64\n        total = 0\n        for i in range(m):\n            a = int(input_data[idx]); idx += 1\n            total += a\n            cnt[a.bit_length()-1] += 1\n        if total < n:\n            out.append(\"-1\")\n            continue\n        ans = 0\n        need = n\n        for b in range(63):\n            if (need >> b) & 1:\n                if cnt[b] > 0:\n                    cnt[b] -= 1\n                else:\n                    j = b + 1\n                    while j < 64 and cnt[j] == 0:\n                        j += 1\n                    while j > b:\n                        cnt[j] -= 1\n                        cnt[j-1] += 2\n                        ans += 1\n                        j -= 1\n                    cnt[b] -= 1\n            cnt[b+1] += cnt[b] // 2\n        out.append(str(ans))\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 808,
+    "completion_tokens": 300,
+    "total_tokens": 1108,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 168
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

@@ -1,0 +1,241 @@
+{
+  "task_public": {
+    "problem_id": "s19g_taco-train-s00-r2749",
+    "prompt": "A lot of frogs want to cross a river. A river is $w$ units width, but frogs can only jump $l$ units long, where $l < w$. Frogs can also jump on lengths shorter than $l$. but can't jump longer. Hopefully, there are some stones in the river to help them.\n\nThe stones are located at integer distances from the banks. There are $a_i$ stones at the distance of $i$ units from the bank the frogs are currently at. Each stone can only be used once by one frog, after that it drowns in the water.\n\nWhat is the maximum number of frogs that can cross the river, given that then can only jump on the stones?\n\n\n-----Input-----\n\nThe first line contains two integers $w$ and $l$ ($1 \\le l < w \\le 10^5$) — the width of the river and the maximum length of a frog's jump.\n\nThe second line contains $w - 1$ integers $a_1, a_2, \\ldots, a_{w-1}$ ($0 \\le a_i \\le 10^4$), where $a_i$ is the number of stones at the distance $i$ from the bank the frogs are currently at.\n\n\n-----Output-----\n\nPrint a single integer — the maximum number of frogs that can cross the river.\n\n\n-----Examples-----\nInput\n10 5\n0 0 1 0 2 0 0 1 0\n\nOutput\n3\n\nInput\n10 3\n1 1 1 1 2 1 1 1 1\n\nOutput\n3\n\n\n\n-----Note-----\n\nIn the first sample two frogs can use the different stones at the distance $5$, and one frog can use the stones at the distances $3$ and then $8$.\n\nIn the second sample although there are two stones at the distance $5$, that does not help. The three paths are: $0 \\to 3 \\to 6 \\to 9 \\to 10$, $0 \\to 2 \\to 5 \\to 8 \\to 10$, $0 \\to 1 \\to 4 \\to 7 \\to 10$.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "10 5\n0 0 1 0 2 0 0 1 0\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r2749::statement",
+          "case_sha256": "7b2a7d8385def0c75cce6d383a7f4cd83a810d4b05137a278920070239f41900"
+        }
+      },
+      {
+        "input": "10 3\n1 1 1 1 2 1 1 1 1\n",
+        "expected": "3",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r2749::statement",
+          "case_sha256": "54d33cce608a29596902ed602b6a6ddaecc2b4156596ba44c67a3806d97a02f5"
+        }
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "10 5\n0 0 1 0 2 0 0 1 0\n",
+      "expected": "3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-train-s00-r2749::statement",
+        "case_sha256": "7b2a7d8385def0c75cce6d383a7f4cd83a810d4b05137a278920070239f41900"
+      }
+    },
+    {
+      "input": "10 3\n1 1 1 1 2 1 1 1 1\n",
+      "expected": "3",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-train-s00-r2749::statement",
+        "case_sha256": "54d33cce608a29596902ed602b6a6ddaecc2b4156596ba44c67a3806d97a02f5"
+      }
+    },
+    {
+      "input": "100 34\n16 2 10 13 12 13 0 5 3 2 3 15 4 9 1 20 19 14 2 7 14 11 3 38 11 9 12 8 1 19 20 4 31 17 8 0 14 34 5 9 17 0 3 18 14 12 11 12 7 5 11 4 9 17 0 8 4 10 0 0 12 4 15 0 15 5 19 12 6 1 19 19 4 24 19 1 10 0 9 1 6 15 4 16 1 18 13 16 5 5 20 11 10 9 9 8 20 15 12\n",
+      "expected": "288\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "7e27b31523c2eebbdd7a2c36782f21d0f774e3b9b960d9a0793615de186c8688"
+      }
+    },
+    {
+      "input": "100 34\n16 2 10 13 12 4 0 3 3 2 3 15 4 9 1 20 6 20 2 10 14 11 3 23 11 9 12 8 1 19 46 4 31 17 8 0 12 34 5 9 17 0 3 18 14 12 6 12 7 6 14 4 9 17 0 8 4 10 0 1 8 4 4 0 15 5 30 22 6 1 19 19 4 24 19 1 10 0 9 0 6 15 4 16 0 18 13 16 5 5 20 11 10 9 9 8 20 15 12\n",
+      "expected": "294\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "8eefa54e867e34bfae2e3c6c136567edd98e79cdf5d0707d6c270126e4721d83"
+      }
+    },
+    {
+      "input": "100 34\n16 2 10 13 12 4 0 3 3 2 2 2 4 7 1 20 6 20 2 11 14 11 3 15 11 9 12 8 1 7 46 1 57 17 8 0 12 34 5 9 17 1 3 18 14 12 6 12 7 6 14 4 9 17 0 8 4 2 0 1 8 4 4 0 15 5 30 22 6 1 3 19 4 24 19 2 1 0 9 0 6 6 4 16 0 18 13 16 11 5 20 11 10 9 9 8 20 15 24\n",
+      "expected": "253\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "da68da427068ed13470524f73e7013bae60ef17536095b1b4cade61372b23df0"
+      }
+    },
+    {
+      "input": "100 34\n16 2 10 13 12 13 0 5 4 2 3 15 4 9 1 20 19 14 2 7 14 11 10 38 11 9 12 8 1 19 20 4 31 17 8 0 14 34 5 9 17 0 3 18 14 12 11 12 7 5 11 4 9 17 0 8 4 10 0 0 12 4 15 0 15 14 19 12 6 8 19 19 4 18 19 1 8 0 9 1 6 15 4 16 1 18 13 16 5 5 20 11 10 9 9 8 20 15 12\n",
+      "expected": "296\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "aeb7e214f7dfaacca094b6c16a7dda9d5008f43d71e04ae0a06b48906ed2021f"
+      }
+    },
+    {
+      "input": "100 34\n16 2 10 13 12 4 0 3 3 2 3 15 4 9 1 20 6 20 2 10 14 11 3 23 11 9 12 8 1 19 46 4 31 17 8 0 12 34 5 9 17 0 3 18 14 12 6 12 7 6 14 4 9 17 0 8 4 10 0 1 8 4 4 0 15 5 30 22 6 1 19 19 4 24 19 1 10 0 9 0 6 15 4 16 0 18 13 16 10 5 20 11 10 9 9 8 20 15 12\n",
+      "expected": "294\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "bbbb12672c2eec7f399e7a49eb47d7734156cd98f987a7096e4bc1463375e9d9"
+      }
+    },
+    {
+      "input": "100 34\n16 0 10 11 12 13 0 5 4 14 6 15 4 9 1 20 19 14 1 7 14 11 10 20 6 9 12 8 3 19 20 4 31 17 8 11 14 18 5 20 17 0 3 18 14 12 11 12 5 5 11 7 9 17 4 8 4 10 0 0 12 9 15 3 15 14 19 12 6 8 17 19 4 18 19 3 8 3 9 1 6 15 4 16 1 18 13 16 3 5 20 11 10 9 9 17 20 15 12\n",
+      "expected": "312\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "019f78e2bda44edc6ccf8ca332cb56f2df91dc581b4c1d95bc0c03d0fb836ae1"
+      }
+    },
+    {
+      "input": "100 34\n16 2 10 13 12 4 0 3 3 2 3 15 4 9 1 20 6 20 2 10 14 11 3 23 11 9 12 8 1 19 46 4 31 17 8 0 12 34 5 9 17 0 3 18 14 12 6 12 7 6 14 4 9 17 0 8 4 3 0 1 8 4 4 0 15 5 30 22 6 1 19 19 4 24 19 2 10 0 9 0 6 6 4 16 0 18 13 16 10 5 20 11 10 9 9 8 20 15 12\n",
+      "expected": "279\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "cbf7e634c527580d7fe8f5309a2fdedbd629cf0f55d76f2078898280576f68b2"
+      }
+    },
+    {
+      "input": "2 1\n5\n",
+      "expected": "5\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "c3c0fab4c83892b7673428bb7ff6ae3f9ce381562e59634c682659f31995f1e0"
+      }
+    },
+    {
+      "input": "100 34\n16 2 10 13 12 4 0 3 3 2 3 15 4 9 1 20 19 20 2 7 14 11 3 23 11 9 12 8 1 19 27 4 31 17 8 0 12 34 5 9 17 0 3 18 14 12 6 12 7 6 14 4 9 17 0 8 4 10 0 0 8 4 15 0 15 5 22 22 6 1 19 19 4 24 19 1 10 0 9 1 6 15 4 16 0 18 13 16 5 5 20 11 10 9 9 8 20 15 12\n",
+      "expected": "297\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "405960cb19212716739f67f8bb2e2ad3149d03ee628e5768e01668aaa3a4b0a1"
+      }
+    },
+    {
+      "input": "10 4\n10 10 10 10 10 10 10 10 10\n",
+      "expected": "40\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "598c34b0eb4595a21d01ddb1248df3082b5ddbd0740648ddb8171e6152bba0fb"
+      }
+    },
+    {
+      "input": "100 34\n16 2 10 13 12 4 0 3 3 2 2 2 4 7 1 20 6 20 2 11 14 11 3 15 11 9 12 9 1 7 46 1 57 17 8 0 12 34 5 9 17 1 3 18 14 12 6 12 7 6 14 4 9 17 0 8 4 2 0 1 8 8 4 0 15 5 30 22 6 1 3 19 4 24 19 2 1 0 9 0 6 6 4 16 0 18 13 16 11 5 20 11 10 9 9 8 20 15 24\n",
+      "expected": "257\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "e203e2b2b228688c255fea709c332f589bf585887be2ea12668013716532c846"
+      }
+    },
+    {
+      "input": "10 1\n1 1 17 10 2 10 0 9 10\n",
+      "expected": "0\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-train-s00-r2749::predesignated-online-development",
+        "case_sha256": "0a2ac4202e0fa9d9131961001846e8e577dd0c85d46bfee976d9670367ea0cff"
+      }
+    }
+  ],
+  "code": "",
+  "feedback": {
+    "status": "NO_COMPLETE_CODE",
+    "summary": "No complete program was produced.",
+    "public_cases": [],
+    "visibility": "public"
+  },
+  "task_id": "s19g_taco-train-s00-r2749",
+  "stage": "l1",
+  "checkpoint_budget": {
+    "max_calls": 5,
+    "max_tokens": 204800,
+    "max_tools": 128,
+    "calls": 1,
+    "used_tokens": 8728,
+    "tool_calls": 0,
+    "remaining_seconds": 559.340316375019
+  },
+  "event_id": "35f66460545c2efd90caa2a6b292dc4eb007d7f3cb74b778507eaaafc7e9dca0",
+  "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifact_state": "NO_COMPLETE_CODE"
+}

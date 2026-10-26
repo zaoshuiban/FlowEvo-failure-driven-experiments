@@ -1,0 +1,28 @@
+{
+  "id": "5c0e86a4-fed0-4c89-8951-5c2ac8a67f5c",
+  "object": "chat.completion",
+  "created": 1793004880,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0]); m = int(data[1])\n    grid = data[2:2+n]\n    \n    # Check if path exists at all\n    # If no path, answer 0\n    # We need min vertex cut between (0,0) and (n-1,m-1) in DAG grid\n    # By Menger's theorem, min vertex cut = max number of vertex-disjoint paths\n    # In a DAG with unit vertex capacities, max flow = min cut\n    # But n*m up to 1e6, need efficient approach\n    \n    # Special case: if (0,0) or (n-1,m-1) blocked - guaranteed not\n    # If no path exists, answer 0\n    \n    # Check reachability first\n    reach = [[False]*m for _ in range(n)]\n    reach[0][0] = True\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == ord('#'):\n                continue\n            if i == 0 and j == 0:\n                continue\n            if (i > 0 and reach[i-1][j]) or (j > 0 and reach[i][j-1]):\n                reach[i][j] = True\n    \n    if not reach[n-1][m-1]:\n        print(0)\n        return\n    \n    # Min vertex cut in grid DAG. By Menger, equals max vertex-disjoint paths.\n    # Since it's a planar grid with only right/down moves, max disjoint paths <= 2\n    # (because (0,0) has only 2 outgoing neighbors and (n-1,m-1) has only 2 incoming)\n    # Actually min cut <= 2 always (block the two neighbors of start or two predecessors of end)\n    # So answer is 1 or 2 (if path exists)\n    \n    # Answer is 1 iff there's a single cell whose removal disconnects.\n    # Equivalently, max vertex-disjoint paths == 1.\n    # We can find 2 vertex-disjoint paths greedily, or check if removing each cell works.\n    # Better: find one path, then check if any cell on it is a cut vertex.\n    # Actually: answer 1 iff there exists a cell (not start/end) that all paths pass through.\n    \n    # Find one path via DP\n    # Then for each cell on path, check if removing it disconnects.\n    # That's O(path_length * n*m) too slow.\n    \n    # Better approach: max flow with unit capacities. Since max flow <= 2, we can do:\n    # Find first path, remove its internal vertices, check if second path exists.\n    # If yes, answer 2. If no, answer 1.\n    # But careful: first path choice matters? No - if max flow is 2, any path removal leaves another.\n    # Actually if max flow = 2, removing any single path's internal vertices still leaves a path? \n    # Not necessarily - but if max flow = 2, there exist 2 disjoint paths. If we find one path P,\n    # and remove P's internal vertices, is there still a path? Yes, because the other disjoint path\n    # doesn't share internal vertices with P. So yes.\n    # If max flow = 1, removing the unique path's internal vertices leaves no path.\n    # So: find any path, remove internal vertices, check reachability.\n    \n    # Find a path using DP\n    parent = [[None]*m for _ in range(n)]\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == ord('#'):\n                continue\n            if i == 0 and j == 0:\n                continue\n            if i > 0 and reach[i-1][j]:\n                parent[i][j] = (i-1, j)\n            elif j > 0 and reach[i][j-1]:\n                parent[i][j] = (i, j-1)\n    \n    # Trace path\n    path = []\n    cur = (n-1, m-1)\n    while cur is not None:\n        path.append(cur)\n        cur = parent[cur[0]][cur[1]]\n    path.reverse()\n    \n    # Mark internal vertices of path as blocked\n    blocked = set()\n    for k in range(1, len(path)-1):\n        blocked.add(path[k])\n    \n    # Check reachability with blocked cells\n    reach2 = [[False]*m for _ in range(n)]\n    reach2[0][0] = True\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == ord('#'):\n                continue\n            if (i,j) in blocked:\n                continue\n            if i == 0 and j == 0:\n                continue\n            if (i > 0 and reach2[i-1][j]) or (j > 0 and reach2[i][j-1]):\n                reach2[i][j] = True\n    \n    if reach2[n-1][m-1]:\n        print(2)\n    else:\n        print(1)\n\nmain()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1549,
+    "completion_tokens": 1146,
+    "total_tokens": 2695,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1549
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "1460228c-7af3-46ce-ac57-15393d90b81b",
+  "object": "chat.completion",
+  "created": 1792987450,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    strings = data[1:1+n]\n\n    need = {}\n    give = {}\n\n    for s in strings:\n        bal = 0\n        min_bal = 0\n        for ch in s:\n            if ch == 40:  # '('\n                bal += 1\n            else:\n                bal -= 1\n            if bal < min_bal:\n                min_bal = bal\n\n        if min_bal >= 0:\n            give[bal] = give.get(bal, 0) + 1\n        else:\n            bal2 = 0\n            min_bal2 = 0\n            for ch in reversed(s):\n                if ch == 41:  # ')'\n                    bal2 += 1\n                else:\n                    bal2 -= 1\n                if bal2 < min_bal2:\n                    min_bal2 = bal2\n\n            if min_bal2 >= 0:\n                need[bal2] = need.get(bal2, 0) + 1\n\n    ans = 0\n    for b, cnt in give.items():\n        if b in need:\n            ans += min(cnt, need[b])\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2221,
+    "completion_tokens": 289,
+    "total_tokens": 2510,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 2221
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

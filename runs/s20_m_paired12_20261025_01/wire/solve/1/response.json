@@ -1,0 +1,28 @@
+{
+  "id": "88507990-aa56-4478-a595-3b10a93bc092",
+  "object": "chat.completion",
+  "created": 1792986335,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    h = int(data[1])\n    a = list(map(int, data[2:2+n]))\n\n    for x in a:\n        if x > h:\n            print(0)\n            return\n\n    # dp[j] = number of ways with j currently open segments\n    dp = [0] * (n + 2)\n    dp[0] = 1\n\n    prev = h\n    for i in range(n):\n        cur = a[i]\n        ndp = [0] * (n + 2)\n\n        if cur == prev:\n            # can close one, keep same, or open one\n            for j in range(n + 1):\n                v = dp[j]\n                if not v:\n                    continue\n                # close one\n                if j > 0:\n                    ndp[j - 1] = (ndp[j - 1] + v * j) % MOD\n                # keep same\n                ndp[j] = (ndp[j] + v) % MOD\n                # open one\n                ndp[j + 1] = (ndp[j + 1] + v) % MOD\n        elif cur == prev - 1:\n            # must open one (or close and open? net +1)\n            for j in range(n + 1):\n                v = dp[j]\n                if not v:\n                    continue\n                # open one\n                ndp[j + 1] = (ndp[j + 1] + v) % MOD\n                # close one and open one: net same, but close choice j, open forced\n                if j > 0:\n                    ndp[j] = (ndp[j] + v * j) % MOD\n        elif cur == prev + 1:\n            # must close one\n            for j in range(1, n + 1):\n                v = dp[j]\n                if not v:\n                    continue\n                ndp[j - 1] = (ndp[j - 1] + v * j) % MOD\n        else:\n            print(0)\n            return\n\n        dp = ndp\n        prev = cur\n\n    # after last element, must close all open segments\n    ans = 0\n    for j in range(n + 1):\n        if dp[j]:\n            # close all j segments in any order: j!\n            fact = 1\n            for k in range(2, j + 1):\n                fact = fact * k % MOD\n            ans = (ans + dp[j] * fact) % MOD\n\n    print(ans % MOD)\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1353,
+    "completion_tokens": 601,
+    "total_tokens": 1954,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1353
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

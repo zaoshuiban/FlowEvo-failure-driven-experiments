@@ -1,0 +1,28 @@
+{
+  "id": "ca6add7c-6a35-4912-93f7-3b4e14e704cc",
+  "object": "chat.completion",
+  "created": 1792986417,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    idx = 1\n\n    ans = 0\n    speed = 0\n    limit = 10**9\n    overtake_allowed = True\n\n    # stack of active speed limits (values), with lazy removal\n    limits = []\n    # stack of active \"no overtake\" signs; each entry is a marker\n    no_overtake = []\n\n    for _ in range(n):\n        t = int(data[idx]); idx += 1\n        if t == 1:\n            speed = int(data[idx]); idx += 1\n        elif t == 2:\n            if not overtake_allowed:\n                ans += len(no_overtake)\n                no_overtake.clear()\n                overtake_allowed = True\n        elif t == 3:\n            s = int(data[idx]); idx += 1\n            limits.append(s)\n            limit = s\n        elif t == 4:\n            overtake_allowed = True\n            no_overtake.clear()\n        elif t == 5:\n            limits.clear()\n            limit = 10**9\n        elif t == 6:\n            if overtake_allowed:\n                overtake_allowed = False\n                no_overtake.append(1)\n            else:\n                no_overtake.append(1)\n\n        # check speed violation against current effective limit\n        if limits:\n            while limits and limits[-1] < speed:\n                limits.pop()\n                ans += 1\n            if limits:\n                limit = limits[-1]\n            else:\n                limit = 10**9\n        else:\n            limit = 10**9\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1673,
+    "completion_tokens": 388,
+    "total_tokens": 2061,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 521
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

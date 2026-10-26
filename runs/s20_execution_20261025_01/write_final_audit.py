@@ -1,0 +1,16 @@
+import pathlib,json,collections,math
+P=pathlib.Path(__file__).resolve().parent
+def read(n):return json.loads((P/n).read_text())
+assert read('sealed_summary.json')['completed']
+r=read('sealed_results.json');a=read('mechanism_audit.json');sets={g:{x['task_id']:x for x in r if x['arm']==g and x['kind']=='TASK_FINAL'} for g in 'GMF'};common=set.intersection(*(set(x) for x in sets.values()));assert len(common)==79
+stats={g:dict(total=len(s),sealed_pass=sum(x['result']['passed'] for x in s.values()),public_pass_sealed_fail=sum(x['public_pass'] and not x['result']['passed'] for x in s.values()),common_sealed_pass=sum(s[t]['result']['passed'] for t in common),common_public_pass=sum(s[t]['public_pass'] for t in common)) for g,s in sets.items()}
+pairs={}
+for g in 'GM':
+ win=sum(sets['F'][t]['result']['passed'] and not sets[g][t]['result']['passed'] for t in common);loss=sum(sets[g][t]['result']['passed'] and not sets['F'][t]['result']['passed'] for t in common);n=win+loss;p=min(1,2*sum(math.comb(n,i) for i in range(min(win,loss)+1))/2**n) if n else 1
+ pairs[g]=dict(F_only=win,comparator_only=loss,both_pass=sum(sets['F'][t]['result']['passed'] and sets[g][t]['result']['passed'] for t in common),exact_mcnemar_p=p,interpretation='exploratory unadjusted; not causal learning effect')
+f=stats['F']['sealed_pass'];sens=dict(F_full80_lower=f/80,F_full80_upper=(f+1)/80,meaning='unknown missing outcome hypothetically fail/pass; not imputed observations')
+(P/'paired79_analysis.json').write_text(json.dumps(dict(arms=stats,pairs=pairs,missing_sensitivity=sens,common_task_ids=sorted(common)),indent=2))
+lines=['# S20-A封存复核与机制审计','', '本次新增模型API为0。使用既有Linux Worker及冻结封存输入；三组ONLINE_LOCKED后独立评分，未将封存结果写回在线库。F r1204保持缺失，未重发或结算未知请求。','', '|组|已评价|封存全通过|共同79题公开通过|共同79题封存全通过|公开通过但封存失败|','|---|---:|---:|---:|---:|---:|']
+for g,s in stats.items():lines.append(f"|{g}|{s['total']}|{s['sealed_pass']}|{s['common_public_pass']}|{s['common_sealed_pass']}|{s['public_pass_sealed_fail']}|")
+lines+=['',f'共同79题配对：{json.dumps(pairs,ensure_ascii=False)}',f'完整80题F缺失敏感性范围：{sens["F_full80_lower"]:.2%}–{sens["F_full80_upper"]:.2%}，不是补造结果。G/M全80题见上表。','', '## M学习阻断','M有61条可信失败事件，涉及22个原题。8批均触发记忆更新，第一批INPUT_TOKEN_UPPER_LIMIT，后7批WIRE_BYTES_LIMIT，均NOT_SENT。内存最终为空，学习调用0。代码boundary把全部累计完整packet传给update_memory，没有采用F的压缩bundle；因此不是失败不足，也不是预算花完，更不能将本轮解释为充分工作的文本失败记忆基线。','', '## F生成与来源验证','F有51条可信事件、24个原题。21次学习响应为11个初始生成、10次修订（合并假设与规则输出，不是另有21次假设调用）。19份被拒：9份hypothesis.refusal_conditions数组而非非空字符串；10份rule.when.candidate_state数组而非标量。顶层type已按白名单处理，不是本轮主要阻断。','2份通过输出为同一规则，聚合成1个Shadow候选：NO_COMPLETE_CODE时REGENERATE_FRESH。已匹配证据上的动作都与Generic相同。两份来源请求wire完全相同；与原生完整请求的相同性缺少完整成功库上下文，不能断言。','两次来源验证都为r2749，输入674/output8192，均finish_reason=length。第一次无完整程序；第二次产生不能输出答案的程序，公开0/14。没有局部改善、没有Experimental准入、没有未来真实Hook。不能将全部生成失败称为没有可匹配任务。','', '## 中断与锁定','未知请求时间及哈希链明细见mechanism_audit.json。用户明确批准保留全额预留并跳过中断题后，恢复适配仅解除这一条请求的运行阻断；账本仍UNKNOWN。日志记录INFRASTRUCTURE_TASK_SKIPPED，不补造TASK_FINALIZED。ONLINE_LOCKED表示在线轨迹已锁定，不表示账单已结清或三组均评价80题。','', '## 结论','本轮没有实际规则介入，F/G成绩差异不构成失败学习因果收益。M的输入组织阻断与F的契约失败/来源交付失败应先解决，再判断419题是否值得运行；单纯扩大题数不能解决已明确的输入及契约问题。不改旧在线结果、不恢复Suspended、不启动B1/S21。',f'封存工具成本：{json.dumps(read("sealed_summary.json"),ensure_ascii=False)}']
+(P/'S20A_封存复核与机制审计报告.md').write_text('\n'.join(lines));print(json.dumps(dict(stats=stats,pairs=pairs,sensitivity=sens),ensure_ascii=False))

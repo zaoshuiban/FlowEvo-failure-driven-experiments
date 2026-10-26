@@ -1,0 +1,28 @@
+{
+  "id": "8b762c43-8a3e-44f7-8d3e-1d6a4f3ec2fa",
+  "object": "chat.completion",
+  "created": 1792986434,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\nimport math\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0]); m = int(data[1]); k = int(data[2])\n    a = [int(x) for x in data[3:3+k]]\n\n    for i in range(k - 1):\n        if math.gcd(a[i], a[i+1]) != 1:\n            print(\"NO\")\n            return\n\n    L = 1\n    for x in a:\n        L = L // math.gcd(L, x) * x\n        if L > n:\n            print(\"NO\")\n            return\n\n    j = 0\n    mod = 1\n    broke = False\n    break_t = 0\n    for t in range(1, k + 1):\n        at = a[t-1]\n        r = (1 - t) % at\n        g = math.gcd(mod, at)\n        if (r - j) % g != 0:\n            print(\"NO\")\n            return\n        mod_g = mod // g\n        a_g = at // g\n        rhs = (r - j) // g\n        if a_g == 1:\n            x = 0\n        else:\n            inv = pow(mod_g % a_g, -1, a_g)\n            x = (rhs * inv) % a_g\n        j = j + mod * x\n        mod = mod * a_g\n        j %= mod\n        if mod > m:\n            broke = True\n            break_t = t\n            break\n\n    if broke:\n        if j == 0:\n            print(\"NO\")\n            return\n        for t in range(break_t + 1, k + 1):\n            if (j - (1 - t)) % a[t-1] != 0:\n                print(\"NO\")\n                return\n        if j > m - k + 1:\n            print(\"NO\")\n            return\n    else:\n        if j == 0:\n            j = mod\n        if j > m - k + 1:\n            print(\"NO\")\n            return\n\n    for t in range(1, k + 1):\n        b = (j + t - 1) // a[t-1]\n        if math.gcd(L // a[t-1], b) != 1:\n            print(\"NO\")\n            return\n\n    print(\"YES\")\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1390,
+    "completion_tokens": 539,
+    "total_tokens": 1929,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1390
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

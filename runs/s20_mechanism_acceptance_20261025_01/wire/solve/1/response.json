@@ -1,0 +1,28 @@
+{
+  "id": "b586fa43-2524-4c39-b3fc-b86ca6125ce2",
+  "object": "chat.completion",
+  "created": 1792985929,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    it = iter(data)\n    n = int(next(it))\n    d = int(next(it))\n    a = [0] * n\n    for i in range(1, n - 1):\n        a[i] = int(next(it))\n    x = [0] * n\n    y = [0] * n\n    for i in range(n):\n        x[i] = int(next(it))\n        y[i] = int(next(it))\n\n    INF = 10**18\n    dist = [[0] * n for _ in range(n)]\n    for i in range(n):\n        for j in range(n):\n            dist[i][j] = (abs(x[i] - x[j]) + abs(y[i] - y[j])) * d\n\n    # dp[i] = minimum money needed to reach station i\n    dp = [INF] * n\n    dp[0] = 0\n    used = [False] * n\n\n    for _ in range(n):\n        u = -1\n        for i in range(n):\n            if not used[i] and (u == -1 or dp[i] < dp[u]):\n                u = i\n        if u == -1 or dp[u] == INF:\n            break\n        used[u] = True\n        for v in range(n):\n            if used[v]:\n                continue\n            cost = dist[u][v]\n            need = max(0, cost - a[u])\n            cand = dp[u] + need\n            if cand < dp[v]:\n                dp[v] = cand\n\n    print(dp[n - 1])\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1351,
+    "completion_tokens": 371,
+    "total_tokens": 1722,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1351
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

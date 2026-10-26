@@ -1,0 +1,28 @@
+{
+  "id": "b2af0529-a3c8-430a-a8e6-ca16cc42bda0",
+  "object": "chat.completion",
+  "created": 1792987439,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\nimport bisect\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    V = list(map(int, data[1:n+1]))\n    T = list(map(int, data[n+1:n+1+n]))\n\n    pref = [0] * (n + 1)\n    for i in range(n):\n        pref[i+1] = pref[i] + T[i]\n\n    ans = [0] * n\n    starts = []\n    vols = []\n\n    for i in range(n):\n        starts.append(i)\n        vols.append(V[i])\n\n        # Find first pile that fully melts by today\n        # total melt from start s through i = pref[i+1] - pref[s]\n        # condition: pref[i+1] - pref[s] >= vol\n        # => pref[s] + vol <= pref[i+1]\n        # We need to process all such piles. Since starts are increasing,\n        # and pref is nondecreasing, we can binary search on a transformed key.\n        # But simpler: maintain a list of (pref[s]+vol) and remove those <= pref[i+1].\n        # However, we need to preserve order and handle partial melt for survivors.\n        # Use a heap keyed by pref[s]+vol.\n        pass\n\n    # Reimplement with heap\n    import heapq\n    heap = []\n    ans = [0] * n\n    active = 0  # number of active piles not yet fully melted\n\n    for i in range(n):\n        # add new pile\n        heapq.heappush(heap, (pref[i] + V[i], i, V[i]))\n        active += 1\n\n        melted = 0\n        # process piles that fully melt today or earlier\n        while heap and heap[0][0] <= pref[i+1]:\n            key, s, vol = heapq.heappop(heap)\n            active -= 1\n            melt_before = pref[i] - pref[s]\n            remaining = vol - melt_before\n            if remaining > 0:\n                melted += remaining\n            # if remaining <= 0, it melted earlier, but we should have removed it earlier\n            # Actually if key <= pref[i+1], it melts by today. If key <= pref[i], it melted before today.\n            # We need to handle that: if key <= pref[i], it should have been removed earlier.\n            # But we only remove when key <= pref[i+1]. So a pile with key <= pref[i] would have been removed on an earlier day.\n            # So remaining > 0 always here? Not necessarily if T[i]=0 and key == pref[i+1] == pref[i].\n            # If T[i]=0, pref[i+1]=pref[i], key <= pref[i] means it melted before today, but we would have removed it earlier.\n            # So remaining >= 0. If remaining == 0, it melts exactly at end of today? Actually if key == pref[i+1], total melt = vol, so remaining = vol - (pref[i]-pref[s]) = vol - (pref[i+1]-T[i]-pref[s]) = vol - (key - T[i] - pref[s])? Let's just compute.\n            # remaining = vol - (pref[i] - pref[s]) = vol - pref[i] + pref[s] = (pref[s]+vol) - pref[i] = key - pref[i].\n            # Since key <= pref[i+1] = pref[i] + T[i], remaining <= T[i]. And remaining > 0 if key > pref[i].\n            # If key <= pref[i], remaining <= 0, meaning it melted before today. But we would have removed it earlier because on day j < i, pref[j+1] >= key? Not necessarily if T[j]=0.\n            # Actually if key <= pref[i], then on some earlier day j, pref[j+1] >= key? Since pref is nondecreasing, pref[i] >= key. The first day j where pref[j+1] >= key would have removed it. So it's already removed. So remaining > 0 here.\n            # But to be safe, only add if remaining > 0.\n            if remaining > 0:\n                melted += remaining\n\n        # survivors melt T[i] today\n        melted += active * T[i]\n        ans[i] = melted\n\n    print(' '.join(map(str, ans)))\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1899,
+    "completion_tokens": 965,
+    "total_tokens": 2864,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1899
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

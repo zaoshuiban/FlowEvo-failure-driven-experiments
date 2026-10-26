@@ -1,0 +1,17 @@
+import json,pathlib,hashlib,ast,collections
+R=pathlib.Path(__file__).resolve().parents[2];P=R/'runs/s20_gmp_strict5_20261026_02';read=lambda f:json.loads((P/f).read_text());s=read('summary.json');plan=read('plan.json');branches=read('branches.json');requests=read('solve_requests.json');lines=['# 五题等Token通用建议与失败记忆严格对照报告','',f"Run：`{plan['run_id']}`；判定：`{s['decision']}`。",'', '## 实验边界','', '5道开发检查点、G/M/P各1次修复，共15次。r2049在模型调用前因三组相同输入超限而排除；没有替换题目，剩余任务沿用原顺序。M固定历史记忆；P固定通用编程与完整交付建议。两者正文458 Token，注入位置与标签相同。P在观察之前开发结果后编写，此实验不是盲法独立确认，也不是动态在线记忆学习。', '', '原UNKNOWN及全部旧账本不变。新Run独立最多15次请求、$1硬上限，不转移旧预算。F无生成或干预；419题长流未启动，119题确认池未使用。', '', f"冻结协议哈希：`{plan['protocol_hash']}`。运行期未修改Prompt、任务、记忆、评分或预算。",'', '## 结果','','|指标|G|M|P|','|---|---:|---:|---:|']
+for k,label in [('public_pass','公开全过'),('sealed_pass','封存全过'),('joint_pass','公开及封存均全过'),('calls','实际响应'),('input_tokens','输入Token'),('output_tokens','输出Token'),('tokens','总Token'),('estimated_usd','在线估算美元')]:
+ lines.append('|'+label+'|'+'|'.join(f"{s['stats'][a][k]:.8f}" if k=='estimated_usd' else str(s['stats'][a][k]) for a in 'GMP')+'|')
+lines+=['','|配对|前者独有成功|后者独有成功|精确McNemar p（未校正）|','|---|---:|---:|---:|']
+for k,v in s['contrasts'].items():lines.append(f"|{k}|{v['first_only']}|{v['second_only']}|{v['exact_mcnemar_p_unadjusted']}|")
+lines+=['','## 逐题结果','','格式为公开通过数/总数、封存通过数/总数、finish_reason、输入+输出Token。','','|任务|G|M|P|','|---|---|---|---|']
+sealed=read('sealed_results.json');detail=[]
+for x in s['pairs']:
+ row=[]
+ for a in 'GMP':
+  b=next(z for z in branches if z['task_id']==x['task_id'] and z['arm']==a);z=next(z for z in sealed if z['task_id']==x['task_id'] and z['arm']==a)['result'];u=b['response']['usage'];pub=b['public_result'];row.append(f"{pub['tests_passed']}/{pub['tests_run']}；{z['tests_passed']}/{z['tests_run']}；{b['response']['finish_reason']}；{u['prompt_tokens']}+{u['completion_tokens']}")
+  detail.append(dict(task_id=x['task_id'],arm=a,finish_reason=b['response']['finish_reason'],syntax_valid=b['syntax_valid'],delivery=b['delivery'],public=pub,heldout=z,usage=u))
+ lines.append('|'+x['task_id']+'|'+'|'.join(row)+'|')
+lines+=['','## 真实Token匹配','','各题M/P供应商prompt_tokens完全一致：'+str(all(x['M_input_increment']==x['P_input_increment'] for x in s['pairs']))+'。相对G增量：'+str([(x['M_input_increment'],x['P_input_increment']) for x in s['pairs']])+'。长度控制通过不能消除一次采样波动或内容表述差异。', '', '语法通过、程序完整交付与测试正确是不同指标。syntax_valid只是AST检查，不能单独证明完整可执行算法；delivery及逐例反馈保存在delivery_audit.json。', '', '## 费用与账本','', f"本轮响应报价估算共${sum(x['estimated_usd'] for x in s['stats'].values()):.8f}。历史记忆构建{ s['learning_tokens']} Token、${s['learning_estimated_usd']:.8f}；M加一次构建总费用${s['M_with_learning_estimated_usd']:.8f}。历史构建不是本轮新增请求，跨轮累计只计一次。", '', f"reserved_upper_bound / charged_or_reserved：${s['budget']['charged_or_reserved_cost_microusd']/1e6:.6f}，与estimated_cost分别报告；actual_invoice不可得。未决请求：{s['budget']['unknown_or_pending_requests']}。报价按缓存/未缓存/输出及响应时间估算，非账单。", '', f"工具次数{s['budget']['tool_calls']}，账本工具时间{s['budget']['charged_or_reserved_tool_milliseconds']}ms；封存评价墙钟{s['sealed_seconds']:.3f}s。本地成本未货币化。",'', '## 预注册决策及限制','', plan['decision_point'], '', '经费NO-GO只表示本次证据未满足继续投入标准，不表示五题足以科学否定记忆机制。若G零成功，费用比记为不可计算，不用无穷大比例制造通过。无论结果如何，本轮结束后不继续同批调试、不自动追加任务或启动长流。来源解答成功不等于未见泛化；固定记忆不证明持续更新的累积收益。', '', '## 运行前自检记录','','首次新Run（尾号01）在Worker夹具中漏填scorer导致KeyError，0模型请求；已保留。补齐夹具后以尾号02重新冻结，模型请求前完成真实Worker正向自检。未改动旧实验。']
+(P/'五题严格对照报告.md').write_text('\n'.join(lines)+'\n');(P/'delivery_audit.json').write_text(json.dumps(detail,ensure_ascii=False,indent=2)+'\n')
+print(P/'五题严格对照报告.md')

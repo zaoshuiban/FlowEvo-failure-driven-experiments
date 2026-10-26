@@ -1,0 +1,28 @@
+{
+  "id": "f6480c1e-2db8-4f22-8160-4f2c2eab9e83",
+  "object": "chat.completion",
+  "created": 1793005032,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    s = data[0]\n    n = len(s)\n    m = int(data[1])\n    \n    # prefix balance and positions\n    # For each query [l, r], answer = 2 * number of matched pairs\n    # Using segment tree with (open, close, pairs)\n    \n    size = 1\n    while size < n:\n        size <<= 1\n    \n    # store as three arrays for speed\n    op = [0] * (2 * size)\n    cl = [0] * (2 * size)\n    pr = [0] * (2 * size)\n    \n    for i in range(n):\n        if s[i] == 40:  # '('\n            op[size + i] = 1\n        else:\n            cl[size + i] = 1\n    \n    for i in range(size - 1, 0, -1):\n        lo = op[2*i]; lc = cl[2*i]; lp = pr[2*i]\n        ro = op[2*i+1]; rc = cl[2*i+1]; rp = pr[2*i+1]\n        matched = lo if lo < rc else rc\n        op[i] = lo + ro - matched\n        cl[i] = lc + rc - matched\n        pr[i] = lp + rp + matched\n    \n    out = []\n    idx = 2\n    for _ in range(m):\n        l = int(data[idx]) - 1\n        r = int(data[idx+1])\n        idx += 2\n        \n        # iterative segment tree query\n        left = l + size\n        right = r + size\n        lo = lc = lp = 0\n        ro = rc = rp = 0\n        \n        while left < right:\n            if left & 1:\n                # merge (lo,lc,lp) with node left\n                no = op[left]; nc = cl[left]; np = pr[left]\n                matched = lo if lo < nc else nc\n                lo = lo + no - matched\n                lc = lc + nc - matched\n                lp = lp + np + matched\n                left += 1\n            if right & 1:\n                right -= 1\n                no = op[right]; nc = cl[right]; np = pr[right]\n                matched = no if no < rc else rc\n                ro = no + ro - matched\n                rc = nc + rc - matched\n                rp = np + rp + matched\n            left >>= 1\n            right >>= 1\n        \n        matched = lo if lo < rc else rc\n        total_pairs = lp + rp + matched\n        out.append(str(total_pairs * 2))\n    \n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 3052,
+    "completion_tokens": 615,
+    "total_tokens": 3667,
+    "prompt_tokens_details": {
+      "cached_tokens": 2816
+    },
+    "prompt_cache_hit_tokens": 2816,
+    "prompt_cache_miss_tokens": 236
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

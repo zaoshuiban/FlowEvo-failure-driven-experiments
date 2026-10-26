@@ -1,0 +1,294 @@
+{
+  "task_public": {
+    "problem_id": "s19g_taco-test-670",
+    "prompt": "Phoenix has a string $s$ consisting of lowercase Latin letters. He wants to distribute all the letters of his string into $k$ non-empty strings $a_1, a_2, \\dots, a_k$ such that every letter of $s$ goes to exactly one of the strings $a_i$. The strings $a_i$ do not need to be substrings of $s$. Phoenix can distribute letters of $s$ and rearrange the letters within each string $a_i$ however he wants.\n\nFor example, if $s = $ baba and $k=2$, Phoenix may distribute the letters of his string in many ways, such as:   ba and ba  a and abb  ab and ab  aa and bb \n\nBut these ways are invalid:   baa and ba  b and ba  baba and empty string ($a_i$ should be non-empty) \n\nPhoenix wants to distribute the letters of his string $s$ into $k$ strings $a_1, a_2, \\dots, a_k$ to minimize the lexicographically maximum string among them, i. e. minimize $max(a_1, a_2, \\dots, a_k)$. Help him find the optimal distribution and print the minimal possible value of $max(a_1, a_2, \\dots, a_k)$.\n\nString $x$ is lexicographically less than string $y$ if either $x$ is a prefix of $y$ and $x \\ne y$, or there exists an index $i$ ($1 \\le i \\le min(|x|, |y|))$ such that $x_i$ < $y_i$ and for every $j$ $(1 \\le j < i)$ $x_j = y_j$. Here $|x|$ denotes the length of the string $x$.\n\n\n-----Input-----\n\nThe input consists of multiple test cases. The first line contains an integer $t$ ($1 \\le t \\le 1000$) — the number of test cases. Each test case consists of two lines.\n\nThe first line of each test case consists of two integers $n$ and $k$ ($1 \\le k \\le n \\le 10^5$) — the length of string $s$ and the number of non-empty strings, into which Phoenix wants to distribute letters of $s$, respectively.\n\nThe second line of each test case contains a string $s$ of length $n$ consisting only of lowercase Latin letters.\n\nIt is guaranteed that the sum of $n$ over all test cases is $\\le 10^5$.\n\n\n-----Output-----\n\nPrint $t$ answers — one per test case. The $i$-th answer should be the minimal possible value of $max(a_1, a_2, \\dots, a_k)$ in the $i$-th test case.\n\n\n-----Example-----\nInput\n6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n\nOutput\nab\nabbc\nb\naa\nx\nehinopx\n\n\n\n-----Note-----\n\nIn the first test case, one optimal solution is to distribute baba into ab and ab. \n\nIn the second test case, one optimal solution is to distribute baacb into abbc and a.\n\nIn the third test case, one optimal solution is to distribute baacb into ac, ab, and b.\n\nIn the fourth test case, one optimal solution is to distribute aaaaa into aa, aa, and a.\n\nIn the fifth test case, one optimal solution is to distribute aaxxzz into az, az, x, and x.\n\nIn the sixth test case, one optimal solution is to distribute phoenix into ehinopx.",
+    "starter_code": "",
+    "function_name": "",
+    "public_examples": [
+      {
+        "input": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n",
+        "expected": "ab\nabbc\nb\naa\nx\nehinopx",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-test-670::statement",
+          "case_sha256": "bf025bf231674afdddac6c2225e458d6c2d86b5760b38fdb7d98b739a49e8c66"
+        }
+      }
+    ]
+  },
+  "public_cases": [
+    {
+      "input": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n",
+      "expected": "ab\nabbc\nb\naa\nx\nehinopx",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_statement",
+        "id": "taco-test-670::statement",
+        "case_sha256": "bf025bf231674afdddac6c2225e458d6c2d86b5760b38fdb7d98b739a49e8c66"
+      }
+    },
+    {
+      "input": "1\n12 11\nmononeuropathy\n",
+      "expected": "r\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "ee41d5232924c15269a4c47edc2a95216fc76f22f3afd2c0f3d028559df25d18"
+      }
+    },
+    {
+      "input": "1\n5 3\nbaacb\n",
+      "expected": "b\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "0ce88bb9c179bcb795391185e53cb11c75101d0c3cd908891ea5e4833969aabc"
+      }
+    },
+    {
+      "input": "4\n5 1\napple\n6 2\norange\n7 3\nbanana\n8 4\npineapple\n",
+      "expected": "aelpp\ne\nabnn\ni\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "417d994143c38e98fed23fe1db50b6b0ae5ab9e7040d2f223b887cac6df73af4"
+      }
+    },
+    {
+      "input": "2\n7 4\ndistort\n8 2\nravaging\n",
+      "expected": "r\nagginrv\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "96c2f7bf6f2ba4c63a474381b78cad143a5aae3d002abdf77f3d03f94506356f"
+      }
+    },
+    {
+      "input": "1\n9 3\nwannamake\n",
+      "expected": "aekmnnw\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "af101ef56dbae47e32e7d6113095853abc069dc1b92402ffc514e5080dcb8487"
+      }
+    },
+    {
+      "input": "9\n8 6\nchefspam\n11 9\nmonkeyeight\n8 2\nvcubingx\n6 1\namazed\n4 4\nhbes\n8 1\narolakiv\n9 7\nhiuavidhd\n33 13\ngosubtovcubingxheneedssubscribers\n7 4\nhiimbad\n",
+      "expected": "m\no\nc\naademz\ns\naaiklorv\ni\ng\nh\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "de1317d9ea8e82e184568ba24268ac578edc996d1c0caf68937cb0031e7652b2"
+      }
+    },
+    {
+      "input": "3\n5 2\naabbv\n6 2\nchcabc\n7 1\nyyaazd\n",
+      "expected": "abbv\nb\naadyyz\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "3a1da0c354a87fee1904e8c49a77b3cf1cb17acc88dd6e09a0fa829862757906"
+      }
+    },
+    {
+      "input": "3\n8 4\nabcdabcd\n9 5\nabcabcabc\n10 6\nababababab\n",
+      "expected": "b\nb\nb\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "6249c715fe058b272f138e71c44c3e58818967d68e98618cd86db812d9f12ca2"
+      }
+    },
+    {
+      "input": "1\n6 3\nabcabc\n",
+      "expected": "b\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "ca77c62c201af09b3942bfc0680e310c40ae32a2baebf0969e0936eb6f3bbe34"
+      }
+    },
+    {
+      "input": "1\n6 4\nakhfgj\n",
+      "expected": "h\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "dea5bd0a6ced20f497107375f870bd0e5cfee6b83a8d5faae1e3e571e9bbe805"
+      }
+    },
+    {
+      "input": "1\n4 4\nhebs\n",
+      "expected": "s\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "4f6ac1c7020065dd126c3afd1042b43a34c0c3b7849b906db18c08db95b5d741"
+      }
+    },
+    {
+      "input": "5\n5 4\nabcde\n6 2\naabbcc\n8 3\naasdfghj\n10 5\nasdfghjklq\n8 1\nzyxvutsr\n",
+      "expected": "d\nabbcc\nd\nh\nrstuvxyz\n",
+      "comparison": "tokens",
+      "scorer": "s1",
+      "visibility": "public",
+      "legal_verified": true,
+      "source": {
+        "kind": "public_dataset",
+        "id": "taco-test-670::predesignated-online-development",
+        "case_sha256": "0da8aa5d42886c9bde40ff3bfa52b8cb5936846de3f5472b3ba4eb81980b1971"
+      }
+    }
+  ],
+  "code": "import sys\n\ndef solve():\n    input = sys.stdin.readline\n    t = int(input())\n    out = []\n    for _ in range(t):\n        n, k = map(int, input().split())\n        s = input().strip()\n        cnt = [0] * 26\n        for ch in s:\n            cnt[ord(ch) - 97] += 1\n\n        first = next(i for i in range(26) if cnt[i] > 0)\n\n        if cnt[first] >= k:\n            cnt[first] -= k\n            distinct = sum(1 for i in range(26) if cnt[i] > 0)\n            if distinct <= 1:\n                total_remaining = sum(cnt)\n                length = 1 + (total_remaining + k - 1) // k\n                out.append(chr(first + 97) * length)\n            else:\n                res = [chr(first + 97)]\n                for i in range(26):\n                    if cnt[i] > 0:\n                        res.append(chr(i + 97) * cnt[i])\n                out.append(''.join(res))\n        else:\n            need = k - cnt[first]\n            for i in range(first + 1, 26):\n                if cnt[i] >= need:\n                    out.append(chr(i + 97))\n                    break\n                else:\n                    need -= cnt[i]\n    sys.stdout.write('\\n'.join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+  "feedback": {
+    "status": "WRONG_ANSWER",
+    "summary": "Wrong answer on audited public checks.",
+    "public_cases": [
+      {
+        "actual": "aa\nabbc\nb\naa\nx\nehinopx",
+        "exception_class": null,
+        "expected": "ab\nabbc\nb\naa\nx\nehinopx",
+        "input": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n"
+      },
+      {
+        "actual": "r",
+        "exception_class": null,
+        "expected": "r\n",
+        "input": "1\n12 11\nmononeuropathy\n"
+      },
+      {
+        "actual": "b",
+        "exception_class": null,
+        "expected": "b\n",
+        "input": "1\n5 3\nbaacb\n"
+      },
+      {
+        "actual": "aelpp\ne\nabnn\ni",
+        "exception_class": null,
+        "expected": "aelpp\ne\nabnn\ni\n",
+        "input": "4\n5 1\napple\n6 2\norange\n7 3\nbanana\n8 4\npineapple\n"
+      },
+      {
+        "actual": "r\nagginrv",
+        "exception_class": null,
+        "expected": "r\nagginrv\n",
+        "input": "2\n7 4\ndistort\n8 2\nravaging\n"
+      },
+      {
+        "actual": "aekmnnw",
+        "exception_class": null,
+        "expected": "aekmnnw\n",
+        "input": "1\n9 3\nwannamake\n"
+      },
+      {
+        "actual": "m\no\nc\naademz\ns\naaiklorv\ni\ng\nh",
+        "exception_class": null,
+        "expected": "m\no\nc\naademz\ns\naaiklorv\ni\ng\nh\n",
+        "input": "9\n8 6\nchefspam\n11 9\nmonkeyeight\n8 2\nvcubingx\n6 1\namazed\n4 4\nhbes\n8 1\narolakiv\n9 7\nhiuavidhd\n33 13\ngosubtovcubingxheneedssubscribers\n7 4\nhiimbad\n"
+      },
+      {
+        "actual": "abbv\nb\naadyyz",
+        "exception_class": null,
+        "expected": "abbv\nb\naadyyz\n",
+        "input": "3\n5 2\naabbv\n6 2\nchcabc\n7 1\nyyaazd\n"
+      },
+      {
+        "actual": "b\nb\nb",
+        "exception_class": null,
+        "expected": "b\nb\nb\n",
+        "input": "3\n8 4\nabcdabcd\n9 5\nabcabcabc\n10 6\nababababab\n"
+      },
+      {
+        "actual": "b",
+        "exception_class": null,
+        "expected": "b\n",
+        "input": "1\n6 3\nabcabc\n"
+      },
+      {
+        "actual": "h",
+        "exception_class": null,
+        "expected": "h\n",
+        "input": "1\n6 4\nakhfgj\n"
+      },
+      {
+        "actual": "s",
+        "exception_class": null,
+        "expected": "s\n",
+        "input": "1\n4 4\nhebs\n"
+      },
+      {
+        "actual": "d\nabbcc\nd\nh\nrstuvxyz",
+        "exception_class": null,
+        "expected": "d\nabbcc\nd\nh\nrstuvxyz\n",
+        "input": "5\n5 4\nabcde\n6 2\naabbcc\n8 3\naasdfghj\n10 5\nasdfghjklq\n8 1\nzyxvutsr\n"
+      }
+    ],
+    "visibility": "public"
+  },
+  "task_id": "s19g_taco-test-670",
+  "stage": "l4",
+  "checkpoint_budget": {
+    "max_calls": 5,
+    "max_tokens": 204800,
+    "max_tools": 128,
+    "calls": 5,
+    "used_tokens": 13455,
+    "tool_calls": 5,
+    "remaining_seconds": 578.0386357089737
+  },
+  "event_id": "b6e796d4bcbc3c9bea6f9e767826a8bef824aef376d9feffb728819e9aec11dd",
+  "candidate_sha256": "2379941bbfafe4bded5737febb210dd721ff0d3ee3c84de16a63d0b4212cf874",
+  "artifact_state": "STRUCTURAL_PASS"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "bb7aff2a-9ad3-4b28-90e3-d3b88ea5c125",
+  "object": "chat.completion",
+  "created": 1792986339,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    n, h = data[0], data[1]\n    a = data[2:2+n]\n\n    for x in a:\n        if x > h:\n            print(0)\n            return\n\n    # dp[j] = number of ways with j currently open segments\n    dp = [0] * (n + 2)\n    dp[0] = 1\n\n    prev = h\n    for i in range(n):\n        cur = a[i]\n        ndp = [0] * (n + 2)\n\n        if cur == prev:\n            # can keep same number of open segments, or close one and open one\n            for j in range(n + 1):\n                if dp[j] == 0:\n                    continue\n                # no change\n                ndp[j] = (ndp[j] + dp[j]) % MOD\n                # close one and open one (requires j >= 1)\n                if j >= 1:\n                    ndp[j] = (ndp[j] + dp[j] * j) % MOD\n        elif cur == prev - 1:\n            # must open one new segment\n            for j in range(n + 1):\n                if dp[j] == 0:\n                    continue\n                ndp[j + 1] = (ndp[j + 1] + dp[j]) % MOD\n        elif cur == prev + 1:\n            # must close one segment\n            for j in range(1, n + 1):\n                if dp[j] == 0:\n                    continue\n                ndp[j - 1] = (ndp[j - 1] + dp[j] * j) % MOD\n        else:\n            print(0)\n            return\n\n        dp = ndp\n        prev = cur\n\n    # after last element, must close all open segments\n    ans = 0\n    for j in range(n + 1):\n        if dp[j] == 0:\n            continue\n        # close all j segments in some order: j!\n        ways = dp[j]\n        for k in range(2, j + 1):\n            ways = ways * k % MOD\n        ans = (ans + ways) % MOD\n\n    print(ans % MOD)\n\nif __name__ == \"__main__\":\n    main()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1822,
+    "completion_tokens": 524,
+    "total_tokens": 2346,
+    "prompt_tokens_details": {
+      "cached_tokens": 1280
+    },
+    "prompt_cache_hit_tokens": 1280,
+    "prompt_cache_miss_tokens": 542
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

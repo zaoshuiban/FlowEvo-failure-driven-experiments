@@ -1,0 +1,28 @@
+{
+  "id": "1aa43eb0-6865-4161-bcfe-6c3173bc350a",
+  "object": "chat.completion",
+  "created": 1793005036,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    s = data[0]\n    n = len(s)\n    m = int(data[1])\n    \n    # prefix balance and positions\n    # For each query [l, r], answer = 2 * number of matched pairs\n    # matched pairs = (number of '(' in range) - unmatched '('\n    # Use segment tree? n up to 1e6, m up to 1e5.\n    # Standard approach: prefix sums of '(' and ')' won't directly give matched pairs.\n    # Use a segment tree over the string storing (open, close, pairs) per node.\n    # But n=1e6, tree size ~2e6, m=1e5 queries O(log n) each -> fine.\n    \n    # Build iterative segment tree\n    size = 1\n    while size < n:\n        size <<= 1\n    \n    # Each node: (open, close, pairs)\n    # open = unmatched '(' count, close = unmatched ')' count, pairs = matched pairs\n    tree_open = [0] * (2 * size)\n    tree_close = [0] * (2 * size)\n    tree_pairs = [0] * (2 * size)\n    \n    for i in range(n):\n        if s[i] == 40:  # '('\n            tree_open[size + i] = 1\n        else:\n            tree_close[size + i] = 1\n    \n    for i in range(size - 1, 0, -1):\n        lo = tree_open[2*i]; lc = tree_close[2*i]; lp = tree_pairs[2*i]\n        ro = tree_open[2*i+1]; rc = tree_close[2*i+1]; rp = tree_pairs[2*i+1]\n        matched = lo if lo < rc else rc\n        tree_open[i] = lo + ro - matched\n        tree_close[i] = lc + rc - matched\n        tree_pairs[i] = lp + rp + matched\n    \n    out = []\n    idx = 2\n    for _ in range(m):\n        l = int(data[idx]) - 1\n        r = int(data[idx+1]) - 1\n        idx += 2\n        \n        # query [l, r] inclusive\n        l += size\n        r += size + 1\n        \n        # accumulate left and right results\n        # left accumulator\n        lo = lc = lp = 0\n        ro = rc = rp = 0\n        \n        while l < r:\n            if l & 1:\n                # combine left accumulator with node l\n                no = tree_open[l]; nc = tree_close[l]; np = tree_pairs[l]\n                matched = lo if lo < nc else nc\n                lo = lo + no - matched\n                lc = lc + nc - matched\n                lp = lp + np + matched\n                l += 1\n            if r & 1:\n                r -= 1\n                # combine node r with right accumulator\n                no = tree_open[r]; nc = tree_close[r]; np = tree_pairs[r]\n                matched = no if no < rc else rc\n                ro = no + ro - matched\n                rc = nc + rc - matched\n                rp = np + rp + matched\n            l >>= 1\n            r >>= 1\n        \n        # combine left and right\n        matched = lo if lo < rc else rc\n        total_pairs = lp + rp + matched\n        out.append(str(2 * total_pairs))\n    \n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 3521,
+    "completion_tokens": 795,
+    "total_tokens": 4316,
+    "prompt_tokens_details": {
+      "cached_tokens": 2944
+    },
+    "prompt_cache_hit_tokens": 2944,
+    "prompt_cache_miss_tokens": 577
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

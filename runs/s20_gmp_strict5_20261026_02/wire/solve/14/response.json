@@ -1,0 +1,28 @@
+{
+  "id": "086688eb-2eb4-4af6-9e42-6676659773c5",
+  "object": "chat.completion",
+  "created": 1793005050,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    m = int(data[0])\n\n    # mobius sieve\n    mu = [0] * (m + 1)\n    mu[1] = 1\n    primes = []\n    is_comp = [False] * (m + 1)\n    for i in range(2, m + 1):\n        if not is_comp[i]:\n            primes.append(i)\n            mu[i] = -1\n        for p in primes:\n            if i * p > m:\n                break\n            is_comp[i * p] = True\n            if i % p == 0:\n                mu[i * p] = 0\n                break\n            else:\n                mu[i * p] = -mu[i]\n\n    # count of numbers in [1,m] divisible by d\n    # E = sum_{k>=0} P(length > k)\n    # P(length > k) = P(gcd after k picks > 1)\n    # = sum_{d>=2} -mu(d) * (floor(m/d)/m)^k  (inclusion-exclusion over gcd)\n    # E = sum_{d=2}^{m} -mu(d) * 1/(1 - floor(m/d)/m)\n    #   = sum_{d=2}^{m} -mu(d) * m / (m - floor(m/d))\n    inv_m = pow(m, MOD - 2, MOD)\n    ans = 0\n    for d in range(2, m + 1):\n        if mu[d] == 0:\n            continue\n        c = m // d\n        # term = -mu[d] * m / (m - c)\n        denom = (m - c) % MOD\n        term = (-mu[d]) * m % MOD * pow(denom, MOD - 2, MOD) % MOD\n        ans = (ans + term) % MOD\n\n    # plus 1 for the base? Let's verify: E = sum_{k>=0} P(L>k), P(L>0)=1\n    ans = (ans + 1) % MOD\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1288,
+    "completion_tokens": 502,
+    "total_tokens": 1790,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 648
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

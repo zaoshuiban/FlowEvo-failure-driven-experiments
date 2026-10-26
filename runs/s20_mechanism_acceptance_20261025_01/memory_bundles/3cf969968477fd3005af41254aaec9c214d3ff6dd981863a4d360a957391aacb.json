@@ -1,0 +1,181 @@
+{
+  "version": "s20-repair-attribution-v1",
+  "events": [
+    {
+      "event_id": "0859cd9d760703ad1b42cf90bc54eef9d1d38c8178e4783c91f002cc52680eb4",
+      "task_id": "s19g_taco-test-670",
+      "stage": "l3",
+      "artifact_state": "STRUCTURAL_PASS",
+      "public_status": "WRONG_ANSWER",
+      "packet_sha256": "4073ab658125ec9f2932432dcdc07eb428518ccaa14e922ef0e4d0b040cef550",
+      "packet_ref": "public_packets/0859cd9d760703ad1b42cf90bc54eef9d1d38c8178e4783c91f002cc52680eb4.json",
+      "code": {
+        "text": "import sys\n\ndef solve():\n    input = sys.stdin.readline\n    t = int(input())\n    out = []\n    for _ in range(t):\n        n, k = map(int, input().split())\n        s = input().strip()\n        cnt = [0] * 26\n        for ch in s:\n            cnt[ord(ch) - 97] += 1\n\n        first = next(i for i in range(26) if cnt[i] > 0)\n\n        if cnt[first] >= k:\n            cnt[first] -= k\n            distinct = s",
+        "is_fragment": true,
+        "full_utf8_bytes": 1181,
+        "full_sha256": "2379941bbfafe4bded5737febb210dd721ff0d3ee3c84de16a63d0b4212cf874",
+        "full_ref": "public_packets/0859cd9d760703ad1b42cf90bc54eef9d1d38c8178e4783c91f002cc52680eb4.json/code"
+      },
+      "public_feedback": [
+        {
+          "case_id": "bf025bf231674afdddac6c2225e458d6c2d86b5760b38fdb7d98b739a49e8c66",
+          "input": {
+            "text": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n",
+            "is_fragment": false,
+            "full_utf8_bytes": 64,
+            "full_sha256": "65fc47981efbb9d9a5ff77a13c891b3bdeb7ca56162a41dc1bb7d62adfc09443",
+            "full_ref": "public_packets/0859cd9d760703ad1b42cf90bc54eef9d1d38c8178e4783c91f002cc52680eb4.json/feedback/input"
+          },
+          "expected": {
+            "text": "ab\nabbc\nb\naa\nx\nehinopx",
+            "is_fragment": false,
+            "full_utf8_bytes": 22,
+            "full_sha256": "19d615c876254b2eac6446c82deebe49c5dd2366c2f18694c410dcc9a1f9604f",
+            "full_ref": "public_packets/0859cd9d760703ad1b42cf90bc54eef9d1d38c8178e4783c91f002cc52680eb4.json/feedback/expected"
+          },
+          "actual": {
+            "text": "aa\nabbc\nb\naa\nx\nehinopx",
+            "is_fragment": false,
+            "full_utf8_bytes": 22,
+            "full_sha256": "7c69d14c0ebe95e120ab835e6b4884855c578ced8c2b27d9d02e9af85e6c73e2",
+            "full_ref": "public_packets/0859cd9d760703ad1b42cf90bc54eef9d1d38c8178e4783c91f002cc52680eb4.json/feedback/actual"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "54c7a3c509f00777698c9a0c11ec1c33dde5d35ae3d43e89a52974586eca5a78",
+      "task_id": "s19g_taco-train-s00-r1653",
+      "stage": "l3",
+      "artifact_state": "STRUCTURAL_PASS",
+      "public_status": "WRONG_ANSWER",
+      "packet_sha256": "69fb9c85a56c4c797b8634098c27b0eb17d35e6c25df59096c3afa68297a95f7",
+      "packet_ref": "public_packets/54c7a3c509f00777698c9a0c11ec1c33dde5d35ae3d43e89a52974586eca5a78.json",
+      "code": {
+        "text": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.read().split()))\n    if len(data) < 24:\n        return\n    cube = data[:24]\n\n    def solved(c):\n        for i in range(0, 24, 4):\n            if not (c[i] == c[i+1] == c[i+2] == c[i+3]):\n                return False\n        return True\n\n    # Faces: 0-3 U, 4-7 F, 8-11 R, 12-15 B, 16-19 L, 20-23 D\n    # Each move is a list of cycles. A cyc",
+        "is_fragment": true,
+        "full_utf8_bytes": 1488,
+        "full_sha256": "90bbcf66dc3443d83de8332ced5c0686225ff941f4b5c564c6e80031992b26b4",
+        "full_ref": "public_packets/54c7a3c509f00777698c9a0c11ec1c33dde5d35ae3d43e89a52974586eca5a78.json/code"
+      },
+      "public_feedback": [
+        {
+          "case_id": "8e163b2c300c9870d4504af5517f09c7b81cd69b4d9f04f5b061c5175787cf54",
+          "input": {
+            "text": "2 5 4 6 1 3 6 2 5 5 1 2 3 5 3 1 1 2 4 6 6 4 3 4\n",
+            "is_fragment": false,
+            "full_utf8_bytes": 48,
+            "full_sha256": "9add530d6772e82e0c0e20770f4292d40c96f5e50d4e1b13c729cdb50e5dba6a",
+            "full_ref": "public_packets/54c7a3c509f00777698c9a0c11ec1c33dde5d35ae3d43e89a52974586eca5a78.json/feedback/input"
+          },
+          "expected": {
+            "text": "NO",
+            "is_fragment": false,
+            "full_utf8_bytes": 2,
+            "full_sha256": "23794d91c53ae875c8e247d72561e35d9d06ee07c70c9e0dbcc977a6d161504a",
+            "full_ref": "public_packets/54c7a3c509f00777698c9a0c11ec1c33dde5d35ae3d43e89a52974586eca5a78.json/feedback/expected"
+          },
+          "actual": {
+            "text": "NO\n",
+            "is_fragment": false,
+            "full_utf8_bytes": 3,
+            "full_sha256": "cfe72034a9f298fb79a6c1f2302673bb449c826d446b3efafdde95e6c48dc3ca",
+            "full_ref": "public_packets/54c7a3c509f00777698c9a0c11ec1c33dde5d35ae3d43e89a52974586eca5a78.json/feedback/actual"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "b6e796d4bcbc3c9bea6f9e767826a8bef824aef376d9feffb728819e9aec11dd",
+      "task_id": "s19g_taco-test-670",
+      "stage": "l4",
+      "artifact_state": "STRUCTURAL_PASS",
+      "public_status": "WRONG_ANSWER",
+      "packet_sha256": "678db9dbc9662d23eea8fb39645e54cf053514a8b446fbb36935c6fceb4b73c6",
+      "packet_ref": "public_packets/b6e796d4bcbc3c9bea6f9e767826a8bef824aef376d9feffb728819e9aec11dd.json",
+      "code": {
+        "text": "import sys\n\ndef solve():\n    input = sys.stdin.readline\n    t = int(input())\n    out = []\n    for _ in range(t):\n        n, k = map(int, input().split())\n        s = input().strip()\n        cnt = [0] * 26\n        for ch in s:\n            cnt[ord(ch) - 97] += 1\n\n        first = next(i for i in range(26) if cnt[i] > 0)\n\n        if cnt[first] >= k:\n            cnt[first] -= k\n            distinct = s",
+        "is_fragment": true,
+        "full_utf8_bytes": 1181,
+        "full_sha256": "2379941bbfafe4bded5737febb210dd721ff0d3ee3c84de16a63d0b4212cf874",
+        "full_ref": "public_packets/b6e796d4bcbc3c9bea6f9e767826a8bef824aef376d9feffb728819e9aec11dd.json/code"
+      },
+      "public_feedback": [
+        {
+          "case_id": "bf025bf231674afdddac6c2225e458d6c2d86b5760b38fdb7d98b739a49e8c66",
+          "input": {
+            "text": "6\n4 2\nbaba\n5 2\nbaacb\n5 3\nbaacb\n5 3\naaaaa\n6 4\naaxxzz\n7 1\nphoenix\n",
+            "is_fragment": false,
+            "full_utf8_bytes": 64,
+            "full_sha256": "65fc47981efbb9d9a5ff77a13c891b3bdeb7ca56162a41dc1bb7d62adfc09443",
+            "full_ref": "public_packets/b6e796d4bcbc3c9bea6f9e767826a8bef824aef376d9feffb728819e9aec11dd.json/feedback/input"
+          },
+          "expected": {
+            "text": "ab\nabbc\nb\naa\nx\nehinopx",
+            "is_fragment": false,
+            "full_utf8_bytes": 22,
+            "full_sha256": "19d615c876254b2eac6446c82deebe49c5dd2366c2f18694c410dcc9a1f9604f",
+            "full_ref": "public_packets/b6e796d4bcbc3c9bea6f9e767826a8bef824aef376d9feffb728819e9aec11dd.json/feedback/expected"
+          },
+          "actual": {
+            "text": "aa\nabbc\nb\naa\nx\nehinopx",
+            "is_fragment": false,
+            "full_utf8_bytes": 22,
+            "full_sha256": "7c69d14c0ebe95e120ab835e6b4884855c578ced8c2b27d9d02e9af85e6c73e2",
+            "full_ref": "public_packets/b6e796d4bcbc3c9bea6f9e767826a8bef824aef376d9feffb728819e9aec11dd.json/feedback/actual"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "e140e28089a6b58c8bd607b4378e150ced6180dcf99c1662aba4c970c59243d9",
+      "task_id": "s19g_taco-train-s00-r1653",
+      "stage": "l4",
+      "artifact_state": "STRUCTURAL_PASS",
+      "public_status": "WRONG_ANSWER",
+      "packet_sha256": "ac13943331ceb1033cff26b3cb686920b8f15c1dcd6d44e4de04c69bc2a83b8b",
+      "packet_ref": "public_packets/e140e28089a6b58c8bd607b4378e150ced6180dcf99c1662aba4c970c59243d9.json",
+      "code": {
+        "text": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.read().split()))\n    if len(data) < 24:\n        return\n    cube = data[:24]\n\n    def solved(c):\n        for i in range(0, 24, 4):\n            if not (c[i] == c[i+1] == c[i+2] == c[i+3]):\n                return False\n        return True\n\n    # Faces: 0-3 U, 4-7 F, 8-11 R, 12-15 B, 16-19 L, 20-23 D\n    # Each move is a list of cycles. A cyc",
+        "is_fragment": true,
+        "full_utf8_bytes": 1722,
+        "full_sha256": "abcbc5055e43dddf32df4b60a889a776e82e1698645d9d6678ab341763f32a20",
+        "full_ref": "public_packets/e140e28089a6b58c8bd607b4378e150ced6180dcf99c1662aba4c970c59243d9.json/code"
+      },
+      "public_feedback": [
+        {
+          "case_id": "8e163b2c300c9870d4504af5517f09c7b81cd69b4d9f04f5b061c5175787cf54",
+          "input": {
+            "text": "2 5 4 6 1 3 6 2 5 5 1 2 3 5 3 1 1 2 4 6 6 4 3 4\n",
+            "is_fragment": false,
+            "full_utf8_bytes": 48,
+            "full_sha256": "9add530d6772e82e0c0e20770f4292d40c96f5e50d4e1b13c729cdb50e5dba6a",
+            "full_ref": "public_packets/e140e28089a6b58c8bd607b4378e150ced6180dcf99c1662aba4c970c59243d9.json/feedback/input"
+          },
+          "expected": {
+            "text": "NO",
+            "is_fragment": false,
+            "full_utf8_bytes": 2,
+            "full_sha256": "23794d91c53ae875c8e247d72561e35d9d06ee07c70c9e0dbcc977a6d161504a",
+            "full_ref": "public_packets/e140e28089a6b58c8bd607b4378e150ced6180dcf99c1662aba4c970c59243d9.json/feedback/expected"
+          },
+          "actual": {
+            "text": "NO\n",
+            "is_fragment": false,
+            "full_utf8_bytes": 3,
+            "full_sha256": "cfe72034a9f298fb79a6c1f2302673bb449c826d446b3efafdde95e6c48dc3ca",
+            "full_ref": "public_packets/e140e28089a6b58c8bd607b4378e150ced6180dcf99c1662aba4c970c59243d9.json/feedback/actual"
+          }
+        }
+      ]
+    }
+  ],
+  "included_ids": [
+    "0859cd9d760703ad1b42cf90bc54eef9d1d38c8178e4783c91f002cc52680eb4",
+    "54c7a3c509f00777698c9a0c11ec1c33dde5d35ae3d43e89a52974586eca5a78",
+    "b6e796d4bcbc3c9bea6f9e767826a8bef824aef376d9feffb728819e9aec11dd",
+    "e140e28089a6b58c8bd607b4378e150ced6180dcf99c1662aba4c970c59243d9"
+  ],
+  "omitted_ids": [],
+  "complete_input_manifest_sha256": "5d801e7389af811b265e7d8c9b31a9df85d95321c7fe20fd963d292159e96c26"
+}

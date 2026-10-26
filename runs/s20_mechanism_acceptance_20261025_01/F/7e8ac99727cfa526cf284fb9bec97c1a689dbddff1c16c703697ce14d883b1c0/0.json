@@ -1,0 +1,45 @@
+{
+  "response": {
+    "text": "{\"hypothesis\":{\"conditions\":\"Candidate is STRUCTURAL_PASS, public result is RUNTIME_ERROR with a ValueError exception class, and at least one remaining call is available.\",\"action\":\"REPAIR_EXISTING: patch the existing program's input parsing and edge-case handling (e.g., guard empty input, validate token count, handle n=0 or empty array) rather than rewriting the algorithm, since the DP logic already matches expected outputs on non-crashing cases.\",\"expected_improvement\":\"Eliminates the ValueError crash on malformed/edge-case inputs while preserving the already-correct DP outputs, converting RUNTIME_ERROR toward a passing result with fewer calls than a full regeneration.\",\"refusal_conditions\":\"Refuse if no legal action is available, evidence is nonpublic or unavailable, or the original budget is insufficient.\",\"stop_conditions\":\"Stop after one repair attempt if the public result remains RUNTIME_ERROR, or if remaining calls drop below the minimum needed to verify a fix.\",\"unknowns\":\"Whether the ValueError stems from empty input, token-count mismatch, or another parsing edge case; whether hidden tests share the same failure mode; whether a single repair suffices.\"},\"rule\":{\"when\":{\"candidate_state\":\"STRUCTURAL_PASS\",\"public_result\":\"RUNTIME_ERROR\",\"remaining_calls_min\":1},\"action\":\"REPAIR_EXISTING\",\"fallback\":\"NATIVE\"}}",
+    "usage": {
+      "prompt_tokens": 6968,
+      "completion_tokens": 290,
+      "total_tokens": 7258,
+      "prompt_tokens_details": {
+        "cached_tokens": 256
+      },
+      "prompt_cache_hit_tokens": 256,
+      "prompt_cache_miss_tokens": 6712
+    },
+    "model": "deepseek-flash",
+    "finish_reason": "stop"
+  },
+  "normalization": {
+    "protocol": "s19-compile-envelope-v2",
+    "raw_text": "{\"hypothesis\":{\"conditions\":\"Candidate is STRUCTURAL_PASS, public result is RUNTIME_ERROR with a ValueError exception class, and at least one remaining call is available.\",\"action\":\"REPAIR_EXISTING: patch the existing program's input parsing and edge-case handling (e.g., guard empty input, validate token count, handle n=0 or empty array) rather than rewriting the algorithm, since the DP logic already matches expected outputs on non-crashing cases.\",\"expected_improvement\":\"Eliminates the ValueError crash on malformed/edge-case inputs while preserving the already-correct DP outputs, converting RUNTIME_ERROR toward a passing result with fewer calls than a full regeneration.\",\"refusal_conditions\":\"Refuse if no legal action is available, evidence is nonpublic or unavailable, or the original budget is insufficient.\",\"stop_conditions\":\"Stop after one repair attempt if the public result remains RUNTIME_ERROR, or if remaining calls drop below the minimum needed to verify a fix.\",\"unknowns\":\"Whether the ValueError stems from empty input, token-count mismatch, or another parsing edge case; whether hidden tests share the same failure mode; whether a single repair suffices.\"},\"rule\":{\"when\":{\"candidate_state\":\"STRUCTURAL_PASS\",\"public_result\":\"RUNTIME_ERROR\",\"remaining_calls_min\":1},\"action\":\"REPAIR_EXISTING\",\"fallback\":\"NATIVE\"}}",
+    "raw_sha256": "007d12f5c1f15cb6f4ca5c7dbe050823aa5c638c5bb0b4aa427eedd63411bd1c",
+    "accepted": true,
+    "reasons": [],
+    "normalized": {
+      "hypothesis": {
+        "conditions": "Candidate is STRUCTURAL_PASS, public result is RUNTIME_ERROR with a ValueError exception class, and at least one remaining call is available.",
+        "action": "REPAIR_EXISTING: patch the existing program's input parsing and edge-case handling (e.g., guard empty input, validate token count, handle n=0 or empty array) rather than rewriting the algorithm, since the DP logic already matches expected outputs on non-crashing cases.",
+        "expected_improvement": "Eliminates the ValueError crash on malformed/edge-case inputs while preserving the already-correct DP outputs, converting RUNTIME_ERROR toward a passing result with fewer calls than a full regeneration.",
+        "refusal_conditions": "Refuse if no legal action is available, evidence is nonpublic or unavailable, or the original budget is insufficient.",
+        "stop_conditions": "Stop after one repair attempt if the public result remains RUNTIME_ERROR, or if remaining calls drop below the minimum needed to verify a fix.",
+        "unknowns": "Whether the ValueError stems from empty input, token-count mismatch, or another parsing edge case; whether hidden tests share the same failure mode; whether a single repair suffices."
+      },
+      "rule": {
+        "when": {
+          "candidate_state": "STRUCTURAL_PASS",
+          "public_result": "RUNTIME_ERROR",
+          "remaining_calls_min": 1
+        },
+        "action": "REPAIR_EXISTING",
+        "fallback": "NATIVE"
+      }
+    },
+    "normalized_sha256": "ac7d188074a1b42decb047e796e87b954e139c86188ab0741119e270a7f08be5",
+    "rule_sha256": "83e5d65cf1b5a423e4b33dbac17f32fb5ef3f61ef95d3f08bbd612428ec0b035"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "response": {
+    "text": "{\"hypothesis\":{\"conditions\":\"Candidate state is NO_COMPLETE_CODE with an empty candidate (zero bytes) and finish_reason length, across multiple independent tasks, with at least one remaining call available.\",\"action\":\"REGENERATE_FRESH\",\"expected_improvement\":\"A fresh generation attempt may produce complete code instead of an empty truncated candidate, giving a chance at a valid submission where the prior attempt yielded nothing.\",\"refusal_conditions\":\"Refuse if no legal action is available, evidence is nonpublic or unavailable, or the original budget is insufficient.\",\"stop_conditions\":\"Stop after the single permitted revision or when remaining calls reach zero; retain Shadow without claimed benefit if regeneration does not yield complete code.\",\"unknowns\":\"Whether truncation is due to output length limits versus task difficulty; whether a fresh attempt will avoid the same length cutoff; hidden correctness of any produced code.\"},\"rule\":{\"when\":{\"candidate_state\":\"NO_COMPLETE_CODE\",\"public_result\":\"NO_COMPLETE_CODE\",\"remaining_calls_min\":1},\"action\":\"REGENERATE_FRESH\",\"fallback\":\"NATIVE\"}}",
+    "usage": {
+      "prompt_tokens": 3919,
+      "completion_tokens": 229,
+      "total_tokens": 4148,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 3919
+    },
+    "model": "deepseek-flash",
+    "finish_reason": "stop"
+  },
+  "normalization": {
+    "protocol": "s19-compile-envelope-v2",
+    "raw_text": "{\"hypothesis\":{\"conditions\":\"Candidate state is NO_COMPLETE_CODE with an empty candidate (zero bytes) and finish_reason length, across multiple independent tasks, with at least one remaining call available.\",\"action\":\"REGENERATE_FRESH\",\"expected_improvement\":\"A fresh generation attempt may produce complete code instead of an empty truncated candidate, giving a chance at a valid submission where the prior attempt yielded nothing.\",\"refusal_conditions\":\"Refuse if no legal action is available, evidence is nonpublic or unavailable, or the original budget is insufficient.\",\"stop_conditions\":\"Stop after the single permitted revision or when remaining calls reach zero; retain Shadow without claimed benefit if regeneration does not yield complete code.\",\"unknowns\":\"Whether truncation is due to output length limits versus task difficulty; whether a fresh attempt will avoid the same length cutoff; hidden correctness of any produced code.\"},\"rule\":{\"when\":{\"candidate_state\":\"NO_COMPLETE_CODE\",\"public_result\":\"NO_COMPLETE_CODE\",\"remaining_calls_min\":1},\"action\":\"REGENERATE_FRESH\",\"fallback\":\"NATIVE\"}}",
+    "raw_sha256": "e51bd43e3bc6fa93b4bf316244fc40b452d9cdc4930139142d0f47cbdf50fac5",
+    "accepted": true,
+    "reasons": [],
+    "normalized": {
+      "hypothesis": {
+        "conditions": "Candidate state is NO_COMPLETE_CODE with an empty candidate (zero bytes) and finish_reason length, across multiple independent tasks, with at least one remaining call available.",
+        "action": "REGENERATE_FRESH",
+        "expected_improvement": "A fresh generation attempt may produce complete code instead of an empty truncated candidate, giving a chance at a valid submission where the prior attempt yielded nothing.",
+        "refusal_conditions": "Refuse if no legal action is available, evidence is nonpublic or unavailable, or the original budget is insufficient.",
+        "stop_conditions": "Stop after the single permitted revision or when remaining calls reach zero; retain Shadow without claimed benefit if regeneration does not yield complete code.",
+        "unknowns": "Whether truncation is due to output length limits versus task difficulty; whether a fresh attempt will avoid the same length cutoff; hidden correctness of any produced code."
+      },
+      "rule": {
+        "when": {
+          "candidate_state": "NO_COMPLETE_CODE",
+          "public_result": "NO_COMPLETE_CODE",
+          "remaining_calls_min": 1
+        },
+        "action": "REGENERATE_FRESH",
+        "fallback": "NATIVE"
+      }
+    },
+    "normalized_sha256": "356f675984df814e8f26512eb513d89fd594ac4c7474d739d18996f5466a1d86",
+    "rule_sha256": "e47509f5b81c46be037da7a83a839103ea7d5e9fa1dbe40d3da01629ae30ae3e"
+  }
+}

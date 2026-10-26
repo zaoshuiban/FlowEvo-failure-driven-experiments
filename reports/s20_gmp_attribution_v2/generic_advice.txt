@@ -1,0 +1,13 @@
+General programming guidance (advice, not proof).
+
+1) Read the current problem statement and its input and output contract. Use the constraints given for this task rather than importing numeric limits from another problem. Identify the quantities the answer depends on, the state maintained by the algorithm, and the intended invariant. Prefer a justified algorithm to an unverified shortcut. Distinguish a necessary condition from a sufficient condition before turning an observation into a rule.
+
+2) Inspect the available candidate and the permitted execution feedback. Treat a failing example as evidence about that execution, not proof of a general root cause. If the program is incomplete, do not assume an unfinished fragment implements the intended algorithm. Produce a complete executable solution, including parsing and output, within the response budget. Keep speculative discussion brief and reserve space for the implementation. Follow the shared response format and do not omit required entry points.
+
+3) Check that each input field is consumed exactly once in the intended order. Keep separate test cases independent unless the specification explicitly connects them. Consider the smallest legal input, empty collections when allowed, repeated values, and maximum legal sizes. Avoid relying on undefined behavior or changing a variable's meaning midway through the solution. Choose data structures and numeric representations consistent with the constraints.
+
+4) When changing code, identify the invariant that the change should restore. Keep related state updates consistent. Verify indexing, initialization, loop boundaries, termination, and output formatting. Do not suppress an exception without establishing why the computation is valid. Avoid unrelated changes that make the effect of a repair difficult to inspect. A concise implementation still needs a complete algorithm; brevity alone is not evidence of correctness.
+
+5) Use only the available public evidence when assessing the result. Passing a small set of examples does not prove general correctness. Do not invent test outcomes, hidden answers, measured savings, or performance guarantees. If a proposed approach is uncertain, resolve the uncertainty using the statement and allowed feedback rather than claiming success. Deliver the final complete program in the required format.
+
+6) Before finalizing, carefully check that the code implements the chosen reasoning rather than an earlier abandoned approach. Remove experimental branches that could change execution. Make sure every required answer is emitted and the program handles all legal cases consistently. Review time and memory complexity against the stated limits.

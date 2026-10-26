@@ -1,0 +1,28 @@
+{
+  "id": "fcca106f-c269-4e18-b8a2-794e28c3bef6",
+  "object": "chat.completion",
+  "created": 1792987582,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\nMOD = 998244353\n\ndef solve():\n    input_data = sys.stdin.buffer.read().split()\n    t = int(input_data[0])\n    idx = 1\n    out = []\n    for _ in range(t):\n        n = int(input_data[idx]); idx += 1\n        s = input_data[idx].decode(); idx += 1\n\n        # Split into maximal blocks of consecutive 1s separated by 0s.\n        # Within a block of 1s, moves shift a 1 by 2 within the block region,\n        # but blocks interact only through zeros? Actually the known solution:\n        # Consider positions of 1s. Operation moves a pawn by 2 over an occupied cell.\n        # This preserves parity of each pawn's position? No: pawn moves by 2, so parity preserved.\n        # Also preserves relative order of pawns. The reachable configurations correspond to\n        # choosing positions for pawns with same parity counts and same order, within constraints.\n        #\n        # Known Codeforces problem 1545? Actually \"AquaMoon and Chess\" CF 1545C? It's 1545B.\n        # Solution: group consecutive 1s into blocks. For each block of length L, it contributes\n        # floor(L/2) \"free pairs\". Total free pairs K = sum floor(L/2). Answer = C(K + Z, K)\n        # where Z = number of zeros? Let's recall: CF 1545B AquaMoon and Chess.\n        # Answer = C(cnt_pairs + cnt_zeros, cnt_pairs) where cnt_zeros is number of '0's,\n        # cnt_pairs = sum over blocks of 1s of floor(len/2).\n        # Yes that's the known solution.\n\n        zeros = s.count('0')\n        pairs = 0\n        run = 0\n        for ch in s:\n            if ch == '1':\n                run += 1\n            else:\n                pairs += run // 2\n                run = 0\n        pairs += run // 2\n\n        N = pairs + zeros\n        K = pairs\n        # compute C(N, K) mod MOD\n        # precompute factorials up to max needed? sum n <= 1e5, so N <= 1e5.\n        # We'll compute per test with precomputed factorials up to 1e5+5.\n        out.append((N, K))\n\n    maxN = max((a for a, b in out), default=0)\n    fact = [1] * (maxN + 1)\n    for i in range(1, maxN + 1):\n        fact[i] = fact[i-1] * i % MOD\n    inv_fact = [1] * (maxN + 1)\n    inv_fact[maxN] = pow(fact[maxN], MOD - 2, MOD)\n    for i in range(maxN, 0, -1):\n        inv_fact[i-1] = inv_fact[i] * i % MOD\n\n    res = []\n    for N, K in out:\n        res.append(str(fact[N] * inv_fact[K] % MOD * inv_fact[N-K] % MOD))\n    sys.stdout.write('\\n'.join(res) + '\\n')\n\nif __name__ == '__main__':\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1402,
+    "completion_tokens": 720,
+    "total_tokens": 2122,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 634
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "b3e5d3c1-5a7b-4322-95bd-3bd2a6afa5d9",
+  "object": "chat.completion",
+  "created": 1793005046,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    m = int(data[0])\n\n    # mobius sieve\n    mu = [0] * (m + 1)\n    primes = []\n    is_comp = [False] * (m + 1)\n    mu[1] = 1\n    for i in range(2, m + 1):\n        if not is_comp[i]:\n            primes.append(i)\n            mu[i] = -1\n        for p in primes:\n            v = i * p\n            if v > m:\n                break\n            is_comp[v] = True\n            if i % p == 0:\n                mu[v] = 0\n                break\n            else:\n                mu[v] = -mu[i]\n\n    inv = [0] * (m + 1)\n    inv[1] = 1\n    for i in range(2, m + 1):\n        inv[i] = MOD - (MOD // i) * inv[MOD % i] % MOD\n\n    # E = sum_{d=1}^m -mu[d] * m / (m - m/d)\n    ans = 0\n    for d in range(1, m + 1):\n        if mu[d] == 0:\n            continue\n        cnt = m // d\n        denom = m - cnt\n        if denom == 0:\n            # d=1 gives m/(m-m)=m/0; but formula handled separately below\n            continue\n        term = m % MOD * inv[denom] % MOD\n        if mu[d] == 1:\n            ans = (ans - term) % MOD\n        else:\n            ans = (ans + term) % MOD\n\n    # d=1 term: -mu[1]*m/(m-m) is infinite; actual contribution is 1\n    # Derivation: E = 1 + sum_{d>=2} -mu[d] * m/(m - floor(m/d))\n    ans = (ans + 1) % MOD\n    print(ans % MOD)\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1288,
+    "completion_tokens": 483,
+    "total_tokens": 1771,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1288
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

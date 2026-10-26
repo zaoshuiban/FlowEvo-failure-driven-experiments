@@ -1,0 +1,63 @@
+{
+  "status": "BLOCKED_INPUT_PREFLIGHT",
+  "preflight_failures": [
+    {
+      "task_id": "s19g_taco-train-s00-r2049",
+      "arm": "G",
+      "error": "INPUT_TOKEN_UPPER_LIMIT"
+    },
+    {
+      "task_id": "s19g_taco-train-s00-r2049",
+      "arm": "M",
+      "error": "INPUT_TOKEN_UPPER_LIMIT"
+    },
+    {
+      "task_id": "s19g_taco-train-s00-r2049",
+      "arm": "P",
+      "error": "INPUT_TOKEN_UPPER_LIMIT"
+    }
+  ],
+  "proposed_run_id": "s20_gmp_advice6_v2",
+  "tasks": [
+    "s19g_taco-train-s00-r2049",
+    "s19g_taco-train-s00-r0770",
+    "s19g_taco-test-788",
+    "s19g_taco-train-s00-r0077",
+    "s19g_taco-train-s00-r2340",
+    "s19g_taco-test-692"
+  ],
+  "model": "deepseek-flash",
+  "temperature": 0,
+  "max_output_tokens": 8192,
+  "max_calls": 18,
+  "hard_usd_proposal": 1.0,
+  "old_unknown_reservation_separate_usd": 0.018206,
+  "memory_source": "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/runs/s20_gmp_pilot12_20261026_01/memory.json",
+  "memory_raw_sha256": "566d9869388c2c4afbe9e37f032adcc1c42edea30c4af707ff4ebf8818e6c4c7",
+  "generic_raw_sha256": "e3ff2c69d3c1a5e9291506f016b18fa51681d4a4a088729d373e494aec2e16dc",
+  "tokenizer_sha256": "89085f12ef79460ac5f66d1119325ddfc694b4ab209d80bbd81d35f081dc9614",
+  "matching": "458 body tokens, +469 full message tokens for both M and P on all six checkpoints; server usage must confirm; no outcome-based padding",
+  "selection": "six previously retained tasks in original order; no old-run unfinished tasks; development only",
+  "memory_updates": false,
+  "F_generation": false,
+  "confirmation_pool_access": false,
+  "continued_run": false,
+  "neutral_control": "generic programming advice, not unrelated filler; same wrapper, no task-specific answers; written after prior reports, not claimed blind",
+  "decision": "One bounded experiment only. Descriptive source-code audit of all discordances. Consider further study only if M has >=2 exclusive joint successes vs P and positive net joint successes vs G, with construction-inclusive cost per joint success <=1.25x G. Otherwise pause current fixed-memory design. Operational threshold, not power/significance proof. Infrastructure incomplete or token mismatch => inconclusive, no automatic retry or expansion.",
+  "stopping": [
+    "unknown request",
+    "Worker failure",
+    "data contamination",
+    "hard budget",
+    "frozen hash mismatch",
+    "provider M/P prompt-token mismatch"
+  ],
+  "scoring": "historical public tests; original same-task held-out tests only after complete online lock, no independent-generalization claim",
+  "cost": "cached/miss/output tokens separately; one historical memory build cost; pending reservations separate; local tool time separate",
+  "protocol_sources": {
+    "reports/s20_gmp_attribution_v2/prepare.py": "b0a211f0ce85abb0ef90c8b2507ba8149d550474323f83b86c7d43be5cd82292",
+    "scripts/run_workflow_v2.py": "815a521b32b4aedad03b8456f601f1e5cafc1b081d1e43b124df49a403866d93",
+    "scripts/s20_repair_stream.py": "5ec8a8194c52faceddfd227fadf3e1064eb502410323231bf91b77bffec70513",
+    "FlowEvo/src/failure_evo/workflow_protocol_v2.py": "234ef174c207eb9f96ebbf22279db676e06b84eec5da3fd26331037d38d5a56a"
+  }
+}

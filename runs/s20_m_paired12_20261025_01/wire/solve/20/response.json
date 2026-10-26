@@ -1,0 +1,28 @@
+{
+  "id": "ef7728f1-7299-4437-8708-fff8f3da5be5",
+  "object": "chat.completion",
+  "created": 1792986512,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef len_block(n):\n    if n <= 0:\n        return 0\n    total = 0\n    start = 1\n    digits = 1\n    while start <= n:\n        end = min(n, start * 10 - 1)\n        count = end - start + 1\n        total += count * digits\n        start *= 10\n        digits += 1\n    return total\n\ndef total_len(m):\n    if m <= 0:\n        return 0\n    total = 0\n    start = 1\n    digits = 1\n    prev_len = 0\n    while start <= m:\n        end = min(m, start * 10 - 1)\n        count = end - start + 1\n        total += count * prev_len + digits * (count * (count + 1) // 2)\n        prev_len += count * digits\n        start *= 10\n        digits += 1\n    return total\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    q = int(data[0])\n    out = []\n    for i in range(1, q + 1):\n        k = int(data[i])\n        lo, hi = 1, 10**9\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if total_len(mid) >= k:\n                hi = mid\n            else:\n                lo = mid + 1\n        m = lo\n        pos = k - total_len(m - 1)\n        lo, hi = 1, m\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if len_block(mid) >= pos:\n                hi = mid\n            else:\n                lo = mid + 1\n        x = lo\n        pos -= len_block(x - 1)\n        out.append(str(x)[pos - 1])\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2323,
+    "completion_tokens": 443,
+    "total_tokens": 2766,
+    "prompt_tokens_details": {
+      "cached_tokens": 1792
+    },
+    "prompt_cache_hit_tokens": 1792,
+    "prompt_cache_miss_tokens": 531
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

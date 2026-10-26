@@ -1,0 +1,28 @@
+{
+  "id": "9da47e42-9832-4791-91fb-c8fb4a56d677",
+  "object": "chat.completion",
+  "created": 1793005054,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\nMOD = 10**9 + 7\n\ndef solve():\n    m = int(sys.stdin.readline())\n    if m == 1:\n        print(1)\n        return\n\n    # mobius\n    mu = [0] * (m + 1)\n    mu[1] = 1\n    primes = []\n    is_comp = [False] * (m + 1)\n    for i in range(2, m + 1):\n        if not is_comp[i]:\n            primes.append(i)\n            mu[i] = -1\n        for p in primes:\n            if i * p > m:\n                break\n            is_comp[i * p] = True\n            if i % p == 0:\n                mu[i * p] = 0\n                break\n            else:\n                mu[i * p] = -mu[i]\n\n    inv = [0] * (m + 1)\n    inv[1] = 1\n    for i in range(2, m + 1):\n        inv[i] = (MOD - (MOD // i) * inv[MOD % i] % MOD) % MOD\n\n    # cnt[d] = number of x in [1,m] with gcd(x,m)=d\n    # = phi(m/d) for d | m\n    # We need E = sum_{k>=0} P(gcd after k steps > 1)\n    # gcd after k steps > 1 iff all k chosen numbers share a common prime factor with m\n    # By inclusion-exclusion over divisors:\n    # P_k = sum_{d|m, d>1} -mu(d) * (floor(m/d)/m)^k ... actually count of numbers divisible by d is floor(m/d)\n    # Probability all k numbers divisible by d = (floor(m/d)/m)^k\n    # Inclusion-exclusion: P(gcd>1 after k) = sum_{d|m, d>1} -mu(d) * (floor(m/d)/m)^k\n    # E = sum_{k>=0} P_k = sum_{d|m, d>1} -mu(d) * 1/(1 - floor(m/d)/m)\n    # = sum_{d|m, d>1} -mu(d) * m / (m - floor(m/d))\n\n    ans = 0\n    for d in range(2, m + 1):\n        if m % d == 0 and mu[d] != 0:\n            q = m // d\n            term = (-mu[d]) * m % MOD * inv[m - q] % MOD\n            ans = (ans + term) % MOD\n\n    print(ans % MOD)\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 819,
+    "completion_tokens": 589,
+    "total_tokens": 1408,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 179
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}

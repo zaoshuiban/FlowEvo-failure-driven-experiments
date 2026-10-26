@@ -1,0 +1,28 @@
+{
+  "id": "6b9a290a-fc26-49c7-9141-4517a719ef27",
+  "object": "chat.completion",
+  "created": 1792986515,
+  "model": "deepseek-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    m = int(data[1])\n    idx = 2\n    atk = []\n    defs = []\n    for _ in range(n):\n        pos = data[idx]\n        s = int(data[idx + 1])\n        idx += 2\n        if pos == \"ATK\":\n            atk.append(s)\n        else:\n            defs.append(s)\n    ciel = [int(data[idx + i]) for i in range(m)]\n\n    atk_sorted = sorted(atk)\n    ciel_sorted = sorted(ciel)\n\n    # Strategy 1: only attack ATK cards, ignore DEF\n    la = len(atk_sorted)\n    lc = len(ciel_sorted)\n    dp = [[0] * (lc + 1) for _ in range(la + 1)]\n    for i in range(1, la + 1):\n        for j in range(1, lc + 1):\n            best = max(dp[i - 1][j], dp[i][j - 1])\n            if ciel_sorted[j - 1] >= atk_sorted[i - 1]:\n                v = dp[i - 1][j - 1] + ciel_sorted[j - 1] - atk_sorted[i - 1]\n                if v > best:\n                    best = v\n            dp[i][j] = best\n    ans = dp[la][lc]\n\n    # Strategy 2: destroy all Jiro cards, then hit directly with remaining\n    def_sorted = sorted(defs, reverse=True)\n    atk_desc = sorted(atk, reverse=True)\n    remaining = sorted(ciel)\n    possible = True\n\n    for d in def_sorted:\n        found = -1\n        for i, c in enumerate(remaining):\n            if c > d:\n                found = i\n                break\n        if found == -1:\n            possible = False\n            break\n        remaining.pop(found)\n\n    if possible:\n        for a in atk_desc:\n            found = -1\n            for i, c in enumerate(remaining):\n                if c >= a:\n                    found = i\n                    break\n            if found == -1:\n                possible = False\n                break\n            remaining.pop(found)\n\n    if possible:\n        total = sum(remaining)\n        for a in atk:\n            total -= a\n        if total > ans:\n            ans = total\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()\n```"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2185,
+    "completion_tokens": 560,
+    "total_tokens": 2745,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 2185
+  },
+  "system_fingerprint": "e72d3c7f663d3e1383b00b3884cb4501"
+}
