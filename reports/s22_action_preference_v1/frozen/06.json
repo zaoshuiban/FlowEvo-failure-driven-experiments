@@ -1,0 +1,414 @@
+{
+  "public_checkpoint": {
+    "task_public": {
+      "problem_id": "s19g_taco-train-s00-r0712",
+      "prompt": "Alice likes snow a lot! Unfortunately, this year's winter is already over, and she can't expect to have any more of it. Bob has thus bought her a gift — a large snow maker. He plans to make some amount of snow every day. On day i he will make a pile of snow of volume Vi and put it in her garden.\n\nEach day, every pile will shrink a little due to melting. More precisely, when the temperature on a given day is Ti, each pile will reduce its volume by Ti. If this would reduce the volume of a pile to or below zero, it disappears forever. All snow piles are independent of each other. \n\nNote that the pile made on day i already loses part of its volume on the same day. In an extreme case, this may mean that there are no piles left at the end of a particular day.\n\nYou are given the initial pile sizes and the temperature on each day. Determine the total volume of snow melted on each day. \n\nInput\n\nThe first line contains a single integer N (1 ≤ N ≤ 105) — the number of days. \n\nThe second line contains N integers V1, V2, ..., VN (0 ≤ Vi ≤ 109), where Vi is the initial size of a snow pile made on the day i.\n\nThe third line contains N integers T1, T2, ..., TN (0 ≤ Ti ≤ 109), where Ti is the temperature on the day i.\n\nOutput\n\nOutput a single line with N integers, where the i-th integer represents the total volume of snow melted on day i.\n\nExamples\n\nInput\n\n3\n10 10 5\n5 7 2\n\n\nOutput\n\n5 12 4\n\n\nInput\n\n5\n30 25 20 15 10\n9 10 12 4 13\n\n\nOutput\n\n9 20 35 11 25\n\nNote\n\nIn the first sample, Bob first makes a snow pile of volume 10, which melts to the size of 5 on the same day. On the second day, he makes another pile of size 10. Since it is a bit warmer than the day before, the first pile disappears completely while the second pile shrinks to 3. At the end of the second day, he has only a single pile of size 3. On the third day he makes a smaller pile than usual, but as the temperature dropped too, both piles survive till the end of the day.",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": [
+        {
+          "input": "3\n10 10 5\n5 7 2\n",
+          "expected": "5 12 4",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-train-s00-r0712::statement",
+            "case_sha256": "47889f1648570182cf6d2c6d0a5ee66d6130f144c3d670cffee74260ebeefde9"
+          }
+        },
+        {
+          "input": "5\n30 25 20 15 10\n9 10 12 4 13\n",
+          "expected": "9 20 35 11 25",
+          "comparison": "tokens",
+          "scorer": "s1",
+          "visibility": "public",
+          "legal_verified": true,
+          "source": {
+            "kind": "public_statement",
+            "id": "taco-train-s00-r0712::statement",
+            "case_sha256": "22089e446ac01a3249a4bb3491196247836d69ab1ee53e0231132e095c0bdbf6"
+          }
+        }
+      ]
+    },
+    "public_cases": [
+      {
+        "input": "3\n10 10 5\n5 7 2\n",
+        "expected": "5 12 4",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r0712::statement",
+          "case_sha256": "47889f1648570182cf6d2c6d0a5ee66d6130f144c3d670cffee74260ebeefde9"
+        }
+      },
+      {
+        "input": "5\n30 25 20 15 10\n9 10 12 4 13\n",
+        "expected": "9 20 35 11 25",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_statement",
+          "id": "taco-train-s00-r0712::statement",
+          "case_sha256": "22089e446ac01a3249a4bb3491196247836d69ab1ee53e0231132e095c0bdbf6"
+        }
+      },
+      {
+        "input": "1\n1\n3\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "9e2a502b61387b82694050e151960a2189bc97039ba3574f00076b561c6ebf42"
+        }
+      },
+      {
+        "input": "3\n10 8 5\n5 3 2\n",
+        "expected": "5 6 6\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "be5b3f4d1fd1416f6f68715e4ec19345b008d8b8e990bd07f35c237fc7f34ecb"
+        }
+      },
+      {
+        "input": "5\n30 11 37 15 19\n9 10 12 4 13\n",
+        "expected": "9 20 24 8 37\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "4342a43e4fb9db1ba8b53c72253ea628861937979824bd377e8f5f4ce53064d5"
+        }
+      },
+      {
+        "input": "10\n20 47 4 0 6 29 4 9 23 10\n0 9 4 12 5 1 4 3 7 4\n",
+        "expected": "0 18 12 19 10 3 12 9 27 14\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "76ed5599fa23d22ea65ea2be1c919e3ca232505f9c16cebdaded07d571a9f206"
+        }
+      },
+      {
+        "input": "2\n0 3\n17 0\n",
+        "expected": "0 0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "3aa508f4d4ad02dcb21e17cbe089b021ea0cbdd15024899b14423129f97f7013"
+        }
+      },
+      {
+        "input": "1\n3\n0\n",
+        "expected": "0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "b7e151226a264859c568dd0f6f689fa1ef653131e963167f4d75c39aad09cf0d"
+        }
+      },
+      {
+        "input": "2\n1 0\n8 0\n",
+        "expected": "1 0\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "2899ef016b263fff39ea1c886427efc9ab85e6b1e060e5cf06c8455aeeb3ae87"
+        }
+      },
+      {
+        "input": "1\n6\n8\n",
+        "expected": "6\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "1ead54fe48b0365e682d81c4fc539ee9acf5061230a3d95097112d9b1bfe74c4"
+        }
+      },
+      {
+        "input": "10\n11 39 16 34 47 3 12 11 31 16\n10 0 4 9 8 12 7 1 9 2\n",
+        "expected": "10 0 9 27 27 39 25 3 31 7\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "68a9e79866cf3d3d4e3e1ab2ad2069c19802275eaaf7bdd22abb1c6727fa8179"
+        }
+      },
+      {
+        "input": "1\n6\n5\n",
+        "expected": "5\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "93f08e238cc14ea23a75d9d005ddbad57e2c138b18ef423bc4e329cc36984993"
+        }
+      },
+      {
+        "input": "1\n1\n1\n",
+        "expected": "1\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "88ad4ee30c9fac3fbaf8437c2356a85a08ad2c26ed60750644d894c97258beae"
+        }
+      },
+      {
+        "input": "2\n32 5\n7 4\n",
+        "expected": "7 8\n",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "public_dataset",
+          "id": "taco-train-s00-r0712::predesignated-online-development",
+          "case_sha256": "3e38f9ff22d949f85894a1d8ebdf1f1a9ef48bb5f2867a7b164a69816c8d02a2"
+        }
+      }
+    ],
+    "code": "import sys\nfrom collections import deque\nimport bisect\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    n = int(data[0])\n    V = list(map(int, data[1:n+1]))\n    T = list(map(int, data[n+1:n+1+n]))\n    \n    # Prefix sums of temperatures\n    pref = [0] * (n + 1)\n    for i in range(n):\n        pref[i+1] = pref[i] + T[i]\n    \n    ans = [0] * n\n    q = deque()  # stores (start_day, volume)\n    \n    for i in range(n):\n        q.append((i, V[i]))\n        melted_today = 0\n        # Process piles that will melt completely today\n        while q:\n            start, vol = q[0]\n            # total melt from start day to today inclusive\n            total_melt = pref[i+1] - pref[start]\n            if total_melt >= vol:\n                # This pile melts completely today or earlier\n                # We need to find exactly how much it melts today\n                # It survived until yesterday: melt_before_today = pref[i] - pref[start]\n                melt_before_today = pref[i] - pref[start]\n                remaining_before_today = vol - melt_before_today\n                melted_today += remaining_before_today\n                q.popleft()\n            else:\n                break\n        # For remaining piles, they melt T[i] today (partial melt)\n        melted_today += len(q) * T[i]\n        ans[i] = melted_today\n    \n    print(' '.join(map(str, ans)))\n\nif __name__ == \"__main__\":\n    solve()",
+    "feedback": {
+      "status": "WRONG_ANSWER",
+      "summary": "Wrong answer on audited public checks.",
+      "public_cases": [
+        {
+          "actual": "5 12 4\n",
+          "exception_class": null,
+          "expected": "5 12 4",
+          "input": "3\n10 10 5\n5 7 2\n"
+        },
+        {
+          "actual": "9 20 35 11 25\n",
+          "exception_class": null,
+          "expected": "9 20 35 11 25",
+          "input": "5\n30 25 20 15 10\n9 10 12 4 13\n"
+        },
+        {
+          "actual": "1\n",
+          "exception_class": null,
+          "expected": "1\n",
+          "input": "1\n1\n3\n"
+        },
+        {
+          "actual": "5 6 6\n",
+          "exception_class": null,
+          "expected": "5 6 6\n",
+          "input": "3\n10 8 5\n5 3 2\n"
+        },
+        {
+          "actual": "9 20 24 8 39\n",
+          "exception_class": null,
+          "expected": "9 20 24 8 37\n",
+          "input": "5\n30 11 37 15 19\n9 10 12 4 13\n"
+        },
+        {
+          "actual": "0 18 12 43 20 5 24 21 56 -56\n",
+          "exception_class": null,
+          "expected": "0 18 12 19 10 3 12 9 27 14\n",
+          "input": "10\n20 47 4 0 6 29 4 9 23 10\n0 9 4 12 5 1 4 3 7 4\n"
+        },
+        {
+          "actual": "0 0\n",
+          "exception_class": null,
+          "expected": "0 0\n",
+          "input": "2\n0 3\n17 0\n"
+        },
+        {
+          "actual": "0\n",
+          "exception_class": null,
+          "expected": "0\n",
+          "input": "1\n3\n0\n"
+        },
+        {
+          "actual": "1 0\n",
+          "exception_class": null,
+          "expected": "1 0\n",
+          "input": "2\n1 0\n8 0\n"
+        },
+        {
+          "actual": "6\n",
+          "exception_class": null,
+          "expected": "6\n",
+          "input": "1\n6\n8\n"
+        },
+        {
+          "actual": "10 0 9 27 32 60 15 4 45 12\n",
+          "exception_class": null,
+          "expected": "10 0 9 27 27 39 25 3 31 7\n",
+          "input": "10\n11 39 16 34 47 3 12 11 31 16\n10 0 4 9 8 12 7 1 9 2\n"
+        },
+        {
+          "actual": "5\n",
+          "exception_class": null,
+          "expected": "5\n",
+          "input": "1\n6\n5\n"
+        },
+        {
+          "actual": "1\n",
+          "exception_class": null,
+          "expected": "1\n",
+          "input": "1\n1\n1\n"
+        },
+        {
+          "actual": "7 8\n",
+          "exception_class": null,
+          "expected": "7 8\n",
+          "input": "2\n32 5\n7 4\n"
+        }
+      ],
+      "visibility": "public"
+    },
+    "task_id": "s19g_taco-train-s00-r0712",
+    "stage": "l1",
+    "checkpoint_budget": {
+      "max_calls": 5,
+      "max_tokens": 204800,
+      "max_tools": 128,
+      "calls": 1,
+      "used_tokens": 1240,
+      "tool_calls": 1,
+      "remaining_seconds": 595.2162974589737
+    },
+    "event_id": "89eba82bf6ea77085c9860eed385603dbf286163e84eba6c17068e435b3ef5fa",
+    "candidate_sha256": "ed578542c34cfde97f7484329963e748fb41ad290d610e7c1d05dfa949f845b8",
+    "artifact_state": "STRUCTURAL_PASS"
+  },
+  "request_freeze": {
+    "version": "s22-identical-context-one-call-v1",
+    "checkpoint_hash": "34c2a1df44cdda06f5004cfb93a846e902eb97d6ce1ebdd217f6980b8ef5c0f2",
+    "state_input_hash": "8b49b721f666196023d21e368f30ac0622cab2285b9577714a28c74aa91a33a0",
+    "context_hash": "dff3cba92a030d17acf75c57b3a0d64eb8406364e68bea1585f23979ee10cd03",
+    "source_event_id": "89eba82bf6ea77085c9860eed385603dbf286163e84eba6c17068e435b3ef5fa",
+    "task_id": "s19g_taco-train-s00-r0712",
+    "stage": "l1",
+    "observed_at": 1792917259.672897,
+    "history_refs": [],
+    "source_budget": {
+      "max_calls": 5,
+      "max_tokens": 204800,
+      "max_tools": 128,
+      "calls": 1,
+      "used_tokens": 1240,
+      "tool_calls": 1,
+      "remaining_seconds": 595.2162974589737
+    },
+    "max_calls_per_branch": 1,
+    "arms": {
+      "A": {
+        "wire": {
+          "max_tokens": 8192,
+          "messages": [
+            {
+              "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution.",
+              "role": "system"
+            },
+            {
+              "content": "{\"candidate_code\":\"import sys\\nfrom collections import deque\\nimport bisect\\n\\ndef solve():\\n    input = sys.stdin.read\\n    data = input().split()\\n    n = int(data[0])\\n    V = list(map(int, data[1:n+1]))\\n    T = list(map(int, data[n+1:n+1+n]))\\n    \\n    # Prefix sums of temperatures\\n    pref = [0] * (n + 1)\\n    for i in range(n):\\n        pref[i+1] = pref[i] + T[i]\\n    \\n    ans = [0] * n\\n    q = deque()  # stores (start_day, volume)\\n    \\n    for i in range(n):\\n        q.append((i, V[i]))\\n        melted_today = 0\\n        # Process piles that will melt completely today\\n        while q:\\n            start, vol = q[0]\\n            # total melt from start day to today inclusive\\n            total_melt = pref[i+1] - pref[start]\\n            if total_melt >= vol:\\n                # This pile melts completely today or earlier\\n                # We need to find exactly how much it melts today\\n                # It survived until yesterday: melt_before_today = pref[i] - pref[start]\\n                melt_before_today = pref[i] - pref[start]\\n                remaining_before_today = vol - melt_before_today\\n                melted_today += remaining_before_today\\n                q.popleft()\\n            else:\\n                break\\n        # For remaining piles, they melt T[i] today (partial melt)\\n        melted_today += len(q) * T[i]\\n        ans[i] = melted_today\\n    \\n    print(' '.join(map(str, ans)))\\n\\nif __name__ == \\\"__main__\\\":\\n    solve()\",\"checkpoint_budget\":{\"calls\":1,\"max_calls\":5,\"max_tokens\":204800,\"max_tools\":128,\"remaining_seconds\":595.2162974589737,\"tool_calls\":1,\"used_tokens\":1240},\"prior_public_history\":[],\"public_feedback\":{\"public_cases\":[{\"actual\":\"5 12 4\\n\",\"exception_class\":null,\"expected\":\"5 12 4\",\"input\":\"3\\n10 10 5\\n5 7 2\\n\"},{\"actual\":\"9 20 35 11 25\\n\",\"exception_class\":null,\"expected\":\"9 20 35 11 25\",\"input\":\"5\\n30 25 20 15 10\\n9 10 12 4 13\\n\"},{\"actual\":\"1\\n\",\"exception_class\":null,\"expected\":\"1\\n\",\"input\":\"1\\n1\\n3\\n\"},{\"actual\":\"5 6 6\\n\",\"exception_class\":null,\"expected\":\"5 6 6\\n\",\"input\":\"3\\n10 8 5\\n5 3 2\\n\"},{\"actual\":\"9 20 24 8 39\\n\",\"exception_class\":null,\"expected\":\"9 20 24 8 37\\n\",\"input\":\"5\\n30 11 37 15 19\\n9 10 12 4 13\\n\"},{\"actual\":\"0 18 12 43 20 5 24 21 56 -56\\n\",\"exception_class\":null,\"expected\":\"0 18 12 19 10 3 12 9 27 14\\n\",\"input\":\"10\\n20 47 4 0 6 29 4 9 23 10\\n0 9 4 12 5 1 4 3 7 4\\n\"},{\"actual\":\"0 0\\n\",\"exception_class\":null,\"expected\":\"0 0\\n\",\"input\":\"2\\n0 3\\n17 0\\n\"},{\"actual\":\"0\\n\",\"exception_class\":null,\"expected\":\"0\\n\",\"input\":\"1\\n3\\n0\\n\"},{\"actual\":\"1 0\\n\",\"exception_class\":null,\"expected\":\"1 0\\n\",\"input\":\"2\\n1 0\\n8 0\\n\"},{\"actual\":\"6\\n\",\"exception_class\":null,\"expected\":\"6\\n\",\"input\":\"1\\n6\\n8\\n\"},{\"actual\":\"10 0 9 27 32 60 15 4 45 12\\n\",\"exception_class\":null,\"expected\":\"10 0 9 27 27 39 25 3 31 7\\n\",\"input\":\"10\\n11 39 16 34 47 3 12 11 31 16\\n10 0 4 9 8 12 7 1 9 2\\n\"},{\"actual\":\"5\\n\",\"exception_class\":null,\"expected\":\"5\\n\",\"input\":\"1\\n6\\n5\\n\"},{\"actual\":\"1\\n\",\"exception_class\":null,\"expected\":\"1\\n\",\"input\":\"1\\n1\\n1\\n\"},{\"actual\":\"7 8\\n\",\"exception_class\":null,\"expected\":\"7 8\\n\",\"input\":\"2\\n32 5\\n7 4\\n\"}],\"status\":\"WRONG_ANSWER\",\"summary\":\"Wrong answer on audited public checks.\",\"visibility\":\"public\"},\"task\":{\"function_name\":\"\",\"problem_id\":\"s19g_taco-train-s00-r0712\",\"prompt\":\"Alice likes snow a lot! Unfortunately, this year's winter is already over, and she can't expect to have any more of it. Bob has thus bought her a gift — a large snow maker. He plans to make some amount of snow every day. On day i he will make a pile of snow of volume Vi and put it in her garden.\\n\\nEach day, every pile will shrink a little due to melting. More precisely, when the temperature on a given day is Ti, each pile will reduce its volume by Ti. If this would reduce the volume of a pile to or below zero, it disappears forever. All snow piles are independent of each other. \\n\\nNote that the pile made on day i already loses part of its volume on the same day. In an extreme case, this may mean that there are no piles left at the end of a particular day.\\n\\nYou are given the initial pile sizes and the temperature on each day. Determine the total volume of snow melted on each day. \\n\\nInput\\n\\nThe first line contains a single integer N (1 ≤ N ≤ 105) — the number of days. \\n\\nThe second line contains N integers V1, V2, ..., VN (0 ≤ Vi ≤ 109), where Vi is the initial size of a snow pile made on the day i.\\n\\nThe third line contains N integers T1, T2, ..., TN (0 ≤ Ti ≤ 109), where Ti is the temperature on the day i.\\n\\nOutput\\n\\nOutput a single line with N integers, where the i-th integer represents the total volume of snow melted on day i.\\n\\nExamples\\n\\nInput\\n\\n3\\n10 10 5\\n5 7 2\\n\\n\\nOutput\\n\\n5 12 4\\n\\n\\nInput\\n\\n5\\n30 25 20 15 10\\n9 10 12 4 13\\n\\n\\nOutput\\n\\n9 20 35 11 25\\n\\nNote\\n\\nIn the first sample, Bob first makes a snow pile of volume 10, which melts to the size of 5 on the same day. On the second day, he makes another pile of size 10. Since it is a bit warmer than the day before, the first pile disappears completely while the second pile shrinks to 3. At the end of the second day, he has only a single pile of size 3. On the third day he makes a smaller pile than usual, but as the temperature dropped too, both piles survive till the end of the day.\",\"public_examples\":[{\"comparison\":\"tokens\",\"expected\":\"5 12 4\",\"input\":\"3\\n10 10 5\\n5 7 2\\n\",\"legal_verified\":true,\"scorer\":\"s1\",\"source\":{\"case_sha256\":\"47889f1648570182cf6d2c6d0a5ee66d6130f144c3d670cffee74260ebeefde9\",\"id\":\"taco-train-s00-r0712::statement\",\"kind\":\"public_statement\"},\"visibility\":\"public\"},{\"comparison\":\"tokens\",\"expected\":\"9 20 35 11 25\",\"input\":\"5\\n30 25 20 15 10\\n9 10 12 4 13\\n\",\"legal_verified\":true,\"scorer\":\"s1\",\"source\":{\"case_sha256\":\"22089e446ac01a3249a4bb3491196247836d69ab1ee53e0231132e095c0bdbf6\",\"id\":\"taco-train-s00-r0712::statement\",\"kind\":\"public_statement\"},\"visibility\":\"public\"}],\"starter_code\":\"\"}}",
+              "role": "user"
+            },
+            {
+              "content": "Return one complete executable Python program in a python fence. Do not provide extended explanation, special-case samples, or merely suppress exceptions.\nAction instruction:\nRepair the current program. Preserve its algorithm and structure where feasible, and correct the observed public failure.",
+              "role": "user"
+            }
+          ],
+          "model": "deepseek-flash",
+          "reasoning_effort": "none",
+          "stream": false,
+          "temperature": 0,
+          "thinking": {
+            "type": "disabled"
+          }
+        },
+        "wire_sha256": "7266ba95b4fc8e5ddd66aaf8a5a5830f8126e7beace5aca346493cf091a92fb5",
+        "input_upper": 9109,
+        "output_upper": 8192
+      },
+      "B": {
+        "wire": {
+          "max_tokens": 8192,
+          "messages": [
+            {
+              "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution.",
+              "role": "system"
+            },
+            {
+              "content": "{\"candidate_code\":\"import sys\\nfrom collections import deque\\nimport bisect\\n\\ndef solve():\\n    input = sys.stdin.read\\n    data = input().split()\\n    n = int(data[0])\\n    V = list(map(int, data[1:n+1]))\\n    T = list(map(int, data[n+1:n+1+n]))\\n    \\n    # Prefix sums of temperatures\\n    pref = [0] * (n + 1)\\n    for i in range(n):\\n        pref[i+1] = pref[i] + T[i]\\n    \\n    ans = [0] * n\\n    q = deque()  # stores (start_day, volume)\\n    \\n    for i in range(n):\\n        q.append((i, V[i]))\\n        melted_today = 0\\n        # Process piles that will melt completely today\\n        while q:\\n            start, vol = q[0]\\n            # total melt from start day to today inclusive\\n            total_melt = pref[i+1] - pref[start]\\n            if total_melt >= vol:\\n                # This pile melts completely today or earlier\\n                # We need to find exactly how much it melts today\\n                # It survived until yesterday: melt_before_today = pref[i] - pref[start]\\n                melt_before_today = pref[i] - pref[start]\\n                remaining_before_today = vol - melt_before_today\\n                melted_today += remaining_before_today\\n                q.popleft()\\n            else:\\n                break\\n        # For remaining piles, they melt T[i] today (partial melt)\\n        melted_today += len(q) * T[i]\\n        ans[i] = melted_today\\n    \\n    print(' '.join(map(str, ans)))\\n\\nif __name__ == \\\"__main__\\\":\\n    solve()\",\"checkpoint_budget\":{\"calls\":1,\"max_calls\":5,\"max_tokens\":204800,\"max_tools\":128,\"remaining_seconds\":595.2162974589737,\"tool_calls\":1,\"used_tokens\":1240},\"prior_public_history\":[],\"public_feedback\":{\"public_cases\":[{\"actual\":\"5 12 4\\n\",\"exception_class\":null,\"expected\":\"5 12 4\",\"input\":\"3\\n10 10 5\\n5 7 2\\n\"},{\"actual\":\"9 20 35 11 25\\n\",\"exception_class\":null,\"expected\":\"9 20 35 11 25\",\"input\":\"5\\n30 25 20 15 10\\n9 10 12 4 13\\n\"},{\"actual\":\"1\\n\",\"exception_class\":null,\"expected\":\"1\\n\",\"input\":\"1\\n1\\n3\\n\"},{\"actual\":\"5 6 6\\n\",\"exception_class\":null,\"expected\":\"5 6 6\\n\",\"input\":\"3\\n10 8 5\\n5 3 2\\n\"},{\"actual\":\"9 20 24 8 39\\n\",\"exception_class\":null,\"expected\":\"9 20 24 8 37\\n\",\"input\":\"5\\n30 11 37 15 19\\n9 10 12 4 13\\n\"},{\"actual\":\"0 18 12 43 20 5 24 21 56 -56\\n\",\"exception_class\":null,\"expected\":\"0 18 12 19 10 3 12 9 27 14\\n\",\"input\":\"10\\n20 47 4 0 6 29 4 9 23 10\\n0 9 4 12 5 1 4 3 7 4\\n\"},{\"actual\":\"0 0\\n\",\"exception_class\":null,\"expected\":\"0 0\\n\",\"input\":\"2\\n0 3\\n17 0\\n\"},{\"actual\":\"0\\n\",\"exception_class\":null,\"expected\":\"0\\n\",\"input\":\"1\\n3\\n0\\n\"},{\"actual\":\"1 0\\n\",\"exception_class\":null,\"expected\":\"1 0\\n\",\"input\":\"2\\n1 0\\n8 0\\n\"},{\"actual\":\"6\\n\",\"exception_class\":null,\"expected\":\"6\\n\",\"input\":\"1\\n6\\n8\\n\"},{\"actual\":\"10 0 9 27 32 60 15 4 45 12\\n\",\"exception_class\":null,\"expected\":\"10 0 9 27 27 39 25 3 31 7\\n\",\"input\":\"10\\n11 39 16 34 47 3 12 11 31 16\\n10 0 4 9 8 12 7 1 9 2\\n\"},{\"actual\":\"5\\n\",\"exception_class\":null,\"expected\":\"5\\n\",\"input\":\"1\\n6\\n5\\n\"},{\"actual\":\"1\\n\",\"exception_class\":null,\"expected\":\"1\\n\",\"input\":\"1\\n1\\n1\\n\"},{\"actual\":\"7 8\\n\",\"exception_class\":null,\"expected\":\"7 8\\n\",\"input\":\"2\\n32 5\\n7 4\\n\"}],\"status\":\"WRONG_ANSWER\",\"summary\":\"Wrong answer on audited public checks.\",\"visibility\":\"public\"},\"task\":{\"function_name\":\"\",\"problem_id\":\"s19g_taco-train-s00-r0712\",\"prompt\":\"Alice likes snow a lot! Unfortunately, this year's winter is already over, and she can't expect to have any more of it. Bob has thus bought her a gift — a large snow maker. He plans to make some amount of snow every day. On day i he will make a pile of snow of volume Vi and put it in her garden.\\n\\nEach day, every pile will shrink a little due to melting. More precisely, when the temperature on a given day is Ti, each pile will reduce its volume by Ti. If this would reduce the volume of a pile to or below zero, it disappears forever. All snow piles are independent of each other. \\n\\nNote that the pile made on day i already loses part of its volume on the same day. In an extreme case, this may mean that there are no piles left at the end of a particular day.\\n\\nYou are given the initial pile sizes and the temperature on each day. Determine the total volume of snow melted on each day. \\n\\nInput\\n\\nThe first line contains a single integer N (1 ≤ N ≤ 105) — the number of days. \\n\\nThe second line contains N integers V1, V2, ..., VN (0 ≤ Vi ≤ 109), where Vi is the initial size of a snow pile made on the day i.\\n\\nThe third line contains N integers T1, T2, ..., TN (0 ≤ Ti ≤ 109), where Ti is the temperature on the day i.\\n\\nOutput\\n\\nOutput a single line with N integers, where the i-th integer represents the total volume of snow melted on day i.\\n\\nExamples\\n\\nInput\\n\\n3\\n10 10 5\\n5 7 2\\n\\n\\nOutput\\n\\n5 12 4\\n\\n\\nInput\\n\\n5\\n30 25 20 15 10\\n9 10 12 4 13\\n\\n\\nOutput\\n\\n9 20 35 11 25\\n\\nNote\\n\\nIn the first sample, Bob first makes a snow pile of volume 10, which melts to the size of 5 on the same day. On the second day, he makes another pile of size 10. Since it is a bit warmer than the day before, the first pile disappears completely while the second pile shrinks to 3. At the end of the second day, he has only a single pile of size 3. On the third day he makes a smaller pile than usual, but as the temperature dropped too, both piles survive till the end of the day.\",\"public_examples\":[{\"comparison\":\"tokens\",\"expected\":\"5 12 4\",\"input\":\"3\\n10 10 5\\n5 7 2\\n\",\"legal_verified\":true,\"scorer\":\"s1\",\"source\":{\"case_sha256\":\"47889f1648570182cf6d2c6d0a5ee66d6130f144c3d670cffee74260ebeefde9\",\"id\":\"taco-train-s00-r0712::statement\",\"kind\":\"public_statement\"},\"visibility\":\"public\"},{\"comparison\":\"tokens\",\"expected\":\"9 20 35 11 25\",\"input\":\"5\\n30 25 20 15 10\\n9 10 12 4 13\\n\",\"legal_verified\":true,\"scorer\":\"s1\",\"source\":{\"case_sha256\":\"22089e446ac01a3249a4bb3491196247836d69ab1ee53e0231132e095c0bdbf6\",\"id\":\"taco-train-s00-r0712::statement\",\"kind\":\"public_statement\"},\"visibility\":\"public\"}],\"starter_code\":\"\"}}",
+              "role": "user"
+            },
+            {
+              "content": "Return one complete executable Python program in a python fence. Do not provide extended explanation, special-case samples, or merely suppress exceptions.\nAction instruction:\nDevelop a fresh solution. You may inspect the current program, but need not preserve its algorithm or structure.",
+              "role": "user"
+            }
+          ],
+          "model": "deepseek-flash",
+          "reasoning_effort": "none",
+          "stream": false,
+          "temperature": 0,
+          "thinking": {
+            "type": "disabled"
+          }
+        },
+        "wire_sha256": "747559a7760a1aedc1803f54076e1fd99cd1bd5d997d88bd5d509f6aae2c8929",
+        "input_upper": 9100,
+        "output_upper": 8192
+      }
+    },
+    "model": "deepseek-flash",
+    "thinking": "disabled",
+    "expected_reasoning_tokens": 0,
+    "status": "DRY_RUN_NOT_AUTHORIZED",
+    "freeze_hash": "23af503968c11ef73bdb0f46abc1077c74722cbf1b45ffdb1208cb5865b1cd84"
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "public_checkpoint": {
+    "task_public": {
+      "problem_id": "taco_0313",
+      "prompt": "Arkady has a playlist that initially consists of $n$ songs, numerated from $1$ to $n$ in the order they appear in the playlist. Arkady starts listening to the songs in the playlist one by one, starting from song $1$. The playlist is cycled, i. e. after listening to the last song, Arkady will continue listening from the beginning.\n\nEach song has a genre $a_i$, which is a positive integer. Let Arkady finish listening to a song with genre $y$, and the genre of the next-to-last listened song be $x$. If $\\operatorname{gcd}(x, y) = 1$, he deletes the last listened song (with genre $y$) from the playlist. After that he continues listening normally, skipping the deleted songs, and forgetting about songs he listened to before. In other words, after he deletes a song, he can't delete the next song immediately.\n\nHere $\\operatorname{gcd}(x, y)$ denotes the greatest common divisor (GCD) of integers $x$ and $y$.\n\nFor example, if the initial songs' genres were $[5, 9, 2, 10, 15]$, then the playlist is converted as follows: [5, 9, 2, 10, 15] $\\to$ [5, 9, 2, 10, 15] $\\to$ [5, 2, 10, 15] (because $\\operatorname{gcd}(5, 9) = 1$) $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 2, 10, 15] $\\to$ [5, 10, 15] (because $\\operatorname{gcd}(5, 2) = 1$) $\\to$ [5, 10, 15] $\\to$ [5, 10, 15] $\\to$ ... The bold numbers represent the two last played songs. Note that after a song is deleted, Arkady forgets that he listened to that and the previous songs.\n\nGiven the initial playlist, please determine which songs are eventually deleted and the order these songs are deleted.\n\n\n-----Input-----\n\nEach test contains multiple test cases. The first line contains the number of test cases $t$ ($1 \\le t \\le 10000$). Description of the test cases follows.\n\nThe first line of each test case contains a single integer $n$ ($1 \\le n \\le 10^5$) — the number of songs.\n\nThe second line contains $n$ integers $a_1, a_2, \\ldots, a_n$ ($1 \\le a_i \\le 10^9$) — the genres of the songs.\n\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $10^5$.\n\n\n-----Output-----\n\nFor each test case, print a single line. First, print a single integer $k$ — the number of deleted songs. After that print $k$ distinct integers: deleted songs in the order of their deletion.\n\n\n-----Examples-----\n\nInput\n5\n5\n5 9 2 10 15\n6\n1 2 4 2 4 2\n2\n1 2\n1\n1\n1\n2\nOutput\n2 2 3 \n2 2 1 \n2 2 1 \n1 1 \n0\n\n\n-----Note-----\n\nExplanation of the first test case is given in the statement.\n\nIn the second test case, the playlist is converted as follows: [1, 2, 4, 2, 4, 2] $\\to$ [1, 2, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] (because $\\operatorname{gcd}(1, 2) = 1$) $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [1, 4, 2, 4, 2] $\\to$ [4, 2, 4, 2] (because $\\operatorname{gcd}(2, 1) = 1$) $\\to$ [4, 2, 4, 2] $\\to$ ...\n\nIn the third test case, the playlist is converted as follows: [1, 2] $\\to$ [1, 2] $\\to$ [1] (because $\\operatorname{gcd}(1, 2) = 1$) $\\to$ [1] $\\to$ [1] (Arkady listened to the same song twice in a row) $\\to$ [] (because $\\operatorname{gcd}(1, 1) = 1$).\n\nThe fourth test case is same as the third after deletion of the second song.\n\nIn the fifth test case, the same song is listened to over and over again, but since $\\operatorname{gcd}(2, 2) \\ne 1$, it is not deleted.\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\n[{\"input\": \"1\\n3\\n12 1 12\\n\", \"expected\": \"1 2\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n3\\n5 11 7\\n\", \"expected\": \"2 2 1\", \"comparison\": \"tokens\"}, {\"input\": \"1\\n3\\n6 1 5\\n\", \"expected\": \"2 2 1\", \"comparison\": \"tokens\"}]",
+      "starter_code": "",
+      "function_name": "",
+      "public_examples": []
+    },
+    "public_cases": [
+      {
+        "input": "1\n3\n12 1 12\n",
+        "expected": "1 2",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#2/case/0",
+          "case_sha256": "c8b493d3a4ad0808bde0824fd4502a4222cb241d0b498a289d927e30c665b8cd"
+        }
+      },
+      {
+        "input": "1\n3\n5 11 7\n",
+        "expected": "2 2 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#2/case/1",
+          "case_sha256": "7257c30922125f1a7b40cc67cafc1c549bbf9fdd65bdd33ad2fad6cc44d1eb12"
+        }
+      },
+      {
+        "input": "1\n3\n6 1 5\n",
+        "expected": "2 2 1",
+        "comparison": "tokens",
+        "scorer": "s1",
+        "visibility": "public",
+        "legal_verified": true,
+        "source": {
+          "kind": "host_public_generator",
+          "id": "runs/s15_learn_reuse30_20261022_01/tasks.json#2/case/2",
+          "case_sha256": "860804cd3983107e56a354504f61bf9e32377b8f04e7b2dabfad08b16903436d"
+        }
+      }
+    ],
+    "code": "import sys\nfrom math import gcd\nfrom collections import deque\n\ninput = sys.stdin.read\ndata = input().split()\nt = int(data[0])\nidx = 1\n\nout_lines = []\n\nfor _ in range(t):\n    n = int(data[idx]); idx += 1\n    a = list(map(int, data[idx:idx+n])); idx += n\n    \n    if n == 1:\n        if a[0] == 1:\n            out_lines.append(\"1 1\")\n        else:\n            out_lines.append(\"0\")\n        continue\n    \n    prev = [(i - 1) % n for i in range(n)]\n    nxt = [(i + 1) % n for i in range(n)]\n    deleted = [False] * n\n    q = deque()\n    \n    # initial check\n    for i in range(n):\n        if gcd(a[prev[i]], a[i]) == 1:\n            q.append(i)\n    \n    res = []\n    \n    while q:\n        i = q.popleft()\n        if deleted[i]:\n            continue\n        p = prev[i]\n        if deleted[p]:\n            continue\n        if gcd(a[p], a[i]) == 1:\n            # delete i\n            deleted[i] = True\n            res.append(i + 1)\n            # link p and nxt[i]\n            nx = nxt[i]\n            nxt[p] = nx\n            prev[nx] = p\n            # check new adjacency\n            if not deleted[nx] and gcd(a[p], a[nx]) == 1:\n                q.append(nx)\n    \n    if res:\n        out_lines.append(str(len(res)) + \" \" + \" \".join(map(str, res)))\n    else:\n        out_lines.append(\"0\")\n\nsys.stdout.write(\"\\n\".join(out_lines))",
+    "feedback": {
+      "status": "WRONG_ANSWER",
+      "summary": "Wrong answer on audited public checks.",
+      "public_cases": [
+        {
+          "actual": "1 2",
+          "exception_class": null,
+          "expected": "1 2",
+          "input": "1\n3\n12 1 12\n"
+        },
+        {
+          "actual": "2 1 2",
+          "exception_class": null,
+          "expected": "2 2 1",
+          "input": "1\n3\n5 11 7\n"
+        },
+        {
+          "actual": "2 1 2",
+          "exception_class": null,
+          "expected": "2 2 1",
+          "input": "1\n3\n6 1 5\n"
+        }
+      ],
+      "visibility": "public"
+    },
+    "task_id": "taco_0313",
+    "stage": "l1",
+    "checkpoint_budget": {
+      "max_calls": 5,
+      "max_tokens": 204800,
+      "max_tools": 40,
+      "calls": 1,
+      "used_tokens": 2186,
+      "tool_calls": 1,
+      "remaining_seconds": 594.1750587500283
+    },
+    "event_id": "5c4a9c03e853be2490b9c50c5abedecc8f32e0995e4b91837dcfc18c3294c438",
+    "candidate_sha256": "65e6d6a207e90a529a47608aabea51b8eac6281a15f164ea9fc2da7a17336649",
+    "artifact_state": "STRUCTURAL_PASS"
+  },
+  "request_freeze": {
+    "version": "s22-identical-context-one-call-v1",
+    "checkpoint_hash": "8381d62db20b8ab58ab8805457e000ec4470ce43b3a1d49418358b79cc2b4b3a",
+    "state_input_hash": "1df2e4e4f12a870b75b7183568e122b467aae4ff7dc5bc21fb19833ab330c145",
+    "context_hash": "16f5394c2320506bde3261dadcf7418d92d8f9ec5a611c92d40633733575085e",
+    "source_event_id": "5c4a9c03e853be2490b9c50c5abedecc8f32e0995e4b91837dcfc18c3294c438",
+    "task_id": "taco_0313",
+    "stage": "l1",
+    "observed_at": 1792830015.906189,
+    "history_refs": [],
+    "source_budget": {
+      "max_calls": 5,
+      "max_tokens": 204800,
+      "max_tools": 40,
+      "calls": 1,
+      "used_tokens": 2186,
+      "tool_calls": 1,
+      "remaining_seconds": 594.1750587500283
+    },
+    "max_calls_per_branch": 1,
+    "arms": {
+      "A": {
+        "wire": {
+          "max_tokens": 8192,
+          "messages": [
+            {
+              "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution.",
+              "role": "system"
+            },
+            {
+              "content": "{\"candidate_code\":\"import sys\\nfrom math import gcd\\nfrom collections import deque\\n\\ninput = sys.stdin.read\\ndata = input().split()\\nt = int(data[0])\\nidx = 1\\n\\nout_lines = []\\n\\nfor _ in range(t):\\n    n = int(data[idx]); idx += 1\\n    a = list(map(int, data[idx:idx+n])); idx += n\\n    \\n    if n == 1:\\n        if a[0] == 1:\\n            out_lines.append(\\\"1 1\\\")\\n        else:\\n            out_lines.append(\\\"0\\\")\\n        continue\\n    \\n    prev = [(i - 1) % n for i in range(n)]\\n    nxt = [(i + 1) % n for i in range(n)]\\n    deleted = [False] * n\\n    q = deque()\\n    \\n    # initial check\\n    for i in range(n):\\n        if gcd(a[prev[i]], a[i]) == 1:\\n            q.append(i)\\n    \\n    res = []\\n    \\n    while q:\\n        i = q.popleft()\\n        if deleted[i]:\\n            continue\\n        p = prev[i]\\n        if deleted[p]:\\n            continue\\n        if gcd(a[p], a[i]) == 1:\\n            # delete i\\n            deleted[i] = True\\n            res.append(i + 1)\\n            # link p and nxt[i]\\n            nx = nxt[i]\\n            nxt[p] = nx\\n            prev[nx] = p\\n            # check new adjacency\\n            if not deleted[nx] and gcd(a[p], a[nx]) == 1:\\n                q.append(nx)\\n    \\n    if res:\\n        out_lines.append(str(len(res)) + \\\" \\\" + \\\" \\\".join(map(str, res)))\\n    else:\\n        out_lines.append(\\\"0\\\")\\n\\nsys.stdout.write(\\\"\\\\n\\\".join(out_lines))\",\"checkpoint_budget\":{\"calls\":1,\"max_calls\":5,\"max_tokens\":204800,\"max_tools\":40,\"remaining_seconds\":594.1750587500283,\"tool_calls\":1,\"used_tokens\":2186},\"prior_public_history\":[],\"public_feedback\":{\"public_cases\":[{\"actual\":\"1 2\",\"exception_class\":null,\"expected\":\"1 2\",\"input\":\"1\\n3\\n12 1 12\\n\"},{\"actual\":\"2 1 2\",\"exception_class\":null,\"expected\":\"2 2 1\",\"input\":\"1\\n3\\n5 11 7\\n\"},{\"actual\":\"2 1 2\",\"exception_class\":null,\"expected\":\"2 2 1\",\"input\":\"1\\n3\\n6 1 5\\n\"}],\"status\":\"WRONG_ANSWER\",\"summary\":\"Wrong answer on audited public checks.\",\"visibility\":\"public\"},\"task\":{\"function_name\":\"\",\"problem_id\":\"taco_0313\",\"prompt\":\"Arkady has a playlist that initially consists of $n$ songs, numerated from $1$ to $n$ in the order they appear in the playlist. Arkady starts listening to the songs in the playlist one by one, starting from song $1$. The playlist is cycled, i. e. after listening to the last song, Arkady will continue listening from the beginning.\\n\\nEach song has a genre $a_i$, which is a positive integer. Let Arkady finish listening to a song with genre $y$, and the genre of the next-to-last listened song be $x$. If $\\\\operatorname{gcd}(x, y) = 1$, he deletes the last listened song (with genre $y$) from the playlist. After that he continues listening normally, skipping the deleted songs, and forgetting about songs he listened to before. In other words, after he deletes a song, he can't delete the next song immediately.\\n\\nHere $\\\\operatorname{gcd}(x, y)$ denotes the greatest common divisor (GCD) of integers $x$ and $y$.\\n\\nFor example, if the initial songs' genres were $[5, 9, 2, 10, 15]$, then the playlist is converted as follows: [5, 9, 2, 10, 15] $\\\\to$ [5, 9, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] (because $\\\\operatorname{gcd}(5, 9) = 1$) $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 10, 15] (because $\\\\operatorname{gcd}(5, 2) = 1$) $\\\\to$ [5, 10, 15] $\\\\to$ [5, 10, 15] $\\\\to$ ... The bold numbers represent the two last played songs. Note that after a song is deleted, Arkady forgets that he listened to that and the previous songs.\\n\\nGiven the initial playlist, please determine which songs are eventually deleted and the order these songs are deleted.\\n\\n\\n-----Input-----\\n\\nEach test contains multiple test cases. The first line contains the number of test cases $t$ ($1 \\\\le t \\\\le 10000$). Description of the test cases follows.\\n\\nThe first line of each test case contains a single integer $n$ ($1 \\\\le n \\\\le 10^5$) — the number of songs.\\n\\nThe second line contains $n$ integers $a_1, a_2, \\\\ldots, a_n$ ($1 \\\\le a_i \\\\le 10^9$) — the genres of the songs.\\n\\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $10^5$.\\n\\n\\n-----Output-----\\n\\nFor each test case, print a single line. First, print a single integer $k$ — the number of deleted songs. After that print $k$ distinct integers: deleted songs in the order of their deletion.\\n\\n\\n-----Examples-----\\n\\nInput\\n5\\n5\\n5 9 2 10 15\\n6\\n1 2 4 2 4 2\\n2\\n1 2\\n1\\n1\\n1\\n2\\nOutput\\n2 2 3 \\n2 2 1 \\n2 2 1 \\n1 1 \\n0\\n\\n\\n-----Note-----\\n\\nExplanation of the first test case is given in the statement.\\n\\nIn the second test case, the playlist is converted as follows: [1, 2, 4, 2, 4, 2] $\\\\to$ [1, 2, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] (because $\\\\operatorname{gcd}(1, 2) = 1$) $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [4, 2, 4, 2] (because $\\\\operatorname{gcd}(2, 1) = 1$) $\\\\to$ [4, 2, 4, 2] $\\\\to$ ...\\n\\nIn the third test case, the playlist is converted as follows: [1, 2] $\\\\to$ [1, 2] $\\\\to$ [1] (because $\\\\operatorname{gcd}(1, 2) = 1$) $\\\\to$ [1] $\\\\to$ [1] (Arkady listened to the same song twice in a row) $\\\\to$ [] (because $\\\\operatorname{gcd}(1, 1) = 1$).\\n\\nThe fourth test case is same as the third after deletion of the second song.\\n\\nIn the fifth test case, the same song is listened to over and over again, but since $\\\\operatorname{gcd}(2, 2) \\\\ne 1$, it is not deleted.\\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\\n[{\\\"input\\\": \\\"1\\\\n3\\\\n12 1 12\\\\n\\\", \\\"expected\\\": \\\"1 2\\\", \\\"comparison\\\": \\\"tokens\\\"}, {\\\"input\\\": \\\"1\\\\n3\\\\n5 11 7\\\\n\\\", \\\"expected\\\": \\\"2 2 1\\\", \\\"comparison\\\": \\\"tokens\\\"}, {\\\"input\\\": \\\"1\\\\n3\\\\n6 1 5\\\\n\\\", \\\"expected\\\": \\\"2 2 1\\\", \\\"comparison\\\": \\\"tokens\\\"}]\",\"public_examples\":[],\"starter_code\":\"\"}}",
+              "role": "user"
+            },
+            {
+              "content": "Return one complete executable Python program in a python fence. Do not provide extended explanation, special-case samples, or merely suppress exceptions.\nAction instruction:\nRepair the current program. Preserve its algorithm and structure where feasible, and correct the observed public failure.",
+              "role": "user"
+            }
+          ],
+          "model": "deepseek-flash",
+          "reasoning_effort": "none",
+          "stream": false,
+          "temperature": 0,
+          "thinking": {
+            "type": "disabled"
+          }
+        },
+        "wire_sha256": "46dc01199cd497452a0388500ada79e30476adbbc782f601e08c3d38a8a113a6",
+        "input_upper": 8971,
+        "output_upper": 8192
+      },
+      "B": {
+        "wire": {
+          "max_tokens": 8192,
+          "messages": [
+            {
+              "content": "You are an expert competitive programmer. Produce a correct and efficient Python solution.",
+              "role": "system"
+            },
+            {
+              "content": "{\"candidate_code\":\"import sys\\nfrom math import gcd\\nfrom collections import deque\\n\\ninput = sys.stdin.read\\ndata = input().split()\\nt = int(data[0])\\nidx = 1\\n\\nout_lines = []\\n\\nfor _ in range(t):\\n    n = int(data[idx]); idx += 1\\n    a = list(map(int, data[idx:idx+n])); idx += n\\n    \\n    if n == 1:\\n        if a[0] == 1:\\n            out_lines.append(\\\"1 1\\\")\\n        else:\\n            out_lines.append(\\\"0\\\")\\n        continue\\n    \\n    prev = [(i - 1) % n for i in range(n)]\\n    nxt = [(i + 1) % n for i in range(n)]\\n    deleted = [False] * n\\n    q = deque()\\n    \\n    # initial check\\n    for i in range(n):\\n        if gcd(a[prev[i]], a[i]) == 1:\\n            q.append(i)\\n    \\n    res = []\\n    \\n    while q:\\n        i = q.popleft()\\n        if deleted[i]:\\n            continue\\n        p = prev[i]\\n        if deleted[p]:\\n            continue\\n        if gcd(a[p], a[i]) == 1:\\n            # delete i\\n            deleted[i] = True\\n            res.append(i + 1)\\n            # link p and nxt[i]\\n            nx = nxt[i]\\n            nxt[p] = nx\\n            prev[nx] = p\\n            # check new adjacency\\n            if not deleted[nx] and gcd(a[p], a[nx]) == 1:\\n                q.append(nx)\\n    \\n    if res:\\n        out_lines.append(str(len(res)) + \\\" \\\" + \\\" \\\".join(map(str, res)))\\n    else:\\n        out_lines.append(\\\"0\\\")\\n\\nsys.stdout.write(\\\"\\\\n\\\".join(out_lines))\",\"checkpoint_budget\":{\"calls\":1,\"max_calls\":5,\"max_tokens\":204800,\"max_tools\":40,\"remaining_seconds\":594.1750587500283,\"tool_calls\":1,\"used_tokens\":2186},\"prior_public_history\":[],\"public_feedback\":{\"public_cases\":[{\"actual\":\"1 2\",\"exception_class\":null,\"expected\":\"1 2\",\"input\":\"1\\n3\\n12 1 12\\n\"},{\"actual\":\"2 1 2\",\"exception_class\":null,\"expected\":\"2 2 1\",\"input\":\"1\\n3\\n5 11 7\\n\"},{\"actual\":\"2 1 2\",\"exception_class\":null,\"expected\":\"2 2 1\",\"input\":\"1\\n3\\n6 1 5\\n\"}],\"status\":\"WRONG_ANSWER\",\"summary\":\"Wrong answer on audited public checks.\",\"visibility\":\"public\"},\"task\":{\"function_name\":\"\",\"problem_id\":\"taco_0313\",\"prompt\":\"Arkady has a playlist that initially consists of $n$ songs, numerated from $1$ to $n$ in the order they appear in the playlist. Arkady starts listening to the songs in the playlist one by one, starting from song $1$. The playlist is cycled, i. e. after listening to the last song, Arkady will continue listening from the beginning.\\n\\nEach song has a genre $a_i$, which is a positive integer. Let Arkady finish listening to a song with genre $y$, and the genre of the next-to-last listened song be $x$. If $\\\\operatorname{gcd}(x, y) = 1$, he deletes the last listened song (with genre $y$) from the playlist. After that he continues listening normally, skipping the deleted songs, and forgetting about songs he listened to before. In other words, after he deletes a song, he can't delete the next song immediately.\\n\\nHere $\\\\operatorname{gcd}(x, y)$ denotes the greatest common divisor (GCD) of integers $x$ and $y$.\\n\\nFor example, if the initial songs' genres were $[5, 9, 2, 10, 15]$, then the playlist is converted as follows: [5, 9, 2, 10, 15] $\\\\to$ [5, 9, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] (because $\\\\operatorname{gcd}(5, 9) = 1$) $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 2, 10, 15] $\\\\to$ [5, 10, 15] (because $\\\\operatorname{gcd}(5, 2) = 1$) $\\\\to$ [5, 10, 15] $\\\\to$ [5, 10, 15] $\\\\to$ ... The bold numbers represent the two last played songs. Note that after a song is deleted, Arkady forgets that he listened to that and the previous songs.\\n\\nGiven the initial playlist, please determine which songs are eventually deleted and the order these songs are deleted.\\n\\n\\n-----Input-----\\n\\nEach test contains multiple test cases. The first line contains the number of test cases $t$ ($1 \\\\le t \\\\le 10000$). Description of the test cases follows.\\n\\nThe first line of each test case contains a single integer $n$ ($1 \\\\le n \\\\le 10^5$) — the number of songs.\\n\\nThe second line contains $n$ integers $a_1, a_2, \\\\ldots, a_n$ ($1 \\\\le a_i \\\\le 10^9$) — the genres of the songs.\\n\\nIt is guaranteed that the sum of $n$ over all test cases does not exceed $10^5$.\\n\\n\\n-----Output-----\\n\\nFor each test case, print a single line. First, print a single integer $k$ — the number of deleted songs. After that print $k$ distinct integers: deleted songs in the order of their deletion.\\n\\n\\n-----Examples-----\\n\\nInput\\n5\\n5\\n5 9 2 10 15\\n6\\n1 2 4 2 4 2\\n2\\n1 2\\n1\\n1\\n1\\n2\\nOutput\\n2 2 3 \\n2 2 1 \\n2 2 1 \\n1 1 \\n0\\n\\n\\n-----Note-----\\n\\nExplanation of the first test case is given in the statement.\\n\\nIn the second test case, the playlist is converted as follows: [1, 2, 4, 2, 4, 2] $\\\\to$ [1, 2, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] (because $\\\\operatorname{gcd}(1, 2) = 1$) $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [1, 4, 2, 4, 2] $\\\\to$ [4, 2, 4, 2] (because $\\\\operatorname{gcd}(2, 1) = 1$) $\\\\to$ [4, 2, 4, 2] $\\\\to$ ...\\n\\nIn the third test case, the playlist is converted as follows: [1, 2] $\\\\to$ [1, 2] $\\\\to$ [1] (because $\\\\operatorname{gcd}(1, 2) = 1$) $\\\\to$ [1] $\\\\to$ [1] (Arkady listened to the same song twice in a row) $\\\\to$ [] (because $\\\\operatorname{gcd}(1, 1) = 1$).\\n\\nThe fourth test case is same as the third after deletion of the second song.\\n\\nIn the fifth test case, the same song is listened to over and over again, but since $\\\\operatorname{gcd}(2, 2) \\\\ne 1$, it is not deleted.\\nAdditional public checks (statement-derived, nonunique outputs use statement validity):\\n[{\\\"input\\\": \\\"1\\\\n3\\\\n12 1 12\\\\n\\\", \\\"expected\\\": \\\"1 2\\\", \\\"comparison\\\": \\\"tokens\\\"}, {\\\"input\\\": \\\"1\\\\n3\\\\n5 11 7\\\\n\\\", \\\"expected\\\": \\\"2 2 1\\\", \\\"comparison\\\": \\\"tokens\\\"}, {\\\"input\\\": \\\"1\\\\n3\\\\n6 1 5\\\\n\\\", \\\"expected\\\": \\\"2 2 1\\\", \\\"comparison\\\": \\\"tokens\\\"}]\",\"public_examples\":[],\"starter_code\":\"\"}}",
+              "role": "user"
+            },
+            {
+              "content": "Return one complete executable Python program in a python fence. Do not provide extended explanation, special-case samples, or merely suppress exceptions.\nAction instruction:\nDevelop a fresh solution. You may inspect the current program, but need not preserve its algorithm or structure.",
+              "role": "user"
+            }
+          ],
+          "model": "deepseek-flash",
+          "reasoning_effort": "none",
+          "stream": false,
+          "temperature": 0,
+          "thinking": {
+            "type": "disabled"
+          }
+        },
+        "wire_sha256": "f6fa943d481994dad74afb951faa3cb75d3ca02189e4b46a449400e4a4bb6563",
+        "input_upper": 8962,
+        "output_upper": 8192
+      }
+    },
+    "model": "deepseek-flash",
+    "thinking": "disabled",
+    "expected_reasoning_tokens": 0,
+    "status": "DRY_RUN_NOT_AUTHORIZED",
+    "freeze_hash": "3c113e23f2b90e76e380bf3e99aea9d3a677da628045f51cd6c59db0497f644a"
+  }
+}
