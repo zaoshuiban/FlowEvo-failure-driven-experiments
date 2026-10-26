@@ -1,0 +1,37 @@
+{
+  "version": "S20-External-v2",
+  "model_api_calls": 0,
+  "seed": "S20-External-v2-fixed-metadata-20261025",
+  "tier_A": "Existing 60 strict tasks preserved byte-for-byte; separate regression/strong-evidence pool",
+  "tier_B_standard": "Trusted official expected outputs; supported stdin scoring; at least 2 online inputs and 6 input-disjoint sealed inputs; reference implementation not mandatory",
+  "tier_B_thin": "Supported official scoring; at least 1 online and 1 sealed input but below standard coverage; auxiliary only",
+  "tier_C": "Unavailable/malformed expected outputs, unsupported call-based/interactive/special checker, ambiguous output contract or insufficient disjoint tests; not promotion evidence",
+  "online_roles": "All trustworthy statement samples plus at most 2 additional official test inputs, ensure at least 2 online where possible. Remaining official cases form locked final pool; select first 6 by seeded hash for initial Worker acceptance and preserve remaining test references.",
+  "sealed_role": "No normalized input overlap; contradictory expectations quarantine. First 24 by frozen seeded hash retained as final evaluation subset (minimum6 for B standard); first6 initially Worker-checked. Remaining official tests remain raw-source-only, never online, with reproducible partition and aggregate hash. No sealed answers sent to model.",
+  "sampling": "Seeded SHA256 within source/difficulty, never source row prefixes or model outcomes; no replacement based on model results",
+  "long_stream_targets": {
+    "apps_introductory": 30,
+    "apps_interview": 150,
+    "apps_competition": 120,
+    "cc_1600_1999": 30,
+    "cc_2000_2399": 40,
+    "cc_2400_plus": 30,
+    "lcb_medium": 30,
+    "lcb_hard": 20
+  },
+  "confirmation_targets": {
+    "apps_interview": 30,
+    "apps_competition": 30,
+    "cc_1600_plus": 20,
+    "lcb_medium": 40,
+    "lcb_hard": 30
+  },
+  "original_split_roles": "APPS train primarily learning. APPS test is explicitly research-reassigned before model outcomes: SHA(identity)%3==0 confirmation, otherwise eligible development stream; official labels always retained. CC train learning and valid/test confirmation. LCB official release_v6 test similarly partitioned by identity hash.",
+  "cross_source_separation": "Canonical identity, normalized statements and near-duplicate connected components; one original/lineage component across both selected pools; exposed components excluded",
+  "scoring": "Pinned official LCB stdout semantics adapted to existing isolated Worker; CodeContests output matching with explicit exact-integer safety correction; APPS official IO with exact ordered tokens, never legacy set fallback",
+  "source_reference_policy": "Reference absence is evidence label, not automatic rejection. Positive expected-output replay fixtures validate adapter/transport only, never claim independent solution correctness; available human reference validation separately recorded.",
+  "worker": "Reuse existing Linux Worker, one admission thread; record concurrent S20-A operation. No change to its image, allocation, protocol, tasks or budget.",
+  "no_paid_execution": true,
+  "metadata_revision_reason": "APPS train exposes few supported stdin tasks with >=8 tests; preserve disjoint official-test research development and confirmation roles instead of relabeling official split or reducing scoring quality.",
+  "pre_worker_review": "Exclude any-order/arbitrary/case-insensitive/absolute-error contracts lacking supported checker. Review selected output sections before paid use."
+}
