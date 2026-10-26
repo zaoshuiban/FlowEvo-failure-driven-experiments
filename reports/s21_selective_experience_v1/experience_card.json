@@ -1,0 +1,55 @@
+{
+  "experience_id": "unchanged-public-retry-v1",
+  "origin": "HUMAN_HYPOTHESIS",
+  "source_refs": [
+    {
+      "event_id": "9c9619a0bb03c98efe5e431a4f760e4a1004e7c889f0a9fd7502c825dea41210",
+      "task_id": "s19g_taco-train-s00-r0236",
+      "lineage_id": "s19g_taco-train-s00-r0236",
+      "packet_hash": "376c16f70ae76aeb1877f46074910ad2909cfca1b86e45c476552641ffdbd66c",
+      "fact_hash": "269395ed3b076f15b371dc635bec8200e2d3344646142b6cd8a75c4225d93fbb",
+      "observed_at": 1792917551.115407,
+      "available_from": 1792917551.115407
+    },
+    {
+      "event_id": "ce22567d114bc0a78539c4197f3aa5bd84111d9321119f7268b3266b6c73a483",
+      "task_id": "s19g_taco-train-s00-r0236",
+      "lineage_id": "s19g_taco-train-s00-r0236",
+      "packet_hash": "6c6899e01ed4926482042de8724e4d331b96dc59bc375acf931804e40151a61a",
+      "fact_hash": "cff3de2e8887e26686f7ee987cbec18c2486a8ce54670567521e00e650110db1",
+      "observed_at": 1792917551.115407,
+      "available_from": 1792917551.115407
+    }
+  ],
+  "observed_failure_pattern": "Earlier repair-stage checkpoints expose identical code and identical public feedback; root cause and unseen raw response remain UNKNOWN.",
+  "applicability_conditions": {
+    "candidate_state": "STRUCTURAL_PASS",
+    "repeat_same_program_feedback": true,
+    "remaining_calls_min": 2
+  },
+  "proposed_intervention": {
+    "kind": "LEGAL_ACTION_SWITCH",
+    "action": "REGENERATE_FRESH",
+    "guidance": ""
+  },
+  "expected_local_effect": "Test whether omitting the unchanged failed implementation avoids another identical retry; no observed benefit asserted.",
+  "refusal_conditions": [
+    "no earlier identical public checkpoint",
+    "same source task/lineage",
+    "unknown evaluator",
+    "illegal or exhausted action",
+    "insufficient/contradictory evidence"
+  ],
+  "stop_conditions": [
+    "public pass",
+    "unknown request",
+    "budget limit",
+    "source provenance invalid"
+  ],
+  "evidence_level": "OBSERVED_PATTERN",
+  "uncertainty": "Manually proposed from two same-task public observations, not automatically learned. Fresh generation can lose useful partial work. No conditional paired benefit is known.",
+  "available_from": 1793007137.144162,
+  "version": "selective-experience-offline-v1",
+  "provenance_hash": "5d5a35d90c7effd2012bf93e507868f1e0fd313e2787bea2f20905ff09694074",
+  "card_hash": "1e025ac70ee06df53a7e3fb454698b171868a4a1c91eec325186d0459a45116c"
+}
