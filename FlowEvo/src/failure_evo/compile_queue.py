@@ -243,13 +243,18 @@ class BoundedCompiler:
                     or job.get('functional_diagnostics_sha256') != fingerprint(functional[0]['review'])):
                 raise ValueError('revision functional diagnostics differ from host review')
         request = dict(job, phase=phase, slot=slot, max_tokens=output_upper)
+        # Providers exposing the final wire own serialization, including prompts
+        # and schema. Count that representation once; internal job metadata is
+        # not another model input. Keep the legacy estimate only for providers
+        # without a wire preparation interface. These are conservative bounds,
+        # not tokenizer measurements or provider-reported usage.
         input_upper = len(str(request).encode()) + 4096
-        # Validate the actual wire serialization BEFORE reserving a capability.
-        # Nested source strings can grow on JSON escaping; repr(request) is not a wire bound.
+        input_basis = 'legacy-request-repr-plus-4096'
         prepare = getattr(self.provider, 'preflight', None) or getattr(self.provider, 'prepare', None)
         if callable(prepare):
             wire = prepare(request)
-            input_upper = max(input_upper, len(canonical(wire).encode()) + 256)
+            input_upper = len(canonical(wire).encode()) + 256
+            input_basis = 'final-wire-utf8-plus-256-v1'
         if (type(output_upper) is not int or not 0 < output_upper <= self.max_output_upper
                 or input_upper > self.max_input_upper):
             raise BudgetExhausted('request exceeds frozen compiler token ceilings')
@@ -263,7 +268,8 @@ class BoundedCompiler:
         if callable(prepare):
             self.events.append('WIRE_PREFLIGHT', dict(request_sha256=fingerprint(request),
                 wire_sha256=fingerprint(wire), wire_bytes=len(canonical(wire).encode()),
-                input_token_upper=input_upper, output_token_upper=output_upper), at)
+                input_token_upper=input_upper, output_token_upper=output_upper,
+                input_accounting=input_basis), at)
         try:
             response = self.provider(request)
             # Preserve returned failures/model drift too, before validation or settlement.

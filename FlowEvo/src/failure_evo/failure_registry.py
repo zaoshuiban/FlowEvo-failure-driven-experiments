@@ -11,6 +11,8 @@ from .failure_events import finite_time
 from .generations import GenerationManagement, serialized
 
 HOOKS = ('before_native_retry', 'before_final_return')
+TASK_START_HOOK = 'before_native_start'
+SUPPORTED_HOOKS = HOOKS + (TASK_START_HOOK,)
 
 
 @dataclass(frozen=True)
@@ -43,8 +45,10 @@ class FailureOperator:
                 raise ValueError('operator collections must be immutable string tuples')
         if not all((self.operator_id, self.version, self.evidence_scope, self.evidence_ids, self.source_group_ids)):
             raise ValueError('operator identity, scope and evidence required')
-        if not self.hooks or not set(self.hooks) <= set(HOOKS):
+        if not self.hooks or not set(self.hooks) <= set(SUPPORTED_HOOKS):
             raise ValueError('unsupported hook')
+        if TASK_START_HOOK in self.hooks and (self.operator_kind!='task_solver' or self.allowed_actions!=('candidate_code',)):
+            raise ValueError('task start requires deterministic task_solver candidate program')
         if not set(self.allowed_actions) <= {'candidate_code', 'select_candidate'} or not self.allowed_actions:
             raise ValueError('unsupported action capability')
         if self.operator_kind not in ('workflow_recovery','code_repair','task_solver','prompt_policy') or self.source_mode not in ('historical_development','chronological_simulation','live_online'):

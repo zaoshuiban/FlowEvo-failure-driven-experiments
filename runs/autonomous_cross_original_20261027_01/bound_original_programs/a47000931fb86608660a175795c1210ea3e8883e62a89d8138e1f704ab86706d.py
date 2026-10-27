@@ -1,0 +1,1 @@
+active[i] = active[i-1] + start[i] - end[i-1]

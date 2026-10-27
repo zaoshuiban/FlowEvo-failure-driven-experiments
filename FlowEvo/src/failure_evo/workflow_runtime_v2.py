@@ -8,7 +8,8 @@ from .workflow_protocol_v2 import PreflightRejected
 
 class PreparedController:
     stages=(('l1',0.0),('l2a',.5),('l2b',.5),('l3',.7),('l4',.2))
-    def __init__(self,generator,public_evaluator,context,router=None,operator_runner=None,clock=time.time,max_output=8192,plugin=None,request_adapter=None):
+    def __init__(self,generator,public_evaluator,context,router=None,operator_runner=None,clock=time.time,max_output=8192,plugin=None,request_adapter=None,allow_task_start=False):
+        self.allow_task_start=allow_task_start
         self.generator=generator;self.evaluate=public_evaluator;self.context=context;self.router=router or Router();self.operator_runner=operator_runner;self.clock=clock;self.max_output=max_output;self.plugin=plugin;self.request_adapter=request_adapter
     def solve(self,raw_task,budget):
         task=PublicTaskView.project(raw_task);events=[];previous='';feedback=PublicFeedback('UNKNOWN');best=None
@@ -25,6 +26,15 @@ class PreparedController:
             if plugin:plugin.finish(self.clock())
 
     def _run(self,task,budget,events,previous,feedback,best,plugin):
+        if plugin and self.allow_task_start:
+            applied=plugin.invoke('before_native_start','task_start','l1','',PublicFeedback('NO_COMPLETE_CODE'),budget,self.evaluate,self.clock())
+            if applied:
+                return dict(problem_id=task.problem_id,status='PUBLIC_ACCEPTED',
+                    selected={k:applied[k] for k in ('stage','code','code_sha256')},
+                    retained_candidates=[applied['code_sha256']],last_candidate=applied['code'],events=[],
+                    budget=budget.snapshot(),hidden_correctness='NOT_QUERIED',
+                    candidate_ledger=plugin.current['ledger'],hook_events=plugin.current['hooks'],
+                    registry_snapshot_id=plugin.current['snapshot'].snapshot_id)
         for stage,temp in self.stages:
             if plugin and stage!='l1':
                 applied=plugin.invoke('before_native_retry',stage,stage,previous,feedback,budget,self.evaluate,self.clock())

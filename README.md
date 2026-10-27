@@ -1,6 +1,32 @@
 # FlowEvo failure-driven experiments
 
-## 最新进展：S22–S24（2026-10-27归档）
+## 自主算子 v2：DeepSeek 替换试验（2026-10-27）
+
+[真实对照报告](runs/autonomous_v2_deepseek_source_20261027_01/DeepSeek_真实机制归纳对照报告.md)：相同原始失败证据，DeepSeek真实归纳1次、8,253 tokens，峰值报价估算$0.002964。返回HYPOTHESIS_ONLY，按规则不生成源码；不是源码生成失败。GPT/DeepSeek均尚无自然跨题复用证据。
+
+## 自主算子 v2：真实 GPT 来源验证（2026-10-27）
+
+[真实实验报告](runs/autonomous_v2_gpt_source_20261027_04/Autonomous_GPT_真实生成与来源验证报告.md)：GPT-5.4真实归纳＋源码生成共2次，23,153 tokens，用量费用约$0.14781。来源公开0/3→3/3，但生成的是来源题专用解法；4个开发控制均拒绝，保持Shadow。未完成自然独立验证、无未来Hook或因果收益；没有启动长流。
+
+## 自主可执行算子学习 v2：P0–P2（2026-10-27）
+
+[架构与接口](reports/autonomous_learning_v2/Architecture_and_Interfaces.md) · [代码差距审计](reports/autonomous_learning_v2/Code_Gap_Audit.md) · [零 API 验收](reports/autonomous_learning_v2/Zero_API_Acceptance.md) · [P3 协议及预算草案](reports/autonomous_learning_v2/P3_Protocol_and_Budget_Draft.md)。253项测试通过，包含真实Linux Worker；模型响应均为Mock。本轮未发送API，未证明自然跨题学习或因果收益。
+
+## 编译器计量修复（2026-10-27）
+
+[零 API 修复报告](reports/autonomous_wire_accounting_fix_20261027/计量口径修复报告.md)：最终wire计量、预检及预留统一；历史候选请求31847可通过32768上限。237项测试通过，原Run不变，未发送新模型请求。
+
+## Autonomous MVP：DeepSeek真实试运行（2026-10-27）
+
+[真实试运行报告](runs/autonomous_mvp_pilot_20261027_01/Autonomous_DeepSeek_真实试运行报告.md)：经用户明确变更生成模型，1次DeepSeek响应、7,377 tokens、估算$0.0027522；机制假设通过契约。候选最终wire估计31,847，但编译器内部请求估计33,151超过32,768，源码生成在发送前停止。0个算子、0次算子执行，H1未完成检验；不归因于模型修复能力失败。新3项适配测试和17项含真实Worker的MVP测试通过。
+
+## Autonomous Operator Learning MVP（P0/P1，2026-10-27）
+
+[实现与零 API 验收](reports/autonomous_mvp_v1/MVP_Implementation_and_Zero_API_Acceptance.md)：新增自主机制假设、GPT 完整 Python 源码生成适配、实际 Linux 验证与题间受限 Hook。17 项新增测试、198 项核心回归及 12 项隔离探针通过。所有生成响应均为 Mock，真实模型调用 0；**工程闭环通过，H1 尚未检验**。未修改旧实验记录或默认求解器。
+
+[后续真实小实验预算提案](reports/autonomous_mvp_v1/API_Experiment_Proposal.md)：尚未执行；需先冻结真实独立验证数据。
+
+## S22–S24（2026-10-27归档）
 
 - [S22真实10题A/B实验](runs/s22_rq1_real_20261026_01/S22_真实10题AB实验报告.md)：20次响应；严格成功A 1/10、B 2/10，无UNKNOWN。尚未支持条件学习的独立价值。
 - [S23上下文干预探索](runs/s23_context_probe_20261026_01/探索性实验报告.md)：两题四组，人工上下文整理与交付提醒组合出现一个正例；不是自动学习成功。
@@ -58,3 +84,10 @@ python3 scripts/smoke_failure_evo_v2.py
 - [机制设计 v2](docs/FlowEvo失败驱动系统设计v2.md)
 - [实施、验收与限制](docs/FlowEvo_v2_S1.1实现与验收.md)
 - [当前实验协议](docs/FlowEvo_E3下一步实验计划.md)
+
+
+## 跨不同原题的自主算子发现（2026-10-27）
+
+按跨不同原题要求重新冻结2道来源、2道验证目标，使用 DeepSeek 真实归纳；旧苹果树专用源码未输入。结果 `HYPOTHESIS_ONLY`：1次请求、14,272 tokens，保守报价估算约 $0.00510；未产生源码，未启动 G/F 配对，不能声称跨题复用或优于对照。历史实验与确认集保持不变。
+
+[真实实验报告](runs/autonomous_cross_original_20261027_01/跨原题自主算子发现与复用实验报告.md) · [机器可读结果](runs/autonomous_cross_original_20261027_01/summary.json) · [冻结协议](runs/autonomous_cross_original_20261027_01/protocol.json)

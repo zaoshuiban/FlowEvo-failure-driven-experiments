@@ -15,7 +15,14 @@ class LearningPipeline:
     evaluation_budget is separate from compiler.budget. Checkers must enforce the
     supplied timeout in an isolated worker. This class never executes model code.
     """
-    def __init__(self, path, compiler, evaluation_budget, design_checker, gate_checker):
+    def __init__(self, path, compiler, evaluation_budget, design_checker, gate_checker, *,
+                 candidate_limit=3, hypothesis_validator=None, revise_failed_only=False, delegate_static_validation=False):
+        if type(candidate_limit) is not int or not 1 <= candidate_limit <= 3:
+            raise ValueError("one to three candidates required")
+        self.candidate_limit=candidate_limit
+        self.hypothesis_validator=hypothesis_validator
+        self.revise_failed_only=revise_failed_only
+        self.delegate_static_validation=delegate_static_validation
         self.events = EvidenceStore(path)
         self.compiler = compiler
         self.budget = evaluation_budget
@@ -98,6 +105,8 @@ class LearningPipeline:
         self._job_id=job_id
         protocol = dict(public_job=public_job, design=design,
             gate=gate, regression=regression, revise=revise)
+        if self.hypothesis_validator is not None or self.candidate_limit!=3 or self.revise_failed_only or self.delegate_static_validation:
+            protocol['generation_controls']=dict(candidate_limit=self.candidate_limit,revise_failed_only=self.revise_failed_only,hypothesis_validation=self.hypothesis_validator is not None,delegate_static_validation=self.delegate_static_validation)
         if data_manifest is not None:
             protocol['data_manifest'] = data_manifest
         self._step(job_id+':protocol', protocol, lambda: {'frozen':True}, at)
@@ -105,8 +114,14 @@ class LearningPipeline:
             return self._step(job_id+':'+phase+':'+str(slot), payload,
                 lambda:self.compiler.request(payload, phase, slot, at), at)
         spec = generate('induction', 0, public_job)['specification']
+        if self.hypothesis_validator is not None:
+            hypothesis=self.hypothesis_validator(spec, public_job)
+            self._step(job_id+':hypothesis',hypothesis,lambda:hypothesis,at)
+            if hypothesis['decision']!='PROPOSE':
+                return dict(status='shadow_retained' if hypothesis['decision']=='HYPOTHESIS_ONLY' else 'no_mechanism',
+                            hypothesis=hypothesis,candidates=[])
         candidates = []
-        for slot in range(3):
+        for slot in range(self.candidate_limit):
             payload = dict(public_job, specification=spec)
             response = generate('candidate', slot, payload)
             code = response['code']
@@ -118,9 +133,11 @@ class LearningPipeline:
                     valid = False
                 result = self._step(job_id+':design:'+str(slot)+':'+str(revision),
                     dict(code=code, data=design),
-                    lambda:self._evaluate(self.design_checker, code, design) if valid
+                    lambda:self._evaluate(self.design_checker, code, design) if valid or self.delegate_static_validation
                     else {'eligible':False, 'score':0, 'reason':'invalid_operator_structure'}, at)
                 candidates.append(dict(slot=slot, revision=revision, code=code, evaluation=result))
+                if self.revise_failed_only and result['eligible']:
+                    break
                 if revise and revision==0:
                     code = generate('revision', slot, dict(payload, code=code, design_feedback=result))['code']
         eligible = [c for c in candidates if c['evaluation']['eligible']]

@@ -6,7 +6,7 @@ import time
 
 from .contracts import PublicFeedback, canonical
 from .failure_events import checked_public_feedback, public_check_outcome, generation_metadata, structural_status
-from .failure_registry import HOOKS
+from .failure_registry import SUPPORTED_HOOKS
 from .runtime import BudgetExhausted
 
 
@@ -44,7 +44,7 @@ class FailureLearningPlugin:
     def invoke(self, hook, checkpoint, stage, code, feedback, budget, evaluator, at):
         state = self.current
         key = (checkpoint, hook)
-        if hook not in HOOKS or key in state['attempted']:
+        if hook not in SUPPORTED_HOOKS or key in state['attempted']:
             return None
         state['attempted'].add(key)
         task, snapshot = state['task'], state['snapshot']

@@ -45,7 +45,7 @@ class LearningLoop:
         return tuple(results)
 
     def run_pipeline(self, pipeline, *, design, gate, regression, at, revise=False,
-                     data_manifest=None, environment=None):
+                     data_manifest=None, environment=None, public_builder=None):
         """Complete one pending family's generation/validation with frozen role manifests.
 
         A caller must explicitly assign independent shards per family. No automatic
@@ -58,6 +58,8 @@ class LearningLoop:
         public = self.public_input(job, at)
         if environment is not None:
             public['environment'] = environment
+        if public_builder is not None:
+            public = public_builder(public, at=at)
         result = pipeline.run(public, design=design, gate=gate,
                               regression=regression, at=at, revise=revise,
                               data_manifest=data_manifest)
