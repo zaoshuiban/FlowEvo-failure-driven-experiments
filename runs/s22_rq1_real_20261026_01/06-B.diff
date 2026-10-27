@@ -1,0 +1,61 @@
+--- source
++++ output
+@@ -1,45 +1,41 @@
+ import sys
+ from collections import deque
+-import bisect
+ 
+ def solve():
+-    input = sys.stdin.read
+-    data = input().split()
++    data = sys.stdin.buffer.read().split()
++    if not data:
++        return
+     n = int(data[0])
+     V = list(map(int, data[1:n+1]))
+     T = list(map(int, data[n+1:n+1+n]))
+-    
+-    # Prefix sums of temperatures
++
+     pref = [0] * (n + 1)
+     for i in range(n):
+         pref[i+1] = pref[i] + T[i]
+-    
++
+     ans = [0] * n
+-    q = deque()  # stores (start_day, volume)
+-    
++    q = deque()  # (start_day, volume)
++
+     for i in range(n):
+         q.append((i, V[i]))
+         melted_today = 0
+-        # Process piles that will melt completely today
++
+         while q:
+             start, vol = q[0]
+-            # total melt from start day to today inclusive
+             total_melt = pref[i+1] - pref[start]
+             if total_melt >= vol:
+-                # This pile melts completely today or earlier
+-                # We need to find exactly how much it melts today
+-                # It survived until yesterday: melt_before_today = pref[i] - pref[start]
+                 melt_before_today = pref[i] - pref[start]
+                 remaining_before_today = vol - melt_before_today
+-                melted_today += remaining_before_today
++                if remaining_before_today > 0:
++                    melted_today += remaining_before_today
+                 q.popleft()
+             else:
+                 break
+-        # For remaining piles, they melt T[i] today (partial melt)
++
+         melted_today += len(q) * T[i]
+         ans[i] = melted_today
+-    
+-    print(' '.join(map(str, ans)))
++
++    sys.stdout.write(' '.join(map(str, ans)))
+ 
+ if __name__ == "__main__":
+     solve()

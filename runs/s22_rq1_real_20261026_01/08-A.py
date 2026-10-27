@@ -1,0 +1,134 @@
+import sys
+from math import gcd
+
+def solve():
+    data = sys.stdin.buffer.read().split()
+    if not data:
+        return
+    n = int(data[0])
+    m = int(data[1])
+    k = int(data[2])
+    a = list(map(int, data[3:3 + k]))
+
+    # The row index i must be a multiple of every a_l, so let L = lcm(a).
+    # Then G(i, j+l-1) = gcd(i, j+l-1) = a_l.
+    # Write i = L * q. Then gcd(L*q, j+l-1) = a_l.
+    # Let d_l = a_l. We need gcd(L*q, j+l-1) = a_l.
+    # Since a_l | L, gcd(L*q, x) is a multiple of a_l iff a_l | x.
+    # More precisely, gcd(L*q, x) = a_l requires:
+    #   a_l | x, and gcd((L/a_l)*q, x/a_l) = 1.
+    # We can choose q to satisfy congruences via CRT.
+
+    L = 1
+    for x in a:
+        L = L // gcd(L, x) * x
+        if L > n:
+            print("NO")
+            return
+
+    # We need positions j..j+k-1 such that for each l:
+    #   a_l | (j+l-1)
+    # and after dividing, gcd((L/a_l)*q, (j+l-1)/a_l) = 1.
+    #
+    # First, find j modulo lcm(a) satisfying a_l | (j+l-1).
+    # This is a system of congruences: j ≡ 1-l (mod a_l).
+    # Solve via CRT. If inconsistent -> NO.
+    # Then we can pick q to avoid common factors.
+
+    # CRT for j ≡ r_l (mod a_l), r_l = (1-l) mod a_l.
+    # Use generalized CRT.
+    cur_mod = 1
+    cur_res = 0
+    for l in range(k):
+        al = a[l]
+        r = (-l) % al  # since j + l - 1 ≡ 0 mod al => j ≡ 1-l mod al
+        # solve x ≡ cur_res (mod cur_mod), x ≡ r (mod al)
+        g = gcd(cur_mod, al)
+        if (r - cur_res) % g != 0:
+            print("NO")
+            return
+        # combine
+        # cur_mod * t + cur_res ≡ r (mod al)
+        # cur_mod/g * t ≡ (r-cur_res)/g (mod al/g)
+        m1 = cur_mod // g
+        m2 = al // g
+        diff = (r - cur_res) // g
+        # inverse of m1 mod m2
+        inv = pow(m1 % m2, -1, m2) if m2 > 1 else 0
+        t = (diff % m2) * inv % m2
+        cur_res = cur_res + cur_mod * t
+        cur_mod = cur_mod * m2
+        cur_res %= cur_mod
+
+    # Now j ≡ cur_res (mod cur_mod). We need j in [1, m-k+1].
+    # Find smallest positive j0 ≡ cur_res mod cur_mod.
+    j0 = cur_res % cur_mod
+    if j0 == 0:
+        j0 = cur_mod
+    if j0 > m - k + 1:
+        print("NO")
+        return
+
+    # Now we need to choose q such that for all l:
+    # gcd((L/a_l)*q, (j0+l-1)/a_l) = 1.
+    # Note j0+l-1 is divisible by a_l by construction.
+    # Let B_l = (j0+l-1)/a_l, C_l = L/a_l.
+    # Need gcd(C_l * q, B_l) = 1, i.e., q coprime to B_l / gcd(B_l, C_l).
+    # Let P = product of distinct primes dividing any B_l / gcd(B_l, C_l).
+    # We need q not divisible by any prime in P.
+    # Also i = L*q <= n => q <= n/L.
+    # We can choose q=1 if 1 is coprime to all those (always true).
+    # But wait: q=1 gives i=L. Need L <= n (already checked).
+    # However, we also need gcd(C_l, B_l) = 1 for q=1? No, gcd(C_l*1, B_l)=1 required.
+    # If gcd(C_l, B_l) > 1, q=1 fails. We can choose q to avoid primes dividing B_l/gcd(B_l,C_l).
+    # Since we can pick q=1 only if all gcd(C_l,B_l)=1.
+    # Otherwise, we need q such that for each prime p | B_l/gcd(B_l,C_l), p ∤ q.
+    # We can always pick q=1 if no such primes. If there are, we need q <= n/L and q avoiding those primes.
+    # The smallest q avoiding a set of primes: if 1 is allowed (it is, since 1 has no prime factors), q=1 works!
+    # Wait, q=1 means gcd(C_l, B_l) must be 1. If gcd(C_l,B_l)>1, then for q=1, gcd(C_l*q,B_l)=gcd(C_l,B_l)>1, fails.
+    # So q=1 is not always valid. We need q such that gcd(C_l*q, B_l)=1.
+    # This is equivalent to: for every prime p | B_l, either p ∤ C_l or p ∤ q.
+    # So q must not be divisible by any prime p that divides B_l but not C_l.
+    # Let S = set of primes p such that p | B_l and p ∤ C_l for some l.
+    # We need q not divisible by any p in S.
+    # We can choose q=1 if 1 is not divisible by any p in S (always true). But wait, q=1 means q has no prime factors, so it's not divisible by any p. So q=1 always satisfies "q not divisible by p in S"!
+    # But we also need gcd(C_l*q, B_l)=1. For q=1, gcd(C_l, B_l) must be 1. If there is p | B_l and p | C_l, then p divides gcd(C_l,B_l), so q=1 fails.
+    # The condition is: for each prime p | B_l, we need p ∤ C_l*q. So if p | C_l, we need p ∤ q. If p ∤ C_l, we need p ∤ q as well? No: if p ∤ C_l, then p | B_l, we need p ∤ C_l*q => p ∤ q (since p ∤ C_l). So in all cases, for p | B_l, we need p ∤ q if p | C_l? Wait:
+    # gcd(C_l*q, B_l)=1 means no prime p divides both C_l*q and B_l.
+    # For p | B_l: we need p ∤ C_l*q, i.e., p ∤ C_l AND p ∤ q? No, p ∤ C_l*q means NOT(p|C_l and p|q). So if p|C_l, we need p∤q. If p∤C_l, then p∤C_l*q automatically regardless of q. So only primes p that divide both B_l and C_l force p∤q.
+    # So S = union over l of {p prime : p | B_l and p | C_l}.
+    # We need q not divisible by any p in S.
+    # q=1 works if S is empty? No, q=1 is not divisible by any prime, so it works for any S! Wait, if p in S, we need p∤q. q=1 has no prime factors, so p∤1 is true. So q=1 always works!
+    # But then gcd(C_l*1, B_l) = gcd(C_l, B_l). For q=1 to work, we need gcd(C_l, B_l)=1 for all l. If there is p | B_l and p | C_l, then gcd(C_l,B_l) >= p > 1, so q=1 fails.
+    # The condition "p∤q" for p in S: if q=1, p∤1 is true. So q=1 satisfies p∤q. But gcd(C_l*q, B_l) = gcd(C_l, B_l) which may be >1. The issue is that the condition is not just p∤q; it's that for p | B_l, we need p ∤ C_l*q. If p | C_l, then p | C_l*q regardless of q (since p|C_l). So we cannot fix it by choosing q; we need p ∤ C_l. So if there exists p | B_l and p | C_l, then no q can make gcd(C_l*q, B_l)=1 because p divides C_l*q always. Thus we need gcd(C_l, B_l)=1 for all l. If not, NO.
+    # Wait, is that true? gcd(C_l*q, B_l)=1 requires that for every prime p | B_l, p ∤ C_l*q. If p | C_l, then p | C_l*q for any q, so impossible. So indeed we need gcd(C_l, B_l)=1 for all l.
+    # So the condition is simply: for all l, gcd(L/a_l, (j0+l-1)/a_l) = 1.
+    # If this holds, q=1 works, i = L. Need L <= n (checked).
+    # If not, NO.
+
+    for l in range(k):
+        al = a[l]
+        pos = j0 + l
+        # pos = j0 + l, but j0 is 1-indexed position j. G(i, j+l-1) with j=j0.
+        # Actually j0 is j. So position is j0 + l - 1? Wait, l from 0 to k-1, position = j0 + l.
+        # In problem, G(i, j+l-1) = a_l for l=1..k. So for l index 0..k-1, position = j0 + l.
+        # We had congruence j ≡ 1-l (mod a_l) for l=1..k. In 0-indexed, l0=0..k-1, a_{l0+1}, position = j + l0.
+        # Congruence: a_{l0+1} | (j + l0) => j ≡ -l0 (mod a_{l0+1}).
+        # Earlier I used r = (-l) % al with l from 0..k-1, which is -l0 mod a_{l0+1}. Correct.
+        # So position = j0 + l0.
+        pos = j0 + l
+        B = pos // al
+        C = L // al
+        if gcd(C, B) != 1:
+            print("NO")
+            return
+
+    # Also need i = L <= n (checked) and j0 + k - 1 <= m.
+    if j0 + k - 1 > m:
+        print("NO")
+        return
+
+    print("YES")
+
+if __name__ == "__main__":
+    solve()

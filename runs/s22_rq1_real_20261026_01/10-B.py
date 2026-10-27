@@ -1,0 +1,267 @@
+import sys
+
+MOD = 998244353
+
+def solve():
+    data = sys.stdin.buffer.read().split()
+    if not data:
+        return
+    n = int(data[0])
+
+    # Perfectly balanced BST shape: complete binary tree.
+    # We need to count striped labelings.
+    #
+    # In a BST, inorder traversal gives keys in increasing order.
+    # So assigning keys 1..n is equivalent to assigning inorder positions.
+    # Key parity at a node = parity of its inorder index (1-based).
+    #
+    # Striped condition:
+    #   left child: parity differs
+    #   right child: parity same
+    #
+    # For a fixed shape, the inorder indices are fixed. So either the shape
+    # satisfies all parity constraints (answer 1) or not (answer 0).
+    #
+    # But wait: perfectly balanced BST shape may not be unique when n is such
+    # that multiple shapes minimize sum of depths. Actually for BST with n nodes,
+    # the shape minimizing sum of depths is the complete tree shape, but there
+    # can be multiple complete tree shapes? No, complete tree shape is unique
+    # (filled level by level, left to right). However, for BST, the shape is
+    # determined by subtree sizes. The condition for minimal sum of depths is
+    # that the tree is as balanced as possible: left and right subtree sizes
+    # differ by at most 1? Not exactly. Let's think.
+    #
+    # Sum of depths = sum over nodes of depth. To minimize, we want tree as
+    # shallow as possible. The optimal shape is the complete binary tree
+    # (all levels full except last, filled left to right). This shape is unique
+    # for a given n. So there is exactly one shape.
+    #
+    # But is the complete tree shape always achievable as a BST? Yes, any
+    # binary tree shape can be a BST by assigning keys in inorder.
+    #
+    # So answer is 1 if the unique complete tree shape satisfies striped
+    # parity constraints, else 0.
+    #
+    # Let's verify with examples: n=4 -> complete tree: root, left child, right child, left-left? 
+    # Actually complete tree with 4 nodes: root, left, right, left-left (or left-right?).
+    # Level 0: root. Level 1: left, right. Level 2: left child of left (since filled left to right).
+    # Inorder: left-left, left, root, right -> indices 1,2,3,4.
+    # Check: root idx 3 (odd). left child idx 2 (even) -> different parity OK.
+    # right child idx 4 (even) -> same parity? root odd, right even -> different -> fails?
+    # Wait, right child condition: parity same. root odd, right even -> different -> fails.
+    # But expected answer for n=4 is 1. So my assumption about shape might be wrong.
+    #
+    # Let's reconsider: perfectly balanced means minimizes sum of depths.
+    # For n=4, possible BST shapes:
+    # 1) root with left subtree size 2, right size 1. Left subtree of size 2 can be
+    #    root with left child (chain) or root with right child. Sum of depths?
+    #    Let's compute: shape: root(0), left child(1), right child(1), left-left(2) -> depths: 0+1+1+2=4.
+    # 2) root with left size 1, right size 2. depths: root(0), left(1), right(1), right-left(2) or right-right(2) -> sum=4.
+    # 3) root with left size 3 (chain) -> depths 0+1+2+3=6.
+    # 4) root with left size 0, right size 3 -> 0+1+2+3=6.
+    # So minimal sum is 4, achieved by shapes where root has left size 2 right size 1, or left size 1 right size 2.
+    # So there are multiple perfectly balanced shapes! The complete tree shape is one of them (left size 2, right size 1 gives left-left at depth 2).
+    # But also left size 1, right size 2 gives right-left or right-right at depth 2.
+    # So we need to count over all perfectly balanced shapes.
+    #
+    # The condition for minimal sum of depths: the tree must be as balanced as possible.
+    # For a given n, the optimal left subtree size L and right subtree size R = n-1-L
+    # must satisfy that the heights are balanced. Specifically, the sum of depths is minimized
+    # when the tree is complete (all levels full except last). But there can be multiple
+    # complete tree shapes? No, complete tree shape is unique. But wait, for n=4, complete tree
+    # is root, left, right, left-left. That's left size 2, right size 1. The other shape with
+    # left size 1, right size 2 is also complete? Let's check: root, left, right, right-left.
+    # Levels: level 0: root. level 1: left, right. level 2: right-left. This is also complete
+    # (filled left to right? No, level 2 has only right-left, which is not leftmost).
+    # Complete tree requires last level filled left to right. So right-left is not complete.
+    # But sum of depths is same: 0+1+1+2=4. So complete tree is not the only minimizer.
+    #
+    # So we need to find all shapes that minimize sum of depths, and count those that
+    # satisfy striped condition.
+    #
+    # This is a known problem: perfectly balanced BST shapes are those where for each node,
+    # the left and right subtree sizes differ by at most 1? Not exactly. Let's derive.
+    #
+    # Sum of depths = sum over nodes of depth. For a tree with n nodes, if we split into
+    # left subtree of size L and right of size R, sum = (sum in left) + L + (sum in right) + R
+    # = sum_left + sum_right + n - 1.
+    # To minimize, we need to minimize sum_left + sum_right. This is achieved by making
+    # left and right subtrees as balanced as possible. The optimal L is either floor((n-1)/2)
+    # or ceil((n-1)/2)? Let's test n=4: n-1=3, floor=1, ceil=2. Both L=1 and L=2 give
+    # sum_left+sum_right = (for L=1: sum of 1 node=0, R=2: min sum for 2 nodes=1) total=1.
+    # For L=2: sum=1, R=1: sum=0 total=1. So both give same total. So both are optimal.
+    # For n=5: n-1=4, L=2,R=2: sum_left=1, sum_right=1 total=2. L=1,R=3: sum_left=0, sum_right=3 (chain) total=3. So only L=2,R=2 optimal.
+    # So the rule: L can be floor((n-1)/2) or ceil((n-1)/2) if they give same sum? Actually for n=4, both give same.
+    # For n=6: n-1=5, L=2,R=3: sum_left=1, sum_right=3 (chain) total=4. L=3,R=2: sum_left=3, sum_right=1 total=4. L=1,R=4: sum_left=0, sum_right=6 total=6. So L=2 or 3 optimal.
+    # So the optimal L is either floor((n-1)/2) or ceil((n-1)/2)? For n=6, floor(5/2)=2, ceil=3. Yes.
+    # For n=7: n-1=6, L=3,R=3: sum_left=3, sum_right=3 total=6. L=2,R=4: sum_left=1, sum_right=6 total=7. So only L=3.
+    # So the rule: L can be floor((n-1)/2) or ceil((n-1)/2) if n-1 is odd? Actually for n=4, n-1=3 odd, both floor and ceil give same sum? Let's check n=5: n-1=4 even, floor=ceil=2. So only one.
+    # For n=6: n-1=5 odd, floor=2, ceil=3, both give same sum? We computed sum_left+sum_right=4 for both. Yes.
+    # For n=8: n-1=7, L=3,R=4: sum_left=3, sum_right=6 total=9. L=4,R=3: sum_left=6, sum_right=3 total=9. L=2,R=5: sum_left=1, sum_right=10 total=11. So L=3 or 4 optimal.
+    # So it seems the optimal L is either floor((n-1)/2) or ceil((n-1)/2) when n-1 is odd? But for n=4, n-1=3 odd, both work. For n=6, n-1=5 odd, both work. For n=8, n-1=7 odd, both work.
+    # What about n=9: n-1=8 even, L=4,R=4: sum_left=4, sum_right=4 total=8. L=3,R=5: sum_left=3, sum_right=10 total=13. So only L=4.
+    # So the rule: if n-1 is even, L=(n-1)/2 only. If n-1 is odd, L=floor((n-1)/2) or ceil((n-1)/2) both optimal.
+    # But wait, is that always true? Let's check n=10: n-1=9 odd, L=4,R=5: sum_left=4, sum_right=10 total=14. L=5,R=4: sum_left=10, sum_right=4 total=14. L=3,R=6: sum_left=3, sum_right=15 total=18. So yes.
+    # So the optimal shapes are those where at each node, the left subtree size is either floor((s-1)/2) or ceil((s-1)/2) where s is subtree size? But we need to be careful: the choice at each node might affect the sum. Actually the sum of depths is minimized globally when the tree is as balanced as possible at every node. The condition is that for each node, the left and right subtree sizes differ by at most 1? Let's test n=4: root left size 2, right size 1 -> differ by 1. OK. n=6: root left 2, right 3 -> differ by 1. OK. n=8: root left 3, right 4 -> differ by 1. OK. n=5: root left 2, right 2 -> differ by 0. OK.
+    # But is it sufficient that at each node, |L-R| <= 1? Let's test n=7: root left 3, right 3 -> differ 0. Then left subtree of size 3: can be left 1, right 1 (differ 0) or left 2, right 0 (differ 2). The latter would give sum? Let's compute: root(0), left(1), right(1), left-left(2), left-right(2), right-left(2), right-right(2) -> sum=0+1+1+2+2+2+2=10. If left subtree is chain: left(1), left-left(2), left-left-left(3) -> sum=0+1+1+2+2+3+2=11. So the balanced one is better. So the condition |L-R|<=1 at each node might be necessary and sufficient for minimal sum? Let's check n=4: root left 2, right 1 (differ 1). Left subtree of size 2: can be left 1, right 0 (differ 1) or left 0, right 1 (differ 1). Both give same sum? For left subtree size 2, sum of depths within subtree: if left 1 right 0: depths 0,1 sum=1. If left 0 right 1: depths 0,1 sum=1. So both fine. So the condition |L-R|<=1 at each node gives multiple shapes.
+    # But is it true that any tree satisfying |L-R|<=1 at each node minimizes sum of depths? Let's test n=6: root left 2, right 3 (differ 1). Left subtree size 2: must have |L-R|<=1 -> left 1 right 0 or left 0 right 1. Right subtree size 3: must have |L-R|<=1 -> left 1 right 1 (differ 0) or left 2 right 0 (differ 2 not allowed) or left 0 right 2 (differ 2 not allowed). So right subtree must be left 1 right 1. So shapes: root left 2 (with left 1 right 0 or left 0 right 1), right 3 (left 1 right 1). Sum of depths: root 0, left 1, right 1, left-left 2, right-left 2, right-right 2 -> sum=0+1+1+2+2+2=8. If left subtree was chain (left 2 right 0) that would violate |L-R|<=1 at left subtree? left subtree size 2: left 2 right 0 means left child has size 2, right 0 -> differ 2, not allowed. So indeed |L-R|<=1 at each node gives the optimal shapes.
+    # Let's verify n=7: root left 3 right 3. Left subtree size 3: must have |L-R|<=1 -> left 1 right 1. Right subtree size 3: left 1 right 1. Sum: root 0, left 1, right 1, left-left 2, left-right 2, right-left 2, right-right 2 -> sum=10. If left subtree was left 2 right 0 (differ 2) not allowed. So yes.
+    # So the perfectly balanced BST shapes are exactly those where for every node, the sizes of its left and right subtrees differ by at most 1.
+    # This is a known characterization: a tree minimizes sum of depths iff it is "complete" in the sense that at each node, the left and right subtree sizes differ by at most 1? Actually that's not exactly complete tree, but it's the condition for optimality.
+    # Let's check n=4: root left 2 right 1 (differ 1). Left subtree size 2: left 1 right 0 (differ 1) or left 0 right 1 (differ 1). So two shapes. Both have sum 4. So there are 2 perfectly balanced shapes for n=4.
+    # But the example says answer for n=4 is 1. So only one of these shapes satisfies striped condition.
+    # Let's check both shapes for n=4.
+    # Shape A: root, left child, right child, left-left. Inorder: left-left(1), left(2), root(3), right(4).
+    # Check striped: root idx 3 (odd). left child idx 2 (even) -> different OK. right child idx 4 (even) -> same? root odd, right even -> different -> fails. So shape A fails.
+    # Shape B: root, left child, right child, right-left. Inorder: left(1), root(2), right-left(3), right(4).
+    # Check: root idx 2 (even). left child idx 1 (odd) -> different OK. right child idx 4 (even) -> same OK. right-left is left child of right: right idx 4 (even), right-left idx 3 (odd) -> different OK. So shape B satisfies striped. So answer 1. Good.
+    # So we need to count the number of perfectly balanced shapes that satisfy striped condition.
+    # The number of perfectly balanced shapes can be large (exponential). We need to count modulo 998244353.
+    # But n up to 1e6, so we need an efficient DP.
+    #
+    # Let's define a DP over subtree sizes. For a subtree of size s, we need to know:
+    # - the number of valid striped labelings (assigning keys from some range? Actually keys are global 1..n, but the striped condition depends on parities of keys. Since keys are assigned in inorder, the parity of a node's key is determined by its inorder position within the whole tree. But the inorder position depends on the sizes of left subtrees along the path. So we need to track the parity of the starting key for the subtree? Actually, if we consider a subtree, its nodes will get a contiguous range of keys in inorder. The parity of the first key in that range determines the parities of all keys in the subtree. So we can define DP[s][p] = number of valid striped labelings of a perfectly balanced tree of size s, given that the first key (in inorder) has parity p (0 for even, 1 for odd). But wait, the keys are 1..n, so the first key of the whole tree is 1 (odd). So we need DP[n][1] (since 1 is odd). But we also need to consider that the subtree sizes can be chosen in multiple ways (left size L can be floor or ceil). So we need to sum over valid L.
+    #
+    # However, the striped condition involves parent-child parity relations. For a subtree, the root's key parity is determined by the inorder position of the root within the subtree. If the subtree has size s, and left subtree size L, then the root is at inorder position L+1 within the subtree. So if the first key of the subtree has parity p, then the root's key parity is (p + L) mod 2 (since keys increase by 1 each step, so parity flips each step). Actually, if first key is p, then the k-th key (1-indexed) has parity (p + k - 1) mod 2. So root is at position L+1, so its parity is (p + L) mod 2.
+    #
+    # The left subtree gets keys starting at p, size L. The right subtree gets keys starting at p + L + 1, size R = s-1-L.
+    #
+    # Striped conditions:
+    # - If left child exists (L>0), its root is the root of left subtree. Its key parity is (p + 0) mod 2? Wait, left subtree's first key is p, and its root is at position L_left+1 within left subtree. But we need the parity of the left child's key. The left child is the root of the left subtree. So its key parity is determined by the left subtree's DP. But we need to enforce the condition between parent and left child: parent parity != left child parity.
+    # - Similarly for right child: parent parity == right child parity.
+    #
+    # So we need to know the parity of the root of the subtree. But the root's parity is determined by p and L. So we can compute it.
+    #
+    # Let's define DP[s][p] = number of valid striped labelings of a perfectly balanced tree of size s, where the keys assigned to this subtree are a contiguous range starting with parity p (i.e., the first key in inorder has parity p). The keys themselves are not fixed, only their parities matter for the striped condition. But wait, the actual keys are 1..n, and they are distinct. The striped condition only depends on parities. So the number of valid labelings is the number of ways to choose the shape (which determines the inorder positions) such that the parity constraints hold. Since the keys are fixed as 1..n in inorder, the parity of each node's key is determined by its inorder position. So for a given shape, the parities are fixed. So DP[s][p] should count the number of shapes of size s that satisfy the striped condition given that the first key has parity p. But the first key parity p is determined by the global position. For the whole tree, the first key is 1 (odd), so p=1. So we need DP[n][1].
+    #
+    # But wait: the keys are 1..n, so the first key is always 1 (odd). So p=1 for the whole tree. For subtrees, the starting parity depends on the sizes of left subtrees along the path. So DP[s][p] is well-defined.
+    #
+    # Now, for a subtree of size s, we can choose L (left subtree size) such that |L - R| <= 1 where R = s-1-L. Actually the condition for perfectly balanced is that at each node, |L-R| <= 1. So for the root of this subtree, we must have |L - (s-1-L)| <= 1 => |2L - (s-1)| <= 1 => L can be floor((s-1)/2) or ceil((s-1)/2). But we also need that the left and right subtrees themselves are perfectly balanced. So we recursively require that the left subtree of size L is perfectly balanced, and right subtree of size R is perfectly balanced. So the set of valid L is exactly those where L is either floor((s-1)/2) or ceil((s-1)/2), and both L and R are valid sizes (i.e., they can be perfectly balanced). But actually any size can be perfectly balanced? Yes, for any s, there exists at least one perfectly balanced tree (e.g., complete tree). So the condition is just that L is floor or ceil of (s-1)/2. But wait, for s=2: s-1=1, floor=0, ceil=1. So L=0 or 1. Both give R=1 or 0. Both are valid. So for s=2, there are two shapes: left child only or right child only. Both are perfectly balanced? Let's check sum of depths for s=2: root depth 0, child depth 1 -> sum=1. Any other shape? Only these two. So both are perfectly balanced. So indeed L can be 0 or 1.
+    #
+    # So for a given s, the possible L values are:
+    #   if s == 1: L=0 only (no children)
+    #   else: L = (s-1)//2 and L = (s-1+1)//2 = (s)//2? Actually floor((s-1)/2) and ceil((s-1)/2). If s-1 is even, they are equal. If odd, they differ by 1.
+    # So at most 2 choices for L.
+    #
+    # Now, for each choice of L, we need to check the striped conditions at the root:
+    #   Let p be the starting parity of the subtree.
+    #   Root's key parity: pr = (p + L) % 2.
+    #   If L > 0: left child is root of left subtree. The left subtree has starting parity p. Its root's parity is determined by its own L_left. But we don't know L_left yet. However, the condition is between parent and left child: pr != parity(left child). The left child's parity is the root parity of the left subtree. So we need to know the parity of the root of the left subtree. But that depends on the choice of L_left within the left subtree. So we need to track the root parity of the subtree as part of the DP state? Or we can incorporate the condition into the DP by considering the parity of the root.
+    #
+    # Let's define DP[s][p][q] = number of valid striped labelings of a perfectly balanced tree of size s, where the first key has parity p, and the root's key has parity q. But q is determined by p and L: q = (p + L) % 2. So for a given L, q is fixed. So we can just use DP[s][p] and when combining, we need to ensure the conditions between root and children. But the children's root parities are not directly known from DP[L][p] because DP[L][p] sums over all valid shapes for the left subtree, each with possibly different root parity. So we need to separate by root parity.
+    #
+    # So let DP[s][p][q] = number of valid striped labelings of a perfectly balanced tree of size s, with first key parity p, and root key parity q. Note that q is determined by p and L, but L can vary, so q can be either (p + L) % 2 for the chosen L. So for a fixed s and p, q can take at most 2 values.
+    #
+    # Base case: s=1. Then L=0, R=0. Root is the only node. Its key parity is p (since it's the first key). So q = p. And there are no children, so no striped conditions to check. So DP[1][p][p] = 1, and DP[1][p][1-p] = 0.
+    #
+    # For s>1, we iterate over possible L (at most 2). For each L, R = s-1-L. We require that L and R are valid sizes (i.e., they can be perfectly balanced). But actually any size >=0 can be perfectly balanced? For size 0, it's an empty tree. We need to handle empty tree: DP[0][p][q]? For empty tree, there is no root, so we can define DP[0][p][*] = 1? But we need to be careful: if L=0, there is no left child, so no condition. So we can treat empty tree as having no root, and the condition is vacuously true. So we can define DP[0][p][q] = 1 for any q? But q is not meaningful. Better to handle L=0 separately.
+    #
+    # Let's define DP[s][p][q] for s>=1. For s=0, we don't need q, just DP[0][p] = 1 (empty tree is always valid).
+    #
+    # For s>=1:
+    #   For each valid L in {floor((s-1)/2), ceil((s-1)/2)} (if s-1 even, only one):
+    #     R = s-1-L.
+    #     For each possible root parity q = (p + L) % 2.
+    #     We need to combine left and right subtrees.
+    #     If L > 0:
+    #       The left subtree has size L, first key parity p. Its root parity qL can be either 0 or 1, but we need to enforce pr != qL, i.e., q != qL.
+    #       So we sum over qL != q of DP[L][p][qL].
+    #     If L == 0:
+    #       No left child, so factor 1.
+    #     If R > 0:
+    #       The right subtree has size R, first key parity pR = (p + L + 1) % 2.
+    #       Its root parity qR must satisfy q == qR (same parity).
+    #       So we sum over qR == q of DP[R][pR][qR].
+    #     If R == 0:
+    #       factor 1.
+    #     Then DP[s][p][q] += (left_factor) * (right_factor).
+    #
+    # Finally, answer = sum over q of DP[n][1][q] (since first key parity is 1 for whole tree).
+    #
+    # But wait: the keys are 1..n, so the first key is 1 (odd). So p=1. So answer = DP[n][1][0] + DP[n][1][1].
+    #
+    # Let's test with n=4.
+    # Compute DP for small s.
+    # s=1: DP[1][0][0]=1, DP[1][1][1]=1, others 0.
+    # s=2: s-1=1, L can be 0 or 1.
+    #   For p=0:
+    #     L=0: R=1. q = (0+0)%2=0. Left factor=1. Right: R=1, pR = (0+0+1)%2=1. Need qR == q=0. DP[1][1][0]=0. So contribution 0.
+    #     L=1: R=0. q = (0+1)%2=1. Left: L=1, p=0. Need qL != q=1 => qL=0. DP[1][0][0]=1. Right factor=1. So DP[2][0][1] += 1.
+    #   For p=1:
+    #     L=0: R=1. q = (1+0)%2=1. Right: R=1, pR = (1+0+1)%2=0. Need qR == q=1. DP[1][0][1]=0. So 0.
+    #     L=1: R=0. q = (1+1)%2=0. Left: L=1, p=1. Need qL != q=0 => qL=1. DP[1][1][1]=1. So DP[2][1][0] += 1.
+    # So DP[2][0][1]=1, DP[2][1][0]=1.
+    # s=3: s-1=2, L=1 only (since floor=1, ceil=1).
+    #   For p=0:
+    #     L=1, R=1. q = (0+1)%2=1.
+    #     Left: L=1, p=0. Need qL != 1 => qL=0. DP[1][0][0]=1.
+    #     Right: R=1, pR = (0+1+1)%2=0. Need qR == 1. DP[1][0][1]=0.
+    #     So contribution 0.
+    #   For p=1:
+    #     L=1, R=1. q = (1+1)%2=0.
+    #     Left: L=1, p=1. Need qL != 0 => qL=1. DP[1][1][1]=1.
+    #     Right: R=1, pR = (1+1+1)%2=1. Need qR == 0. DP[1][1][0]=0.
+    #     So contribution 0.
+    # So DP[3][*][*] = 0. So answer for n=3 is 0. Matches example.
+    # s=4: s-1=3, L can be 1 or 2.
+    #   For p=1 (since whole tree first key odd):
+    #     L=1: R=2. q = (1+1)%2=0.
+    #       Left: L=1, p=1. Need qL != 0 => qL=1. DP[1][1][1]=1.
+    #       Right: R=2, pR = (1+1+1)%2=1. Need qR == 0. DP[2][1][0]=1 (from above). So right factor=1.
+    #       Contribution = 1*1=1.
+    #     L=2: R=1. q = (1+2)%2=1.
+    #       Left: L=2, p=1. Need qL != 1 => qL=0. DP[2][1][0]=1.
+    #       Right: R=1, pR = (1+2+1)%2=0. Need qR == 1. DP[1][0][1]=0. So contribution 0.
+    #   So DP[4][1][0] += 1 (from L=1). DP[4][1][1] += 0.
+    #   Answer = sum_q DP[4][1][q] = 1. Matches example.
+    #
+    # Great! So the DP works.
+    #
+    # Now we need to compute DP[n][1][*] efficiently for n up to 1e6.
+    # The recurrence for DP[s][p][q] only depends on DP[L][p][*] and DP[R][pR][*] where L and R are about s/2. So we can compute DP for all s from 1 to n in increasing order. Since L and R are < s, we can compute iteratively.
+    #
+    # But we need to store DP[s][p][q] for all s up to n. That's 4 values per s (p in {0,1}, q in {0,1}). So 4*n integers. For n=1e6, that's 4e6 integers, which is fine (about 32 MB if using arrays of ints, but Python lists of ints might be larger. We can use arrays or lists of lists. 4e6 Python ints is about 112 MB, might be okay but we can optimize by using two arrays for p=0 and p=1, each storing two values q=0,1. Or we can use a flat list of size 4*(n+1). Since n=1e6, 4e6 elements is fine.
+    #
+    # But we need to be careful with modulo 998244353.
+    #
+    # Let's define dp0[s] = (DP[s][0][0], DP[s][0][1]) and dp1[s] = (DP[s][1][0], DP[s][1][1]).
+    # We can store as two lists of tuples, or four separate lists.
+    #
+    # For s=0: empty tree. We can define DP[0][p][q] = 1 for all p,q? But we only use it when L=0 or R=0, and in that case we don't multiply by DP[0]. We handle L=0 and R=0 separately as factor 1. So we don't need DP[0].
+    #
+    # So we can start from s=1.
+    #
+    # For each s from 1 to n:
+    #   if s == 1:
+    #     dp0[1] = (1, 0)  # p=0: q=0 ->1, q=1->0
+    #     dp1[1] = (0, 1)  # p=1: q=0->0, q=1->1
+    #   else:
+    #     compute for p=0 and p=1.
+    #     For a given p:
+    #       initialize res0=0, res1=0 (for q=0,1)
+    #       For L in possible_L(s):
+    #         R = s-1-L
+    #         q = (p + L) % 2
+    #         left_factor = 1
+    #         if L > 0:
+    #           # need qL != q
+    #           if q == 0:
+    #             left_factor = dp_p[L][1]  # qL=1
+    #           else:
+    #             left_factor = dp_p[L][0]  # qL=0
+    #         right_factor = 1
+    #         if R > 0:
+    #           pR = (p + L + 1) % 2
+    #           # need qR == q
+    #           if q == 0:
+    #             right_factor = dp_pR[R][0]
+    #           else:
+    #             right_factor = dp_pR[R][1]
+    #         contrib = (left_factor * right_factor) % MOD
+    #         if q == 0:
+    #           res0 = (res0 + contrib) % MOD
+    #         else:
+    #           res1 = (res1 + contrib) % MOD
+    #       dp_p[s] = (res0, res1)
+    #
+    # But wait: for a given s and p, there might be multiple L values. We sum over them. However, we must ensure that the left and right subtrees are themselves perfectly balanced. But our DP already only counts perfectly balanced shapes because we only consider L

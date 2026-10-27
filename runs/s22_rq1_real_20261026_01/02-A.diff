@@ -1,0 +1,69 @@
+--- source
++++ output
+@@ -7,40 +7,30 @@
+     n = int(data[0])
+     t = int(data[1])
+ 
+-    # The row m+1 sum is the number of k in [0, m] such that (m xor k) == t.
+-    # Let x = m xor k. Then k = m xor x, and k <= m iff (m xor x) <= m.
+-    # For fixed m, valid x are those with x <= m and (m xor x) <= m.
+-    # We need count of m in [1, n] such that there exists exactly? Actually
+-    # sum equals t means number of k with m xor k = t is 1 if t <= m and
+-    # (m xor t) <= m, else 0. Since xor is a bijection, for each x there is
+-    # exactly one k. So the sum is 1 iff t <= m and (m xor t) <= m, else 0.
+-    # Thus we need count m in [1, n] with t <= m and (m xor t) <= m.
++    # We need count of m in [1, n] such that the sum of row m+1 equals t.
++    # Row m+1 (0-indexed row m) contains values (m xor k) for k = 0..m.
++    # Sum equals t iff exactly one k in [0, m] has (m xor k) = t.
++    # Since xor is a bijection, k = m xor t is unique. It is in [0, m] iff
++    # (m xor t) <= m. So condition: (m xor t) <= m.
+     #
+-    # Condition (m xor t) <= m. Let highest bit where m and t differ.
+-    # If t has a higher bit than m at some position, xor > m. More precisely,
+-    # (m xor t) <= m iff the highest set bit of t is not above the highest
+-    # set bit of m, or if equal, then bit of m at that position is 1.
+-    # Standard fact: (m xor t) <= m iff bit at highest set bit of t in m is 1.
+-    # If t == 0, always true, but t >= 1.
++    # Fact: (m xor t) <= m iff at the highest set bit of t, m has bit 1.
++    # (For t >= 1.) Let b = highest set bit of t. Then m must have bit b set.
+     #
+-    # So condition: let b = highest set bit of t (0-indexed). Then m must have
+-    # bit b set. Also m >= t.
++    # So answer = count of m in [1, n] with bit b set.
++    # Note: no need for m >= t separately; if m has bit b set and b is highest
++    # bit of t, then m >= 2^b, but t could be larger than m? If m has bit b set
++    # and t has bit b set, m could still be less than t (e.g., t=6 (110), m=4 (100)).
++    # Check condition (m xor t) <= m for m=4, t=6: 4 xor 6 = 2 <= 4, true.
++    # So m need not be >= t. The condition is exactly bit b of m is 1.
++    # Let's verify: t=6 (110), b=2. m=4 (100) has bit 2 set, xor=2<=4 true.
++    # m=5 (101) bit 2 set, xor=3<=5 true. m=7 (111) bit 2 set, xor=1<=7 true.
++    # m=2 (010) bit 2 not set, xor=4 > 2 false. Good.
+     #
+-    # Count m in [t, n] with bit b set.
+-    # Since t has bit b set, all m >= t with bit b set? Not necessarily all,
+-    # but we just count numbers in [t, n] with bit b set.
+-
+-    if t > n:
+-        print(0)
+-        return
++    # So answer = count of m in [1, n] with bit b set.
+ 
+     b = t.bit_length() - 1
+     mask = 1 << b
+ 
+-    # Count numbers in [t, n] with bit b set.
+-    # Since t has bit b set, numbers in [t, n] with bit b set are exactly
+-    # those m where m >= t and bit b is 1.
+-    # We can count total with bit b set up to n minus up to t-1.
+     def count_bit_set(x, bit):
+         # count numbers in [0, x] with given bit set
+         if x < 0:
+@@ -52,7 +42,7 @@
+         full += max(0, rem - half)
+         return full
+ 
+-    ans = count_bit_set(n, b) - count_bit_set(t - 1, b)
++    ans = count_bit_set(n, b) - count_bit_set(0, b)
+     print(ans)
+ 
+ if __name__ == "__main__":

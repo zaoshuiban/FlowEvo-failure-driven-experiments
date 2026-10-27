@@ -1,0 +1,322 @@
+--- source
++++ output
+@@ -1 +1,319 @@
+-active[i] = active[i-1] + start[i] - end[i-1]+import sys
++
++def solve():
++    input_data = sys.stdin.read().split()
++    if not input_data:
++        return
++    n = int(input_data[0])
++    h = int(input_data[1])
++    a = list(map(int, input_data[2:2+n]))
++    MOD = 1000000007
++
++    # We need to add 1 on segments such that each left endpoint and each right endpoint
++    # is used at most once. The total number of operations covering position i must be h - a[i].
++    # Let d[i] = h - a[i]. If any d[i] < 0, impossible.
++    # Consider the difference array of coverage counts. At position i, the number of segments
++    # starting at i minus ending at i-1 equals d[i] - d[i-1] (with d[0]=0, d[n+1]=0).
++    # Since each start/end is used at most once, the number of starts at i is either 0 or 1,
++    # and similarly for ends. The net change d[i]-d[i-1] must be in {-1,0,1}.
++    # If d[i] - d[i-1] == 1, a segment must start at i.
++    # If d[i] - d[i-1] == -1, a segment must end at i-1.
++    # If 0, either nothing happens or one starts and one ends simultaneously.
++    # The number of ways: process positions, maintain number of "open" segments.
++    # At each position i, we have d[i] active segments covering i.
++    # Let open be the number of segments that started before i and haven't ended yet.
++    # Actually, we can think of matching starts and ends.
++    # Standard solution: dp over positions with number of currently open segments.
++    # But n,h <= 2000, so O(n*h) is fine.
++
++    d = [h - x for x in a]
++    for x in d:
++        if x < 0:
++            print(0)
++            return
++
++    # dp[j] = number of ways after processing some prefix, with j open segments.
++    # At position i (1-indexed), we need exactly d[i-1] open segments covering it.
++    # Transition from i-1 to i:
++    # Let prev = d[i-2] (or 0 for i=1), cur = d[i-1].
++    # We can start some segments at i and end some at i-1.
++    # Since each start/end used at most once, at most one start and at most one end per position.
++    # The change in open count: cur = prev + starts - ends, where starts, ends in {0,1}.
++    # So cur - prev in {-1,0,1}.
++    # If cur - prev == 1: must start one segment at i (starts=1, ends=0). Ways: 1 (choose to start).
++    # If cur - prev == -1: must end one segment at i-1 (starts=0, ends=1). Ways: prev (choose which open segment to end).
++    # If cur - prev == 0: either starts=0,ends=0 (ways 1) or starts=1,ends=1 (ways prev, choose which to end and start new one).
++    # Wait, if starts=1 and ends=1, we end one of the prev open segments and start a new one. Number of ways = prev.
++    # But also we need to consider that the new segment started at i is distinct from the one ended.
++    # Actually, if we end one and start one, the new open count remains prev. The number of ways is prev (choose which open segment to end; the new one is determined as starting at i).
++    # However, there's a subtlety: the segments are unlabeled, but the operation is defined by its endpoints. Since each start and end is used at most once, the set of segments is determined by matching starts to ends in order? Actually, segments must be valid: l <= r. Since we process left to right, any open segment can be ended at current position, and it will have l < current r, so valid.
++    # But we must ensure that we don't end a segment at i-1 if it started at i? No, start at i means l=i, end at i-1 means r=i-1, invalid. But in our transition, ends happen at i-1 and starts at i, so the ended segment started earlier (since it was open before i), so l <= i-1, valid.
++    # So the DP is straightforward.
++
++    # Initialize: before position 1, open count = 0, ways = 1.
++    dp = [0] * (n + 2)
++    dp[0] = 1
++    prev = 0
++    for i in range(1, n + 1):
++        cur = d[i-1]
++        ndp = [0] * (n + 2)
++        diff = cur - prev
++        if diff == 1:
++            # must start one
++            for j in range(n + 1):
++                if dp[j]:
++                    # open count becomes j+1
++                    ndp[j+1] = (ndp[j+1] + dp[j]) % MOD
++        elif diff == -1:
++            # must end one
++            for j in range(1, n + 1):
++                if dp[j]:
++                    # choose which of j open to end: j ways
++                    ndp[j-1] = (ndp[j-1] + dp[j] * j) % MOD
++        elif diff == 0:
++            for j in range(n + 1):
++                if dp[j]:
++                    # option 1: no start, no end
++                    ndp[j] = (ndp[j] + dp[j]) % MOD
++                    # option 2: start one and end one (requires j >= 1)
++                    if j >= 1:
++                        ndp[j] = (ndp[j] + dp[j] * j) % MOD
++        else:
++            # impossible
++            print(0)
++            return
++        dp = ndp
++        prev = cur
++
++    # After processing all positions, we need to end all open segments.
++    # The last position n has cur = d[n-1]. After that, we need to end all open segments at position n.
++    # Actually, we process positions 1..n. After position n, we need to end all open segments at n.
++    # The transition from n to n+1: cur = 0 (since no coverage after n). prev = d[n-1].
++    # So diff = 0 - d[n-1] = -d[n-1]. This must be -1 or 0? Actually, we can end at most one segment per position, but we can end multiple segments at the same position? The problem says: "Peter never chooses any element as the end of the segment twice." So each position can be the end of at most one segment. Therefore, at position n, we can end at most one segment. But we might have multiple open segments that need to end at n. That would require multiple ends at n, which is not allowed. So we must have d[n-1] <= 1? Wait, but we can end segments at different positions. The last position n can be the end of at most one segment. So after processing position n, the number of open segments must be 0 or 1? Actually, if there are open segments after position n, they must end at n. But only one can end at n. So if open count > 1, impossible. But wait, we could have ended some segments earlier. The DP already accounts for ending at each position. At the end, we need to end all remaining open segments at position n. But we can only end one at n. So we need open count <= 1. And if open count == 1, we must end it at n (1 way). If open count == 0, 0 ways? Actually, if open count == 0, no segments to end, 1 way (do nothing). But wait, we also need to consider that we might have started a segment at n? No, we already processed position n. The DP state after processing position n has some open count. Those open segments must be ended at n. But we can only end one at n. So if open count > 1, impossible. If open count == 1, we end it at n (1 way). If open count == 0, 1 way. But also, we need to ensure that the total number of ends at n is at most 1. So the answer is dp[0] + dp[1] (if dp[1] exists, we end it at n). But wait, is there any restriction that we cannot end a segment at n if it started at n? That would be l=r=n, which is valid. But in our DP, a segment started at n would be open after processing n. Then ending it at n would mean l=r=n, which is allowed. But in our transition, we process position n, and then we need to end open segments at n. If a segment started at n, it is open after processing n. Ending it at n is valid. So dp[1] includes cases where the open segment started at n. That's fine.
++
++    # However, we must also consider that we might have started a segment at n+1? No, positions only up to n.
++    # So the answer is (dp[0] + dp[1]) % MOD? But wait, we need to ensure that we don't have any open segments after n. So we must end all open segments at n. But we can only end one at n. So if open count > 1, impossible. If open count == 1, we end it at n (1 way). If open count == 0, 1 way. So answer = dp[0] + dp[1] (if dp[1] exists). But is there any case where we need to end a segment at n but we already ended one at n? No, we only end at n in this final step. So it's fine.
++
++    # But wait, there's a catch: the problem says "Peter never chooses any element as the beginning of the segment twice. Similarly, Peter never chooses any element as the end of the segment twice." This means each position can be the start of at most one segment, and the end of at most one segment. Our DP enforces that by allowing at most one start and at most one end per position. However, in the transition for diff==0, we allowed both a start and an end at the same position? Actually, in our transition, we process position i: we consider starts at i and ends at i-1. So a position can be both a start (at i) and an end (at i-1)? No, end at i-1 is a different position. So a position can be a start and an end? Yes, a position can be the start of one segment and the end of another segment. That is allowed because the condition is about not choosing the same element as beginning twice, and not as end twice. It doesn't forbid being both a beginning and an end. So our DP is correct.
++
++    # Let's test with examples.
++    # Example 1: n=3, h=2, a=[1,1,1] => d=[1,1,1]
++    # i=1: prev=0, cur=1, diff=1 => dp[1]=1
++    # i=2: prev=1, cur=1, diff=0 => from dp[1]=1: ndp[1] += 1 (no start/end) + 1*1 (start and end) = 2. So dp[1]=2.
++    # i=3: prev=1, cur=1, diff=0 => from dp[1]=2: ndp[1] += 2 + 2*1 = 4. So dp[1]=4.
++    # After loop, answer = dp[0]+dp[1] = 0+4=4. Correct.
++
++    # Example 2: n=5, h=1, a=[1,1,1,1,1] => d=[0,0,0,0,0]
++    # i=1: prev=0, cur=0, diff=0 => dp[0]=1 (no start/end) + 0 = 1.
++    # i=2: prev=0, cur=0, diff=0 => dp[0]=1.
++    # ... all dp[0]=1.
++    # answer = dp[0]+dp[1] = 1+0=1. Correct.
++
++    # Example 3: n=4, h=3, a=[3,2,1,1] => d=[0,1,2,2]
++    # i=1: prev=0, cur=0, diff=0 => dp[0]=1.
++    # i=2: prev=0, cur=1, diff=1 => dp[1]=1.
++    # i=3: prev=1, cur=2, diff=1 => dp[2]=1.
++    # i=4: prev=2, cur=2, diff=0 => from dp[2]=1: ndp[2] += 1 + 1*2 = 3. So dp[2]=3.
++    # After loop, answer = dp[0]+dp[1] = 0+0=0. Correct.
++
++    # But wait, in example 3, after i=4, dp[2]=3. But we need to end all open segments at n=4. We can only end one at n=4. So open count must be <=1. Here open count=2, so impossible. Our answer dp[0]+dp[1] = 0, correct.
++
++    # However, there's a subtlety: what if we have open count 1 after processing n, but that segment started at n? Then ending it at n is valid. But what if we have open count 1 and it started before n? Also valid. So dp[1] is fine.
++
++    # But wait, we also need to consider that we might have started a segment at n+1? No.
++
++    # Let's test another case: n=1, h=1, a=[0] => d=[1]
++    # i=1: prev=0, cur=1, diff=1 => dp[1]=1.
++    # answer = dp[0]+dp[1] = 0+1=1. But is that correct? We need to add 1 to the only element. We can do segment [1,1]. That's 1 way. Correct.
++
++    # n=1, h=1, a=[1] => d=[0]
++    # i=1: prev=0, cur=0, diff=0 => dp[0]=1.
++    # answer = dp[0]+dp[1] = 1+0=1. Correct (do nothing).
++
++    # n=2, h=1, a=[0,0] => d=[1,1]
++    # i=1: prev=0, cur=1, diff=1 => dp[1]=1.
++    # i=2: prev=1, cur=1, diff=0 => from dp[1]=1: ndp[1] += 1 + 1*1 = 2. So dp[1]=2.
++    # answer = dp[0]+dp[1] = 0+2=2.
++    # Let's enumerate: need to add 1 to both positions. Segments must cover both. Possible segments: [1,2] only? Or [1,1] and [2,2]? But each start used at most once: start at 1 and start at 2 is allowed (different starts). Ends: end at 1 and end at 2 is allowed. So we can have two segments: [1,1] and [2,2]. That uses starts 1,2 and ends 1,2. That's valid. Also [1,2] uses start 1, end 2. That's valid. So 2 ways. Correct.
++
++    # n=2, h=1, a=[0,1] => d=[1,0]
++    # i=1: prev=0, cur=1, diff=1 => dp[1]=1.
++    # i=2: prev=1, cur=0, diff=-1 => from dp[1]=1: ndp[0] += 1*1 = 1. So dp[0]=1.
++    # answer = dp[0]+dp[1] = 1+0=1.
++    # Enumerate: need to add 1 to position 1 only. Segment [1,1] works. That's 1 way. Correct.
++
++    # n=2, h=1, a=[1,0] => d=[0,1]
++    # i=1: prev=0, cur=0, diff=0 => dp[0]=1.
++    # i=2: prev=0, cur=1, diff=1 => dp[1]=1.
++    # answer = dp[0]+dp[1] = 0+1=1.
++    # Enumerate: need to add 1 to position 2 only. Segment [2,2] works. That's 1 way. Correct.
++
++    # n=2, h=1, a=[0,0] we did.
++
++    # n=3, h=1, a=[0,0,0] => d=[1,1,1]
++    # i=1: dp[1]=1
++    # i=2: prev=1, cur=1, diff=0 => dp[1]=2
++    # i=3: prev=1, cur=1, diff=0 => dp[1]=4
++    # answer = dp[0]+dp[1] = 0+4=4.
++    # Let's enumerate: need to add 1 to all three. Possible sets of segments with distinct starts and ends.
++    # We can have:
++    # - [1,3] (start 1, end 3)
++    # - [1,1] and [2,3] (starts 1,2; ends 1,3)
++    # - [1,2] and [3,3] (starts 1,3; ends 2,3)
++    # - [1,1], [2,2], [3,3] (starts 1,2,3; ends 1,2,3)
++    # That's 4 ways. Correct.
++
++    # So the DP seems correct.
++
++    # But wait, there's a potential issue: in the transition for diff==0, we allowed both no start/end and start+end. But what if we have multiple open segments and we choose to end one and start one? The number of ways is j (choose which open segment to end). But is the new segment distinguishable? The new segment starts at i, so it's determined. So yes, j ways.
++
++    # However, we must also consider that the segments are unlabeled, but the operation is defined by the set of segments. Since each start and end is used at most once, the set of segments is uniquely determined by the matching of starts to ends. Our DP counts the number of ways to choose which open segment to end at each step. But does this overcount? Let's think: suppose we have open segments A and B. At position i, we end A and start C. The resulting set of segments is {B, C} (if we consider the open ones). But the set of all segments includes the ended ones. The DP state only tracks the number of open segments, not their identities. But since all open segments are equivalent in terms of future possibilities (they all started at some earlier position and can be ended at any later position), the number of ways to end one is j. And the resulting set of segments is different depending on which one we end? Actually, if we end A vs B, the set of segments is different because the end position of A vs B differs. But wait, in the DP, we are counting the number of ways to form the set of segments. If we end A at i, then A's end is i. If we end B at i, then B's end is i. These are different sets of segments (since the end points differ). So they are distinct ways. So multiplying by j is correct.
++
++    # But there's a subtlety: when we start a new segment at i, it is a new segment. So the set of segments is different. So the DP correctly counts the number of distinct sets of segments.
++
++    # However, we must ensure that we don't count the same set of segments multiple times due to different orders of processing. But since we process positions in order, each set of segments corresponds to a unique sequence of decisions (at each position, whether to start/end). So no overcounting.
++
++    # So the DP is correct.
++
++    # Let's implement it efficiently. n <= 2000, so O(n^2) is fine (4e6 operations). We can optimize by only iterating up to current max open count, but not necessary.
++
++    # We'll use a list dp of size n+2.
++
++    # But wait, the open count can be at most n. So size n+2 is fine.
++
++    # Let's code it.
++
++    # However, there's a potential issue: the DP state after processing position i has open count = d[i-1]? Actually, after processing position i, the open count is exactly d[i-1]? No, in our transition, we set cur = d[i-1] and we ensure that after processing position i, the open count is cur. But wait, in our transition, we computed ndp based on cur. But we didn't enforce that the open count after processing i is exactly cur? Actually, we did: in the transition, we only add to ndp[j] where j is the new open count. For diff==1, we added to ndp[j+1] from dp[j], so new open count = j+1. But we need new open count = cur. Since cur = prev+1, and prev was the open count before, j must be prev. So we only have dp[prev] nonzero? Actually, dp might have multiple nonzero entries? No, because at each step, the open count is determined by the d array. Let's check: initially dp[0]=1. After i=1, cur=d[0]. If diff=1, we only add to ndp[1] from dp[0]. So dp[1]=1, others 0. So dp is always concentrated on a single state? Not necessarily, because for diff==0, we can have multiple ways leading to the same open count. But the open count is always exactly cur. So dp[j] is nonzero only for j=cur. So we don't need an array; we can just keep a single value for the number of ways to have the current open count. But wait, is that true? Let's check: after i=1, open count = d[0]. After i=2, open count = d[1]. So indeed, the open count is forced to be d[i-1] after processing position i. So there is only one possible open count at each step. So we can just maintain a single variable ways, representing the number of ways to achieve the required open count. But wait, in the transition for diff==0, we had two options: no start/end (ways 1) and start+end (ways j). Both lead to the same open count j. So we sum them. So we can just compute ways = ways * (1 + j) for diff==0, where j is the current open count (which is prev). For diff==1, ways remains the same (since we must start one, 1 way). For diff==-1, ways = ways * j (since we must end one, j ways). So we can simplify the DP to a single variable.
++
++    # Let's verify: at step i, prev = d[i-2] (or 0 for i=1). cur = d[i-1].
++    # If cur - prev == 1: ways unchanged.
++    # If cur - prev == -1: ways *= prev.
++    # If cur - prev == 0: ways *= (1 + prev).
++    # If other: 0.
++
++    # After processing all n positions, we need to end all open segments at n. The open count after processing n is d[n-1]. We can end at most one at n. So if d[n-1] > 1, answer 0. If d[n-1] == 1, we must end it at n (1 way). If d[n-1] == 0, 1 way. So answer = ways if d[n-1] <= 1 else 0.
++
++    # But wait, is there any case where we need to end a segment at n but we already ended one at n? No, we only end at n in this final step. So it's fine.
++
++    # Let's test with example 1: d=[1,1,1]
++    # i=1: prev=0, cur=1, diff=1 => ways=1
++    # i=2: prev=1, cur=1, diff=0 => ways *= (1+1)=2 => ways=2
++    # i=3: prev=1, cur=1, diff=0 => ways *= 2 => ways=4
++    # after loop, d[2]=1 <=1, answer=4. Correct.
++
++    # Example 2: d=[0,0,0,0,0]
++    # i=1: prev=0, cur=0, diff=0 => ways *= (1+0)=1 => ways=1
++    # i=2: prev=0, cur=0, diff=0 => ways *= 1 => 1
++    # ... ways=1
++    # after loop, d[4]=0 <=1, answer=1. Correct.
++
++    # Example 3: d=[0,1,2,2]
++    # i=1: prev=0, cur=0, diff=0 => ways=1
++    # i=2: prev=0, cur=1, diff=1 => ways=1
++    # i=3: prev=1, cur=2, diff=1 => ways=1
++    # i=4: prev=2, cur=2, diff=0 => ways *= (1+2)=3 => ways=3
++    # after loop, d[3]=2 >1 => answer=0. Correct.
++
++    # Example 4: n=6, h=3, a=[2,1,2,2,1,2] => d=[1,2,1,1,2,1]
++    # Let's compute:
++    # i=1: prev=0, cur=1, diff=1 => ways=1
++    # i=2: prev=1, cur=2, diff=1 => ways=1
++    # i=3: prev=2, cur=1, diff=-1 => ways *= 2 => ways=2
++    # i=4: prev=1, cur=1, diff=0 => ways *= (1+1)=2 => ways=4
++    # i=5: prev=1, cur=2, diff=1 => ways=4
++    # i=6: prev=2, cur=1, diff=-1 => ways *= 2 => ways=8
++    # after loop, d[5]=1 <=1, answer=8. Matches expected 8.
++
++    # Example 5: n=6, h=1, a=[0,1,0,0,0,0] => d=[1,0,1,1,1,1]
++    # i=1: prev=0, cur=1, diff=1 => ways=1
++    # i=2: prev=1, cur=0, diff=-1 => ways *= 1 => ways=1
++    # i=3: prev=0, cur=1, diff=1 => ways=1
++    # i=4: prev=1, cur=1, diff=0 => ways *= (1+1)=2 => ways=2
++    # i=5: prev=1, cur=1, diff=0 => ways *= 2 => ways=4
++    # i=6: prev=1, cur=1, diff=0 => ways *= 2 => ways=8
++    # after loop, d[5]=1 <=1, answer=8. Matches expected 8.
++
++    # Example 6: n=7, h=3, a=[2,1,1,2,1,1,2] => d=[1,2,2,1,2,2,1]
++    # i=1: prev=0, cur=1, diff=1 => ways=1
++    # i=2: prev=1, cur=2, diff=1 => ways=1
++    # i=3: prev=2, cur=2, diff=0 => ways *= (1+2)=3 => ways=3
++    # i=4: prev=2, cur=1, diff=-1 => ways *= 2 => ways=6
++    # i=5: prev=1, cur=2, diff=1 => ways=6
++    # i=6: prev=2, cur=2, diff=0 => ways *= (1+2)=3 => ways=18
++    # i=7: prev=2, cur=1, diff=-1 => ways *= 2 => ways=36
++    # after loop, d[6]=1 <=1, answer=36. Matches expected 36.
++
++    # So the simplified DP works.
++
++    # Let's implement it.
++
++    # Edge case: n=1, h=1, a=[0] => d=[1]
++    # i=1: prev=0, cur=1, diff=1 => ways=1
++    # after loop, d[0]=1 <=1, answer=1. Correct.
++
++    # n=1, h=1, a=[1] => d=[0]
++    # i=1: prev=0, cur=0, diff=0 => ways *= (1+0)=1 => ways=1
++    # after loop, d[0]=0 <=1, answer=1. Correct.
++
++    # n=1, h=1, a=[2] => d=[-1] => negative, answer 0.
++
++    # So the algorithm is O(n) time, O(1) space.
++
++    # Let's write the code.
++
++    # We need to handle modulo 1000000007.
++
++    # We'll read input, compute d, check for negatives, then iterate.
++
++    # Let's code.
++
++    # But wait, there's a potential issue: the problem says "Peter never chooses any element as the beginning of the segment twice. Similarly, Peter never chooses any element as the end of the segment twice." This means each position can be the start of at most one segment, and the end of at most one segment. Our DP enforces that by allowing at most one start and at most one end per position. However, in the transition for diff==0, we allowed both a start and an end at the same position? Actually, in our transition, we process position i: we consider starts at i and ends at i-1. So a position can be both a start (at i) and an end (at i-1)? No, end at i-1 is a different position. So a position can be a start and an end? Yes, a position can be the start of one segment and the end of another segment. That is allowed because the condition is about not choosing the same element as beginning twice, and not as end twice. It doesn't forbid being both a beginning and an end. So our DP is correct.
++
++    # However, there's a subtlety: in the transition for diff==0, we allowed start+end at the same position i? Actually, in our transition, we process position i: we consider starts at i and ends at i-1. So a start at i and an end at i-1 are at different positions. So a position can be a start and an end? Yes, a position can be the start of one segment and the end of another segment. That is allowed. But wait, in our transition for diff==0, we allowed both a start at i and an end at i-1. That means position i is a start, and position i-1 is an end. So position i is not an end. So a position can be both a start and an end? That would require a start at i and an end at i. But in our transition, ends happen at i-1, not at i. So a position can be a start (at i) and an end (at i-1)? No, that's different positions. So a position can be a start and an end? Yes, if we have a segment ending at i and another starting at i. That would be an end at i and a start at i. But in our transition, we process position i: we consider starts at i and ends at i-1. So an end at i would be considered in the next step (i+1) as an end at (i+1)-1 = i. So a position can be both a start and an end, but they are processed in different steps. Our DP allows that because at step i, we can start a segment, and at step i+1, we can end a segment at i. So a position can be both a start and an end. That is allowed by the problem statement. So our DP is correct.
++
++    # Let's double-check with an example: n=2, h=1, a=[0,0] => d=[1,1]. We got 2 ways: [1,2] and [1,1]+[2,2]. In the second way, position 1 is start and end, position 2 is start and end. That's allowed. Our DP counted it. So correct.
++
++    # So the simplified DP is correct.
++
++    # Let's write the final code.
++
++    # We'll use sys.stdin.read().split() to read all tokens.
++
++    # We'll compute d = [h - x for x in a].
++
++    # If any d[i] < 0, print 0.
++
++    # Initialize ways = 1, prev = 0.
++
++    # For i in range(n):
++    #   cur = d[i]
++    #   diff = cur - prev
++    #   if diff == 1:
++    #       pass  # ways unchanged
++    #   elif diff == -1:
++    #       ways = (ways * prev) % MOD
++    #   elif diff == 0:
++    #       ways = (ways * (1 + prev)) % MOD
++    #   else:
++    #       print(0); return
++    #   prev = cur
++
++    # After loop, if prev > 1: print(0) else print(ways % MOD)
++
++    # But wait, we need to ensure that we don't have any open segments after n. The open count after processing n is prev = d[n-1]. We can end at most one at n. So if prev > 1, impossible. If prev == 1, we must end it at n (1 way). If prev == 0, 1 way. So answer = ways if prev <= 1 else 0.
++
++    # But is there any case where we need to end a segment at n but we already ended one at n? No, we only end at n in this final step. So it's fine.
++
++    # However, we must also consider that we might have started a segment at n+1? No.
++
++    # So the answer is ways if prev <= 1 else 0.
++
++    # Let's test with n=1, h=1, a=[0] => d=[1]. prev after loop = 1. ways=1. answer=1. Correct.
++
++    # n=1, h=1, a=[1] => d=[0]. prev=0. ways=1. answer=1. Correct.
++
++    # n=2, h=1, a=[0,0] => d=[1,1]. i=0: prev=0, cur=1, diff=1 => ways=1. prev=1. i=1: prev=1, cur=1, diff=0 => ways *= (1+1)=2 => ways=2. prev=1. after loop, prev=1 <=1, answer=2. Correct.
++
++    # n=2, h=1, a=[0,1] => d=[1,0]. i=0: prev=0, cur=1, diff=1 => ways=1. prev=1. i=1: prev=1, cur=0, diff=-1 => ways *= 1 => ways=1. prev=0. after loop, prev=0 <=1, answer=1. Correct.
++
++    # n=2, h=1, a=[1,0] => d=[0,1]. i=0: prev=0, cur=0, diff=0 => ways *= (1+0)=1 => ways=1. prev=0. i=1: prev=0, cur=1, diff=1
