@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-geometry-524",
+    "problem": "Two noncongruent integer-sided isosceles triangles have the same perimeter and the same area. The ratio of the lengths of the bases of the two triangles is $8: 7$. Find the minimum possible value of their common perimeter.\n"
+  },
+  "problem_sha256": "4bac9048d469e17172fa9129233399305f8f8f6e355646986ab172d43d1e4b0f",
+  "task_id": "hard140-math-train-geometry-524",
+  "sequence": 86,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-geometry-524",
+  "locked_sha256": "d9e76f8c5ab52b663d6b020b98ca84dcfe05c58cca1b81ef804c450affdeaf09",
+  "trajectory_sha256": "520de31ee1048112d623f3c34544627623b19733f34dd15d2fc26a77a1abaada",
+  "responses": [
+    {
+      "text": "Let's go step-by-step.\n\n---\n\nWe have two **noncongruent integer-sided isosceles triangles** with:\n\n- Same perimeter \\(P\\)\n- Same area \\(A\\)\n- Ratio of bases = \\(8:7\\)\n\nWe want the **minimum possible common perimeter**.\n\n---\n\n## Step 1 – Represent the triangles\n\nLet the bases be \\(8k\\) and \\(7k\\) for some positive integer \\(k\\) (since sides are integers, \\(k\\) may be integer or rational, but ultimately base lengths must be integers).\n\nFor an isosceles triangle with base \\(b\\) and equal sides \\(s\\):\n\n- Perimeter: \\(P = b + 2s\\)\n- Height: \\(h = \\sqrt{s^2 - (b/2)^2}\\)\n- Area: \\(A = \\frac12 b h = \\frac12 b \\sqrt{s^2 - (b/2)^2}\\)\n\n---\n\n## Step 2 – Equal perimeters\n\nLet triangle 1 have base \\(8k\\), equal sides \\(s_1\\).  \nLet triangle 2 have base \\(7k\\), equal sides \\(s_2\\).\n\nSame perimeter:\n\n\\[\n8k + 2s_1 = 7k + 2s_2\n\\]\n\\[\n2s_1 - 2s_2 = -k\n\\]\n\\[\ns_2 - s_1 = \\frac{k}{2}\n\\]\n\nSo \\(s_2 = s_1 + \\frac{k}{2}\\).\n\n---\n\n## Step 3 – Equal areas\n\nArea of triangle 1:\n\n\\[\nA_1 = \\frac12 (8k) \\sqrt{s_1^2 - (4k)^2} = 4k \\sqrt{s_1^2 - 16k^2}\n\\]\n\nArea of triangle 2:\n\n\\[\nA_2 = \\frac12 (7k) \\sqrt{s_2^2 - (3.5k)^2} = \\frac{7k}{2} \\sqrt{s_2^2 - \\frac{49k^2}{4}}\n\\]\n\nSet \\(A_1 = A_2\\):\n\n\\[\n4k \\sqrt{s_1^2 - 16k^2} = \\frac{7k}{2} \\sqrt{s_2^2 - \\frac{49k^2}{4}}\n\\]\n\nCancel \\(k\\) (positive):\n\n\\[\n4 \\sqrt{s_1^2 - 16k^2} = \\frac{7}{2} \\sqrt{s_2^2 - \\frac{49k^2}{4}}\n\\]\n\nMultiply both sides by 2:\n\n\\[\n8 \\sqrt{s_1^2 - 16k^2} = 7 \\sqrt{s_2^2 - \\frac{49k^2}{4}}\n\\]\n\nSquare:\n\n\\[\n64 (s_1^2 - 16k^2) = 49 \\left( s_2^2 - \\frac{49k^2}{4} \\right)\n\\]\n\n---\n\n## Step 4 – Substitute \\(s_2 = s_1 + k/2\\)\n\nLet \\(s_1 = x\\) for convenience.\n\nThen \\(s_2 = x + k/2\\).\n\nEquation becomes:\n\n\\[\n64(x^2 - 16k^2) = 49\\left( (x + k/2)^2 - \\frac{49k^2}{4} \\right)\n\\]\n\nExpand right side:\n\n\\((x + k/2)^2 = x^2 + kx + k^2/4\\)\n\nSubtract \\(49k^2/4\\):\n\n\\(x^2 + kx + k^2/4 - 49k^2/4 = x^2 + kx - 48k^2/4 = x^2 + kx - 12k^2\\)\n\nSo:\n\n\\[\n64x^2 - 1024k^2 = 49(x^2 + kx - 12k^2)\n\\]\n\n\\[\n64x^2 - 1024k^2 = 49x^2 + 49kx - 588k^2\n\\]\n\n\\[\n15x^2 - 49kx - 436k^2 = 0\n\\]\n\n---\n\n## Step 5 – Solve for \\(x\\) in terms of \\(k\\)\n\nQuadratic in \\(x\\):\n\n\\(15x^2 - 49k x - 436k^2 = 0\\)\n\nDiscriminant:\n\n\\[\n\\Delta = (49k)^2 + 4\\cdot 15 \\cdot 436 k^2 = 2401k^2 + 26160k^2 = 28561k^2\n\\]\n\nNote: \\(169^2 = 28561\\). Yes: \\(169^2 = (170-1)^2 = 28900 - 340 + 1 = 28561\\).\n\nSo \\(\\sqrt{\\Delta} = 169k\\).\n\nThus:\n\n\\[\nx = \\frac{49k \\pm 169k}{30}\n\\]\n\nPositive root: \\((49+169)k/30 = 218k/30 = 109k/15\\).\n\nNegative root: \\((49-169)k/30 = -120k/30 = -4k\\) (discard, side length positive).\n\nSo \\(s_1 = \\frac{109k}{15}\\).\n\n---\n\n## Step 6 – Integer side lengths\n\nWe need \\(s_1\\) integer, \\(s_2 = s_1 + k/2\\) integer, and bases \\(8k, 7k\\) integers.\n\n\\(s_1 = 109k/15\\) integer ⇒ \\(15 \\mid 109k\\). Since \\(\\gcd(109,15)=1\\), \\(15 \\mid k\\).\n\nAlso \\(s_2 = 109k/15 + k/2 = (218k + 15k)/30 = 233k/30\\) integer ⇒ \\(30 \\mid 233k\\). \\(\\gcd(233,30)=1\\), so \\(30 \\mid k\\).\n\nThus \\(k\\) multiple of lcm(15,30) = 30.\n\nSmallest \\(k=30\\).\n\n---\n\n## Step 7 – Check triangle inequalities and compute perimeter\n\nIf \\(k=30\\):\n\n- Base1 = \\(8k = 240\\), Base2 = \\(7k = 210\\)\n- \\(s_1 = 109\\cdot 30 / 15 = 109\\cdot 2 = 218\\)\n- \\(s_2 = 233\\cdot 30 / 30 = 233\\)\n\nCheck triangle 1: base 240, sides 218,218. Need \\(2\\cdot 218 > 240\\) → 436 > 240, ok. Also height real: \\(218^2 - 120^2 = 47524 - 14400 = 33124\\), positive.\n\nTriangle 2: base 210, sides 233,233. \\(2\\cdot 233 > 210\\), ok. Height: \\(233^2 - 105^2 = 54289 - 11025 = 43264\\), positive.\n\nPerimeters:\n\nTriangle 1: \\(240 + 2\\cdot 218 = 240 + 436 = 676\\)  \nTriangle 2: \\(210 + 2\\cdot 233 = 210 + 466 = 676\\) ✓\n\nAreas:\n\nTriangle 1: height = \\(\\sqrt{33124} = 182\\) (since \\(182^2 = 33124\\)), area = \\(0.5\\cdot 240\\cdot 182 = 120\\cdot 182 = 21840\\).\n\nTriangle 2: height = \\(\\sqrt{43264} = 208\\) (since \\(208^2 = 43264\\)), area = \\(0.5\\cdot 210\\cdot 208 = 105\\cdot 208 = 21840\\). ✓\n\n---\n\n## Step 8 – Minimality\n\nWe found \\(k\\) must be multiple of 30, so smallest \\(k=30\\) gives perimeter 676. No smaller \\(k\\) possible due to divisibility constraints.\n\n---\n\n**Final answer**:\n\n\\[\n\\boxed{676}\n\\]\n\nThe answer is 676.",
+      "usage": {
+        "prompt_tokens": 105,
+        "completion_tokens": 1703,
+        "total_tokens": 1808,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 105
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "df8b83f7c45f5ca18800b14fd35161bedeb5e966cefb27ec3470c24f58412d1e"
+    },
+    {
+      "text": "Let the bases be \\(8k\\) and \\(7k\\). For an isosceles triangle with base \\(b\\) and equal side \\(s\\),\n\n\\[\nP=b+2s,\\qquad A=\\frac12 b\\sqrt{s^2-\\left(\\frac b2\\right)^2}.\n\\]\n\nLet the equal sides be \\(s_1\\) for base \\(8k\\), and \\(s_2\\) for base \\(7k\\). Equal perimeters give\n\n\\[\n8k+2s_1=7k+2s_2 \\implies s_2=s_1+\\frac k2.\n\\]\n\nEqual areas give\n\n\\[\n4k\\sqrt{s_1^2-16k^2}\n=\n\\frac{7k}{2}\\sqrt{s_2^2-\\frac{49k^2}{4}}.\n\\]\n\nSubstituting \\(s_2=s_1+\\frac k2\\) and simplifying yields\n\n\\[\n15s_1^2-49ks_1-436k^2=0.\n\\]\n\nThe positive solution is\n\n\\[\ns_1=\\frac{109k}{15}.\n\\]\n\nThen\n\n\\[\ns_2=s_1+\\frac k2=\\frac{233k}{30}.\n\\]\n\nFor all side lengths to be integers, \\(k\\) must be divisible by \\(30\\). The smallest choice is \\(k=30\\), giving bases \\(240\\) and \\(210\\), equal sides \\(218\\) and \\(233\\), and common perimeter\n\n\\[\n240+2(218)=676.\n\\]\n\nThe answer is 676.",
+      "usage": {
+        "prompt_tokens": 1815,
+        "completion_tokens": 317,
+        "total_tokens": 2132,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1815
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "3704c0fa142f0f2a93d02c7e3f0b03c907203aca8862db94a5fcc546fd934ec6"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "676",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "676",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "676",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "676",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "000b49a8e9fd26ac125c044d92b01899eb2ebd4964e120f9ecfb72905232d454"
+}

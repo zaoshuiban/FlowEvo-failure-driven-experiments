@@ -1,0 +1,74 @@
+{
+  "version": "math-no-gold-p0-proposal-v1",
+  "status": "ENGINEERING_ACCEPTED_AWAITING_NEW_AUTHORIZATION",
+  "source_manifest_sha256": "32fe94a24276cd4001b7f35109c8d290154f12064cf813aa106574da3392064e",
+  "dataset_manifest_sha256": "0f3bab012e21ba3f2c44d1957f42d90764dc9df99733ec2a8cac243e4826ceea",
+  "budget_sha256": "20fe87c4daa41cdd6032d26f7311bf5c0c4226afe796c55062121b4c8757f60e",
+  "solver": {
+    "model": "deepseek-flash",
+    "temperature": 0,
+    "thinking": false,
+    "output_tokens": 4096,
+    "input_upper": 32768,
+    "reflection_calls": 1,
+    "reflection_trigger": "unconditional fixed schedule, no score",
+    "selection": "last scheduled response; first APPLIED operator locks without rescue"
+  },
+  "compiler": {
+    "model": "gpt-5.4-2026-03-05",
+    "reasoning": "medium",
+    "contract_sha256": "17a2f84ae2fac30ab588c9438f995578ea3adf0dcd6166a94185d00212b7b2db",
+    "schema_sha256": "fb67bbb51f3dcd34653b16d12405c3cba96b89be033760fb1c7cada25057081f",
+    "max_candidates_per_arm": 3,
+    "max_revisions_per_candidate": 1,
+    "selection": "first source+Design pass, stop generating, freeze one winner per arm before Gate; never replace after Gate failure",
+    "source_selection": "earliest up to6 distinct terminal numeric failures; no class filtering",
+    "context_fragment_characters": 2400,
+    "context_full_source_hashes": true,
+    "max_wire_upper": 65536
+  },
+  "admissibility": {
+    "source": "at least one correct applied; no incorrect applied or ERROR",
+    "design": "same",
+    "gate": "same; no feedback to generation",
+    "refusal": "all declines and errors logged; all public questions supplied, no labels"
+  },
+  "worker": {
+    "image": "sha256:cce12316475d7d56d605f76e1d811d0dc4e7227f2d4afd29951521264f504ff8",
+    "script": "experiments/flowevo_taco_lcb_20261019/repair_v2/epochs/repair_v2d_20261020/code/candidate_worker.py",
+    "sha256": "a32629562386b360a162a69ecbc599a7e521dc69dd54aaccf158d5a0b1661493",
+    "network": "none",
+    "read_only": true,
+    "user": "65534:65534",
+    "memory": "256m",
+    "cpus": 1,
+    "pids": 32,
+    "timeout_seconds": 2,
+    "mounts": [
+      "generated candidate",
+      "frozen Worker"
+    ]
+  },
+  "solver_system_sha256": "840cef4d854edba241759ae2ff26e801ca68208a8fb46432872b1758b354eb1a",
+  "review_system_sha256": "bc653109d56fa2e893f75eb4135880121fc4e00844d50f8df3599dd9b3b01354",
+  "primary_arms": [
+    "G",
+    "T",
+    "F"
+  ],
+  "auxiliary_arms_enabled": false,
+  "formal_order": "frozen schedule role/seed/task/repeat; arm order cyclic GTF/TFG/FGT by task ordinal",
+  "failure_learning": "Discovery only, terminal private grade without gold; rational mismatch only; UNVERIFIED_NONMATCH excluded",
+  "test_feedback": "none to learner or router; score after answer lock; formal versions remain frozen",
+  "stopping": [
+    "gold leakage",
+    "permission violation",
+    "data contamination",
+    "UNKNOWN request",
+    "Worker infrastructure fault",
+    "budget exhaustion"
+  ],
+  "no_mechanism_is_valid": true,
+  "old_budgets_reused": false,
+  "paid_api_authorized": false
+}

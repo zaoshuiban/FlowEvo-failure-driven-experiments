@@ -1,0 +1,44 @@
+{
+  "decision": "PROPOSE",
+  "invalid_operation": null,
+  "observations": [
+    "The object performs a simple symmetric random walk on Z^2 starting at (0,0).",
+    "We need the probability of ever hitting (2,2) at or before step 6.",
+    "Parity: reaching (2,2) requires an even number of steps; minimum is 4 steps.",
+    "Only step counts 4 and 6 can contribute.",
+    "At step 4, the only path to (2,2) is two right and two up moves in some order.",
+    "At step 6, paths may reach (2,2) for the first time at step 6, or reach it earlier and return; the event is 'reaches by step 6', so we can count all length-6 walks ending at (2,2) and subtract those that already hit (2,2) at step 4 to avoid double counting."
+  ],
+  "parameter_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "max_steps": {
+        "description": "maximum number of steps allowed",
+        "minimum": 0,
+        "type": "integer"
+      },
+      "target_x": {
+        "description": "x-coordinate of target point",
+        "type": "integer"
+      },
+      "target_y": {
+        "description": "y-coordinate of target point",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "target_x",
+      "target_y",
+      "max_steps"
+    ],
+    "type": "object"
+  },
+  "procedure_plan": "Model the walk as a sequence of independent steps from {L,R,U,D}. Enumerate all 4^n step sequences for n=4 and n=6 (or use combinatorial counting). Compute the set of walks that visit target (2,2) at any time t<=6. Count them and divide by 4^6? Careful: the probability space is infinite sequences, but the event depends only on first 6 steps, so probability = (# length-6 prefixes that hit target by time 6) / 4^6. Equivalently, sum over n=4,6 of probability first hit at n. Use inclusion-exclusion: P(hit by 6) = P(S_4=(2,2)) + P(S_6=(2,2) and S_4 != (2,2)). Count length-4 walks ending at (2,2): multinomial 4!/(2!2!)=6. Count length-6 walks ending at (2,2): need net displacement (2,2), so #R - #L = 2, #U - #D = 2, total 6. Let r,l,u,d nonnegative with r+l+u+d=6, r-l=2, u-d=2. Then r=l+2, u=d+2, total 2l+2d+4=6 => l+d=1. Cases: (l=0,d=1): r=2,u=3 => multinomial 6!/(2!0!3!1!)=60. (l=1,d=0): r=3,u=2 => 6!/(3!1!2!0!)=60. Total 120 length-6 walks ending at (2,2). Among these, those that also hit (2,2) at step 4: a length-4 prefix ending at (2,2) (6 choices) followed by a length-2 walk from (2,2) back to (2,2) (must be one step and its opposite: 4 choices: LR,RL,UD,DU). So 6*4=24 walks counted in both. Thus # length-6 prefixes hitting by step 6 = 6 (hit at 4) + (120 - 24) (hit at 6 but not 4) = 102. Probability = 102 / 4^6 = 102/4096 = 51/2048. Then m+n=51+2048=2099. Generalize: given target (a,b), max steps N, compute probability of ever hitting target by step N via dynamic programming or combinatorial enumeration over step counts with first-hit decomposition. Parameterize by target coordinates and maximum step count.",
+  "replacement_operation": null,
+  "source_parameters": {
+    "max_steps": 6,
+    "target_x": 2,
+    "target_y": 2
+  },
+  "uncertainty": "Assumes the walk is unrestricted (no boundaries) and steps are independent and equally likely. The combinatorial counting must correctly handle first-hit vs. all-ending counts to avoid double counting. For larger N, enumeration is exponential; dynamic programming over states (x,y,step) is preferable."
+}

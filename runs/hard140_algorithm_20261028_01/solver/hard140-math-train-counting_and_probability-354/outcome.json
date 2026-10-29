@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-counting_and_probability-354",
+    "problem": "Every card in a deck has a picture of one shape - circle, square, or triangle, which is painted in one of the three colors - red, blue, or green. Furthermore, each color is applied in one of three shades - light, medium, or dark. The deck has 27 cards, with every shape-color-shade combination represented. A set of three cards from the deck is called complementary if all of the following statements are true:\ni. Either each of the three cards has a different shape or all three of the card have the same shape.\nii. Either each of the three cards has a different color or all three of the cards have the same color.\niii. Either each of the three cards has a different shade or all three of the cards have the same shade.\nHow many different complementary three-card sets are there?\n"
+  },
+  "problem_sha256": "db84b240974efd2615e2f9e88155186ef17e3e51c0a40831156cd63ae1cb1718",
+  "task_id": "hard140-math-train-counting_and_probability-354",
+  "sequence": 50,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-counting_and_probability-354",
+  "locked_sha256": "ff936611341efc236106cec61350f0f35347b6e1f88db1624e566d9cbd31cfd5",
+  "trajectory_sha256": "30d4a820a12e43c28b254a42b03331dbe4ebd185bc4a0c1dff35364998870b0e",
+  "responses": [
+    {
+      "text": "We have 27 cards, each corresponding to a triple \\((shape, color, shade)\\) where each coordinate is from a set of size 3. A complementary set of 3 cards is one where, in each coordinate (shape, color, shade), the three values are either all the same or all different.\n\nThis is exactly the condition for a \"line\" in the affine space \\(\\mathbb{F}_3^3\\) over the field with 3 elements. In \\(\\mathbb{F}_3\\), the condition \"all same or all different\" for three elements is equivalent to their sum being \\(0 \\pmod{3}\\) (since in \\(\\mathbb{F}_3\\), \\(a+b+c=0\\) means either all equal or all distinct).\n\nSo we can map each card to a point in \\(\\mathbb{F}_3^3\\). A complementary set is a set of three distinct points \\(\\{x, y, z\\}\\) such that \\(x+y+z = 0\\) in \\(\\mathbb{F}_3^3\\).\n\n---\n\n### Step 1: Count ordered triples \\((x, y, z)\\) with \\(x+y+z=0\\) and \\(x, y, z\\) distinct.\n\nFirst, count all ordered triples with sum zero (including possibly repeated points).\n\nFor any choice of \\(x\\) and \\(y\\), \\(z\\) is uniquely determined as \\(z = -x - y\\). There are \\(3^3 = 27\\) choices for \\(x\\) and \\(27\\) for \\(y\\), so \\(27 \\times 27 = 729\\) ordered triples \\((x, y, z)\\) with sum zero.\n\nNow exclude cases where not all three are distinct.\n\n- **Case 1: All three equal.**  \n  \\(x = y = z\\) and \\(3x = 0\\) in \\(\\mathbb{F}_3^3\\). Since \\(3=0\\) in \\(\\mathbb{F}_3\\), \\(3x = 0\\) for all \\(x\\). So any \\(x\\) works: 27 triples of the form \\((x, x, x)\\).\n\n- **Case 2: Exactly two equal.**  \n  Suppose \\(x = y \\neq z\\). Then \\(2x + z = 0\\) → \\(z = -2x = x\\) (since \\(-2 \\equiv 1 \\pmod{3}\\)). That forces \\(z = x\\), contradiction to \\(z \\neq x\\). So no triples with exactly two equal and sum zero? Let's check: If \\(x = y\\), then \\(x+y+z = 2x+z = -x + z = 0\\) → \\(z = x\\). So indeed, if two are equal, the third must equal them too. So no \"exactly two equal\" cases.\n\nThus the only non-distinct triples are the 27 all-equal ones.\n\nSo the number of ordered triples with sum zero and all distinct is \\(729 - 27 = 702\\).\n\n---\n\n### Step 2: Convert to unordered sets.\n\nEach unordered set of 3 distinct points summing to zero corresponds to how many ordered triples?  \nFor a given set \\(\\{a,b,c\\}\\) with \\(a+b+c=0\\), all 6 permutations are valid ordered triples (since sum is symmetric). So each set is counted \\(3! = 6\\) times in the 702.\n\nThus number of complementary sets = \\(702 / 6 = 117\\).\n\n---\n\n### Step 3: Double-check with known formula.\n\nIn \\(\\mathbb{F}_3^3\\), number of lines (1D affine subspaces) is known: total points = 27. Each line has 3 points. Number of lines = \\(\\frac{27 \\times (27-1)}{3 \\times (3-1)} / 2\\)? Wait, better: number of 2D subspaces? Actually, known formula: number of lines in AG(3,3) = \\(\\frac{3^3(3^3-1)}{3(3-1)} / 2\\)? Let's recall: number of 1D subspaces in \\(\\mathbb{F}_3^3\\) is \\((3^3-1)/(3-1) = 26/2 = 13\\) directions. Each direction has \\(3^2 = 9\\) parallel lines (since 27 points / 3 per line = 9 lines per direction). So total lines = \\(13 \\times 9 = 117\\). Matches.\n\n---\n\n**Final answer:**\n\\[\n\\boxed{117}\n\\]\n\nThe answer is 117.",
+      "usage": {
+        "prompt_tokens": 227,
+        "completion_tokens": 937,
+        "total_tokens": 1164,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 227
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "48090232a9d1f7d2a7fe56f6c4876320c03e705101e6b54e320dfb64fd60bf4f"
+    },
+    {
+      "text": "The reasoning is correct: complementary sets correspond to lines in the affine space \\(\\mathbb{F}_3^3\\), where each coordinate condition “all same or all different” is equivalent to the three coordinate values summing to \\(0 \\pmod 3\\).\n\nCounting ordered triples \\((x,y,z)\\) with \\(x+y+z=0\\) gives \\(27^2=729\\). The only triples with repeated points are the 27 constant triples \\((x,x,x)\\), leaving \\(702\\) ordered triples of distinct points. Each unordered complementary set is counted \\(3!=6\\) times, so the number is\n\n\\[\n\\frac{702}{6}=117.\n\\]\n\nEquivalently, there are \\(13\\) directions in \\(\\mathbb{F}_3^3\\), and each direction has \\(9\\) parallel lines, giving \\(13\\cdot 9=117\\).\n\nThe answer is 117.",
+      "usage": {
+        "prompt_tokens": 1172,
+        "completion_tokens": 178,
+        "total_tokens": 1350,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1172
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "6b606c51b1e60c7212bc531626419c969144ea1186af8409b06d7c9f6589cd63"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "117",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "117",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "117",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "117",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "faf5b275d994ce081305bd8f755868f0a87eda1d91ceec1e76d3e9c5c24b5c45"
+}

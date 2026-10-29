@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-number_theory-865",
+    "problem": "The number $1000!$ has a long tail of zeroes. How many zeroes are there?  (Reminder: The number $n!$ is the product of the integers from 1 to $n$.  For example, $5!=5\\cdot 4\\cdot3\\cdot2\\cdot 1= 120$.)"
+  },
+  "problem_sha256": "6f8df4cd1a93894172406c2f9fad8e7f18bb94cde53cf5d065f66b968376e021",
+  "task_id": "hard140-math-train-number_theory-865",
+  "sequence": 11,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-number_theory-865",
+  "locked_sha256": "6bef68d1bb3aa41c35b48067dce8e5e4114c1321b7322c9edb8e27a44a616c80",
+  "trajectory_sha256": "9ae39285d96e1298373152d941ccb4b0855c3e49738170399996eed429a38280",
+  "responses": [
+    {
+      "text": "We need the number of trailing zeros in \\(1000!\\).  \nTrailing zeros come from factors of 10, i.e., pairs of 2 and 5. Since there are more factors of 2 than 5, we count factors of 5.\n\n\\[\n\\left\\lfloor \\frac{1000}{5} \\right\\rfloor + \\left\\lfloor \\frac{1000}{25} \\right\\rfloor + \\left\\lfloor \\frac{1000}{125} \\right\\rfloor + \\left\\lfloor \\frac{1000}{625} \\right\\rfloor\n\\]\n\n\\[\n= 200 + 40 + 8 + 1 = 249\n\\]\n\nThe answer is 249.",
+      "usage": {
+        "prompt_tokens": 126,
+        "completion_tokens": 149,
+        "total_tokens": 275,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 126
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "6d4b01ee28270e024b9e9a07c6f0783927b7e6ff4c4f3d1356dc13fc9d4bba1a"
+    },
+    {
+      "text": "To find the number of trailing zeros in \\(1000!\\), count the factors of 5, since factors of 2 are more plentiful.\n\n\\[\n\\left\\lfloor \\frac{1000}{5} \\right\\rfloor + \\left\\lfloor \\frac{1000}{25} \\right\\rfloor + \\left\\lfloor \\frac{1000}{125} \\right\\rfloor + \\left\\lfloor \\frac{1000}{625} \\right\\rfloor\n= 200 + 40 + 8 + 1 = 249\n\\]\n\nThe answer is 249.",
+      "usage": {
+        "prompt_tokens": 282,
+        "completion_tokens": 121,
+        "total_tokens": 403,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 282
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "6eef56b7bcc7dcdeadfe0797a5f4551f92c6862eb2aebfb0794d876fb578bb9c"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "249",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "249",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "249",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "249",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "3d75c45403e5e1f4e01770b5c1b0da68d59b5cde0b479eae7f28331c197f88c0"
+}

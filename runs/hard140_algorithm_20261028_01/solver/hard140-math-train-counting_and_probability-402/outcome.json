@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-counting_and_probability-402",
+    "problem": "Dave arrives at an airport which has twelve gates arranged in a straight line with exactly $100$ feet between adjacent gates. His departure gate is assigned at random. After waiting at that gate, Dave is told the departure gate has been changed to a different gate, again at random. Let the probability that Dave walks $400$ feet or less to the new gate be a fraction $\\frac{m}{n}$, where $m$ and $n$ are relatively prime positive integers. Find $m+n$.\n"
+  },
+  "problem_sha256": "ca760b1f5196815adb68abb02953526b435c3cde26f5d8f8c8872a6aaf9115f3",
+  "task_id": "hard140-math-train-counting_and_probability-402",
+  "sequence": 134,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-counting_and_probability-402",
+  "locked_sha256": "8f9e7766a0182b50c3f783ae3d03ea3b2486b8717ff18f0266fa5ef18e9612bf",
+  "trajectory_sha256": "bd4ce86be796f07b46b0758bf8bfa8c53d2d22e20cee565115719d4cc7192e14",
+  "responses": [
+    {
+      "text": "Let's go step-by-step.\n\n---\n\nWe have 12 gates in a straight line, 100 feet apart.  \nDave’s original gate is assigned randomly, then the new gate is assigned randomly among the other 11 gates (different from the original).\n\nWe want the probability that the distance walked is ≤ 400 feet.\n\n---\n\n**Step 1 – Understanding the distance**\n\nDistance between gates = 100 feet × (number of gate spacings).  \n400 feet or less means at most 4 gate spacings apart.\n\nSo the new gate must be within 4 gates away (in either direction) from the original gate.\n\n---\n\n**Step 2 – Counting possible pairs**\n\nTotal possible ordered pairs (original gate, new gate) with different gates:\n\n- 12 choices for original gate.\n- 11 choices for new gate (must be different).\n- Total = \\( 12 \\times 11 = 132 \\) equally likely outcomes.\n\n---\n\n**Step 3 – Counting favorable outcomes**\n\nWe need to count, for each original gate, how many other gates are within 4 positions.\n\nLabel gates 1 to 12.\n\n- Gate 1: can go to gates 2, 3, 4, 5 → 4 gates.\n- Gate 2: can go to 1, 3, 4, 5, 6 → 5 gates.\n- Gate 3: can go to 1, 2, 4, 5, 6, 7 → 6 gates.\n- Gate 4: can go to 1, 2, 3, 5, 6, 7, 8 → 7 gates.\n- Gate 5: can go to 1, 2, 3, 4, 6, 7, 8, 9 → 8 gates.\n- Gate 6: can go to 2, 3, 4, 5, 7, 8, 9, 10 → 8 gates (since 1 is 5 away, too far).\n- Gate 7: symmetric to gate 6 → 8 gates.\n- Gate 8: symmetric to gate 5 → 8 gates.\n- Gate 9: symmetric to gate 4 → 7 gates.\n- Gate 10: symmetric to gate 3 → 6 gates.\n- Gate 11: symmetric to gate 2 → 5 gates.\n- Gate 12: symmetric to gate 1 → 4 gates.\n\n---\n\n**Step 4 – Sum them up**\n\nSum = 4 + 5 + 6 + 7 + 8 + 8 + 8 + 8 + 7 + 6 + 5 + 4.\n\nLet’s add:\n\nFirst 4: 4+5=9, +6=15, +7=22.  \nNext four 8's: 22+8=30, +8=38, +8=46, +8=54.  \nLast four: 54+7=61, +6=67, +5=72, +4=76.\n\nSo total favorable = 76.\n\n---\n\n**Step 5 – Probability**\n\nProbability = \\( \\frac{76}{132} \\).\n\nSimplify: divide numerator and denominator by 4 → \\( \\frac{19}{33} \\).\n\n---\n\n**Step 6 – m + n**\n\nm = 19, n = 33, relatively prime.  \nm + n = 52.\n\n---\n\nThe answer is 52.\n\nThe answer is 52.",
+      "usage": {
+        "prompt_tokens": 157,
+        "completion_tokens": 736,
+        "total_tokens": 893,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 157
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "b89b768ab663acaa3f3e8524b2781677929797d1efc4acf79f1afbd16c110b69"
+    },
+    {
+      "text": "Let's verify the counting carefully.\n\nGates are numbered 1 to 12. Distance ≤ 400 feet means at most 4 gate spacings apart.\n\nFor each starting gate, count the number of other gates within 4 positions:\n\n- Gate 1: gates 2,3,4,5 → 4\n- Gate 2: gates 1,3,4,5,6 → 5\n- Gate 3: gates 1,2,4,5,6,7 → 6\n- Gate 4: gates 1,2,3,5,6,7,8 → 7\n- Gate 5: gates 1,2,3,4,6,7,8,9 → 8\n- Gate 6: gates 2,3,4,5,7,8,9,10 → 8\n- Gate 7: gates 3,4,5,6,8,9,10,11 → 8\n- Gate 8: gates 4,5,6,7,9,10,11,12 → 8\n- Gate 9: gates 5,6,7,8,10,11,12 → 7\n- Gate 10: gates 6,7,8,9,11,12 → 6\n- Gate 11: gates 7,8,9,10,12 → 5\n- Gate 12: gates 8,9,10,11 → 4\n\nSum: \\(4+5+6+7+8+8+8+8+7+6+5+4 = 76\\).\n\nTotal ordered pairs: \\(12 \\times 11 = 132\\).\n\nProbability: \\(\\frac{76}{132} = \\frac{19}{33}\\).\n\nThus \\(m+n = 19+33 = 52\\).\n\nThe answer is 52.",
+      "usage": {
+        "prompt_tokens": 901,
+        "completion_tokens": 400,
+        "total_tokens": 1301,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 901
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "a2a5d11918bd11ba61508c956facc4b77b087eab305ced0d0f130b7ae1b7a1f2"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "52",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "52",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "52",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "52",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "bfed5f057daddd1fd747ec1f8cf70cd2e88dcd86728405ed37a7a2f3db868c7c"
+}

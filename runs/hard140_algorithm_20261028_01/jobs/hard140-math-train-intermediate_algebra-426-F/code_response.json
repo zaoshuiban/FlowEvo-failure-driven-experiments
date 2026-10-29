@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "cfbed994-99b5-4ab2-b76b-6a8da4f52cb0",
+  "raw_response": {
+    "id": "cfbed994-99b5-4ab2-b76b-6a8da4f52cb0",
+    "object": "chat.completion",
+    "created": 1793201508,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\nfrom fractions import Fraction\\n\\ndef _cbrt(x):\\n    if x < 0:\\n        return -((-x) ** (1.0 / 3.0))\\n    return x ** (1.0 / 3.0)\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    required = ['p', 'q', 'multiplier', 'bound', 'tolerance']\\n    for key in required:\\n        if key not in parameters:\\n            raise ValueError('missing parameter: ' + key)\\n    p = parameters['p']\\n    q = parameters['q']\\n    m = parameters['multiplier']\\n    bound = parameters['bound']\\n    tol = parameters['tolerance']\\n    for name, val in [('p', p), ('q', q), ('multiplier', m), ('bound', bound)]:\\n        if isinstance(val, bool) or not isinstance(val, int):\\n            raise ValueError(name + ' must be an integer')\\n        if val < 1:\\n            raise ValueError(name + ' must be positive')\\n    if isinstance(tol, bool) or not isinstance(tol, (int, float)):\\n        raise ValueError('tolerance must be a number')\\n    if tol <= 0:\\n        raise ValueError('tolerance must be positive')\\n    if bound > 200:\\n        raise ValueError('bound too large')\\n    if p == q:\\n        raise ValueError('p and q must differ')\\n    inner = _cbrt(p) - _cbrt(q)\\n    if inner <= 0:\\n        raise ValueError('p must exceed q for a real square root')\\n    target = m * math.sqrt(inner)\\n    best = None\\n    for a in range(1, bound + 1):\\n        ca = _cbrt(a)\\n        for b in range(1, bound + 1):\\n            cb = _cbrt(b)\\n            partial = ca + cb\\n            for c in range(1, bound + 1):\\n                val = partial - _cbrt(c)\\n                if abs(val - target) < tol:\\n                    s = a + b + c\\n                    if best is None or s < best:\\n                        best = s\\n    if best is None:\\n        raise ValueError('no solution found within bound')\\n    return str(best)\",\"description\":\"Searches all positive integer triples (a,b,c) up to the given bound, computing the left side m*sqrt(cbrt(p)-cbrt(q)) and the right side cbrt(a)+cbrt(b)-cbrt(c) in double precision, and returns the minimal sum a+b+c among triples whose difference is below the supplied tolerance. The search is exhaustive over the bounded cube, so it is deterministic; uncertainty comes from floating-point rounding and from the possibility that the true triple lies outside the bound or that multiple near-matches exist.\",\"applicability\":\"Valid for positive integer p>q, positive integer multiplier, positive integer bound (capped at 200 to keep the O(bound^3) search tractable), and a positive numeric tolerance. Rejects malformed inputs, booleans, non-positive values, p<=q, and cases where no triple matches within the bound. Intended for small bounded instances of the cube-root identity family; not a symbolic proof and not suitable for large bounds.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1005,
+      "completion_tokens": 781,
+      "total_tokens": 1786,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 877
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1786,
+    "input_tokens": 1005,
+    "output_tokens": 781
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "a66838f9882d2b1addc9234711f78ddda7bf3e29f04578519a65f6081c6fa3da",
+  "response_sha256": "da92ecb3dc5ff08a6ebe08768091d1215af0a76cfd10a8bbd2d38f152f3ce9e2",
+  "reserved_rate_estimate_microusd": 2144,
+  "applicability": "Valid for positive integer p>q, positive integer multiplier, positive integer bound (capped at 200 to keep the O(bound^3) search tractable), and a positive numeric tolerance. Rejects malformed inputs, booleans, non-positive values, p<=q, and cases where no triple matches within the bound. Intended for small bounded instances of the cube-root identity family; not a symbolic proof and not suitable for large bounds.",
+  "code": "import math\nfrom fractions import Fraction\n\ndef _cbrt(x):\n    if x < 0:\n        return -((-x) ** (1.0 / 3.0))\n    return x ** (1.0 / 3.0)\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    required = ['p', 'q', 'multiplier', 'bound', 'tolerance']\n    for key in required:\n        if key not in parameters:\n            raise ValueError('missing parameter: ' + key)\n    p = parameters['p']\n    q = parameters['q']\n    m = parameters['multiplier']\n    bound = parameters['bound']\n    tol = parameters['tolerance']\n    for name, val in [('p', p), ('q', q), ('multiplier', m), ('bound', bound)]:\n        if isinstance(val, bool) or not isinstance(val, int):\n            raise ValueError(name + ' must be an integer')\n        if val < 1:\n            raise ValueError(name + ' must be positive')\n    if isinstance(tol, bool) or not isinstance(tol, (int, float)):\n        raise ValueError('tolerance must be a number')\n    if tol <= 0:\n        raise ValueError('tolerance must be positive')\n    if bound > 200:\n        raise ValueError('bound too large')\n    if p == q:\n        raise ValueError('p and q must differ')\n    inner = _cbrt(p) - _cbrt(q)\n    if inner <= 0:\n        raise ValueError('p must exceed q for a real square root')\n    target = m * math.sqrt(inner)\n    best = None\n    for a in range(1, bound + 1):\n        ca = _cbrt(a)\n        for b in range(1, bound + 1):\n            cb = _cbrt(b)\n            partial = ca + cb\n            for c in range(1, bound + 1):\n                val = partial - _cbrt(c)\n                if abs(val - target) < tol:\n                    s = a + b + c\n                    if best is None or s < best:\n                        best = s\n    if best is None:\n        raise ValueError('no solution found within bound')\n    return str(best)",
+  "description": "Searches all positive integer triples (a,b,c) up to the given bound, computing the left side m*sqrt(cbrt(p)-cbrt(q)) and the right side cbrt(a)+cbrt(b)-cbrt(c) in double precision, and returns the minimal sum a+b+c among triples whose difference is below the supplied tolerance. The search is exhaustive over the bounded cube, so it is deterministic; uncertainty comes from floating-point rounding and from the possibility that the true triple lies outside the bound or that multiple near-matches exist.",
+  "finish_reason": "stop"
+}

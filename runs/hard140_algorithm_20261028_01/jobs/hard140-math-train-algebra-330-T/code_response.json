@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "17724177-7829-49a2-afc9-91485fabd536",
+  "raw_response": {
+    "id": "17724177-7829-49a2-afc9-91485fabd536",
+    "object": "chat.completion",
+    "created": 1793201463,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    required = ['multiplier', 'addend', 'seed', 'depth']\\n    for key in required:\\n        if key not in parameters:\\n            raise ValueError('missing parameter: ' + key)\\n    for key in parameters:\\n        if key not in required:\\n            raise ValueError('unexpected parameter: ' + key)\\n    a = parameters['multiplier']\\n    b = parameters['addend']\\n    c = parameters['seed']\\n    n = parameters['depth']\\n    for name, val in (('multiplier', a), ('addend', b), ('seed', c), ('depth', n)):\\n        if isinstance(val, bool) or not isinstance(val, int):\\n            raise ValueError(name + ' must be an integer')\\n    if n < 0:\\n        raise ValueError('depth must be nonnegative')\\n    if n > 100000:\\n        raise ValueError('depth too large')\\n    if abs(a) > 10**6 or abs(b) > 10**6 or abs(c) > 10**6:\\n        raise ValueError('parameter magnitude too large')\\n    x = c\\n    for _ in range(n):\\n        x = a * (b + x)\\n        if abs(x) > 10**100000:\\n            raise ValueError('result too large')\\n    return str(x)\\n\",\"description\":\"Evaluate a nested expression of the form a*(b + a*(b + ... a*(b + c)...)) with n layers. Start from the innermost seed c and repeatedly apply x -> a*(b + x) exactly n times using Python integers. Inputs are validated: all four parameters must be present, integers (booleans rejected), depth nonnegative and bounded, and magnitudes bounded to keep computation deterministic and resource-safe. The result is returned as a decimal string. Uncertainty: the only ambiguity is the interpretation of nesting depth, which here is the number of times the layer a*(b+...) is applied around the seed.\",\"applicability\":\"Applies to exact integer evaluation of uniformly nested affine expressions parameterized by multiplier, addend, seed, and depth. Rejects non-integer, missing, extra, negative-depth, or excessively large inputs. Not suitable for symbolic simplification, non-uniform nesting, or non-integer parameters.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 841,
+      "completion_tokens": 541,
+      "total_tokens": 1382,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 713
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1382,
+    "input_tokens": 841,
+    "output_tokens": 541
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "3bf1675485af6054283b99226cf104b47c11a05d76f846b31ed8fe2e3e931cb2",
+  "response_sha256": "18f3a031f1c11fe28056b95b988348a5896b191cd8741ecdfe5242b01865ba47",
+  "reserved_rate_estimate_microusd": 1659,
+  "applicability": "Applies to exact integer evaluation of uniformly nested affine expressions parameterized by multiplier, addend, seed, and depth. Rejects non-integer, missing, extra, negative-depth, or excessively large inputs. Not suitable for symbolic simplification, non-uniform nesting, or non-integer parameters.",
+  "code": "import math\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    required = ['multiplier', 'addend', 'seed', 'depth']\n    for key in required:\n        if key not in parameters:\n            raise ValueError('missing parameter: ' + key)\n    for key in parameters:\n        if key not in required:\n            raise ValueError('unexpected parameter: ' + key)\n    a = parameters['multiplier']\n    b = parameters['addend']\n    c = parameters['seed']\n    n = parameters['depth']\n    for name, val in (('multiplier', a), ('addend', b), ('seed', c), ('depth', n)):\n        if isinstance(val, bool) or not isinstance(val, int):\n            raise ValueError(name + ' must be an integer')\n    if n < 0:\n        raise ValueError('depth must be nonnegative')\n    if n > 100000:\n        raise ValueError('depth too large')\n    if abs(a) > 10**6 or abs(b) > 10**6 or abs(c) > 10**6:\n        raise ValueError('parameter magnitude too large')\n    x = c\n    for _ in range(n):\n        x = a * (b + x)\n        if abs(x) > 10**100000:\n            raise ValueError('result too large')\n    return str(x)\n",
+  "description": "Evaluate a nested expression of the form a*(b + a*(b + ... a*(b + c)...)) with n layers. Start from the innermost seed c and repeatedly apply x -> a*(b + x) exactly n times using Python integers. Inputs are validated: all four parameters must be present, integers (booleans rejected), depth nonnegative and bounded, and magnitudes bounded to keep computation deterministic and resource-safe. The result is returned as a decimal string. Uncertainty: the only ambiguity is the interpretation of nesting depth, which here is the number of times the layer a*(b+...) is applied around the seed.",
+  "finish_reason": "stop"
+}

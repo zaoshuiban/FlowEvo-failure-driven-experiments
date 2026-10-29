@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "c854fea1-6169-49c0-a898-b2b18e33a753",
+  "raw_response": {
+    "id": "c854fea1-6169-49c0-a898-b2b18e33a753",
+    "object": "chat.completion",
+    "created": 1793195516,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"def solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    if set(parameters.keys()) != {'operands', 'operators'}:\\n        raise ValueError('unexpected keys')\\n    operands = parameters['operands']\\n    operators = parameters['operators']\\n    if not isinstance(operands, list) or not isinstance(operators, list):\\n        raise ValueError('operands and operators must be lists')\\n    n = len(operands)\\n    if n < 1 or n > 8:\\n        raise ValueError('operand count out of range')\\n    for v in operands:\\n        if isinstance(v, bool) or not isinstance(v, int):\\n            raise ValueError('operands must be integers')\\n        if v < -10 or v > 20:\\n            raise ValueError('operand out of range')\\n    if len(operators) != n - 1:\\n        raise ValueError('operator count mismatch')\\n    for o in operators:\\n        if not isinstance(o, str) or o not in ('+', '-', '*'):\\n            raise ValueError('invalid operator')\\n    if n == 1:\\n        return str(1)\\n    dp = [[None] * n for _ in range(n)]\\n    for i in range(n):\\n        dp[i][i] = {operands[i]}\\n    for length in range(2, n + 1):\\n        for i in range(0, n - length + 1):\\n            j = i + length - 1\\n            cur = set()\\n            for k in range(i, j):\\n                left = dp[i][k]\\n                right = dp[k + 1][j]\\n                op = operators[k]\\n                for x in left:\\n                    for y in right:\\n                        if op == '+':\\n                            cur.add(x + y)\\n                        elif op == '-':\\n                            cur.add(x - y)\\n                        else:\\n                            cur.add(x * y)\\n            dp[i][j] = cur\\n    return str(len(dp[0][n - 1]))\",\"description\":\"Interval dynamic programming over all binary parenthesizations. dp[i][j] is the set of distinct values obtainable from operands i..j using operators i..j-1. Base intervals are singletons; longer intervals combine every split point k, applying operator k to every pair of values from the left and right subintervals. Sets deduplicate equal results. The answer is the cardinality of dp[0][n-1]. The computation is exact and deterministic; the only practical concern is set growth, which is modest for the allowed operand count (at most 8).\",\"applicability\":\"Applies to expressions given as an ordered list of 1 to 8 integer operands (each between -10 and 20) and exactly len(operands)-1 operators drawn from '+', '-', '*'. Order of operands and operators is preserved; only parenthesization varies. Returns the number of distinct achievable values as a decimal string. Rejects malformed input, wrong operator count, out-of-range operands, booleans, and unsupported operators with ValueError.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1057,
+      "completion_tokens": 721,
+      "total_tokens": 1778,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 929
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1778,
+    "input_tokens": 1057,
+    "output_tokens": 721
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "e41dff759d3111ea1b686a4b12b00b978289e853dd49b2b236d2b013f37d5b73",
+  "response_sha256": "347533b409f72ee609e84164466d15bef99b599bd8304a8e01699bcd2165e54e",
+  "reserved_rate_estimate_microusd": 2134,
+  "applicability": "Applies to expressions given as an ordered list of 1 to 8 integer operands (each between -10 and 20) and exactly len(operands)-1 operators drawn from '+', '-', '*'. Order of operands and operators is preserved; only parenthesization varies. Returns the number of distinct achievable values as a decimal string. Rejects malformed input, wrong operator count, out-of-range operands, booleans, and unsupported operators with ValueError.",
+  "code": "def solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    if set(parameters.keys()) != {'operands', 'operators'}:\n        raise ValueError('unexpected keys')\n    operands = parameters['operands']\n    operators = parameters['operators']\n    if not isinstance(operands, list) or not isinstance(operators, list):\n        raise ValueError('operands and operators must be lists')\n    n = len(operands)\n    if n < 1 or n > 8:\n        raise ValueError('operand count out of range')\n    for v in operands:\n        if isinstance(v, bool) or not isinstance(v, int):\n            raise ValueError('operands must be integers')\n        if v < -10 or v > 20:\n            raise ValueError('operand out of range')\n    if len(operators) != n - 1:\n        raise ValueError('operator count mismatch')\n    for o in operators:\n        if not isinstance(o, str) or o not in ('+', '-', '*'):\n            raise ValueError('invalid operator')\n    if n == 1:\n        return str(1)\n    dp = [[None] * n for _ in range(n)]\n    for i in range(n):\n        dp[i][i] = {operands[i]}\n    for length in range(2, n + 1):\n        for i in range(0, n - length + 1):\n            j = i + length - 1\n            cur = set()\n            for k in range(i, j):\n                left = dp[i][k]\n                right = dp[k + 1][j]\n                op = operators[k]\n                for x in left:\n                    for y in right:\n                        if op == '+':\n                            cur.add(x + y)\n                        elif op == '-':\n                            cur.add(x - y)\n                        else:\n                            cur.add(x * y)\n            dp[i][j] = cur\n    return str(len(dp[0][n - 1]))",
+  "description": "Interval dynamic programming over all binary parenthesizations. dp[i][j] is the set of distinct values obtainable from operands i..j using operators i..j-1. Base intervals are singletons; longer intervals combine every split point k, applying operator k to every pair of values from the left and right subintervals. Sets deduplicate equal results. The answer is the cardinality of dp[0][n-1]. The computation is exact and deterministic; the only practical concern is set growth, which is modest for the allowed operand count (at most 8).",
+  "finish_reason": "stop"
+}

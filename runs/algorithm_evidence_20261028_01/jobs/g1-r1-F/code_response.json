@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "22dc2e8c-82fe-4984-b175-5f050b18ad35",
+  "raw_response": {
+    "id": "22dc2e8c-82fe-4984-b175-5f050b18ad35",
+    "object": "chat.completion",
+    "created": 1793195548,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"def solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    if set(parameters.keys()) != {'operands', 'operators'}:\\n        raise ValueError('unexpected keys')\\n    operands = parameters['operands']\\n    operators = parameters['operators']\\n    if not isinstance(operands, list) or not isinstance(operators, list):\\n        raise ValueError('operands and operators must be lists')\\n    n = len(operands)\\n    if n < 1 or n > 8:\\n        raise ValueError('operand count out of range')\\n    if len(operators) != n - 1:\\n        raise ValueError('operator count mismatch')\\n    for x in operands:\\n        if isinstance(x, bool) or not isinstance(x, int):\\n            raise ValueError('operands must be integers')\\n        if x < -10 or x > 20:\\n            raise ValueError('operand out of range')\\n    for op in operators:\\n        if op not in ('+', '-', '*'):\\n            raise ValueError('invalid operator')\\n    if n == 1:\\n        return str(1)\\n    dp = [[None] * n for _ in range(n)]\\n    for i in range(n):\\n        dp[i][i] = {operands[i]}\\n    for length in range(2, n + 1):\\n        for i in range(0, n - length + 1):\\n            j = i + length - 1\\n            vals = set()\\n            for k in range(i, j):\\n                op = operators[k]\\n                left = dp[i][k]\\n                right = dp[k + 1][j]\\n                if op == '+':\\n                    for a in left:\\n                        for b in right:\\n                            vals.add(a + b)\\n                elif op == '-':\\n                    for a in left:\\n                        for b in right:\\n                            vals.add(a - b)\\n                else:\\n                    for a in left:\\n                        for b in right:\\n                            vals.add(a * b)\\n            dp[i][j] = vals\\n    return str(len(dp[0][n - 1]))\",\"description\":\"Interval dynamic programming over the fixed operand/operator sequence. For each contiguous subrange operands[i..j], dp[i][j] is the set of all integer values obtainable by fully parenthesizing that subrange while preserving order. Base case is a single operand. For longer ranges, every split point k between i and j-1 is considered; the operator operators[k] combines every value from the left subrange set with every value from the right subrange set, and results are accumulated into a set to deduplicate. The answer is the cardinality of the full-range set. This implicitly enumerates all Catalan-many parenthesizations without invalid associativity or precedence reductions. Arithmetic is exact integer arithmetic. Uncertainty is limited to performance if operand counts were much larger than the schema allows; within the stated bounds (at most 8 operands) the computation is small and exact.\",\"applicability\":\"Applies to inputs matching the schema: 1 to 8 integer operands each between -10 and 20, and exactly len(operands)-1 operators drawn from '+', '-', '*'. It counts distinct values from all full parenthesizations preserving operand and operator order, with no rearrangement. It rejects malformed inputs, wrong key sets, booleans, non-integers, out-of-range operands, wrong operator counts, and unsupported operators via ValueError. It does not handle other operators, floating point, or sequences longer than 8 operands.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1141,
+      "completion_tokens": 821,
+      "total_tokens": 1962,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1141
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1962,
+    "input_tokens": 1141,
+    "output_tokens": 821
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "2b8a0e82d3ce06755204db77e16cbf30d353af7bc68538bc74ce5d37a2573a3d",
+  "response_sha256": "ecd88d0168be760e79f1614038f9845c9d551e6ed6f3e40c6c11fadcd9fee870",
+  "reserved_rate_estimate_microusd": 2355,
+  "applicability": "Applies to inputs matching the schema: 1 to 8 integer operands each between -10 and 20, and exactly len(operands)-1 operators drawn from '+', '-', '*'. It counts distinct values from all full parenthesizations preserving operand and operator order, with no rearrangement. It rejects malformed inputs, wrong key sets, booleans, non-integers, out-of-range operands, wrong operator counts, and unsupported operators via ValueError. It does not handle other operators, floating point, or sequences longer than 8 operands.",
+  "code": "def solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    if set(parameters.keys()) != {'operands', 'operators'}:\n        raise ValueError('unexpected keys')\n    operands = parameters['operands']\n    operators = parameters['operators']\n    if not isinstance(operands, list) or not isinstance(operators, list):\n        raise ValueError('operands and operators must be lists')\n    n = len(operands)\n    if n < 1 or n > 8:\n        raise ValueError('operand count out of range')\n    if len(operators) != n - 1:\n        raise ValueError('operator count mismatch')\n    for x in operands:\n        if isinstance(x, bool) or not isinstance(x, int):\n            raise ValueError('operands must be integers')\n        if x < -10 or x > 20:\n            raise ValueError('operand out of range')\n    for op in operators:\n        if op not in ('+', '-', '*'):\n            raise ValueError('invalid operator')\n    if n == 1:\n        return str(1)\n    dp = [[None] * n for _ in range(n)]\n    for i in range(n):\n        dp[i][i] = {operands[i]}\n    for length in range(2, n + 1):\n        for i in range(0, n - length + 1):\n            j = i + length - 1\n            vals = set()\n            for k in range(i, j):\n                op = operators[k]\n                left = dp[i][k]\n                right = dp[k + 1][j]\n                if op == '+':\n                    for a in left:\n                        for b in right:\n                            vals.add(a + b)\n                elif op == '-':\n                    for a in left:\n                        for b in right:\n                            vals.add(a - b)\n                else:\n                    for a in left:\n                        for b in right:\n                            vals.add(a * b)\n            dp[i][j] = vals\n    return str(len(dp[0][n - 1]))",
+  "description": "Interval dynamic programming over the fixed operand/operator sequence. For each contiguous subrange operands[i..j], dp[i][j] is the set of all integer values obtainable by fully parenthesizing that subrange while preserving order. Base case is a single operand. For longer ranges, every split point k between i and j-1 is considered; the operator operators[k] combines every value from the left subrange set with every value from the right subrange set, and results are accumulated into a set to deduplicate. The answer is the cardinality of the full-range set. This implicitly enumerates all Catalan-many parenthesizations without invalid associativity or precedence reductions. Arithmetic is exact integer arithmetic. Uncertainty is limited to performance if operand counts were much larger than the schema allows; within the stated bounds (at most 8 operands) the computation is small and exact.",
+  "finish_reason": "stop"
+}

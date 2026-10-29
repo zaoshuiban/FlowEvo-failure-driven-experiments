@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-geometry-625",
+    "problem": "The base of a triangle is of length $b$, and the altitude is of length $h$. A rectangle of height $x$ is inscribed in the triangle with the base of the rectangle in the base of the triangle. The area of the rectangle is:\n$\\textbf{(A)}\\ \\frac{bx}{h}(h-x)\\qquad \\textbf{(B)}\\ \\frac{hx}{b}(b-x)\\qquad \\textbf{(C)}\\ \\frac{bx}{h}(h-2x)\\qquad \\textbf{(D)}\\ x(b-x)\\qquad \\textbf{(E)}\\ x(h-x)$\n"
+  },
+  "problem_sha256": "4ceec611e54dd877b15478ad71198ad15dfcd3d1662dbb8e11991c9337c97bf9",
+  "task_id": "hard140-math-train-geometry-625",
+  "sequence": 93,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-geometry-625",
+  "locked_sha256": "99e44e99b8c617205a3e93c3764f40a29088871cb4bc1adee2b569ed70544f0a",
+  "trajectory_sha256": "ea918d6feaf9f83403e5554c023bc065d0007414136afba42a4f4eefa6f9f593",
+  "responses": [
+    {
+      "text": "Let's go step-by-step.\n\nWe have a triangle with base \\( b \\) and height \\( h \\).  \nA rectangle of height \\( x \\) is inscribed with its base along the triangle's base.\n\n---\n\n**Step 1 – Understanding the geometry**\n\nWhen the rectangle is inscribed, its top side is parallel to the base of the triangle, at height \\( x \\) above the base.  \nAt that height, the width of the triangle is less than \\( b \\). The rectangle's width equals the width of the triangle at height \\( x \\).\n\n---\n\n**Step 2 – Width of the triangle at height \\( x \\)**\n\nThe triangle's width decreases linearly from \\( b \\) at the base (height 0) to 0 at the top (height \\( h \\)).\n\nAt height \\( x \\), the remaining height to the top is \\( h - x \\).  \nBy similar triangles:\n\n\\[\n\\frac{\\text{width at height } x}{b} = \\frac{h - x}{h}\n\\]\n\nSo width at height \\( x \\) is:\n\n\\[\nw = b \\cdot \\frac{h - x}{h}\n\\]\n\n---\n\n**Step 3 – Area of rectangle**\n\nRectangle height = \\( x \\), width = \\( w \\).  \nArea:\n\n\\[\nA = x \\cdot b \\cdot \\frac{h - x}{h} = \\frac{bx}{h}(h - x)\n\\]\n\nThis matches choice (A).\n\n---\n\nThe answer is \\(\\frac{bx}{h}(h-x)\\).",
+      "usage": {
+        "prompt_tokens": 179,
+        "completion_tokens": 307,
+        "total_tokens": 486,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 179
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "c418678e57813ffb116f0a21c6a9f22a54e453e3b7d3b1d6920fea7e7c36cb35"
+    },
+    {
+      "text": "The width of the triangle at height \\(x\\) is found by similar triangles:\n\n\\[\nw = b\\left(1-\\frac{x}{h}\\right)=\\frac{b(h-x)}{h}\n\\]\n\nThus the rectangle’s area is\n\n\\[\nA=x\\cdot w=x\\cdot \\frac{b(h-x)}{h}=\\frac{bx}{h}(h-x).\n\\]\n\nThis corresponds to choice (A).\n\nThe answer is \\(\\frac{bx}{h}(h-x)\\).",
+      "usage": {
+        "prompt_tokens": 493,
+        "completion_tokens": 94,
+        "total_tokens": 587,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 493
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "bf70d24b024676efb06dfe373f09302ee77558846e766646355397d74d0a9953"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "\\frac{bx}{h}(h-x)",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "\\frac{bx}{h}(h-x)",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "\\frac{bx}{h}(h-x)",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "\\frac{bx}{h}(h-x)",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "36b35f019cf1d4f289c2ed474e87876f68c7f1d675ff3f1d9cd83c141aac3008"
+}

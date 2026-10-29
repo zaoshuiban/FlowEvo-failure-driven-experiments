@@ -1,0 +1,55 @@
+{
+  "source_tasks": [
+    {
+      "task_id": "hard140-math-train-intermediate_algebra-426",
+      "problem": "There exist positive integers $a,$ $b,$ and $c$ such that\n\\[3 \\sqrt{\\sqrt[3]{5} - \\sqrt[3]{4}} = \\sqrt[3]{a} + \\sqrt[3]{b} - \\sqrt[3]{c}.\\]Find $a + b + c.$"
+    }
+  ],
+  "analysis": {
+    "decision": "PROPOSE",
+    "invalid_operation": null,
+    "observations": [
+      "The left side is 3 times a square root of a difference of cube roots: 3*sqrt(cbrt(5)-cbrt(4)).",
+      "We need to express it as cbrt(a)+cbrt(b)-cbrt(c) with positive integers a,b,c.",
+      "A natural approach is to square the target form and match coefficients in the basis of cube roots of rationals.",
+      "Let x=cbrt(a), y=cbrt(b), z=cbrt(c). Then (x+y-z)^2 = x^2+y^2+z^2+2xy-2xz-2yz.",
+      "The left side squared is 9*(cbrt(5)-cbrt(4)).",
+      "Matching terms suggests choosing a,b,c so that cross terms produce cbrt(5) and cbrt(4) with correct signs and magnitudes.",
+      "A standard ansatz is a,b,c of the form 2^p*5^q or similar, but the computation should search over small integer triples and verify numerically/symbolically."
+    ],
+    "parameter_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "N": {
+          "description": "Maximum value for a,b,c in brute-force search",
+          "minimum": 1,
+          "type": "integer"
+        },
+        "precision": {
+          "description": "Decimal digits of precision for real arithmetic",
+          "minimum": 10,
+          "type": "integer"
+        },
+        "tolerance": {
+          "description": "Absolute tolerance for floating-point equality check",
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "N",
+        "tolerance",
+        "precision"
+      ],
+      "type": "object"
+    },
+    "procedure_plan": "Parameterize by an upper bound N on a,b,c. For each triple (a,b,c) with 1<=a,b,c<=N, compute the real value S = cbrt(a)+cbrt(b)-cbrt(c) and compare to T = 3*sqrt(cbrt(5)-cbrt(4)) using high-precision arithmetic (e.g., 50 decimal digits). Accept a triple if |S-T| < 1e-30. To avoid floating-point ambiguity, also verify algebraically: cube both sides or square and compare in the field Q(cbrt(2),cbrt(5)) if needed. Return the first matching triple and a+b+c. The schema should allow specifying N and tolerance, and optionally a list of candidate bases for cube roots.",
+    "replacement_operation": null,
+    "source_parameters": {
+      "N": 1000,
+      "precision": 60,
+      "tolerance": 1e-30
+    },
+    "uncertainty": "The search bound N must be large enough to include the true a,b,c; if the true values exceed N the method fails. Floating-point comparison may have false positives/negatives; use high precision and algebraic verification. There may be multiple representations; the problem states positive integers exist, presumably unique up to ordering of a,b."
+  }
+}

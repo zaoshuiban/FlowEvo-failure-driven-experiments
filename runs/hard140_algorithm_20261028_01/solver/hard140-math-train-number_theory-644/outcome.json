@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-number_theory-644",
+    "problem": "How many positive integers $n$ satisfy\\[\\dfrac{n+1000}{70} = \\lfloor \\sqrt{n} \\rfloor?\\](Recall that $\\lfloor x\\rfloor$ is the greatest integer not exceeding $x$.)\n$\\textbf{(A) } 2 \\qquad\\textbf{(B) } 4 \\qquad\\textbf{(C) } 6 \\qquad\\textbf{(D) } 30 \\qquad\\textbf{(E) } 32$\n"
+  },
+  "problem_sha256": "a08ef73d7c3bb80fe5ddfc9dae99a6ffdfc7cf1b7ef3d9a5c6723c708db314e4",
+  "task_id": "hard140-math-train-number_theory-644",
+  "sequence": 39,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-number_theory-644",
+  "locked_sha256": "803973942b496c4258240dbb00f5c4fc4f9fbb18a1aaca615ad65840a06510f0",
+  "trajectory_sha256": "f8786227fe0c968adff7a082bd7ddaee7b3bfb0f06e3919dbc8f6cbd1f708917",
+  "responses": [
+    {
+      "text": "Let’s go step-by-step.\n\nWe have:\n\n\\[\n\\frac{n+1000}{70} = \\lfloor \\sqrt{n} \\rfloor\n\\]\n\nLet \\( k = \\lfloor \\sqrt{n} \\rfloor \\). Then \\( k \\) is a nonnegative integer, and:\n\n\\[\nk \\le \\sqrt{n} < k+1\n\\]\nwhich means:\n\\[\nk^2 \\le n < (k+1)^2\n\\]\n\nAlso, from the given equation:\n\n\\[\n\\frac{n+1000}{70} = k\n\\]\nso:\n\\[\nn + 1000 = 70k\n\\]\n\\[\nn = 70k - 1000\n\\]\n\nWe need \\( n \\) to be a positive integer, so \\( 70k - 1000 > 0 \\), i.e. \\( k > \\frac{1000}{70} \\approx 14.2857\\), so \\( k \\ge 15 \\).\n\nAlso, \\( n \\) must satisfy \\( k^2 \\le n < (k+1)^2 \\).\n\nSubstitute \\( n = 70k - 1000 \\):\n\nLower bound:\n\\[\nk^2 \\le 70k - 1000\n\\]\n\\[\nk^2 - 70k + 1000 \\le 0\n\\]\nThe quadratic \\( k^2 - 70k + 1000 = 0 \\) has discriminant:\n\\[\n4900 - 4000 = 900\n\\]\nRoots:\n\\[\nk = \\frac{70 \\pm 30}{2} = 50, 20\n\\]\nSo inequality holds for \\( 20 \\le k \\le 50 \\).\n\nUpper bound:\n\\[\n70k - 1000 < (k+1)^2 = k^2 + 2k + 1\n\\]\n\\[\n70k - 1000 < k^2 + 2k + 1\n\\]\n\\[\n0 < k^2 - 68k + 1001\n\\]\nCheck discriminant: \\( 68^2 - 4 \\cdot 1001 = 4624 - 4004 = 620 \\), not a perfect square. Roots:\n\\[\nk = \\frac{68 \\pm \\sqrt{620}}{2} = 34 \\pm \\frac{\\sqrt{620}}{2}\n\\]\n\\(\\sqrt{620} \\approx 24.9\\), so half is ~12.45. Roots ≈ \\(34 - 12.45 = 21.55\\) and \\(34 + 12.45 = 46.45\\).\n\nInequality \\( k^2 - 68k + 1001 > 0 \\) holds when \\( k < 21.55 \\) or \\( k > 46.45 \\).\n\nCombine with \\( 20 \\le k \\le 50 \\):\n\nFrom lower bound: \\( k \\ge 20 \\).  \nFrom upper bound: \\( k < 21.55 \\) or \\( k > 46.45 \\).\n\nSo possible integer \\( k \\):\n\n- From \\( k < 21.55 \\): \\( k = 20, 21 \\) (since \\( k \\ge 20\\)).\n- From \\( k > 46.45 \\): \\( k = 47, 48, 49, 50 \\).\n\nThat’s \\( 2 + 4 = 6 \\) values.\n\nCheck positivity: \\( k \\ge 15 \\) already satisfied.\n\nEach \\( k \\) gives exactly one \\( n \\), and all conditions are satisfied.\n\nSo the number of positive integers \\( n \\) is \\( 6 \\).\n\n\\[\n\\boxed{C}\n\\]\n\nThe answer is 6.",
+      "usage": {
+        "prompt_tokens": 155,
+        "completion_tokens": 776,
+        "total_tokens": 931,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 155
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "8ddcab6fb9bf785e61c61c40e1306d0f5ad136e2b5ecef8281aeabd9198543f9"
+    },
+    {
+      "text": "Let \\(k=\\lfloor\\sqrt n\\rfloor\\). Then\n\n\\[\n\\frac{n+1000}{70}=k \\implies n=70k-1000.\n\\]\n\nAlso \\(k^2\\le n<(k+1)^2\\). Substituting:\n\n\\[\nk^2\\le 70k-1000 \\implies k^2-70k+1000\\le 0\n\\]\n\\[\n(k-20)(k-50)\\le 0 \\implies 20\\le k\\le 50.\n\\]\n\nAnd\n\n\\[\n70k-1000<(k+1)^2 \\implies k^2-68k+1001>0.\n\\]\n\nThe roots are \\(34\\pm\\sqrt{155}\\), approximately \\(21.55\\) and \\(46.45\\). Thus\n\n\\[\nk<21.55 \\quad\\text{or}\\quad k>46.45.\n\\]\n\nCombining with \\(20\\le k\\le 50\\), we get\n\n\\[\nk=20,21,47,48,49,50,\n\\]\n\nwhich gives \\(6\\) values of \\(n\\).\n\nThe answer is 6.",
+      "usage": {
+        "prompt_tokens": 939,
+        "completion_tokens": 234,
+        "total_tokens": 1173,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 939
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "0bea1ce391a546b14d32d1f71a96d818cf3c2be446b2004d6bd9e543949eaeab"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "6",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "6",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "6",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "6",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "d0a62c7f2800a0ce5a28e9400569e026ee2470d322fb2c788896c452d87a65a9"
+}

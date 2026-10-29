@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "de6e0b13-19a6-4c48-8cd0-c9f5ca01a45b",
+  "raw_response": {
+    "id": "de6e0b13-19a6-4c48-8cd0-c9f5ca01a45b",
+    "object": "chat.completion",
+    "created": 1793201585,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    required = ['target_x', 'target_y', 'max_steps']\\n    for key in required:\\n        if key not in parameters:\\n            raise ValueError('missing parameter: ' + key)\\n    tx = parameters['target_x']\\n    ty = parameters['target_y']\\n    N = parameters['max_steps']\\n    for v in (tx, ty, N):\\n        if isinstance(v, bool) or not isinstance(v, int):\\n            raise ValueError('parameters must be integers')\\n    if N < 0:\\n        raise ValueError('max_steps must be nonnegative')\\n    if N > 200:\\n        raise ValueError('max_steps too large')\\n    if abs(tx) > N or abs(ty) > N:\\n        raise ValueError('target out of reachable range')\\n\\n    def count_walks(k, x, y):\\n        total = 0\\n        for a in range(k + 1):\\n            b = a - x\\n            if b < 0:\\n                continue\\n            for c in range(k - a - b + 1):\\n                d = c - y\\n                if d < 0:\\n                    continue\\n                if a + b + c + d != k:\\n                    continue\\n                total += math.factorial(k) // (math.factorial(a) * math.factorial(b) * math.factorial(c) * math.factorial(d))\\n        return total\\n\\n    favorable = 0\\n    for k in range(N + 1):\\n        if (k - tx - ty) % 2 != 0:\\n            continue\\n        favorable += count_walks(k, tx, ty)\\n\\n    total = 0\\n    for k in range(N + 1):\\n        total += 4 ** k\\n\\n    if favorable == 0:\\n        return '0'\\n\\n    g = math.gcd(favorable, total)\\n    m = favorable // g\\n    n = total // g\\n    return str(m + n)\\n\",\"description\":\"Counts all length-k walks from the origin to (target_x,target_y) for each k from 0 to max_steps using multinomial coefficients over counts of right/left/up/down steps, sums them as favorable outcomes, divides by the total number of walks of lengths 0..max_steps (sum of 4^k), reduces the fraction, and returns numerator+denominator. This treats 'reaches in six or fewer steps' as ever visiting the target at some time <= max_steps, counting each walk once by its endpoint at that time. Uncertainty: if the intended event were 'first reaches at exactly that time', the count would differ; the ever-visits reading is used.\",\"applicability\":\"Valid for integer target coordinates and nonnegative integer max_steps up to 200, with |target| <= max_steps. Returns '0' if the target is unreachable within the step bound. Rejects malformed or out-of-range inputs with ValueError.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1087,
+      "completion_tokens": 701,
+      "total_tokens": 1788,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 959
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1788,
+    "input_tokens": 1087,
+    "output_tokens": 701
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "ca4226c14004875cde8922c260d29526284bc01b390ed1af4d9946d9a22a0080",
+  "response_sha256": "019923cedde4e3287a16316d986132fd7bfeddf6deb6da2a3935c8f5cbcb5369",
+  "reserved_rate_estimate_microusd": 2146,
+  "applicability": "Valid for integer target coordinates and nonnegative integer max_steps up to 200, with |target| <= max_steps. Returns '0' if the target is unreachable within the step bound. Rejects malformed or out-of-range inputs with ValueError.",
+  "code": "import math\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    required = ['target_x', 'target_y', 'max_steps']\n    for key in required:\n        if key not in parameters:\n            raise ValueError('missing parameter: ' + key)\n    tx = parameters['target_x']\n    ty = parameters['target_y']\n    N = parameters['max_steps']\n    for v in (tx, ty, N):\n        if isinstance(v, bool) or not isinstance(v, int):\n            raise ValueError('parameters must be integers')\n    if N < 0:\n        raise ValueError('max_steps must be nonnegative')\n    if N > 200:\n        raise ValueError('max_steps too large')\n    if abs(tx) > N or abs(ty) > N:\n        raise ValueError('target out of reachable range')\n\n    def count_walks(k, x, y):\n        total = 0\n        for a in range(k + 1):\n            b = a - x\n            if b < 0:\n                continue\n            for c in range(k - a - b + 1):\n                d = c - y\n                if d < 0:\n                    continue\n                if a + b + c + d != k:\n                    continue\n                total += math.factorial(k) // (math.factorial(a) * math.factorial(b) * math.factorial(c) * math.factorial(d))\n        return total\n\n    favorable = 0\n    for k in range(N + 1):\n        if (k - tx - ty) % 2 != 0:\n            continue\n        favorable += count_walks(k, tx, ty)\n\n    total = 0\n    for k in range(N + 1):\n        total += 4 ** k\n\n    if favorable == 0:\n        return '0'\n\n    g = math.gcd(favorable, total)\n    m = favorable // g\n    n = total // g\n    return str(m + n)\n",
+  "description": "Counts all length-k walks from the origin to (target_x,target_y) for each k from 0 to max_steps using multinomial coefficients over counts of right/left/up/down steps, sums them as favorable outcomes, divides by the total number of walks of lengths 0..max_steps (sum of 4^k), reduces the fraction, and returns numerator+denominator. This treats 'reaches in six or fewer steps' as ever visiting the target at some time <= max_steps, counting each walk once by its endpoint at that time. Uncertainty: if the intended event were 'first reaches at exactly that time', the count would differ; the ever-visits reading is used.",
+  "finish_reason": "stop"
+}

@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-algebra-1571",
+    "problem": "Compute the domain of the function  $$f(x)=\\frac{1}{\\lfloor x^2-7x+13\\rfloor}.$$"
+  },
+  "problem_sha256": "a51636e2e9218ec59954a84c70f9b940e1e7b97aa8cf2995cec093675aa8a788",
+  "task_id": "hard140-math-train-algebra-1571",
+  "sequence": 84,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-algebra-1571",
+  "locked_sha256": "68583b33411ceb7a8e8a6661ef77340e4b492bf75ded57dd648d12009542e4dc",
+  "trajectory_sha256": "aa416a36384274c7bd916e44ba2826088b2f134313d6c59bfe36f558d98d48af",
+  "responses": [
+    {
+      "text": "We need the denominator to be nonzero:  \n\\[\n\\lfloor x^2 - 7x + 13 \\rfloor \\neq 0.\n\\]\n\nThe floor of a real number is zero exactly when the number lies in \\([0,1)\\).  \nSo we must exclude all \\(x\\) such that  \n\\[\n0 \\le x^2 - 7x + 13 < 1.\n\\]\n\nFirst, solve \\(x^2 - 7x + 13 \\ge 0\\).  \nThe discriminant is \\(49 - 52 = -3 < 0\\), and the leading coefficient is positive, so  \n\\[\nx^2 - 7x + 13 > 0\n\\]\nfor all real \\(x\\). Thus the lower bound \\(0 \\le\\) is always satisfied.\n\nNow solve  \n\\[\nx^2 - 7x + 13 < 1.\n\\]\nThis becomes  \n\\[\nx^2 - 7x + 12 < 0.\n\\]\nFactor:  \n\\[\n(x-3)(x-4) < 0.\n\\]\nSo this holds for  \n\\[\n3 < x < 4.\n\\]\n\nTherefore, the floor is zero exactly when \\(3 < x < 4\\). At \\(x=3\\) or \\(x=4\\), the expression equals \\(1\\), so the floor is \\(1\\), which is allowed.\n\nThus the domain is all real numbers except the interval \\((3,4)\\):\n\\[\n(-\\infty,3] \\cup [4,\\infty).\n\\]\n\nThe answer is \\((-\\infty,3]\\cup[4,\\infty)\\).",
+      "usage": {
+        "prompt_tokens": 86,
+        "completion_tokens": 331,
+        "total_tokens": 417,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 86
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "77f8d9c0b3c6a87d9e2ef355e32dba16072e9c00b3f425552927fb0c63ea0cfa"
+    },
+    {
+      "text": "We need the denominator nonzero:\n\\[\n\\lfloor x^2-7x+13\\rfloor \\neq 0.\n\\]\nThe floor is \\(0\\) exactly when\n\\[\n0\\le x^2-7x+13<1.\n\\]\nSince\n\\[\nx^2-7x+13=\\left(x-\\frac72\\right)^2+\\frac34>0,\n\\]\nthe lower bound is automatic. Now\n\\[\nx^2-7x+13<1\n\\iff x^2-7x+12<0\n\\iff (x-3)(x-4)<0,\n\\]\nso this holds for\n\\[\n3<x<4.\n\\]\nAt \\(x=3\\) and \\(x=4\\), the quadratic equals \\(1\\), so the floor is \\(1\\), which is allowed. Therefore the excluded values are exactly \\(3<x<4\\), and the domain is\n\\[\n(-\\infty,3]\\cup[4,\\infty).\n\\]\n\nThe answer is \\((-\\infty,3]\\cup[4,\\infty)\\).",
+      "usage": {
+        "prompt_tokens": 424,
+        "completion_tokens": 221,
+        "total_tokens": 645,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 424
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "63f16714fb1b93f26af9439afd0b1fe9e2b8f0145f65fdfc8491a55dadb84e81"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "(-\\infty,3]\\cup[4,\\infty)",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "(-\\infty,3]\\cup[4,\\infty)",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "(-\\infty,3]\\cup[4,\\infty)",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "(-\\infty,3]\\cup[4,\\infty)",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "463b21913983048720d60cdea6a5565734850b41cbe648dde81c10e753009bf4"
+}

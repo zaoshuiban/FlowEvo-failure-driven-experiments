@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-counting_and_probability-508",
+    "problem": "A cube is painted so that one side is blue, two sides are red, and three sides are green. How many different such cubes can be painted? Two cubes are considered the same if one cube can be rotated in any way to match the second cube."
+  },
+  "problem_sha256": "976eb6751c165763c4b7dfd9e60349ad5c66fb89fb05663801860edb973d5300",
+  "task_id": "hard140-math-train-counting_and_probability-508",
+  "sequence": 29,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-counting_and_probability-508",
+  "locked_sha256": "3963384589d91146c4388981092eae85b92afb55f4efd9ff8dd6230c1ffad788",
+  "trajectory_sha256": "393f183c35a63f0027f65e2b6e08857c8a7ab48e91164036263801f551e6e7a4",
+  "responses": [
+    {
+      "text": "We need count colorings of cube faces with multiset {B, R, R, G, G, G} up to rotations. Let's reason.\n\nTotal arrangements of colors on labeled faces: 6!/(1!2!3!) = 60.\n\nWe need number of orbits under rotation group of cube (24 rotations). Use Burnside.\n\nWe need count colorings fixed by each rotation type.\n\nRotation types of cube:\n1. Identity: 1 rotation. Fixes all 60.\n\n2. Rotations about axes through centers of opposite faces: \n- 90° or 270°: 3 axes × 2 = 6 rotations. Cycle structure on faces: two opposite faces fixed (the ones on axis), other 4 faces in a 4-cycle. For coloring fixed, the 4-cycle faces must all same color. But we have counts: B=1, R=2, G=3. The 4-cycle would need 4 same color, impossible since max count 3. So 0 fixed.\n\n- 180° about face centers: 3 axes × 1 = 3 rotations. Cycle structure: two opposite faces fixed, other 4 faces in two 2-cycles. Need each 2-cycle same color. So colors on the four side faces come in pairs. The two fixed faces can be any colors. Let's count.\n\nWe have two fixed faces (opposite). They can be colored with any two colors from multiset, but must leave remaining counts to be arranged in two pairs among side faces.\n\nLet's enumerate possible colors for the two fixed faces (ordered? They are distinct faces: top and bottom, but rotation by 180 about axis swaps? Actually fixed individually under 180 rotation? A 180 rotation about vertical axis: top and bottom faces are fixed as sets? Wait rotation about axis through centers of top and bottom: top face maps to itself (rotated 180 in plane), bottom maps to itself. So each fixed face individually fixed. So colors assigned to top and bottom must be same? No, a face is fixed as a set, so its color must be same under rotation? The rotation maps the face to itself, so color on that face must be invariant—trivially any solid color is invariant. So top and bottom can be any colors independently, as long as total counts allow.\n\nBut careful: Under 180 rotation about vertical axis, the four side faces form two 2-cycles (front-back, left-right). For coloring to be fixed, each pair must have same color. So side faces consist of two pairs of same color. Thus the multiset of colors on side faces must have even counts for each color. The fixed top/bottom faces take one face each.\n\nWe need total counts: B:1, R:2, G:3. Let top and bottom colors be (c1, c2) (ordered, since top and bottom distinct). Remaining counts must be even for each color to form pairs.\n\nTotal counts minus (c1+c2) must have all even counts.\n\nCheck possibilities for (c1,c2):\n\n- If both same color? Then subtract 2 of that color. Remaining counts: B:1 or -1? Let's list.\n\nWe need remaining counts even. Since total B=1 odd, to make remaining B even, we must subtract odd number of B from fixed faces. So exactly one of top/bottom must be B. Because if subtract 0 B, remaining B=1 odd; if subtract 2 B impossible (only 1 B). So one fixed face is B, the other is R or G.\n\nCase 1: fixed faces B and R. Remaining: B:0, R:1, G:3. R remaining 1 odd -> not all even. So invalid.\n\nCase 2: fixed faces B and G. Remaining: B:0, R:2, G:2. All even. Good. So top/bottom colors are B and G in some order. Number of ordered assignments: 2 (B top G bottom or G top B bottom). For each, side faces: remaining R:2, G:2. Need two pairs: one pair R, one pair G. The two 2-cycles (front-back and left-right) can be assigned colors: either front-back R and left-right G, or vice versa. That's 2 ways. So total for this case: 2 * 2 = 4 colorings fixed.\n\nCheck if any other? What if fixed faces both G? Then remaining B:1 odd -> no. Both R? remaining B:1 odd -> no. B and B impossible. So only B and G. So 4 fixed colorings for each 180 face-axis rotation. There are 3 such rotations, each fixes 4? Wait need check: For a given 180 rotation about a specific axis, the top and bottom are the two faces on that axis. The count 4 is for that specific axis. But are these 4 distinct for each axis? Yes, but Burnside sums over rotations. So contribution: 3 rotations * 4 = 12.\n\nBut careful: Are there any other constraints? The two fixed faces are opposite. In our count, we assigned colors to top and bottom (ordered). But under the rotation, top and bottom are fixed individually, so order matters. We counted 2 orders for B and G. Then side pairs: 2 ways. So 4. Good.\n\n3. Rotations about axes through opposite vertices (body diagonals): 4 axes, each has 120° and 240° rotations: 4*2=8 rotations. Cycle structure on faces: two 3-cycles (since 6 faces, no fixed faces). For coloring fixed, each 3-cycle must be monochromatic. So colors must appear in multiples of 3. Our counts: B=1, R=2, G=3. Only G=3 can form a 3-cycle. But we have two 3-cycles, need two colors each with count multiple of 3. Only G has 3, B and R not multiples of 3. So impossible to have both 3-cycles monochromatic because we need total 6 faces as two triples of same color. That would require either two colors each with 3, or one color with 6. We have only one color with 3. So 0 fixed.\n\n4. Rotations about axes through midpoints of opposite edges: 6 axes, each 180° rotation: 6 rotations. Cycle structure: three 2-cycles (since 6 faces, no fixed faces). For coloring fixed, each 2-cycle must be monochromatic. So colors must appear in pairs. Total counts: B=1 odd -> impossible because all colors must have even counts. So 0 fixed.\n\nThus Burnside sum = identity 60 + face 180: 12 + others 0 = 72. Divide by 24 = 3.\n\nSo answer 3.\n\nLet's double-check by explicit enumeration maybe. The three colorings: Since B is unique, place B on top. Then consider arrangement of R,R,G,G,G on remaining 5 faces up to rotations that fix B? But easier: Burnside gave 3. Let's verify.\n\nWe can also think: unique blue face. Fix blue on top. Then bottom face can be R or G? But rotations that keep blue on top can rotate around vertical axis (4 rotations) and also possibly flip cube? But we fixed blue on top, remaining symmetries are rotations about vertical axis (4) and maybe reflections? No, only rotations. But also rotations that move blue to top from other positions? We already fixed blue on top by choosing orientation. The stabilizer of blue face is rotations about axis through blue face center: 4 rotations (0,90,180,270). So we need count colorings of remaining 5 faces with R,R,G,G,G up to C4 rotations about vertical axis. But careful: The cube has bottom face opposite blue, and 4 side faces. Under C4, bottom is fixed, side faces cycle. So we need count assignments of colors to bottom and 4 side faces (cycle) with counts R:2, G:3 (since blue used). Total arrangements: choose bottom color: if bottom R, then remaining R:1, G:3 on 4 side faces in cycle. If bottom G, remaining R:2, G:2 on side faces.\n\nWe need count up to C4 rotations (which rotate side faces cyclically, bottom fixed). Let's count orbits.\n\nCase A: bottom R. Then side faces have 1 R, 3 G. Under C4, the position of the single R among 4 side faces: all positions equivalent under rotation? Yes, C4 acts transitively on 4 positions. So 1 orbit.\n\nCase B: bottom G. Then side faces have 2 R, 2 G. Under C4, arrangements of 2 R and 2 G on a 4-cycle. Number of binary necklaces length 4 with 2 ones (R) up to rotation. Possible patterns: adjacent RR (positions 1,2) or opposite R (positions 1,3). Under rotation, adjacent RR can be rotated to any adjacent pair; opposite R is invariant under 180 but not 90. Are these two distinct orbits? Yes: adjacent vs opposite. So 2 orbits.\n\nTotal orbits = 1 + 2 = 3. Matches.\n\nThus answer 3.\n\nThe answer is 3.The answer is 3.",
+      "usage": {
+        "prompt_tokens": 109,
+        "completion_tokens": 2004,
+        "total_tokens": 2113,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 109
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "336da5987501fef6b4de054638b2c24ff961300c1cb0c4a4f51dcc615d59df8c"
+    },
+    {
+      "text": "The cube has faces colored with multiset \\(\\{B, R, R, G, G, G\\}\\). Using Burnside’s lemma over the 24 rotations of the cube:\n\n- Identity fixes all \\(\\frac{6!}{1!2!3!}=60\\) colorings.\n- 180° rotations about face-center axes: each fixes 4 colorings, and there are 3 such rotations, contributing \\(12\\).\n- All other rotations fix 0 colorings.\n\nThus the number of distinct cubes is\n\\[\n\\frac{60+12}{24}=3.\n\\]\n\nEquivalently, fixing the unique blue face on top, the remaining faces can be arranged in exactly 3 rotationally distinct ways.\n\nThe answer is 3.",
+      "usage": {
+        "prompt_tokens": 2118,
+        "completion_tokens": 153,
+        "total_tokens": 2271,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2118
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "29a0b9b1d63920f5816926d1ef3c6a61b6b11908146f26c5f17069f5d777556b"
+    }
+  ],
+  "initial": {
+    "status": "UNVERIFIED",
+    "correct": null,
+    "parsed_answer": "3.The answer is 3",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "UNVERIFIED",
+      "correct": null,
+      "parsed_answer": "3.The answer is 3",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "3",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "3",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "da2971f780f9f76c47ee147029240be38c66ac865ea40c106dd269864b02ca39"
+}

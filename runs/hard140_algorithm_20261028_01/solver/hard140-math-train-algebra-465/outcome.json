@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-algebra-465",
+    "problem": "Evaluate $\\cfrac{\\left\\lceil\\cfrac{17}{7}-\\left\\lceil\\cfrac{27}{17}\\right\\rceil\\right\\rceil}{\\left\\lceil\\cfrac{27}{7}+\\left\\lceil\\cfrac{7\\cdot17}{27}\\right\\rceil\\right\\rceil}$"
+  },
+  "problem_sha256": "12f1a174cd53c31adfc13ab6a69cf81b898f3c88549924c3c1ac29b814aed7e5",
+  "task_id": "hard140-math-train-algebra-465",
+  "sequence": 112,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-algebra-465",
+  "locked_sha256": "7526ac7c05a254832c4bce6ffa05c1c35a625c25b7c7d4ffaff55207cdda2ca1",
+  "trajectory_sha256": "7c87f852c18f225abcb5ed552c3a0fa009d3b2df6f4c4fac8698e9e65135baa5",
+  "responses": [
+    {
+      "text": "Let's go step-by-step.\n\nWe need to evaluate:\n\n\\[\n\\frac{\\left\\lceil \\frac{17}{7} - \\left\\lceil \\frac{27}{17} \\right\\rceil \\right\\rceil}{\\left\\lceil \\frac{27}{7} + \\left\\lceil \\frac{7\\cdot 17}{27} \\right\\rceil \\right\\rceil}\n\\]\n\n---\n\n**Step 1: Inner ceiling in numerator**\n\n\\[\n\\frac{27}{17} \\approx 1.588\n\\]\nCeiling is \\(2\\).\n\nSo numerator inside becomes:\n\n\\[\n\\frac{17}{7} - 2\n\\]\n\\(\\frac{17}{7} \\approx 2.4286\\), so:\n\n\\[\n2.4286 - 2 = 0.4286\n\\]\n\n---\n\n**Step 2: Outer ceiling in numerator**\n\nCeiling of \\(0.4286\\) is \\(1\\).\n\nSo numerator = \\(1\\).\n\n---\n\n**Step 3: Inner ceiling in denominator**\n\n\\[\n\\frac{7\\cdot 17}{27} = \\frac{119}{27} \\approx 4.407\n\\]\nCeiling is \\(5\\).\n\n---\n\n**Step 4: Denominator inside**\n\n\\[\n\\frac{27}{7} \\approx 3.857\n\\]\nAdd 5:\n\n\\[\n3.857 + 5 = 8.857\n\\]\n\n---\n\n**Step 5: Outer ceiling in denominator**\n\nCeiling of \\(8.857\\) is \\(9\\).\n\n---\n\n**Step 6: Final fraction**\n\n\\[\n\\frac{1}{9}\n\\]\n\n---\n\nThe answer is \\(\\frac{1}{9}\\).\n\nThe answer is \\(\\frac{1}{9}\\)",
+      "usage": {
+        "prompt_tokens": 122,
+        "completion_tokens": 351,
+        "total_tokens": 473,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 122
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "a1874fa9d19db626fd9a9b0ccc5e501f6cbaaed7581925d450d4e5e424dcf6fa"
+    },
+    {
+      "text": "Let's verify each step carefully.\n\nNumerator:\n\n\\[\n\\left\\lceil \\frac{17}{7} - \\left\\lceil \\frac{27}{17} \\right\\rceil \\right\\rceil\n\\]\n\nFirst, \\(\\frac{27}{17} \\approx 1.588\\), so \\(\\left\\lceil \\frac{27}{17} \\right\\rceil = 2\\).\n\nThen:\n\n\\[\n\\frac{17}{7} - 2 = \\frac{17}{7} - \\frac{14}{7} = \\frac{3}{7} \\approx 0.4286\n\\]\n\nCeiling of \\(\\frac{3}{7}\\) is \\(1\\). So numerator = \\(1\\).\n\nDenominator:\n\n\\[\n\\left\\lceil \\frac{27}{7} + \\left\\lceil \\frac{7\\cdot 17}{27} \\right\\rceil \\right\\rceil\n\\]\n\nFirst, \\(\\frac{119}{27} \\approx 4.407\\), so ceiling is \\(5\\).\n\nThen:\n\n\\[\n\\frac{27}{7} + 5 = \\frac{27}{7} + \\frac{35}{7} = \\frac{62}{7} \\approx 8.857\n\\]\n\nCeiling of \\(\\frac{62}{7}\\) is \\(9\\). So denominator = \\(9\\).\n\nThus the fraction is:\n\n\\[\n\\frac{1}{9}\n\\]\n\nThe answer is \\(\\frac{1}{9}\\).",
+      "usage": {
+        "prompt_tokens": 480,
+        "completion_tokens": 298,
+        "total_tokens": 778,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 480
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "2ec10454956a2a066720f1ca67399977c3c7077d9317a773400e21ca03cc4115"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "\\frac{1}{9}",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "\\frac{1}{9}",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "\\frac{1}{9}",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "\\frac{1}{9}",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "9c1f691767238917376ae02cd565ffb49cd7310cc9b6e811f313b14cc6e39162"
+}

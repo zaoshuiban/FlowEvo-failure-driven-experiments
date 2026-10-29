@@ -1,0 +1,13 @@
+# V3代码差距审计
+
+当前Git为abf86c669ab5d5a2f8419085b43db6f813c74741，但P0–P3数学模块与脚本主要存在于未提交工作树。运行以冻结协议逐文件SHA及frozen_source快照为准，不误称旧提交已包含所有实现。
+
+已检查AFlow九个指定参考文件。parameterized_tools/restricted_prime_tool提供检测、解析、计算、拒绝分层；operator_library提供能力/安全路由/配对证据分离与哈希；contextual_operator_router提供通用回退；tournament提供候选隔离与比较；其余确认脚本提供冻结、near-miss、配对和版本经验。部分旧数据准备按工具成功过滤，不能照搬为无选择偏差的泛化测试。文件哈希与接口索引见aflow_architecture_sources.json。
+
+不复制上述数学算法、专用正则、机制名称或手工条件进生成器。GPT请求只用真实Discovery投影、通用契约及自主产生的替代操作。
+
+复用：BoundedCompiler、GPT持久请求/费用账本、OpenRouter限制OpenAI通道、FrozenLinuxBackend、EvidenceStore、MathOperatorRegistry、FrozenMathLibrary、NoGoldMathController。autonomous_generation等编程任务模块保留原状；现有data_roles严格独立性规则未放宽。
+
+新增：corrective_mechanism.py、semantic_contract.py、operator_test_generation.py、operator_dual_validation.py、operator_version_gate.py、math_operator_v3_pipeline.py。数学入口仍默认关闭；VersionGate继承原数学注册表，并写同一MATH_SHADOW/MATH_EXPERIMENTAL/MATH_SUSPENDED事件体系，没有另一套OperatorLibrary。
+
+原P0–P3源代码、模型响应及评分不改写。本轮v3独立Run；新增jsonschema==4.26.0用于通用参数结构校验，不包含任何专用数学知识。

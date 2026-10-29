@@ -1,0 +1,14 @@
+{
+  "decision": "PROPOSE",
+  "invalid_operation": null,
+  "observations": [
+    "All source tasks share one deterministic structure: count distinct primes obtainable by permuting k distinct digits from a supplied digit set, for k=1..max_length, with no repetition and no leading zero.",
+    "The only varying parameters are the digit set and max_length; the counting rule is identical across tasks.",
+    "Failures are consistent with manual enumeration/primality-check errors: truncated attempts and guessed 4-digit counts (e.g., 78, 60, 52, 49, 136, 21, 40), not with a different problem interpretation.",
+    "A brute-force enumeration over all valid permutations is small: at most sum_{k=1..4} P(n,k) with n<=10, and for n=6 at most 6+30+120+360=516 candidates, so exact primality testing is cheap and reliable.",
+    "Leading-zero exclusion and distinctness are explicit in the source statements and must be enforced during permutation generation."
+  ],
+  "procedure_plan": "Implement solve(parameters) with digits (list of distinct integers 0-9) and max_length (1..min(4, len(digits))). For each length k from 1 to max_length, generate all ordered k-tuples of distinct digits from the set (permutations without repetition). Skip any tuple whose first element is 0. Convert each tuple to an integer. Test primality deterministically: n<2 not prime; n in {2,3} prime; if n even or divisible by 3 not prime; otherwise trial-divide by d=5,7,... while d*d<=n (or by all integers 2..floor(sqrt(n))) and return composite on any divisor. Collect primes in a set to guarantee distinctness, then return the set size. Use integer arithmetic only; no heuristics or sampling.",
+  "replacement_operation": null,
+  "uncertainty": "Low mathematical uncertainty: the procedure is a direct exhaustive enumeration with exact primality testing, and the search space is tiny. Residual risk is only implementation bugs (e.g., forgetting leading-zero exclusion, allowing repeated digits, or an incorrect primality bound); these are avoided by generating permutations from distinct indices and testing divisors up to sqrt(n)."
+}

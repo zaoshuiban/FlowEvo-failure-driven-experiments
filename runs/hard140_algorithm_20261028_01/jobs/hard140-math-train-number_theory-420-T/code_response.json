@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "d0cd916e-ebc4-4a26-bfe9-0231e0b9a140",
+  "raw_response": {
+    "id": "d0cd916e-ebc4-4a26-bfe9-0231e0b9a140",
+    "object": "chat.completion",
+    "created": 1793201515,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef _digit_sum(n, base):\\n    if n < 0:\\n        raise ValueError(\\\"negative values not supported\\\")\\n    if base < 2:\\n        raise ValueError(\\\"base must be at least 2\\\")\\n    total = 0\\n    while n > 0:\\n        total += n % base\\n        n //= base\\n    return total\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError(\\\"parameters must be a dict\\\")\\n    lo = parameters.get(\\\"lo\\\")\\n    hi = parameters.get(\\\"hi\\\")\\n    base_a = parameters.get(\\\"base_a\\\", 10)\\n    base_b = parameters.get(\\\"base_b\\\", 2)\\n    none_sentinel = parameters.get(\\\"none_sentinel\\\", -1)\\n    for name, val in ((\\\"lo\\\", lo), (\\\"hi\\\", hi), (\\\"base_a\\\", base_a), (\\\"base_b\\\", base_b), (\\\"none_sentinel\\\", none_sentinel)):\\n        if isinstance(val, bool) or not isinstance(val, int):\\n            raise ValueError(name + \\\" must be an integer\\\")\\n    if base_a < 2 or base_b < 2:\\n        raise ValueError(\\\"bases must be at least 2\\\")\\n    if lo < 0:\\n        raise ValueError(\\\"lo must be nonnegative\\\")\\n    if hi < lo:\\n        raise ValueError(\\\"hi must be at least lo\\\")\\n    if hi - lo > 2000000:\\n        raise ValueError(\\\"range too large\\\")\\n    best = None\\n    for n in range(lo, hi):\\n        if _digit_sum(n, base_a) == _digit_sum(n, base_b):\\n            best = n\\n    if best is None:\\n        return str(none_sentinel)\\n    return str(best)\",\"description\":\"Searches integers n in [lo, hi) and computes the digit sum of n in base_a and base_b by repeated division. Tracks the largest n whose two digit sums are equal and returns it as a string, or none_sentinel if no such n exists. Inputs are validated for integer types, base >= 2, nonnegative lo, hi >= lo, and a bounded range size. The main uncertainty is the intended treatment of 0 and whether the range should be inclusive of hi; this implementation uses [lo, hi) and allows 0.\",\"applicability\":\"Applies to integer ranges with nonnegative lo, hi >= lo, bases at least 2, and range size at most 2,000,000. It does not support negative integers, non-integer parameters, or very large ranges. The result is the maximum qualifying integer in the half-open interval [lo, hi), or the provided sentinel if none qualifies.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 950,
+      "completion_tokens": 634,
+      "total_tokens": 1584,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 822
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1584,
+    "input_tokens": 950,
+    "output_tokens": 634
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "3d73badcdf00a48757e287f648ed76969cf0cdfb4d1a3db2049641e08ca0446d",
+  "response_sha256": "6213b95d99ff1779432ae747797dd72ad5c4b7a73e65ee0ee86f2b972a7d891c",
+  "reserved_rate_estimate_microusd": 1901,
+  "applicability": "Applies to integer ranges with nonnegative lo, hi >= lo, bases at least 2, and range size at most 2,000,000. It does not support negative integers, non-integer parameters, or very large ranges. The result is the maximum qualifying integer in the half-open interval [lo, hi), or the provided sentinel if none qualifies.",
+  "code": "import math\n\ndef _digit_sum(n, base):\n    if n < 0:\n        raise ValueError(\"negative values not supported\")\n    if base < 2:\n        raise ValueError(\"base must be at least 2\")\n    total = 0\n    while n > 0:\n        total += n % base\n        n //= base\n    return total\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError(\"parameters must be a dict\")\n    lo = parameters.get(\"lo\")\n    hi = parameters.get(\"hi\")\n    base_a = parameters.get(\"base_a\", 10)\n    base_b = parameters.get(\"base_b\", 2)\n    none_sentinel = parameters.get(\"none_sentinel\", -1)\n    for name, val in ((\"lo\", lo), (\"hi\", hi), (\"base_a\", base_a), (\"base_b\", base_b), (\"none_sentinel\", none_sentinel)):\n        if isinstance(val, bool) or not isinstance(val, int):\n            raise ValueError(name + \" must be an integer\")\n    if base_a < 2 or base_b < 2:\n        raise ValueError(\"bases must be at least 2\")\n    if lo < 0:\n        raise ValueError(\"lo must be nonnegative\")\n    if hi < lo:\n        raise ValueError(\"hi must be at least lo\")\n    if hi - lo > 2000000:\n        raise ValueError(\"range too large\")\n    best = None\n    for n in range(lo, hi):\n        if _digit_sum(n, base_a) == _digit_sum(n, base_b):\n            best = n\n    if best is None:\n        return str(none_sentinel)\n    return str(best)",
+  "description": "Searches integers n in [lo, hi) and computes the digit sum of n in base_a and base_b by repeated division. Tracks the largest n whose two digit sums are equal and returns it as a string, or none_sentinel if no such n exists. Inputs are validated for integer types, base >= 2, nonnegative lo, hi >= lo, and a bounded range size. The main uncertainty is the intended treatment of 0 and whether the range should be inclusive of hi; this implementation uses [lo, hi) and allows 0.",
+  "finish_reason": "stop"
+}

@@ -1,0 +1,52 @@
+{
+  "source_tasks": [
+    {
+      "task_id": "hard140-math-train-counting_and_probability-351",
+      "problem": "Starting at $(0,0),$ an object moves in the coordinate plane via a sequence of steps, each of length one. Each step is left, right, up, or down, all four equally likely. Let $p$ be the probability that the object reaches $(2,2)$ in six or fewer steps. Given that $p$ can be written in the form $m/n,$ where $m$ and $n$ are relatively prime positive integers, find $m+n.$\n"
+    }
+  ],
+  "analysis": {
+    "decision": "PROPOSE",
+    "invalid_operation": null,
+    "observations": [
+      "The failed attempt counted only paths that first reach (2,2) at exactly 4 or exactly 6 steps, but the event 'reaches (2,2) in six or fewer steps' includes paths that hit (2,2) earlier and then return to it.",
+      "A correct computation must count all length-4 and length-6 walks from (0,0) to (2,2), not just monotone paths.",
+      "For length 4, the only walks to (2,2) are monotone with 2 R and 2 U, giving 6 walks.",
+      "For length 6, the number of walks to (2,2) can be computed by summing over counts of R,L,U,D satisfying net displacement equations and total length.",
+      "The probability is the total number of valid walks of length 4 or 6 divided by 4^4 + 4^6, since the process stops at 6 steps and paths of length 4 and 6 are disjoint sample outcomes.",
+      "The final answer is m+n where p=m/n in lowest terms."
+    ],
+    "parameter_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "max_steps": {
+          "description": "maximum number of steps allowed",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "target_x": {
+          "description": "x-coordinate of target point",
+          "type": "integer"
+        },
+        "target_y": {
+          "description": "y-coordinate of target point",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "target_x",
+        "target_y",
+        "max_steps"
+      ],
+      "type": "object"
+    },
+    "procedure_plan": "Define a deterministic function that takes target coordinates (tx,ty), maximum step count N, and dimension 2 (four directions). Enumerate all step counts k from 0 to N with k ≡ (tx+ty) mod 2. For each k, count the number of length-k walks from (0,0) to (tx,ty) by iterating over possible counts of right steps a and up steps c, with left b=a-tx and down d=c-ty, requiring a,b,c,d ≥ 0 and a+b+c+d=k. Add multinomial coefficient k!/(a!b!c!d!) for each valid tuple. Sum these counts over all valid k to get total favorable walks. Compute total possible walks as sum_{k=0}^{N} 4^k. Form probability p = favorable/total, reduce fraction m/n, and return m+n.",
+    "replacement_operation": null,
+    "source_parameters": {
+      "max_steps": 6,
+      "target_x": 2,
+      "target_y": 2
+    },
+    "uncertainty": "The main subtlety is whether the event 'reaches (2,2) in six or fewer steps' means the walk ever visits (2,2) at some time ≤6, which includes walks that visit (2,2) at step 4 and again at step 6. The counting above includes all such walks by counting all length-4 and length-6 walks ending at (2,2). If the intended interpretation were 'first reaches', the count would differ, but the standard reading of 'reaches in six or fewer steps' is the ever-visits interpretation."
+  }
+}

@@ -39,8 +39,9 @@ class LLMClient:
     RETRY_BACKOFF_SECONDS = 2.0
     MAX_RETRY_AFTER_SECONDS = 30.0
 
-    def __init__(self, config: RuntimeLLMConfig) -> None:
+    def __init__(self, config: RuntimeLLMConfig, *, no_gold_channel=None) -> None:
         self.config = config
+        self.no_gold_channel = no_gold_channel
         from runtime.config import SUPPORTED_PROVIDERS
         if config.provider not in SUPPORTED_PROVIDERS:
             raise LLMClientError(
@@ -99,6 +100,16 @@ class LLMClient:
         raise LLMClientError(
             "Unsupported provider `%s` at generation time." % self.config.provider
         )
+
+    def generate_no_gold(self, *, messages, policy, request_id):
+        """Explicitly injected, separately authorized no-retry experiment channel.
+
+        Never fall through to the legacy HTTP retry client or reuse its credentials.
+        """
+        if self.no_gold_channel is None:
+            raise PermissionError('no_gold requires a separately authorized audited channel')
+        return self.no_gold_channel.generate_no_gold(messages=messages, policy=policy,
+                                                      request_id=request_id)
 
     # ------------------------------------------------------------------
     # OpenRouter (OpenAI Chat Completions compatible)

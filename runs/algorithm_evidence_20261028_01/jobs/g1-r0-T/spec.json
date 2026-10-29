@@ -1,0 +1,33 @@
+{
+  "parameter_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "operands",
+      "operators"
+    ],
+    "properties": {
+      "operands": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 8,
+        "items": {
+          "type": "integer",
+          "minimum": -10,
+          "maximum": 20
+        }
+      },
+      "operators": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "+",
+            "-",
+            "*"
+          ]
+        }
+      }
+    }
+  }
+}

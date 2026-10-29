@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "d240eb63-bb0e-4364-bcfb-2cf9a8c856ef",
+  "raw_response": {
+    "id": "d240eb63-bb0e-4364-bcfb-2cf9a8c856ef",
+    "object": "chat.completion",
+    "created": 1793195556,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"def solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    if set(parameters.keys()) != {'operands', 'operators'}:\\n        raise ValueError('unexpected keys')\\n    operands = parameters['operands']\\n    operators = parameters['operators']\\n    if not isinstance(operands, list) or not isinstance(operators, list):\\n        raise ValueError('operands and operators must be lists')\\n    n = len(operands)\\n    if n < 1 or n > 8:\\n        raise ValueError('operands length out of bounds')\\n    if len(operators) != n - 1:\\n        raise ValueError('operators length must be len(operands)-1')\\n    for x in operands:\\n        if isinstance(x, bool) or not isinstance(x, int):\\n            raise ValueError('operands must be integers')\\n        if x < -10 or x > 20:\\n            raise ValueError('operand out of bounds')\\n    for op in operators:\\n        if not isinstance(op, str) or op not in ('+', '-', '*'):\\n            raise ValueError('invalid operator')\\n    dp = [[set() for _ in range(n)] for _ in range(n)]\\n    for i in range(n):\\n        dp[i][i].add(operands[i])\\n    for length in range(2, n + 1):\\n        for i in range(0, n - length + 1):\\n            j = i + length - 1\\n            cur = dp[i][j]\\n            for k in range(i, j):\\n                op = operators[k]\\n                left = dp[i][k]\\n                right = dp[k + 1][j]\\n                for a in left:\\n                    for b in right:\\n                        if op == '+':\\n                            cur.add(a + b)\\n                        elif op == '-':\\n                            cur.add(a - b)\\n                        else:\\n                            cur.add(a * b)\\n    return str(len(dp[0][n - 1]))\",\"description\":\"Interval dynamic programming over the fixed operand/operator sequence. For each contiguous subinterval of operands, compute the set of all values obtainable by fully parenthesizing that subinterval. Combine sets across every split point using the operator at the split, deduplicating via sets. The answer is the size of the full-interval set. Exact integer arithmetic is used. Uncertainty: assumes the intended semantics is full parenthesization of the fixed sequence (no reordering, no precedence shortcuts), which matches the source framing.\",\"applicability\":\"Valid for 1 to 8 integer operands in [-10,20] and exactly len(operands)-1 operators drawn from +,-,*. Rejects malformed inputs, booleans, out-of-range operands, and wrong operator counts. Complexity grows with set sizes but is bounded for the stated limits.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1040,
+      "completion_tokens": 664,
+      "total_tokens": 1704,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 912
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1704,
+    "input_tokens": 1040,
+    "output_tokens": 664
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "fa8dbce4cc8c69426a45eb875f0c71b3c768543df248cbfa4db5c121c0eb417f",
+  "response_sha256": "06eb4579a6daaf63e5d8d1d13cc0932271608ce48a30125c05f8282587f53bcb",
+  "reserved_rate_estimate_microusd": 2045,
+  "applicability": "Valid for 1 to 8 integer operands in [-10,20] and exactly len(operands)-1 operators drawn from +,-,*. Rejects malformed inputs, booleans, out-of-range operands, and wrong operator counts. Complexity grows with set sizes but is bounded for the stated limits.",
+  "code": "def solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    if set(parameters.keys()) != {'operands', 'operators'}:\n        raise ValueError('unexpected keys')\n    operands = parameters['operands']\n    operators = parameters['operators']\n    if not isinstance(operands, list) or not isinstance(operators, list):\n        raise ValueError('operands and operators must be lists')\n    n = len(operands)\n    if n < 1 or n > 8:\n        raise ValueError('operands length out of bounds')\n    if len(operators) != n - 1:\n        raise ValueError('operators length must be len(operands)-1')\n    for x in operands:\n        if isinstance(x, bool) or not isinstance(x, int):\n            raise ValueError('operands must be integers')\n        if x < -10 or x > 20:\n            raise ValueError('operand out of bounds')\n    for op in operators:\n        if not isinstance(op, str) or op not in ('+', '-', '*'):\n            raise ValueError('invalid operator')\n    dp = [[set() for _ in range(n)] for _ in range(n)]\n    for i in range(n):\n        dp[i][i].add(operands[i])\n    for length in range(2, n + 1):\n        for i in range(0, n - length + 1):\n            j = i + length - 1\n            cur = dp[i][j]\n            for k in range(i, j):\n                op = operators[k]\n                left = dp[i][k]\n                right = dp[k + 1][j]\n                for a in left:\n                    for b in right:\n                        if op == '+':\n                            cur.add(a + b)\n                        elif op == '-':\n                            cur.add(a - b)\n                        else:\n                            cur.add(a * b)\n    return str(len(dp[0][n - 1]))",
+  "description": "Interval dynamic programming over the fixed operand/operator sequence. For each contiguous subinterval of operands, compute the set of all values obtainable by fully parenthesizing that subinterval. Combine sets across every split point using the operator at the split, deduplicating via sets. The answer is the size of the full-interval set. Exact integer arithmetic is used. Uncertainty: assumes the intended semantics is full parenthesization of the fixed sequence (no reordering, no precedence shortcuts), which matches the source framing.",
+  "finish_reason": "stop"
+}

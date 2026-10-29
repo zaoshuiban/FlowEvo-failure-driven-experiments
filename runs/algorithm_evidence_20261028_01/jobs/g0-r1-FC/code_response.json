@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "8af4fe1c-8c6e-41dc-ad6e-3aad7d8b3b8b",
+  "raw_response": {
+    "id": "8af4fe1c-8c6e-41dc-ad6e-3aad7d8b3b8b",
+    "object": "chat.completion",
+    "created": 1793195531,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('DECLINED')\\n    digits = parameters.get('digits')\\n    max_length = parameters.get('max_length')\\n    if not isinstance(digits, list) or not isinstance(max_length, int) or isinstance(max_length, bool):\\n        raise ValueError('DECLINED')\\n    if len(digits) < 1 or len(digits) > 10:\\n        raise ValueError('DECLINED')\\n    seen = set()\\n    for d in digits:\\n        if not isinstance(d, int) or isinstance(d, bool) or d < 0 or d > 9:\\n            raise ValueError('DECLINED')\\n        if d in seen:\\n            raise ValueError('DECLINED')\\n        seen.add(d)\\n    if max_length < 1 or max_length > 4:\\n        raise ValueError('DECLINED')\\n    if max_length > len(digits):\\n        raise ValueError('DECLINED')\\n    ds = sorted(seen)\\n    n = len(ds)\\n\\n    def is_prime(x):\\n        if x < 2:\\n            return False\\n        if x < 4:\\n            return True\\n        if x % 2 == 0 or x % 3 == 0:\\n            return False\\n        d = 5\\n        while d * d <= x:\\n            if x % d == 0 or x % (d + 2) == 0:\\n                return False\\n            d += 6\\n        return True\\n\\n    primes = set()\\n    for k in range(1, max_length + 1):\\n        for perm in _permutations(ds, k):\\n            if perm[0] == 0:\\n                continue\\n            val = 0\\n            for dgt in perm:\\n                val = val * 10 + dgt\\n            if is_prime(val):\\n                primes.add(val)\\n    return str(len(primes))\\n\\ndef _permutations(items, k):\\n    if k == 0:\\n        yield ()\\n        return\\n    for i in range(len(items)):\\n        rest = items[:i] + items[i+1:]\\n        for tail in _permutations(rest, k - 1):\\n            yield (items[i],) + tail\\n\",\"description\":\"Exhaustively enumerates all ordered selections of k distinct digits for k=1..max_length, skips leading-zero arrangements, forms the integer, and tests primality exactly by trial division up to the integer square root (6k±1 wheel after small cases). Counts distinct primes via a set. Deterministic, integer-only, and exact for the small search space. Uncertainty is minimal; the main assumptions are that max_length does not exceed the number of distinct digits and that digits are unique as required by the schema.\",\"applicability\":\"Valid for inputs matching the schema: digits is a nonempty list of 1..10 unique integers in 0..9, and max_length is an integer 1..4 not exceeding the number of distinct digits. Rejects malformed inputs, duplicates, out-of-range values, booleans, and max_length larger than the digit count with ValueError. Computes the count of distinct primes formable from 1..max_length distinct digits without repetition and without leading zeros.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1532,
+      "completion_tokens": 754,
+      "total_tokens": 2286,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1532
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 2286,
+    "input_tokens": 1532,
+    "output_tokens": 754
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "1d86f738e1435342f58654edf10037c9fee189cacaad717846463586a03c4660",
+  "response_sha256": "579fc1886f76c7925368658f9bb442ff2ca6c61159fcf56b4a690ffdcfc59ada",
+  "reserved_rate_estimate_microusd": 2744,
+  "applicability": "Valid for inputs matching the schema: digits is a nonempty list of 1..10 unique integers in 0..9, and max_length is an integer 1..4 not exceeding the number of distinct digits. Rejects malformed inputs, duplicates, out-of-range values, booleans, and max_length larger than the digit count with ValueError. Computes the count of distinct primes formable from 1..max_length distinct digits without repetition and without leading zeros.",
+  "code": "import math\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('DECLINED')\n    digits = parameters.get('digits')\n    max_length = parameters.get('max_length')\n    if not isinstance(digits, list) or not isinstance(max_length, int) or isinstance(max_length, bool):\n        raise ValueError('DECLINED')\n    if len(digits) < 1 or len(digits) > 10:\n        raise ValueError('DECLINED')\n    seen = set()\n    for d in digits:\n        if not isinstance(d, int) or isinstance(d, bool) or d < 0 or d > 9:\n            raise ValueError('DECLINED')\n        if d in seen:\n            raise ValueError('DECLINED')\n        seen.add(d)\n    if max_length < 1 or max_length > 4:\n        raise ValueError('DECLINED')\n    if max_length > len(digits):\n        raise ValueError('DECLINED')\n    ds = sorted(seen)\n    n = len(ds)\n\n    def is_prime(x):\n        if x < 2:\n            return False\n        if x < 4:\n            return True\n        if x % 2 == 0 or x % 3 == 0:\n            return False\n        d = 5\n        while d * d <= x:\n            if x % d == 0 or x % (d + 2) == 0:\n                return False\n            d += 6\n        return True\n\n    primes = set()\n    for k in range(1, max_length + 1):\n        for perm in _permutations(ds, k):\n            if perm[0] == 0:\n                continue\n            val = 0\n            for dgt in perm:\n                val = val * 10 + dgt\n            if is_prime(val):\n                primes.add(val)\n    return str(len(primes))\n\ndef _permutations(items, k):\n    if k == 0:\n        yield ()\n        return\n    for i in range(len(items)):\n        rest = items[:i] + items[i+1:]\n        for tail in _permutations(rest, k - 1):\n            yield (items[i],) + tail\n",
+  "description": "Exhaustively enumerates all ordered selections of k distinct digits for k=1..max_length, skips leading-zero arrangements, forms the integer, and tests primality exactly by trial division up to the integer square root (6k±1 wheel after small cases). Counts distinct primes via a set. Deterministic, integer-only, and exact for the small search space. Uncertainty is minimal; the main assumptions are that max_length does not exceed the number of distinct digits and that digits are unique as required by the schema.",
+  "finish_reason": "stop"
+}

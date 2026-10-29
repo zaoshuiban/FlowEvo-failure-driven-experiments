@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "88f59e3c-766d-4596-9247-f5ee73adaf27",
+  "raw_response": {
+    "id": "88f59e3c-766d-4596-9247-f5ee73adaf27",
+    "object": "chat.completion",
+    "created": 1793195564,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('bad input')\\n    if set(parameters.keys()) != {'operands', 'operators'}:\\n        raise ValueError('bad keys')\\n    operands = parameters['operands']\\n    operators = parameters['operators']\\n    if not isinstance(operands, list) or not isinstance(operators, list):\\n        raise ValueError('bad types')\\n    n = len(operands)\\n    if n < 1 or n > 8:\\n        raise ValueError('bad operand count')\\n    if len(operators) != n - 1:\\n        raise ValueError('bad operator count')\\n    for x in operands:\\n        if isinstance(x, bool) or not isinstance(x, int):\\n            raise ValueError('bad operand')\\n        if x < -10 or x > 20:\\n            raise ValueError('operand out of range')\\n    for op in operators:\\n        if op not in ('+', '-', '*'):\\n            raise ValueError('bad operator')\\n    # S[i][j] = set of values for operands[i..j]\\n    S = [[None] * n for _ in range(n)]\\n    for i in range(n):\\n        S[i][i] = {operands[i]}\\n    for length in range(2, n + 1):\\n        for i in range(0, n - length + 1):\\n            j = i + length - 1\\n            vals = set()\\n            for k in range(i, j):\\n                op = operators[k]\\n                left = S[i][k]\\n                right = S[k + 1][j]\\n                for a in left:\\n                    for b in right:\\n                        if op == '+':\\n                            vals.add(a + b)\\n                        elif op == '-':\\n                            vals.add(a - b)\\n                        else:\\n                            vals.add(a * b)\\n            S[i][j] = vals\\n    return str(len(S[0][n - 1]))\\n\",\"description\":\"Exhaustive interval dynamic programming. For each contiguous subrange operands[i..j], compute the full set of integer values reachable by fully parenthesizing that subrange. Base case is a single operand. For longer ranges, try every split point k and every operator at position k, combining all values from the left and right subranges with exact integer arithmetic, and deduplicate via sets. The answer is the cardinality of the value set for the whole expression. No algebraic simplification or associativity assumptions are made, avoiding the unsound collapsing of constant-looking subexpressions. Complexity is O(n^3 * M^2) where M is the maximum set size, fine for n<=8. Uncertainty: correctness depends on the intended quantity being exactly the number of distinct values over all full parenthesizations, as the source wording states.\",\"applicability\":\"Applies to ordered sequences of 1..8 integer operands (each in [-10,20]) and exactly len(operands)-1 binary operators drawn from +, -, *. Returns the number of distinct values obtainable by fully parenthesizing the expression without reordering. Rejects malformed inputs, wrong operator counts, out-of-range operands, booleans, and unsupported operators with ValueError. Does not handle reordering, unary operators, division, or non-integer operands.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1201,
+      "completion_tokens": 766,
+      "total_tokens": 1967,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1201
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1967,
+    "input_tokens": 1201,
+    "output_tokens": 766
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "6e4ab9d5cb12772dab662503236594ef72025cf78e96c495d1ae14d6723cefbd",
+  "response_sha256": "2213dc9df96498b26dadb94c4eba23af7dcb546e47878319e70963060fd3b196",
+  "reserved_rate_estimate_microusd": 2361,
+  "applicability": "Applies to ordered sequences of 1..8 integer operands (each in [-10,20]) and exactly len(operands)-1 binary operators drawn from +, -, *. Returns the number of distinct values obtainable by fully parenthesizing the expression without reordering. Rejects malformed inputs, wrong operator counts, out-of-range operands, booleans, and unsupported operators with ValueError. Does not handle reordering, unary operators, division, or non-integer operands.",
+  "code": "import math\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('bad input')\n    if set(parameters.keys()) != {'operands', 'operators'}:\n        raise ValueError('bad keys')\n    operands = parameters['operands']\n    operators = parameters['operators']\n    if not isinstance(operands, list) or not isinstance(operators, list):\n        raise ValueError('bad types')\n    n = len(operands)\n    if n < 1 or n > 8:\n        raise ValueError('bad operand count')\n    if len(operators) != n - 1:\n        raise ValueError('bad operator count')\n    for x in operands:\n        if isinstance(x, bool) or not isinstance(x, int):\n            raise ValueError('bad operand')\n        if x < -10 or x > 20:\n            raise ValueError('operand out of range')\n    for op in operators:\n        if op not in ('+', '-', '*'):\n            raise ValueError('bad operator')\n    # S[i][j] = set of values for operands[i..j]\n    S = [[None] * n for _ in range(n)]\n    for i in range(n):\n        S[i][i] = {operands[i]}\n    for length in range(2, n + 1):\n        for i in range(0, n - length + 1):\n            j = i + length - 1\n            vals = set()\n            for k in range(i, j):\n                op = operators[k]\n                left = S[i][k]\n                right = S[k + 1][j]\n                for a in left:\n                    for b in right:\n                        if op == '+':\n                            vals.add(a + b)\n                        elif op == '-':\n                            vals.add(a - b)\n                        else:\n                            vals.add(a * b)\n            S[i][j] = vals\n    return str(len(S[0][n - 1]))\n",
+  "description": "Exhaustive interval dynamic programming. For each contiguous subrange operands[i..j], compute the full set of integer values reachable by fully parenthesizing that subrange. Base case is a single operand. For longer ranges, try every split point k and every operator at position k, combining all values from the left and right subranges with exact integer arithmetic, and deduplicate via sets. The answer is the cardinality of the value set for the whole expression. No algebraic simplification or associativity assumptions are made, avoiding the unsound collapsing of constant-looking subexpressions. Complexity is O(n^3 * M^2) where M is the maximum set size, fine for n<=8. Uncertainty: correctness depends on the intended quantity being exactly the number of distinct values over all full parenthesizations, as the source wording states.",
+  "finish_reason": "stop"
+}

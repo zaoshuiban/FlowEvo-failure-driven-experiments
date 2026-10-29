@@ -1,0 +1,62 @@
+{
+  "source_tasks": [
+    {
+      "problem": "The expression $4 \\times  5 +  2 -  8 -  3 +  3 \\times  5$ may be changed only by inserting parentheses; rearranging numbers or operations is not allowed. In total, how many values can be obtained?",
+      "task_id": "math-4220e51a86ed1e06842cd093"
+    },
+    {
+      "problem": "Consider the expression $4 +  8 -  6 \\cdot  6 -  4 +  2 \\cdot  7$. Fully parenthesize it in every possible way without changing the order of numbers or operations. Parenthesizations with the same numerical result count only once. How many distinct values are possible?",
+      "task_id": "math-3ea8382e636948f1ab643366"
+    },
+    {
+      "problem": "The expression $7 +  6 \\times  8 -  6 +  5 \\times  3 -  5$ may be changed only by inserting parentheses; rearranging numbers or operations is not allowed. In total, how many values can be obtained?",
+      "task_id": "math-89dd90943b2f5cb78d64a3e8"
+    }
+  ],
+  "parameter_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "operands",
+      "operators"
+    ],
+    "properties": {
+      "operands": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 8,
+        "items": {
+          "type": "integer",
+          "minimum": -10,
+          "maximum": 20
+        }
+      },
+      "operators": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "+",
+            "-",
+            "*"
+          ]
+        }
+      }
+    }
+  },
+  "interface_note": "Only parameter values vary; all mathematical conditions and requested quantity remain those stated by the supplied source questions. Names describe source data, not a target algorithm. Implement solve(parameters), no natural-language applicability detection. operators must have exactly len(operands)-1 entries.",
+  "analysis": {
+    "decision": "PROPOSE",
+    "invalid_operation": "Manual enumeration of a handful of parenthesizations, guessing a plausible count, or performing interval DP with arithmetic/union mistakes and truncation; these do not exhaustively and correctly compute the union of all parenthesization values.",
+    "observations": [
+      "All three source tasks ask for the number of distinct values obtainable by parenthesizing a fixed sequence of operands and binary operators (+,-,*).",
+      "The failing attempts either enumerated a small subset of parenthesizations by hand (missing many), guessed a number, or attempted interval DP but made arithmetic/union errors and truncated.",
+      "The correct mathematical object is the set of values from all full binary parenthesizations; this is exactly computed by interval DP over contiguous subexpressions.",
+      "The number of parenthesizations is Catalan(n-1) for n operands, but the requested quantity is the cardinality of the union of resulting values, not the Catalan count.",
+      "The interface supplies operands and operators with len(operators)=len(operands)-1, so a deterministic DP is well-defined."
+    ],
+    "procedure_plan": "Implement solve(operands, operators): let n=len(operands). Build dp[i][j] as a set of integers for subexpression operands[i..j]. Base: dp[i][i]={operands[i]}. For length L=2..n, for i=0..n-L, j=i+L-1, for split k=i..j-1, combine every a in dp[i][k] and b in dp[k+1][j] using operators[k] ('+' -> a+b, '-' -> a-b, '*' -> a*b), adding results to dp[i][j]. Return len(dp[0][n-1]). Use Python ints (arbitrary precision); sets deduplicate automatically. Complexity is O(n^3 * max set size), fine for n<=8.",
+    "replacement_operation": "Exhaustive interval dynamic programming: dp[i][j] = union over splits k of {a op_k b : a in dp[i][k], b in dp[k+1][j]}, returning the cardinality of dp[0][n-1]. This is logically guaranteed to cover every full parenthesization exactly once per split and deduplicate values via sets.",
+    "uncertainty": "The DP is exact for full parenthesizations; the only interpretive risk is whether 'inserting parentheses' allows partial parenthesizations that are not full binary trees. Any partial parenthesization evaluates to the same value as some full parenthesization under standard precedence, so the distinct-value set is unchanged. No other uncertainty."
+  }
+}

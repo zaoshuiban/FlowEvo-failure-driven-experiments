@@ -1,0 +1,59 @@
+{
+  "source_tasks": [
+    {
+      "task_id": "hard140-math-train-intermediate_algebra-426",
+      "problem": "There exist positive integers $a,$ $b,$ and $c$ such that\n\\[3 \\sqrt{\\sqrt[3]{5} - \\sqrt[3]{4}} = \\sqrt[3]{a} + \\sqrt[3]{b} - \\sqrt[3]{c}.\\]Find $a + b + c.$"
+    }
+  ],
+  "analysis": {
+    "decision": "PROPOSE",
+    "invalid_operation": "Guessing integer triples by floating-point approximation and accepting a near-match without exact algebraic verification; the attempt's squaring check produced non-matching cross terms but was dismissed.",
+    "observations": [
+      "The attempted solution guessed integer triples (a,b,c) by numerical approximation and stopped at a near-match (9,2,12), then failed to verify exactness algebraically.",
+      "The squaring check in the attempt was inconclusive because the cross terms did not simplify to the required form, indicating the guessed triple was likely wrong.",
+      "The problem asks for a+b+c where 3*sqrt(cbrt(5)-cbrt(4)) = cbrt(a)+cbrt(b)-cbrt(c); a deterministic algebraic search over small positive integers can decide this exactly."
+    ],
+    "parameter_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "N": {
+          "description": "search bound for a,b,c",
+          "type": "integer"
+        },
+        "k": {
+          "description": "outer multiplier",
+          "type": "integer"
+        },
+        "p": {
+          "description": "first radicand under inner cube root, positive",
+          "type": "integer"
+        },
+        "q": {
+          "description": "second radicand under inner cube root, positive",
+          "type": "integer"
+        },
+        "return_sum": {
+          "description": "if true return a+b+c, else return the triple",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "p",
+        "q",
+        "k",
+        "N"
+      ],
+      "type": "object"
+    },
+    "procedure_plan": "Parameterize by the two radicands p=5 and q=4 and the outer multiplier k=3. For each candidate triple (a,b,c) with 1<=a,b,c<=N, compute the exact algebraic number S = cbrt(a)+cbrt(b)-cbrt(c) and compare S^2 to k^2*(cbrt(p)-cbrt(q)) by clearing cube roots: represent both sides in the basis of monomials cbrt(a^i b^j c^k) and cbrt(p^u q^v) over a common compositum, or more simply verify the polynomial identity by cubing/squaring symbolically. A robust deterministic method: for each triple, compute the minimal polynomial of S over Q using resultants (eliminating x=cbrt(a), y=cbrt(b), z=cbrt(c) with x^3=a, y^3=b, z^3=c and S=x+y-z), and check whether the target T = k*sqrt(cbrt(p)-cbrt(q)) satisfies the same minimal polynomial by computing T's minimal polynomial via resultants (T^2 = k^2*(cbrt(p)-cbrt(q))). Match minimal polynomials and confirm sign/numerical agreement to select the unique triple, then return a+b+c.",
+    "replacement_operation": "Exact algebraic identification via minimal polynomials: compute the minimal polynomial of the target T=k*sqrt(cbrt(p)-cbrt(q)) using resultants, then enumerate small positive triples (a,b,c), compute each S=cbrt(a)+cbrt(b)-cbrt(c)'s minimal polynomial by eliminating the cube-root generators, and select the triple whose minimal polynomial equals the target's, confirming with a numerical sign check.",
+    "source_parameters": {
+      "N": 50,
+      "k": 3,
+      "p": 5,
+      "q": 4,
+      "return_sum": true
+    },
+    "uncertainty": "The search bound N must be large enough; the true triple may exceed the guessed range. Resultant-based minimal polynomial computation is exact but requires careful handling of the degree-9 compositum. If multiple triples share the minimal polynomial, numerical sign checks disambiguate."
+  }
+}

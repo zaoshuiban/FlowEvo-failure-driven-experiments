@@ -1,0 +1,55 @@
+{
+  "decision": "PROPOSE",
+  "invalid_operation": null,
+  "observations": [
+    "The cost of a representation is the sum of its digits.",
+    "Option 1 cost is the decimal digit sum of n.",
+    "Option 2 cost is the binary digit sum (popcount) of n.",
+    "We need the largest n < 1000 with decimal digit sum equal to binary digit sum."
+  ],
+  "parameter_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "base_a": {
+        "default": 10,
+        "description": "First representation base for digit-sum comparison.",
+        "minimum": 2,
+        "type": "integer"
+      },
+      "base_b": {
+        "default": 2,
+        "description": "Second representation base for digit-sum comparison.",
+        "minimum": 2,
+        "type": "integer"
+      },
+      "hi": {
+        "description": "Exclusive upper bound of the search range.",
+        "type": "integer"
+      },
+      "lo": {
+        "description": "Inclusive lower bound of the search range.",
+        "type": "integer"
+      },
+      "none_sentinel": {
+        "default": -1,
+        "description": "Value returned if no integer in range satisfies equality.",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "lo",
+      "hi"
+    ],
+    "type": "object"
+  },
+  "procedure_plan": "Define a deterministic search over integers in a given range [lo, hi). For each integer n, compute decimal digit sum by repeatedly taking n mod 10 and integer-dividing by 10, and compute binary digit sum by repeatedly taking n mod 2 and integer-dividing by 2. Track the maximum n for which the two sums are equal. Return that maximum, or a sentinel (e.g., null) if none exists. Parameterize by lo, hi, and optionally a base pair (decimal base 10 and binary base 2) so the computation is reusable for analogous digit-sum equality problems.",
+  "replacement_operation": null,
+  "source_parameters": {
+    "base_a": 10,
+    "base_b": 2,
+    "hi": 1000,
+    "lo": 1,
+    "none_sentinel": -1
+  },
+  "uncertainty": "The plan assumes the intended interpretation is strict inequality n < hi and positive integers; if the range includes 0 or negative values, behavior should be defined by the caller. The sentinel for no solution must be specified."
+}

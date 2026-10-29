@@ -164,3 +164,24 @@ def load_tasks(benchmark: str, limit: int = 0) -> list[CodeTaskInstance]:
         raise ValueError("Unknown benchmark: %s (available: %s)"
                          % (benchmark, ", ".join(BENCHMARKS)))
     return loader(limit=limit)
+
+
+def split_math_tasks(tasks):
+    """Explicit no_gold boundary: solver objects contain no answer or metadata.
+
+    Returned private rows belong exclusively to the post-task host scorer.
+    The legacy loader and its historical representations remain unchanged.
+    """
+    from code_math.no_gold import PublicMathTask
+    from failure_evo.contracts import fingerprint
+    public, private = [], []
+    for task in tasks:
+        if task.benchmark not in ('gsm8k', 'math'):
+            raise ValueError('no_gold projection is for mathematical tasks')
+        gold = task.metadata.get('gold_answer')
+        if not isinstance(gold, str) or not gold.strip():
+            raise ValueError('private scoring answer required')
+        public.append(PublicMathTask(task.task_id, task.prompt))
+        private.append(dict(task_id=task.task_id,
+                            problem_sha256=fingerprint(task.prompt), gold_answer=gold))
+    return public, private

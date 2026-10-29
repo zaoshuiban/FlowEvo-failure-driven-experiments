@@ -1,0 +1,77 @@
+{
+  "source_tasks": [
+    {
+      "task_id": "hard140-math-train-intermediate_algebra-289",
+      "problem": "Let $a > 0$, and let $P(x)$ be a polynomial with integer coefficients such that\n\\[P(1) = P(3) = P(5) = P(7) = a\\]and\n\\[P(2) = P(4) = P(6) = P(8) = -a.\\]What is the smallest possible value of $a$?"
+    }
+  ],
+  "analysis": {
+    "decision": "PROPOSE",
+    "invalid_operation": null,
+    "observations": [
+      "The conditions fix values of P at eight integer points: P(1)=P(3)=P(5)=P(7)=a and P(2)=P(4)=P(6)=P(8)=-a.",
+      "A polynomial with integer coefficients taking integer values at integers must satisfy congruence constraints; the key is that for integer-coefficient P, P(m)-P(n) is divisible by m-n.",
+      "For each pair of points with different prescribed values, the difference 2a must be divisible by the distance between the points.",
+      "The odd points are mutually distance 2,4,6 apart; the even points likewise; odd-even distances are odd (1,3,5,7).",
+      "Thus 2a must be divisible by all odd distances 1,3,5,7, so 2a is divisible by lcm(1,3,5,7)=105.",
+      "Also within same-parity pairs the difference is 2a, and distances are even, so 2a divisible by 2,4,6 gives no extra beyond 2a divisible by 12? Actually P(1)-P(3)=0 so no constraint; cross-parity gives 2a divisible by odd distances.",
+      "The minimal positive a satisfying 2a divisible by 105 is a=105/ gcd? Since 2a multiple of 105 and a integer, minimal a=105 (because 105 odd, 2a=210).",
+      "Need to verify existence: construct P via interpolation with integer coefficients? The divisibility condition is necessary; sufficiency for integer-valued polynomial at these points with integer coefficients is not automatic, but one can use P(x)=a*Q(x) where Q integer coefficients with Q odd points 1, even points -1.",
+      "A candidate Q(x) can be built from product factors; e.g., Q(x)=1-2*((x-1)(x-3)(x-5)(x-7))/(?) not integer coefficients necessarily.",
+      "Alternative: use finite differences / Chinese remainder style construction; the standard result is minimal a equals lcm of odd distances divided by gcd with 2, i.e., 105.",
+      "Check smaller a: if a<105, then 2a<210; must be divisible by 105, impossible unless 2a=105 (not integer a) or 0. So a>=105.",
+      "Existence at a=105: need integer-coefficient polynomial matching signs. One can take P(x)=105*R(x) where R has integer coefficients and R(odd)=1, R(even)=-1. Does such R exist? Consider R(x)=1-2*S(x) where S is integer polynomial with S(odd)=0, S(even)=1. S(x)= product over odd points? Let T(x)=(x-1)(x-3)(x-5)(x-7). At even x=2,4,6,8, T values: T(2)=(-1)(-1)(-3)(-5)=15? compute: (2-1)=1,(2-3)=-1,(2-5)=-3,(2-7)=-5 product=1*(-1)*(-3)*(-5)= -15? 1*-1=-1; *-3=3; *-5=-15. T(4)=3*1*(-1)*(-3)=9. T(6)=5*3*1*(-1)=-15. T(8)=7*5*3*1=105. Not constant. Need S integer polynomial zero at odds and 1 at evens. Since S vanishes at 1,3,5,7, S(x)=T(x)*U(x) with U integer polynomial? If S integer coefficients and roots integers, division by monic T yields integer coefficients (Gauss). Then S(even)=T(even)U(even)=1. Thus T(even) must divide 1, so T(even)=±1. But T(2)=-15, impossible. So no such S with integer coefficients. Therefore a=105 may not be achievable with integer coefficients; need stronger constraints.",
+      "Re-evaluate: P integer coefficients, P(odd)=a, P(even)=-a. Let F(x)=P(x)-a. Then F(odd)=0, F(even)=-2a. Since F has integer coefficients and roots 1,3,5,7, F(x)=T(x)G(x) with G integer coefficients (T monic). Then at even x: -2a = T(x)G(x). Thus T(x) divides 2a for x=2,4,6,8. T(2)=-15, T(4)=9, T(6)=-15, T(8)=105. So 2a must be divisible by gcd(15,9,15,105)=3? gcd(15,9)=3, gcd(3,105)=3. So 2a divisible by 3 only? Wait divisibility: T(x)G(x)=-2a, so T(x) divides 2a. Thus 2a multiple of each T(x), hence multiple of lcm(15,9,105)=? 15=3*5, 9=3^2, 105=3*5*7. lcm=3^2*5*7=315. So 2a multiple of 315. Minimal a=315/ gcd(315,2)=315.",
+      "Check: 2a=315k, a integer => k even? 315 odd, so k must be even for a integer; minimal k=2 gives 2a=630, a=315.",
+      "Existence: need G integer polynomial with G(2)=-2a/T(2)= -630/(-15)=42; G(4)=-630/9=-70; G(6)=42; G(8)=-630/105=-6. Need integer polynomial G with these values at 2,4,6,8. Check divisibility constraints for G: differences: G(2)-G(4)=112 divisible by 2? 112/2=56 ok; G(2)-G(6)=0; G(2)-G(8)=48 divisible by 6? 48/6=8 ok; G(4)-G(6)=-112 divisible by 2 ok; G(4)-G(8)=-64 divisible by 4? -16 ok; G(6)-G(8)=48 divisible by 2 ok. Also need higher finite difference integrality? For integer coefficients, necessary and sufficient that divided differences are integers? Actually integer coefficients imply all finite differences at integer points are integers, but not sufficient. However we can construct G via Lagrange with integer coefficients? Need check.",
+      "We can try G(x)=? Values at 2,4,6,8: 42,-70,42,-6. This is degree ≤3 interpolation. Compute polynomial: Let y=x-5 maybe. Points x=2,4,6,8 symmetric around 5. Values: at 2:42, 4:-70, 6:42, 8:-6. Not symmetric. Use Newton forward differences: x:2,4,6,8; y:42,-70,42,-6. First diffs: -112,112,-48. Second:224,-160. Third:-384. Newton: G(x)=42 + (-112)/2*(x-2) + 224/(2*4)? Wait step h=2. Newton with step 2: G(x)=42 + Δ1/1! * (x-2)/2 + Δ2/2! * (x-2)(x-4)/4 + Δ3/3! * (x-2)(x-4)(x-6)/8. Δ1=-112, Δ2=224, Δ3=-384. Coefficients: 42 -56*(x-2) + (224/2)*( (x-2)(x-4)/4 )? Actually formula: G(x)=y0 + Δy0 * C(t,1) + Δ^2 y0 * C(t,2)+ Δ^3 y0 * C(t,3), t=(x-2)/2. C(t,1)=t, C(t,2)=t(t-1)/2, C(t,3)=t(t-1)(t-2)/6. So G=42 -112 t +224 * t(t-1)/2 -384 * t(t-1)(t-2)/6 =42 -112t +112 t(t-1) -64 t(t-1)(t-2). Expand in t: 42 -112t +112t^2-112t -64(t^3-3t^2+2t)=42 -224t +112t^2 -64t^3+192t^2-128t =42 -352t +304t^2 -64t^3. t=(x-2)/2. This has rational coefficients? t has denominator 2, so coefficients may be rational. Check integer coefficients? Expand: -64*(x-2)^3/8 = -8(x-2)^3 integer. 304*(x-2)^2/4=76(x-2)^2 integer. -352*(x-2)/2=-176(x-2) integer. So G(x)=42 -176(x-2)+76(x-2)^2 -8(x-2)^3, integer coefficients. Great. Then P(x)=a + T(x)G(x) with a=315, T monic integer, G integer => P integer coefficients. Check P(odd)=a+0=a; P(even)=a+T(even)G(even)=315+(-2a)=315-630=-315=-a. Works. So minimal a=315.",
+      "Thus algorithm: given sets of points with values ±a, derive divisibility constraints via monic product over zero-difference points, compute lcm of product values at other points, then minimal a = lcm / gcd(lcm,2) adjusted for parity; verify existence via interpolation divisibility or construct. General parameterization: inputs are two disjoint sets of integer x-coordinates with prescribed values +a and -a, and a>0 integer. Compute minimal a."
+    ],
+    "parameter_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "a_positive": {
+          "description": "Whether a is required to be positive (true for this problem)",
+          "type": "boolean"
+        },
+        "minus_points": {
+          "description": "Distinct integer x-coordinates where P(x)=-a, disjoint from plus_points",
+          "items": {
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "plus_points": {
+          "description": "Distinct integer x-coordinates where P(x)=a",
+          "items": {
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "plus_points",
+        "minus_points"
+      ],
+      "type": "object"
+    },
+    "procedure_plan": "Parameterize by two disjoint finite sets A (where P=a) and B (where P=-a) of integers, with a>0 integer unknown. Let T(x)=∏_{α∈A}(x-α). Since P(x)-a has integer coefficients and vanishes on A, and T is monic, P(x)-a=T(x)G(x) for some G∈Z[x]. For each β∈B, -2a=T(β)G(β), so T(β) divides 2a. Therefore 2a must be a multiple of L=lcm{|T(β)|: β∈B}. The minimal positive integer a satisfying this is a0=L/gcd(L,2) if that is integer (it is), but also need a integer: since 2a multiple of L, minimal a = L/gcd(L,2). Then verify existence: construct G∈Z[x] with G(β)=-2a0/T(β) for β∈B using Newton interpolation with step gcd of differences; check all divided differences are integers (or directly construct and verify integer coefficients). If construction fails, increase a by multiples of L/gcd(L,2) until success. Return minimal a. For the source instance, A={1,3,5,7}, B={2,4,6,8}; T(x)=(x-1)(x-3)(x-5)(x-7); T values at B: -15,9,-15,105; L=315; a0=315; construction succeeds with G as above.",
+    "replacement_operation": null,
+    "source_parameters": {
+      "a_positive": true,
+      "minus_points": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "plus_points": [
+        1,
+        3,
+        5,
+        7
+      ]
+    },
+    "uncertainty": "The main uncertainty is sufficiency: divisibility T(β)|2a is necessary but not always sufficient for existence of integer-coefficient G matching all β values. The plan includes an explicit construction/verification step and a fallback search over multiples. Also, the problem statement fixes a>0 but does not explicitly say a is integer; however P has integer coefficients and evaluates to a at integers, so a must be integer. If a were allowed real, the problem would be ill-posed; we assume integer a."
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-prealgebra-127",
+    "problem": "When $\\frac{1}{1111}$ is expressed as a decimal, what is the sum of the first 40 digits after the decimal point?"
+  },
+  "problem_sha256": "231532fc91091cd785e89e4554d3a24701afe79449b68c38026453b8099860b0",
+  "task_id": "hard140-math-train-prealgebra-127",
+  "sequence": 12,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-prealgebra-127",
+  "locked_sha256": "2d42d5135bf66ecff4caf99a16fb4e9b39dfe7c9d41f30da86af5229313d80ca",
+  "trajectory_sha256": "b6d449dcaf89258a212e29397c097eac98c92ea5c7611c2d13b8c13109e67334",
+  "responses": [
+    {
+      "text": "We need sum of first 40 digits after decimal of \\(1/1111\\).\n\nFirst, note \\(1111 = 11 \\times 101\\). But maybe easier: \\(1/1111 = 0.\\overline{0009}\\)? Let's check.\n\nActually \\(1/1111\\):  \n\\(1111 \\times 9 = 9999\\), so \\(1/1111 = 9/9999 = 0.\\overline{0009}\\). Yes, because \\(9/9999 = 0.\\overline{0009}\\) repeating every 4 digits.\n\nLet's verify: \\(0.\\overline{0009} = 9/(10^4-1) = 9/9999 = 1/1111\\). Correct.\n\nSo decimal is \\(0.000900090009\\ldots\\) repeating block \"0009\".\n\nFirst 40 digits: 40/4 = 10 full blocks of \"0009\".\n\nEach block sum = 0+0+0+9 = 9.  \n10 blocks sum = 90.\n\nThe answer is 90. \n\nThe answer is 90.",
+      "usage": {
+        "prompt_tokens": 87,
+        "completion_tokens": 231,
+        "total_tokens": 318,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 87
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "bf7f0e942e4573a936bdd344b1ca309159ea5ce03f2829850a33736970e31c39"
+    },
+    {
+      "text": "The decimal repeats in blocks of \"0009\".  \nEach block has digit sum \\(9\\), and 40 digits contain 10 full blocks.  \nTotal sum: \\(10 \\times 9 = 90\\).\n\nThe answer is 90.",
+      "usage": {
+        "prompt_tokens": 325,
+        "completion_tokens": 49,
+        "total_tokens": 374,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 325
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "f5c00801b7cf52da0dde026160e3d28b7cf4967b54a22eeaa8b759bc461d270e"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "90",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "90",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "90",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "90",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "0d3b8fa60a438df5b59881871dcc4c79d58afcd100ca9be0caa980ed271ba522"
+}

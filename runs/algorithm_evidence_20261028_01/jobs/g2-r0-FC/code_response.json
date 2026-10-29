@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "4adba1dd-f547-417b-b8c6-ffb411e986c7",
+  "raw_response": {
+    "id": "4adba1dd-f547-417b-b8c6-ffb411e986c7",
+    "object": "chat.completion",
+    "created": 1793195502,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"def solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    if set(parameters.keys()) != {'operands', 'operators'}:\\n        raise ValueError('unexpected keys')\\n    operands = parameters['operands']\\n    operators = parameters['operators']\\n    if not isinstance(operands, list) or not isinstance(operators, list):\\n        raise ValueError('operands and operators must be lists')\\n    n = len(operands)\\n    if n < 1 or n > 8:\\n        raise ValueError('operands length out of bounds')\\n    if len(operators) != n - 1:\\n        raise ValueError('operators must have len(operands)-1 entries')\\n    for x in operands:\\n        if isinstance(x, bool) or not isinstance(x, int):\\n            raise ValueError('operands must be integers')\\n        if x < -10 or x > 20:\\n            raise ValueError('operand out of bounds')\\n    for op in operators:\\n        if op not in ('+', '-', '*'):\\n            raise ValueError('invalid operator')\\n    if n == 1:\\n        return str(1)\\n    S = [[set() for _ in range(n)] for _ in range(n)]\\n    for i in range(n):\\n        S[i][i].add(operands[i])\\n    for length in range(2, n + 1):\\n        for i in range(0, n - length + 1):\\n            j = i + length - 1\\n            cur = S[i][j]\\n            for k in range(i, j):\\n                op = operators[k]\\n                left = S[i][k]\\n                right = S[k + 1][j]\\n                for a in left:\\n                    for b in right:\\n                        if op == '+':\\n                            cur.add(a + b)\\n                        elif op == '-':\\n                            cur.add(a - b)\\n                        else:\\n                            cur.add(a * b)\\n    return str(len(S[0][n - 1]))\",\"description\":\"Interval dynamic programming over the operand sequence. For each contiguous interval [i,j], maintain the set of all integer values obtainable by fully parenthesizing that subexpression while preserving order. Base case: a single operand yields its own value. For longer intervals, for every split point k, combine every value from the left interval with every value from the right interval using the operator at position k, and union the results. The answer is the cardinality of the set for the full interval. Exact integer arithmetic is used, so no floating-point error occurs. The main uncertainty is performance if intermediate sets grow large, but with at most 8 operands and small integer bounds this is negligible.\",\"applicability\":\"Applies to expressions given as an ordered list of integer operands (length 1 to 8, each between -10 and 20) and a list of binary operators from {+,-,*} of length exactly len(operands)-1. It counts distinct numerical values over all full parenthesizations preserving operand and operator order, counting each distinct value once. It does not handle other operators, reordering, unary operators, non-integer operands, or inputs outside the stated bounds; such inputs raise ValueError.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1283,
+      "completion_tokens": 746,
+      "total_tokens": 2029,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1283
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 2029,
+    "input_tokens": 1283,
+    "output_tokens": 746
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "5f4b6aa6fc3010b39fcb591888c370d39fdfe16a018f8097d9d42f8ed3fe4b58",
+  "response_sha256": "85304bb9f194d7d7fb039e9469fe4ee0018bc0bfd23985ca6c75625c2f23b5c9",
+  "reserved_rate_estimate_microusd": 2435,
+  "applicability": "Applies to expressions given as an ordered list of integer operands (length 1 to 8, each between -10 and 20) and a list of binary operators from {+,-,*} of length exactly len(operands)-1. It counts distinct numerical values over all full parenthesizations preserving operand and operator order, counting each distinct value once. It does not handle other operators, reordering, unary operators, non-integer operands, or inputs outside the stated bounds; such inputs raise ValueError.",
+  "code": "def solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    if set(parameters.keys()) != {'operands', 'operators'}:\n        raise ValueError('unexpected keys')\n    operands = parameters['operands']\n    operators = parameters['operators']\n    if not isinstance(operands, list) or not isinstance(operators, list):\n        raise ValueError('operands and operators must be lists')\n    n = len(operands)\n    if n < 1 or n > 8:\n        raise ValueError('operands length out of bounds')\n    if len(operators) != n - 1:\n        raise ValueError('operators must have len(operands)-1 entries')\n    for x in operands:\n        if isinstance(x, bool) or not isinstance(x, int):\n            raise ValueError('operands must be integers')\n        if x < -10 or x > 20:\n            raise ValueError('operand out of bounds')\n    for op in operators:\n        if op not in ('+', '-', '*'):\n            raise ValueError('invalid operator')\n    if n == 1:\n        return str(1)\n    S = [[set() for _ in range(n)] for _ in range(n)]\n    for i in range(n):\n        S[i][i].add(operands[i])\n    for length in range(2, n + 1):\n        for i in range(0, n - length + 1):\n            j = i + length - 1\n            cur = S[i][j]\n            for k in range(i, j):\n                op = operators[k]\n                left = S[i][k]\n                right = S[k + 1][j]\n                for a in left:\n                    for b in right:\n                        if op == '+':\n                            cur.add(a + b)\n                        elif op == '-':\n                            cur.add(a - b)\n                        else:\n                            cur.add(a * b)\n    return str(len(S[0][n - 1]))",
+  "description": "Interval dynamic programming over the operand sequence. For each contiguous interval [i,j], maintain the set of all integer values obtainable by fully parenthesizing that subexpression while preserving order. Base case: a single operand yields its own value. For longer intervals, for every split point k, combine every value from the left interval with every value from the right interval using the operator at position k, and union the results. The answer is the cardinality of the set for the full interval. Exact integer arithmetic is used, so no floating-point error occurs. The main uncertainty is performance if intermediate sets grow large, but with at most 8 operands and small integer bounds this is negligible.",
+  "finish_reason": "stop"
+}

@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "50dd8734-d450-47e7-a59d-1b36f2cf8e8f",
+  "raw_response": {
+    "id": "50dd8734-d450-47e7-a59d-1b36f2cf8e8f",
+    "object": "chat.completion",
+    "created": 1793201521,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    if 'limit' not in parameters:\\n        raise ValueError('missing limit')\\n    limit = parameters['limit']\\n    if isinstance(limit, bool) or not isinstance(limit, int):\\n        raise ValueError('limit must be an integer')\\n    if limit < 2:\\n        raise ValueError('limit must be at least 2')\\n    if limit > 10000000:\\n        raise ValueError('limit too large')\\n    n = limit - 1\\n    while n >= 1:\\n        s = 0\\n        m = n\\n        while m > 0:\\n            s += m % 10\\n            m //= 10\\n        if s == bin(n).count('1'):\\n            return str(n)\\n        n -= 1\\n    raise ValueError('no solution found')\\n\",\"description\":\"Enumerate integers from limit-1 downward. For each candidate compute the base-10 digit sum by repeated divmod and the binary popcount via bin(n).count('1'). Return the first (largest) n where the two sums are equal. The search is deterministic and consumes the limit parameter; it rejects non-integer, boolean, or out-of-range limits. Complexity is O(limit * log(limit)), bounded by a resource cap of ten million.\",\"applicability\":\"Valid for integer limits in [2, 10000000]. Returns the largest n with 1 <= n < limit whose decimal digit sum equals its binary digit sum. Raises ValueError for malformed input, unsupported types, or limits outside the resource bound. If no such n exists in range, raises ValueError rather than returning a sentinel.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 912,
+      "completion_tokens": 395,
+      "total_tokens": 1307,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 784
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1307,
+    "input_tokens": 912,
+    "output_tokens": 395
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "7137df3d247819327287200a45842876e1ff1f08d47c13c87b764250d41017e4",
+  "response_sha256": "a48bffa8a1310cfcc15424b2a15fce45173de0dcbb89a75f1a061c0894f48560",
+  "reserved_rate_estimate_microusd": 1569,
+  "applicability": "Valid for integer limits in [2, 10000000]. Returns the largest n with 1 <= n < limit whose decimal digit sum equals its binary digit sum. Raises ValueError for malformed input, unsupported types, or limits outside the resource bound. If no such n exists in range, raises ValueError rather than returning a sentinel.",
+  "code": "import math\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    if 'limit' not in parameters:\n        raise ValueError('missing limit')\n    limit = parameters['limit']\n    if isinstance(limit, bool) or not isinstance(limit, int):\n        raise ValueError('limit must be an integer')\n    if limit < 2:\n        raise ValueError('limit must be at least 2')\n    if limit > 10000000:\n        raise ValueError('limit too large')\n    n = limit - 1\n    while n >= 1:\n        s = 0\n        m = n\n        while m > 0:\n            s += m % 10\n            m //= 10\n        if s == bin(n).count('1'):\n            return str(n)\n        n -= 1\n    raise ValueError('no solution found')\n",
+  "description": "Enumerate integers from limit-1 downward. For each candidate compute the base-10 digit sum by repeated divmod and the binary popcount via bin(n).count('1'). Return the first (largest) n where the two sums are equal. The search is deterministic and consumes the limit parameter; it rejects non-integer, boolean, or out-of-range limits. Complexity is O(limit * log(limit)), bounded by a resource cap of ten million.",
+  "finish_reason": "stop"
+}

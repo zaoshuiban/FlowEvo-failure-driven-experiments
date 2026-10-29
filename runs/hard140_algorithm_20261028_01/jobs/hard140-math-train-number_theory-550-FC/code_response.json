@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "b57686b0-2781-4e14-b53e-9f0e37eecae8",
+  "raw_response": {
+    "id": "b57686b0-2781-4e14-b53e-9f0e37eecae8",
+    "object": "chat.completion",
+    "created": 1793201546,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    required = ['total_problems','base_score','correct_coefficient','wrong_coefficient','threshold','max_score','require_unique_correct_count']\\n    for k in required:\\n        if k not in parameters:\\n            raise ValueError('missing parameter: ' + k)\\n    N = parameters['total_problems']\\n    B = parameters['base_score']\\n    A = parameters['correct_coefficient']\\n    W = parameters['wrong_coefficient']\\n    T = parameters['threshold']\\n    M = parameters['max_score']\\n    req = parameters['require_unique_correct_count']\\n    for name, val in [('total_problems',N),('base_score',B),('correct_coefficient',A),('wrong_coefficient',W),('threshold',T),('max_score',M)]:\\n        if isinstance(val, bool) or not isinstance(val, int):\\n            raise ValueError(name + ' must be an integer')\\n    if not isinstance(req, bool):\\n        raise ValueError('require_unique_correct_count must be a boolean')\\n    if N < 0 or N > 100000:\\n        raise ValueError('total_problems out of range')\\n    if A < 0 or W < 0:\\n        raise ValueError('coefficients must be nonnegative')\\n    if A > 10**9 or W > 10**9 or abs(B) > 10**12 or abs(T) > 10**12 or abs(M) > 10**12:\\n        raise ValueError('parameter magnitude too large')\\n    if M < T:\\n        raise ValueError('max_score must be >= threshold')\\n    if M - T > 10**7:\\n        raise ValueError('scan range too large')\\n    intervals = []\\n    for c in range(N + 1):\\n        lo = B + A * c - W * (N - c)\\n        hi = B + A * c\\n        intervals.append((lo, hi, c))\\n    def count_at(s):\\n        cnt = 0\\n        for lo, hi, c in intervals:\\n            if lo <= s <= hi:\\n                cnt += 1\\n                if cnt > 1 and req:\\n                    return cnt\\n        return cnt\\n    s = T + 1\\n    while s <= M:\\n        cnt = count_at(s)\\n        if req:\\n            if cnt == 1:\\n                return str(s)\\n        else:\\n            if cnt >= 1:\\n                return str(s)\\n        s += 1\\n    raise ValueError('no qualifying score found in range')\\n\\ndef _selfcheck():\\n    pass\\n\",\"description\":\"For each possible number of correct answers c in 0..N, the achievable scores form the integer interval [B + A*c - W*(N-c), B + A*c], since wrong answers w range from 0 to N-c. The algorithm builds these intervals and, for each integer score s from threshold+1 up to max_score, counts how many intervals contain s. It returns the smallest s whose interval count is exactly 1 (or at least 1 if uniqueness is not required). This is a direct exhaustive counting method, deterministic and parameterized. Uncertainty: the interpretation of the original problem as 'smallest score above the threshold with a unique correct-count' is assumed; if the intended condition is stronger (e.g., uniqueness must fail for all lower scores above the threshold in a different sense), the result could differ. Also, if no qualifying score exists within max_score, a ValueError is raised.\",\"applicability\":\"Applies when total_problems is a nonnegative integer up to 100000, coefficients are nonnegative integers, base/threshold/max_score are integers with max_score >= threshold and scan range at most 10^7, and require_unique_correct_count is a boolean. Scores are modeled as B + A*c - W*w with 0 <= c <= N and 0 <= w <= N-c. Does not handle negative coefficients, non-integer parameters, or ranges too large to scan; raises ValueError for those or when no qualifying score is found.\",\"type\":\"json_object\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1242,
+      "completion_tokens": 944,
+      "total_tokens": 2186,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 1114
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 2186,
+    "input_tokens": 1242,
+    "output_tokens": 944
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "50ff4d69510ab0e8938417404b1a3c829a6cdae6353a6a5910dcd4cd669fef65",
+  "response_sha256": "0742f78b3bc728fef082adee10225a8f0a974740a2301248f3c911cd26c752d0",
+  "reserved_rate_estimate_microusd": 2624,
+  "applicability": "Applies when total_problems is a nonnegative integer up to 100000, coefficients are nonnegative integers, base/threshold/max_score are integers with max_score >= threshold and scan range at most 10^7, and require_unique_correct_count is a boolean. Scores are modeled as B + A*c - W*w with 0 <= c <= N and 0 <= w <= N-c. Does not handle negative coefficients, non-integer parameters, or ranges too large to scan; raises ValueError for those or when no qualifying score is found.",
+  "code": "import math\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    required = ['total_problems','base_score','correct_coefficient','wrong_coefficient','threshold','max_score','require_unique_correct_count']\n    for k in required:\n        if k not in parameters:\n            raise ValueError('missing parameter: ' + k)\n    N = parameters['total_problems']\n    B = parameters['base_score']\n    A = parameters['correct_coefficient']\n    W = parameters['wrong_coefficient']\n    T = parameters['threshold']\n    M = parameters['max_score']\n    req = parameters['require_unique_correct_count']\n    for name, val in [('total_problems',N),('base_score',B),('correct_coefficient',A),('wrong_coefficient',W),('threshold',T),('max_score',M)]:\n        if isinstance(val, bool) or not isinstance(val, int):\n            raise ValueError(name + ' must be an integer')\n    if not isinstance(req, bool):\n        raise ValueError('require_unique_correct_count must be a boolean')\n    if N < 0 or N > 100000:\n        raise ValueError('total_problems out of range')\n    if A < 0 or W < 0:\n        raise ValueError('coefficients must be nonnegative')\n    if A > 10**9 or W > 10**9 or abs(B) > 10**12 or abs(T) > 10**12 or abs(M) > 10**12:\n        raise ValueError('parameter magnitude too large')\n    if M < T:\n        raise ValueError('max_score must be >= threshold')\n    if M - T > 10**7:\n        raise ValueError('scan range too large')\n    intervals = []\n    for c in range(N + 1):\n        lo = B + A * c - W * (N - c)\n        hi = B + A * c\n        intervals.append((lo, hi, c))\n    def count_at(s):\n        cnt = 0\n        for lo, hi, c in intervals:\n            if lo <= s <= hi:\n                cnt += 1\n                if cnt > 1 and req:\n                    return cnt\n        return cnt\n    s = T + 1\n    while s <= M:\n        cnt = count_at(s)\n        if req:\n            if cnt == 1:\n                return str(s)\n        else:\n            if cnt >= 1:\n                return str(s)\n        s += 1\n    raise ValueError('no qualifying score found in range')\n\ndef _selfcheck():\n    pass\n",
+  "description": "For each possible number of correct answers c in 0..N, the achievable scores form the integer interval [B + A*c - W*(N-c), B + A*c], since wrong answers w range from 0 to N-c. The algorithm builds these intervals and, for each integer score s from threshold+1 up to max_score, counts how many intervals contain s. It returns the smallest s whose interval count is exactly 1 (or at least 1 if uniqueness is not required). This is a direct exhaustive counting method, deterministic and parameterized. Uncertainty: the interpretation of the original problem as 'smallest score above the threshold with a unique correct-count' is assumed; if the intended condition is stronger (e.g., uniqueness must fail for all lower scores above the threshold in a different sense), the result could differ. Also, if no qualifying score exists within max_score, a ValueError is raised.",
+  "finish_reason": "stop"
+}

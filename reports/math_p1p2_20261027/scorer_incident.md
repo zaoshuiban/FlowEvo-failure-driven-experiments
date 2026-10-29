@@ -1,0 +1,9 @@
+# 运行中评分安全事件
+
+原Run在13题完成后人工安全中断。序号1的第二次输出finish_reason=length，结尾为未完成列表序号25。旧解析器的最后一行回退将其当作答案，误标CONFIRMED_WRONG。因此旧标签不构成真实失败证据，不能进入P2。
+
+中断时第14题第二次请求在途，账本保留UNKNOWN，不重发、不退回占用。原协议、评分日志、模型响应、账本与STOP保留不变；原评分源码按冻结SHA存入Run/frozen_source。未向GPT发送任何失败材料。
+
+新增v2解析在离线复核中先检查finish_reason，再要求显式最终答案或完整单行数值。截断输出为EXECUTION_ERROR/INCOMPLETE_GENERATION。LaTeX外层定界符属于形式规范化；符号非匹配仍UNVERIFIED。该修正属于事后工程诊断，不能追溯改写原Run或作为新的预注册实验结果。
+
+本轮按UNKNOWN/数据质量停止边界封存，不自动启动新付费Run。后续必须先重新冻结修复版，不能直接恢复当前Run。

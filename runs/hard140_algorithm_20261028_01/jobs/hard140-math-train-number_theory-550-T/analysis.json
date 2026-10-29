@@ -1,0 +1,59 @@
+{
+  "decision": "PROPOSE",
+  "invalid_operation": null,
+  "observations": [
+    "The score formula is s=30+4c-w with c+w+u=30 (u unanswered), so w=30-c-u and s=30+4c-(30-c-u)=5c+u.",
+    "Thus s=5c+u where 0<=u<=30-c, so for a given score s, possible c values satisfy c<=s/5 and u=s-5c with 0<=u<=30-c.",
+    "John can determine c uniquely from s iff exactly one integer c satisfies max(0,ceil((s-30)/4))<=c<=floor(s/5) and u=s-5c in [0,30-c].",
+    "The question asks for the largest score s>80 such that s is uniquely decodable but every integer score t with 80<t<s is not uniquely decodable."
+  ],
+  "parameter_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "base_score": {
+        "description": "Constant added to the score formula.",
+        "type": "integer"
+      },
+      "correct_weight": {
+        "description": "Coefficient multiplying the number of correct answers.",
+        "type": "integer"
+      },
+      "lower_bound_exclusive": {
+        "description": "Scores must be strictly greater than this value to be considered.",
+        "type": "integer"
+      },
+      "max_score": {
+        "description": "Maximum possible score to scan up to.",
+        "type": "integer"
+      },
+      "num_problems": {
+        "description": "Total number of multiple-choice problems on the exam.",
+        "type": "integer"
+      },
+      "wrong_weight": {
+        "description": "Coefficient multiplying the number of wrong answers (typically negative).",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "num_problems",
+      "base_score",
+      "correct_weight",
+      "wrong_weight",
+      "lower_bound_exclusive",
+      "max_score"
+    ],
+    "type": "object"
+  },
+  "procedure_plan": "Enumerate integer scores s from 81 up to the maximum possible score (150). For each s, count the number of feasible correct-answer counts c by iterating c from 0 to 30 and checking whether u=s-5c satisfies 0<=u<=30-c. A score is 'determinable' if exactly one c is feasible. Find the smallest determinable score strictly greater than 80; that score is the answer, because any lower score over 80 is not determinable. Return that score.",
+  "replacement_operation": null,
+  "source_parameters": {
+    "base_score": 30,
+    "correct_weight": 4,
+    "lower_bound_exclusive": 80,
+    "max_score": 150,
+    "num_problems": 30,
+    "wrong_weight": -1
+  },
+  "uncertainty": "Assumes the intended reading that 'any lower score over 80' means every integer score strictly between 80 and Mary's score is not uniquely decodable, and that scores are integers. Also assumes no other constraints on unanswered questions beyond c+w+u=30."
+}

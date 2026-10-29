@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "8d87a6cb-94a7-44eb-afa6-bc3dd494a92f",
+  "raw_response": {
+    "id": "8d87a6cb-94a7-44eb-afa6-bc3dd494a92f",
+    "object": "chat.completion",
+    "created": 1793195459,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import itertools\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    digits = parameters.get('digits')\\n    max_length = parameters.get('max_length')\\n    if not isinstance(digits, list) or not digits:\\n        raise ValueError('digits must be a nonempty list')\\n    if len(digits) > 10:\\n        raise ValueError('too many digits')\\n    seen = set()\\n    for d in digits:\\n        if isinstance(d, bool) or not isinstance(d, int):\\n            raise ValueError('digits must be integers')\\n        if d < 0 or d > 9:\\n            raise ValueError('digit out of range')\\n        if d in seen:\\n            raise ValueError('digits must be distinct')\\n        seen.add(d)\\n    if isinstance(max_length, bool) or not isinstance(max_length, int):\\n        raise ValueError('max_length must be an integer')\\n    if max_length < 1 or max_length > 4:\\n        raise ValueError('max_length out of range')\\n    L = min(max_length, len(digits))\\n    primes = set()\\n    for k in range(1, L + 1):\\n        for tup in itertools.permutations(digits, k):\\n            if k > 1 and tup[0] == 0:\\n                continue\\n            n = 0\\n            for d in tup:\\n                n = n * 10 + d\\n            if n < 2:\\n                continue\\n            if k == 1:\\n                if n in (2, 3, 5, 7):\\n                    primes.add(n)\\n                continue\\n            last = tup[-1]\\n            if last not in (1, 3, 7, 9):\\n                continue\\n            if sum(tup) % 3 == 0:\\n                continue\\n            is_p = True\\n            d = 2\\n            while d * d <= n:\\n                if n % d == 0:\\n                    is_p = False\\n                    break\\n                d += 1\\n            if is_p:\\n                primes.add(n)\\n    return str(len(primes))\",\"description\":\"Exhaustively enumerate all ordered selections of k distinct digits for k from 1 to min(max_length, number of distinct digits). Skip leading-zero multi-digit numbers. For single digits accept only 2,3,5,7. For longer numbers require the last digit in {1,3,7,9} and digit sum not divisible by 3, then confirm primality by exact trial division up to floor(sqrt(n)). Results are collected in a set to guarantee distinctness and the count is returned as a string. The method is exact; runtime is bounded by the small permutation space (at most 10 digits, max_length 4).\",\"applicability\":\"Applies to the stated family: a nonempty set of 1-10 distinct decimal digits and an integer max_length in 1..4, counting distinct primes formable from up to max_length chosen digits without repetition and with no leading zero. Inputs outside this domain (duplicate or out-of-range digits, non-integer or boolean values, max_length outside 1..4) are rejected with ValueError. It does not handle repeated digits, lengths above 4, or non-decimal bases.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1503,
+      "completion_tokens": 755,
+      "total_tokens": 2258,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 1375
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 2258,
+    "input_tokens": 1503,
+    "output_tokens": 755
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "3c82a537aa2d4e3b1e96fd48b8847c90d4a2e877530a4f78e170700398311235",
+  "response_sha256": "d7a9cf81aad0d49adff050671449565a35ed9b31610d021525bfb73e987d4b0d",
+  "reserved_rate_estimate_microusd": 2710,
+  "applicability": "Applies to the stated family: a nonempty set of 1-10 distinct decimal digits and an integer max_length in 1..4, counting distinct primes formable from up to max_length chosen digits without repetition and with no leading zero. Inputs outside this domain (duplicate or out-of-range digits, non-integer or boolean values, max_length outside 1..4) are rejected with ValueError. It does not handle repeated digits, lengths above 4, or non-decimal bases.",
+  "code": "import itertools\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    digits = parameters.get('digits')\n    max_length = parameters.get('max_length')\n    if not isinstance(digits, list) or not digits:\n        raise ValueError('digits must be a nonempty list')\n    if len(digits) > 10:\n        raise ValueError('too many digits')\n    seen = set()\n    for d in digits:\n        if isinstance(d, bool) or not isinstance(d, int):\n            raise ValueError('digits must be integers')\n        if d < 0 or d > 9:\n            raise ValueError('digit out of range')\n        if d in seen:\n            raise ValueError('digits must be distinct')\n        seen.add(d)\n    if isinstance(max_length, bool) or not isinstance(max_length, int):\n        raise ValueError('max_length must be an integer')\n    if max_length < 1 or max_length > 4:\n        raise ValueError('max_length out of range')\n    L = min(max_length, len(digits))\n    primes = set()\n    for k in range(1, L + 1):\n        for tup in itertools.permutations(digits, k):\n            if k > 1 and tup[0] == 0:\n                continue\n            n = 0\n            for d in tup:\n                n = n * 10 + d\n            if n < 2:\n                continue\n            if k == 1:\n                if n in (2, 3, 5, 7):\n                    primes.add(n)\n                continue\n            last = tup[-1]\n            if last not in (1, 3, 7, 9):\n                continue\n            if sum(tup) % 3 == 0:\n                continue\n            is_p = True\n            d = 2\n            while d * d <= n:\n                if n % d == 0:\n                    is_p = False\n                    break\n                d += 1\n            if is_p:\n                primes.add(n)\n    return str(len(primes))",
+  "description": "Exhaustively enumerate all ordered selections of k distinct digits for k from 1 to min(max_length, number of distinct digits). Skip leading-zero multi-digit numbers. For single digits accept only 2,3,5,7. For longer numbers require the last digit in {1,3,7,9} and digit sum not divisible by 3, then confirm primality by exact trial division up to floor(sqrt(n)). Results are collected in a set to guarantee distinctness and the count is returned as a string. The method is exact; runtime is bounded by the small permutation space (at most 10 digits, max_length 4).",
+  "finish_reason": "stop"
+}

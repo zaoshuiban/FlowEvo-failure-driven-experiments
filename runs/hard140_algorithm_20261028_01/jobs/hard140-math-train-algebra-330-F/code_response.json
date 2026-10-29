@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "e335bf65-1a61-4c72-a041-1ecee3885c64",
+  "raw_response": {
+    "id": "e335bf65-1a61-4c72-a041-1ecee3885c64",
+    "object": "chat.completion",
+    "created": 1793201448,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    required = ['outer_coefficient', 'inner_constant', 'inner_coefficient', 'depth']\\n    for key in required:\\n        if key not in parameters:\\n            raise ValueError('missing parameter: ' + key)\\n    outer_coefficient = parameters['outer_coefficient']\\n    inner_constant = parameters['inner_constant']\\n    inner_coefficient = parameters['inner_coefficient']\\n    depth = parameters['depth']\\n    for name, val in [('outer_coefficient', outer_coefficient), ('inner_constant', inner_constant), ('inner_coefficient', inner_coefficient), ('depth', depth)]:\\n        if isinstance(val, bool) or not isinstance(val, int):\\n            raise ValueError(name + ' must be an integer')\\n    if depth < 0:\\n        raise ValueError('depth must be nonnegative')\\n    if depth > 100000:\\n        raise ValueError('depth too large')\\n    value = inner_constant\\n    for _ in range(depth):\\n        value = inner_constant + inner_coefficient * value\\n    result = outer_coefficient * value\\n    return str(result)\\n\\ndef description():\\n    return 'Evaluate nested expression outer_coefficient*(inner_constant+inner_coefficient*(...)) with depth nested layers. Start with innermost constant, iterate recurrence value=inner_constant+inner_coefficient*value depth times, multiply by outer_coefficient. Returns integer string. Uncertainty: assumes uniform nesting pattern and exact depth as given.'\\n\\ndef applicability():\\n    return 'Applies to integer parameters with depth>=0 and depth<=100000. Rejects non-integer or boolean inputs and negative depth. Does not handle non-uniform nesting or non-integer coefficients.'\\n\" , \"description\":\"Evaluate nested expression outer_coefficient*(inner_constant+inner_coefficient*(...)) with depth nested layers. Start with innermost constant, iterate recurrence value=inner_constant+inner_coefficient*value depth times, multiply by outer_coefficient. Returns integer string. Uncertainty: assumes uniform nesting pattern and exact depth as given.\",\"applicability\":\"Applies to integer parameters with depth>=0 and depth<=100000. Rejects non-integer or boolean inputs and negative depth. Does not handle non-uniform nesting or non-integer coefficients.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 831,
+      "completion_tokens": 551,
+      "total_tokens": 1382,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 703
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1382,
+    "input_tokens": 831,
+    "output_tokens": 551
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "5f1d9b7ec8eb576934f6ff4b6305a4fd84bad1c552893d7f35fac6d42d89bd29",
+  "response_sha256": "91684ea95e4a2ba342a217b635d2a482cd5a874ecd1d4005c2146289fb311b58",
+  "reserved_rate_estimate_microusd": 1659,
+  "applicability": "Applies to integer parameters with depth>=0 and depth<=100000. Rejects non-integer or boolean inputs and negative depth. Does not handle non-uniform nesting or non-integer coefficients.",
+  "code": "import math\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    required = ['outer_coefficient', 'inner_constant', 'inner_coefficient', 'depth']\n    for key in required:\n        if key not in parameters:\n            raise ValueError('missing parameter: ' + key)\n    outer_coefficient = parameters['outer_coefficient']\n    inner_constant = parameters['inner_constant']\n    inner_coefficient = parameters['inner_coefficient']\n    depth = parameters['depth']\n    for name, val in [('outer_coefficient', outer_coefficient), ('inner_constant', inner_constant), ('inner_coefficient', inner_coefficient), ('depth', depth)]:\n        if isinstance(val, bool) or not isinstance(val, int):\n            raise ValueError(name + ' must be an integer')\n    if depth < 0:\n        raise ValueError('depth must be nonnegative')\n    if depth > 100000:\n        raise ValueError('depth too large')\n    value = inner_constant\n    for _ in range(depth):\n        value = inner_constant + inner_coefficient * value\n    result = outer_coefficient * value\n    return str(result)\n\ndef description():\n    return 'Evaluate nested expression outer_coefficient*(inner_constant+inner_coefficient*(...)) with depth nested layers. Start with innermost constant, iterate recurrence value=inner_constant+inner_coefficient*value depth times, multiply by outer_coefficient. Returns integer string. Uncertainty: assumes uniform nesting pattern and exact depth as given.'\n\ndef applicability():\n    return 'Applies to integer parameters with depth>=0 and depth<=100000. Rejects non-integer or boolean inputs and negative depth. Does not handle non-uniform nesting or non-integer coefficients.'\n",
+  "description": "Evaluate nested expression outer_coefficient*(inner_constant+inner_coefficient*(...)) with depth nested layers. Start with innermost constant, iterate recurrence value=inner_constant+inner_coefficient*value depth times, multiply by outer_coefficient. Returns integer string. Uncertainty: assumes uniform nesting pattern and exact depth as given.",
+  "finish_reason": "stop"
+}

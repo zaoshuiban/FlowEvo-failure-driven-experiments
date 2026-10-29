@@ -405,6 +405,10 @@ def run_condition(
     output_dir: Path | None = None,
 ) -> list[dict[str, Any]]:
 
+    if cfg.get('no_gold', False):
+        from code_math.no_gold import run_condition_no_gold
+        return run_condition_no_gold(benchmark, condition_name, cfg, llm, tasks, output_dir)
+
     print("\n" + "=" * 72)
     print("  %s / %s — %s" % (benchmark, condition_name, cfg["display"]))
     print("=" * 72)

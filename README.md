@@ -91,3 +91,44 @@ python3 scripts/smoke_failure_evo_v2.py
 按跨不同原题要求重新冻结2道来源、2道验证目标，使用 DeepSeek 真实归纳；旧苹果树专用源码未输入。结果 `HYPOTHESIS_ONLY`：1次请求、14,272 tokens，保守报价估算约 $0.00510；未产生源码，未启动 G/F 配对，不能声称跨题复用或优于对照。历史实验与确认集保持不变。
 
 [真实实验报告](runs/autonomous_cross_original_20261027_01/跨原题自主算子发现与复用实验报告.md) · [机器可读结果](runs/autonomous_cross_original_20261027_01/summary.json) · [冻结协议](runs/autonomous_cross_original_20261027_01/protocol.json)
+
+### 无Gold数学算子学习（P0，2026-10-27）
+
+新增默认关闭的 `code_math.runner` / `cfg.no_gold` 路径：固定求解与自检，答案锁定后私有评分；GPT生成的标量数学算子在Linux Worker执行。P0仅Mock模型＋真实Worker，无付费调用，未更改历史结果。
+
+见 [P0中文总报告](reports/math_no_gold_p0_20261027/P0_总报告.md) 与 [机器可读协议](reports/math_no_gold_p0_20261027/protocol.json)。私有参考答案及历史生成器副本不随Git上传。真实实验须新授权；未配置授权通道时不会回落旧客户端。
+
+### 无Gold数学学习 P1–P2（部分运行）
+
+[实验总结](reports/math_p1p2_20261027/P1P2_实验总结.md)：完成13/96题后发现截断枚举被误解析为答案，按证据质量安全边界中断。27次DeepSeek响应，1次在途请求UNKNOWN且未重发；GPT/P2未启动。修复版26项零API测试通过；事后复核与原运行标签分开保存，不将Mock或无效错误标签算作真实学习成功。
+
+### 无Gold数学P1：剩余82题续跑完成
+
+[结果摘要](reports/math_p1_remaining82_20261027/P1_续跑结果摘要.md)：82/82完成；58题确认正确、12题确认数值答案错误、7题截断、5题未确认。164次DeepSeek响应、371,125 tokens，冻结报价估算$0.292578；本轮无UNKNOWN或重复请求。旧13题曝光及1题UNKNOWN隔离保持不变。P2未启动，未生成或复用算子。
+
+
+## 数学 P2：12条可信失败自主归纳与源码生成（2026-10-27）
+
+[中文实验总结](reports/math_p2_all12_20261027/P2_实验总结.md)：4次真实GPT响应，3条机制假设、3份Python源码，3/3通过工程检查；15次真实Worker执行。未使用gold修订或评分，未运行独立题/Gate/性能比较，全部Shadow。供应商返回cost约$0.33425，独立硬预算$8。
+
+**工程通过不等于修复成功：**候选2把错误的前缀化简过程实现进代码，存在明确语义风险。本轮还发生一次来源ID规范化补充，原拒绝与响应均保留。详见[工程验收](reports/math_p2_all12_20261027/P2_生成算子工程验收报告.md)及[冻结协议](reports/math_p2_all12_20261027/P2_冻结协议与零API验收.md)。
+
+
+## 数学算子冻结功能审计（2026-10-27）
+
+[中文报告](reports/math_p3_functional_audit_20261027/P3_冻结算子功能审计报告.md)：零新增模型API、156次真实Worker执行。三个算子来源分别7/7、0/2、3/3正确；48题Design上分别5对1错42拒绝、0对4错2异常42拒绝、8对4错36拒绝。确认部分计算能力，也确认失败过程编译及适用范围误触发。源码未改，全部Shadow；未运行Gate或性能对照。
+
+
+## FlowEvo数学 v3：纠错与语义契约（2026-10-27）
+
+[完整报告](reports/math_v3_20261027/V3_Final_Report.md)：PARTIAL。已实现分离的纠错机制、match/solve、独立Oracle门控和版本授权；15项零API测试通过。真实GPT 6份机制响应，4份源码交付截断，最后一次源码请求HTTP402并保留UNKNOWN，未产生可验收新源码。未运行真实V1/V2/V3消融或Gate。10次响应124,699 Token、usage.cost约$1.32965。P0–P3记录不变。
+
+
+## 最新数学算法实验（2026-10-28）
+
+- [T/F/F-C参数化算法对照](reports/algorithm_evidence_20261028_01/Algorithm_Evidence_Final_Report.md)：18次生成尝试，17份可执行候选通过来源及新参数检查；Task-Only同样能生成正确算法，未证明失败信息增量。
+- [10道Level 5题](reports/hard10_algorithm_20261028_01/Hard10_Final_Report.md)：最终10/10正确，0可信数学错误，未触发生成对照。
+- [140道七类型Level 5题](reports/hard140_algorithm_20261028_01/Hard140_Final_Report.md)：118正确、8错误、13未确认、1截断；7个来源的T/F/F-C修复数为3/3/4。共321次响应，546,335 Token，报价估算$0.194775。
+- [机制与账本审计](reports/hard140_algorithm_20261028_01/Mechanism_and_Ledger_Audit.md)：F-C有表达式解析和首次命中正例，也有多项式反例；两条归一化失败被账本标记UNKNOWN但未触发全局停止。本轮为`COMPLETE_WITH_LEDGER_GATE_DEVIATION`，仅作开发探索，不宣称严格确认或跨题收益。
+
+脚本默认不发送API；执行真实运行需匹配冻结协议和显式授权。此次上传源码、报告及最近三轮公开运行记录；私有评分答案、原始数据集、未来封存测试和重复源码快照不上传。离线重放涉及这些本地文件的步骤需要按记录的来源和哈希恢复，仓库不是包含全部私有实验数据的自包含包。历史费用预留、UNKNOWN和负结果不追溯修改。

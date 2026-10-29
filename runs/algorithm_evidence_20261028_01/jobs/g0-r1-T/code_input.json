@@ -1,0 +1,74 @@
+{
+  "source_tasks": [
+    {
+      "problem": "Choose between one and 4 distinct digits from the set {1, 4, 5, 6, 7, 9} and arrange the chosen digits without repetition to form a positive integer. How many distinct prime numbers can be formed?",
+      "task_id": "math-820c7a4e1d44c1a32863b84b"
+    },
+    {
+      "problem": "Using up to 4 digits from the set {0, 1, 3, 4, 6, 9}, arrange the digits without repetition to make positive integers. A leading zero is not allowed. What is the number of distinct prime integers obtainable?",
+      "task_id": "math-4d87d0114e4e9312d2494bb6"
+    },
+    {
+      "problem": "Using up to 4 digits from the set {0, 1, 3, 5, 6, 7}, arrange the digits without repetition to make positive integers. A leading zero is not allowed. What is the number of distinct prime integers obtainable?",
+      "task_id": "math-f2682d6017b1a7fde3bc8ae5"
+    },
+    {
+      "problem": "From one to 4 digits may be selected from the set {0, 2, 6, 7, 8, 9} and arranged without repetition as a positive integer. A leading zero is not allowed. How many distinct prime numbers result?",
+      "task_id": "math-61c3853fa124c45cbd4a8d8f"
+    },
+    {
+      "problem": "Choose between one and 4 distinct digits from the set {1, 5, 6, 7, 8, 9} and arrange the chosen digits without repetition to form a positive integer. How many distinct prime numbers can be formed?",
+      "task_id": "math-4d53fdd9b4622f38480dc462"
+    },
+    {
+      "problem": "Choose between one and 4 distinct digits from the set {0, 2, 4, 6, 7, 8} and arrange the chosen digits without repetition to form a positive integer. A leading zero is not allowed. How many distinct prime numbers can be formed?",
+      "task_id": "math-5f1f433e226249cd7ea9aeba"
+    },
+    {
+      "problem": "Using up to 4 digits from the set {0, 1, 5, 6, 7, 8}, arrange the digits without repetition to make positive integers. A leading zero is not allowed. What is the number of distinct prime integers obtainable?",
+      "task_id": "math-0cf4153cb611f5703c7a9707"
+    }
+  ],
+  "parameter_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "digits",
+      "max_length"
+    ],
+    "properties": {
+      "digits": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 10,
+        "uniqueItems": true,
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9
+        }
+      },
+      "max_length": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 4
+      }
+    }
+  },
+  "interface_note": "Only parameter values vary; all mathematical conditions and requested quantity remain those stated by the supplied source questions. Names describe source data, not a target algorithm. Implement solve(parameters), no natural-language applicability detection. max_length must not exceed the number of distinct supplied digits.",
+  "analysis": {
+    "decision": "PROPOSE",
+    "invalid_operation": null,
+    "observations": [
+      "All source questions ask for the count of distinct primes formed by arranging between 1 and max_length distinct digits drawn from a supplied digit set, with no repetition.",
+      "Leading zero is disallowed whenever 0 is in the digit set; the resulting integer must be positive.",
+      "The count is finite and small: at most sum over lengths 1..4 of permutations of the digit set, so exhaustive enumeration is feasible.",
+      "Primality must be tested exactly; trial division up to integer square root suffices for numbers with at most 4 digits.",
+      "Distinctness is automatic because digit arrangements without repetition over distinct digits yield distinct integers, but a set should still be used to be safe.",
+      "The parameter max_length is bounded by the number of distinct supplied digits, so enumeration lengths are 1..min(max_length, len(digits))."
+    ],
+    "procedure_plan": "Implement solve(parameters): read digits (list of distinct integers 0-9) and max_length L. Let n = len(digits). For each length k from 1 to min(L, n): generate all ordered k-tuples of distinct digits from digits (permutations). For each tuple, if the first digit is 0, skip it (no leading zero). Otherwise form the integer value by positional accumulation. If value >= 2 and is_prime(value), add to a set. Return the size of the set. is_prime(v): if v < 2 return false; if v is 2 or 3 return true; if v % 2 == 0 or v % 3 == 0 return false; loop d from 5 while d*d <= v step 6, checking divisibility by d and d+2; return true if none divide. Use integer arithmetic only.",
+    "replacement_operation": null,
+    "uncertainty": "The plan assumes the requested quantity is exactly the count of distinct prime integers, matching all supplied source questions. If a future parameter set contains repeated digits, the 'distinct digits' premise would need clarification, but the schema enforces uniqueItems. No other ambiguity affects the deterministic enumeration."
+  }
+}

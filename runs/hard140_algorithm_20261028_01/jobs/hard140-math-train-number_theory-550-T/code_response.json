@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "5a203ae4-6f84-4b0f-8e0a-38409b0ae524",
+  "raw_response": {
+    "id": "5a203ae4-6f84-4b0f-8e0a-38409b0ae524",
+    "object": "chat.completion",
+    "created": 1793201554,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"def solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    required = ['num_problems', 'base_score', 'correct_weight', 'wrong_weight', 'lower_bound_exclusive', 'max_score']\\n    for key in required:\\n        if key not in parameters:\\n            raise ValueError('missing parameter: ' + key)\\n        val = parameters[key]\\n        if isinstance(val, bool) or not isinstance(val, int):\\n            raise ValueError('parameter must be an integer: ' + key)\\n    n = parameters['num_problems']\\n    b = parameters['base_score']\\n    a = parameters['correct_weight']\\n    d = parameters['wrong_weight']\\n    lo = parameters['lower_bound_exclusive']\\n    hi = parameters['max_score']\\n    if n < 0 or n > 10000:\\n        raise ValueError('num_problems out of supported range')\\n    if a == d:\\n        raise ValueError('correct_weight and wrong_weight must differ')\\n    if hi < lo:\\n        raise ValueError('max_score must be at least lower_bound_exclusive')\\n    if hi - lo > 2000000:\\n        raise ValueError('score range too large')\\n    def feasible_count(s):\\n        count = 0\\n        for c in range(0, n + 1):\\n            rem = s - b - a * c\\n            if rem % d != 0:\\n                continue\\n            w = rem // d\\n            if w < 0 or w > n - c:\\n                continue\\n            count += 1\\n            if count > 1:\\n                return count\\n        return count\\n    start = lo + 1\\n    for s in range(start, hi + 1):\\n        if feasible_count(s) == 1:\\n            return str(s)\\n    raise ValueError('no uniquely decodable score found in range')\\n\",\"description\":\"The score is s = base_score + correct_weight*c + wrong_weight*w with c correct, w wrong, and c+w <= num_problems (unanswered allowed). For each integer score s strictly above lower_bound_exclusive up to max_score, I count the number of feasible correct counts c by solving for w = (s - base_score - correct_weight*c)/wrong_weight and checking integrality and 0 <= w <= num_problems - c. The first score with exactly one feasible c is returned, matching the condition that this score is uniquely decodable while every lower score above the bound is not. The scan is deterministic and bounded by the validated score range. Uncertainty: the intended reading is that all integer scores strictly between the bound and the answer are non-uniquely decodable; if no such score exists in range, a ValueError is raised.\",\"applicability\":\"Applies to integer-parameterized AHSME-style scoring with a fixed number of problems, a linear score formula, and a bounded integer score interval. Requires correct_weight != wrong_weight and a modest score range (at most 2,000,000 values scanned). It assumes unanswered problems are allowed and that scores are integers; it does not handle non-integer parameters or unbounded ranges.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1037,
+      "completion_tokens": 705,
+      "total_tokens": 1742,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 909
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 1742,
+    "input_tokens": 1037,
+    "output_tokens": 705
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "c4c3bc8851d180810a298ee06cb2a2fca1ee2a68d8b2f9ad397a39fbb3f75e9f",
+  "response_sha256": "af6eec7008063eb32a59691d27a830e03d94cb465f333e413f36f60803e43bec",
+  "reserved_rate_estimate_microusd": 2091,
+  "applicability": "Applies to integer-parameterized AHSME-style scoring with a fixed number of problems, a linear score formula, and a bounded integer score interval. Requires correct_weight != wrong_weight and a modest score range (at most 2,000,000 values scanned). It assumes unanswered problems are allowed and that scores are integers; it does not handle non-integer parameters or unbounded ranges.",
+  "code": "def solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    required = ['num_problems', 'base_score', 'correct_weight', 'wrong_weight', 'lower_bound_exclusive', 'max_score']\n    for key in required:\n        if key not in parameters:\n            raise ValueError('missing parameter: ' + key)\n        val = parameters[key]\n        if isinstance(val, bool) or not isinstance(val, int):\n            raise ValueError('parameter must be an integer: ' + key)\n    n = parameters['num_problems']\n    b = parameters['base_score']\n    a = parameters['correct_weight']\n    d = parameters['wrong_weight']\n    lo = parameters['lower_bound_exclusive']\n    hi = parameters['max_score']\n    if n < 0 or n > 10000:\n        raise ValueError('num_problems out of supported range')\n    if a == d:\n        raise ValueError('correct_weight and wrong_weight must differ')\n    if hi < lo:\n        raise ValueError('max_score must be at least lower_bound_exclusive')\n    if hi - lo > 2000000:\n        raise ValueError('score range too large')\n    def feasible_count(s):\n        count = 0\n        for c in range(0, n + 1):\n            rem = s - b - a * c\n            if rem % d != 0:\n                continue\n            w = rem // d\n            if w < 0 or w > n - c:\n                continue\n            count += 1\n            if count > 1:\n                return count\n        return count\n    start = lo + 1\n    for s in range(start, hi + 1):\n        if feasible_count(s) == 1:\n            return str(s)\n    raise ValueError('no uniquely decodable score found in range')\n",
+  "description": "The score is s = base_score + correct_weight*c + wrong_weight*w with c correct, w wrong, and c+w <= num_problems (unanswered allowed). For each integer score s strictly above lower_bound_exclusive up to max_score, I count the number of feasible correct counts c by solving for w = (s - base_score - correct_weight*c)/wrong_weight and checking integrality and 0 <= w <= num_problems - c. The first score with exactly one feasible c is returned, matching the condition that this score is uniquely decodable while every lower score above the bound is not. The scan is deterministic and bounded by the validated score range. Uncertainty: the intended reading is that all integer scores strictly between the bound and the answer are non-uniquely decodable; if no such score exists in range, a ValueError is raised.",
+  "finish_reason": "stop"
+}

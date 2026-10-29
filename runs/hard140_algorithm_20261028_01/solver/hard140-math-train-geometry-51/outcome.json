@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-geometry-51",
+    "problem": "Triangles $ABC$ and $ADE$ have areas $2007$ and $7002,$ respectively, with $B=(0,0), C=(223,0), D=(680,380),$ and $E=(689,389).$ What is the sum of all possible $x$-coordinates of $A$?"
+  },
+  "problem_sha256": "0ed077814815086be7eb0f7965275881a089f9ef88a01385428bac9445752f2b",
+  "task_id": "hard140-math-train-geometry-51",
+  "sequence": 135,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-geometry-51",
+  "locked_sha256": "82d9607bb196624690222c3888b7a7875fbbe6baf14f45f238116517db3c65f0",
+  "trajectory_sha256": "3df19e9f883ecf3edf5822756105075c4cb5cecc7326ce39603bdaf089c7a007",
+  "responses": [
+    {
+      "text": "Let’s go step-by-step.\n\n---\n\nWe have:\n\n- Triangle \\(ABC\\): \\(B=(0,0)\\), \\(C=(223,0)\\), \\(A=(x,y)\\).\n- Area of \\(ABC = 2007\\).\n\n- Triangle \\(ADE\\): \\(D=(680,380)\\), \\(E=(689,389)\\), \\(A=(x,y)\\).\n- Area of \\(ADE = 7002\\).\n\nWe want the sum of all possible \\(x\\)-coordinates of \\(A\\).\n\n---\n\n### Step 1: Area of triangle \\(ABC\\)\n\nBase \\(BC\\) is horizontal from \\((0,0)\\) to \\((223,0)\\), length \\(223\\).\n\nArea formula:  \n\\[\n\\text{Area} = \\frac12 \\times \\text{base} \\times \\text{height}\n\\]\nHeight is \\(|y|\\) (since BC is on x-axis).\n\nSo:\n\\[\n\\frac12 \\times 223 \\times |y| = 2007\n\\]\n\\[\n223|y| = 4014\n\\]\n\\[\n|y| = \\frac{4014}{223}\n\\]\nLet’s check: \\(223 \\times 18 = 4014\\), yes.\n\nSo \\(|y| = 18\\).  \nThus \\(y = 18\\) or \\(y = -18\\).\n\n---\n\n### Step 2: Area of triangle \\(ADE\\)\n\nPoints: \\(D=(680,380)\\), \\(E=(689,389)\\), \\(A=(x,y)\\).\n\nVector \\(DE = (9,9)\\).\n\nArea formula using coordinates:\n\\[\n\\text{Area} = \\frac12 | \\det( \\vec{AD}, \\vec{AE} ) |\n\\]\nBut easier: base \\(DE\\) length = \\(\\sqrt{9^2+9^2} = 9\\sqrt{2}\\).\n\nHeight from \\(A\\) to line \\(DE\\):  \nLine DE slope = 1, equation: through D: \\(y - 380 = 1(x - 680)\\), so \\(y = x - 300\\).\n\nDistance from \\(A=(x,y)\\) to line \\(y = x - 300\\):\n\nLine in form \\(x - y - 300 = 0\\).\n\nDistance = \\(\\frac{|x - y - 300|}{\\sqrt{1^2 + (-1)^2}} = \\frac{|x - y - 300|}{\\sqrt{2}}\\).\n\nArea = \\(\\frac12 \\times (9\\sqrt{2}) \\times \\frac{|x - y - 300|}{\\sqrt{2}} = \\frac{9}{2} |x - y - 300|\\).\n\nGiven area = 7002:\n\\[\n\\frac{9}{2} |x - y - 300| = 7002\n\\]\n\\[\n|x - y - 300| = \\frac{14004}{9} = 1556\n\\]\nsince \\(9 \\times 1556 = 14004\\).\n\nSo:\n\\[\nx - y - 300 = 1556 \\quad\\text{or}\\quad x - y - 300 = -1556\n\\]\nThus:\n\\[\nx - y = 1856 \\quad\\text{or}\\quad x - y = -1256\n\\]\n\n---\n\n### Step 3: Combine with \\(y = \\pm 18\\)\n\nCase 1: \\(y = 18\\):\n\n- \\(x - 18 = 1856 \\implies x = 1874\\)\n- \\(x - 18 = -1256 \\implies x = -1238\\)\n\nCase 2: \\(y = -18\\):\n\n- \\(x - (-18) = 1856 \\implies x + 18 = 1856 \\implies x = 1838\\)\n- \\(x + 18 = -1256 \\implies x = -1274\\)\n\n---\n\n### Step 4: Possible x-values\n\nWe have: \\(1874, -1238, 1838, -1274\\).\n\nSum = \\(1874 + (-1238) + 1838 + (-1274)\\).\n\nFirst: \\(1874 + 1838 = 3712\\).  \nNegatives: \\(-1238 - 1274 = -2512\\).\n\nSum = \\(3712 - 2512 = 1200\\).\n\n---\n\n\\[\n\\boxed{1200}\n\\]\n\nThe answer is 1200.",
+      "usage": {
+        "prompt_tokens": 125,
+        "completion_tokens": 903,
+        "total_tokens": 1028,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 125
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "5a078d4a45e94d0ab63b3b9f25d70bd855c86105796063fcdb4d38a310300c10"
+    },
+    {
+      "text": "Let’s verify the key computations.\n\nArea of \\(ABC\\):\n\\[\n\\frac12(223)|y|=2007 \\implies |y|=18\n\\]\nso \\(y=\\pm 18\\).\n\nFor \\(ADE\\), \\(D=(680,380)\\), \\(E=(689,389)\\). The line \\(DE\\) has slope \\(1\\), equation:\n\\[\ny-380=x-680 \\implies x-y-300=0.\n\\]\nThe distance from \\(A=(x,y)\\) to this line is\n\\[\n\\frac{|x-y-300|}{\\sqrt2}.\n\\]\nAlso,\n\\[\nDE=\\sqrt{9^2+9^2}=9\\sqrt2.\n\\]\nThus\n\\[\n[ ADE ]=\\frac12(9\\sqrt2)\\frac{|x-y-300|}{\\sqrt2}\n=\\frac92|x-y-300|.\n\\]\nGiven area \\(7002\\),\n\\[\n\\frac92|x-y-300|=7002\n\\implies |x-y-300|=1556.\n\\]\nSo\n\\[\nx-y=1856 \\quad\\text{or}\\quad x-y=-1256.\n\\]\n\nNow combine with \\(y=\\pm18\\):\n\n- \\(y=18\\): \\(x=1874\\) or \\(x=-1238\\).\n- \\(y=-18\\): \\(x=1838\\) or \\(x=-1274\\).\n\nSum:\n\\[\n1874-1238+1838-1274=1200.\n\\]\n\nThe answer is 1200.",
+      "usage": {
+        "prompt_tokens": 1035,
+        "completion_tokens": 313,
+        "total_tokens": 1348,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1035
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "3ada8d9ee301d39bb1b1c093bb819319a29348fe3bf92a281e2538ad67255d79"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "1200",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "1200",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "1200",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "1200",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "ed4de6330b7b23006cc061db91dbe3a3b79484e6d6dba270aa3dab7d132859dd"
+}

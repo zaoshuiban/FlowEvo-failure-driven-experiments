@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "id": "cda3695d-84e8-4208-8cb7-93bb29fb2f3a",
+  "raw_response": {
+    "id": "cda3695d-84e8-4208-8cb7-93bb29fb2f3a",
+    "object": "chat.completion",
+    "created": 1793195539,
+    "model": "deepseek-flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"code\":\"import math\\n\\ndef solve(parameters):\\n    if not isinstance(parameters, dict):\\n        raise ValueError('parameters must be a dict')\\n    if set(parameters.keys()) != {'digits', 'max_length'}:\\n        raise ValueError('unexpected keys')\\n    digits = parameters['digits']\\n    max_length = parameters['max_length']\\n    if not isinstance(digits, list):\\n        raise ValueError('digits must be a list')\\n    if not isinstance(max_length, int) or isinstance(max_length, bool):\\n        raise ValueError('max_length must be an integer')\\n    if len(digits) < 1 or len(digits) > 10:\\n        raise ValueError('digits length out of range')\\n    seen = set()\\n    for d in digits:\\n        if not isinstance(d, int) or isinstance(d, bool):\\n            raise ValueError('digit must be integer')\\n        if d < 0 or d > 9:\\n            raise ValueError('digit out of range')\\n        if d in seen:\\n            raise ValueError('digits must be distinct')\\n        seen.add(d)\\n    if max_length < 1 or max_length > 4:\\n        raise ValueError('max_length out of range')\\n    if max_length > len(digits):\\n        raise ValueError('max_length exceeds number of digits')\\n\\n    def is_prime(n):\\n        if n < 2:\\n            return False\\n        if n < 4:\\n            return True\\n        if n % 2 == 0 or n % 3 == 0:\\n            return False\\n        d = 5\\n        while d * d <= n:\\n            if n % d == 0 or n % (d + 2) == 0:\\n                return False\\n            d += 6\\n        return True\\n\\n    primes = set()\\n    n = len(digits)\\n    for k in range(1, max_length + 1):\\n        for perm in _permutations(digits, k):\\n            if perm[0] == 0:\\n                continue\\n            val = 0\\n            for x in perm:\\n                val = val * 10 + x\\n            if is_prime(val):\\n                primes.add(val)\\n    return str(len(primes))\\n\\ndef _permutations(items, k):\\n    n = len(items)\\n    if k == 0:\\n        yield ()\\n        return\\n    if k > n:\\n        return\\n    indices = list(range(n))\\n    def rec(chosen, used):\\n        if len(chosen) == k:\\n            yield tuple(items[i] for i in chosen)\\n            return\\n        for i in range(n):\\n            if not (used >> i) & 1:\\n                chosen.append(i)\\n                yield from rec(chosen, used | (1 << i))\\n                chosen.pop()\\n    yield from rec([], 0)\\n\",\"description\":\"Exhaustively enumerates all ordered selections of k distinct digits for k=1..max_length, skips leading-zero numbers, converts each to an integer, tests primality by deterministic trial division up to sqrt(n), and counts distinct primes via a set. The search space is tiny (at most a few thousand candidates), so exact enumeration is reliable. Uncertainty is limited to implementation correctness; the counting rule matches the source family.\",\"applicability\":\"Applies when parameters contain a list of 1-10 distinct integer digits in 0..9 and an integer max_length in 1..4 not exceeding the digit count. Rejects malformed inputs, duplicate or out-of-range digits, booleans, and unsupported max_length values with ValueError. Only counts primes formable from 1 to max_length digits without repetition and without leading zeros.\"}"
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1415,
+      "completion_tokens": 848,
+      "total_tokens": 2263,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 1287
+    },
+    "system_fingerprint": "bc19ba97cbe016479903222bb1578db6"
+  },
+  "usage": {
+    "total_tokens": 2263,
+    "input_tokens": 1415,
+    "output_tokens": 848
+  },
+  "origin": "DEEPSEEK",
+  "wire_sha256": "328b985a98d705690347138e1fed07cf842ebcb6662b494ce8f2006e5960a770",
+  "response_sha256": "ee83ccb92678265bc6a84ce9a48a63b80aea0ba9c44bb9aeee3924ed28943b15",
+  "reserved_rate_estimate_microusd": 2716,
+  "applicability": "Applies when parameters contain a list of 1-10 distinct integer digits in 0..9 and an integer max_length in 1..4 not exceeding the digit count. Rejects malformed inputs, duplicate or out-of-range digits, booleans, and unsupported max_length values with ValueError. Only counts primes formable from 1 to max_length digits without repetition and without leading zeros.",
+  "code": "import math\n\ndef solve(parameters):\n    if not isinstance(parameters, dict):\n        raise ValueError('parameters must be a dict')\n    if set(parameters.keys()) != {'digits', 'max_length'}:\n        raise ValueError('unexpected keys')\n    digits = parameters['digits']\n    max_length = parameters['max_length']\n    if not isinstance(digits, list):\n        raise ValueError('digits must be a list')\n    if not isinstance(max_length, int) or isinstance(max_length, bool):\n        raise ValueError('max_length must be an integer')\n    if len(digits) < 1 or len(digits) > 10:\n        raise ValueError('digits length out of range')\n    seen = set()\n    for d in digits:\n        if not isinstance(d, int) or isinstance(d, bool):\n            raise ValueError('digit must be integer')\n        if d < 0 or d > 9:\n            raise ValueError('digit out of range')\n        if d in seen:\n            raise ValueError('digits must be distinct')\n        seen.add(d)\n    if max_length < 1 or max_length > 4:\n        raise ValueError('max_length out of range')\n    if max_length > len(digits):\n        raise ValueError('max_length exceeds number of digits')\n\n    def is_prime(n):\n        if n < 2:\n            return False\n        if n < 4:\n            return True\n        if n % 2 == 0 or n % 3 == 0:\n            return False\n        d = 5\n        while d * d <= n:\n            if n % d == 0 or n % (d + 2) == 0:\n                return False\n            d += 6\n        return True\n\n    primes = set()\n    n = len(digits)\n    for k in range(1, max_length + 1):\n        for perm in _permutations(digits, k):\n            if perm[0] == 0:\n                continue\n            val = 0\n            for x in perm:\n                val = val * 10 + x\n            if is_prime(val):\n                primes.add(val)\n    return str(len(primes))\n\ndef _permutations(items, k):\n    n = len(items)\n    if k == 0:\n        yield ()\n        return\n    if k > n:\n        return\n    indices = list(range(n))\n    def rec(chosen, used):\n        if len(chosen) == k:\n            yield tuple(items[i] for i in chosen)\n            return\n        for i in range(n):\n            if not (used >> i) & 1:\n                chosen.append(i)\n                yield from rec(chosen, used | (1 << i))\n                chosen.pop()\n    yield from rec([], 0)\n",
+  "description": "Exhaustively enumerates all ordered selections of k distinct digits for k=1..max_length, skips leading-zero numbers, converts each to an integer, tests primality by deterministic trial division up to sqrt(n), and counts distinct primes via a set. The search space is tiny (at most a few thousand candidates), so exact enumeration is reliable. Uncertainty is limited to implementation correctness; the counting rule matches the source family.",
+  "finish_reason": "stop"
+}

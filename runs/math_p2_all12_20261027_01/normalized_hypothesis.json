@@ -1,0 +1,51 @@
+{
+  "decision": "PROPOSE",
+  "mechanisms": [
+    {
+      "applicability": "Digit-selection prime-counting tasks where the model can cheaply prune by last digit, leading zero, and digit-sum mod 3, but the remaining 3- or 4-digit candidates still require many explicit primality tests. Applies to the seven prime-counting episodes.",
+      "computation": "1) Enumerate easy cases exactly for 1-digit and often 2-digit numbers. 2) For longer lengths, filter candidates by obvious rules: allowed last digit, no leading zero, digit sum not divisible by 3. 3) Do only partial trial division or partial listing of survivors. 4) Replace the unresolved remainder by an asserted subtotal for that length ('systematic check gives ...', 'verified count ...', or an explicit guess), then add subtotals to form the final answer.",
+      "hypothesized_cause": "The model appears to switch from exact enumeration to heuristic completion once pruning leaves a moderate candidate pool. The final scalar subtotal is then treated as if exhaustive primality testing had been completed.",
+      "input_output": "Input: a set of digits and a maximum length up to 4. Output: an exact-looking total count of distinct primes, typically broken down by number of digits. The wrongness enters at the unresolved longer-length subtotal, especially 4-digit counts.",
+      "observation": "Across prime tasks, the answers often have exact-looking small-length counts plus an unsupported 3-digit or 4-digit subtotal. In fragments, the model sometimes openly guesses a remaining subtotal or total; finals then present the result as fully checked. Examples include explicit guessing in the {0,1,3,5,6,7} task, a guessed total in the {0,1,5,6,7,8} task, and 'verified/systematic' 4-digit totals without shown exhaustive checks in several others.",
+      "refusal": "This does not explain parenthesization tasks, and it should not be applied when there is evidence of a real exhaustive program or a complete explicit primality list with correct trial divisions for every survivor.",
+      "source_event_ids": [
+        "81a1eda6e69e4e0a8dc6e05805522e2207bc2baa17fc325c433c38b8d2e6b712",
+        "d75d4ba3f8eff0644a91a580c7112eae0240550410727bdaf17d5a14b4f1c361",
+        "9b29d3bcb262ee7563fe99e4dc632ec69a31d26300c7db90de5e02f401072add",
+        "c3bb416549f2d04ab06e8b38e0a8dace0410163b02010c395e8960af066abe87",
+        "77e321d3054746968818496771c3e65c58290347e3f50f6aa2cd8afdaa6945ae",
+        "b30d6e94b548712794f073803d431676ab32835c925d2401b6e2ef4c1820814e",
+        "0a17221ece87dbb251117273e214e2d9eb9bd502e00490cd2ebbe2f637748a66"
+      ],
+      "uncertainty": "Moderate. The repeated language and fragments strongly support incomplete enumeration, but the exact fallback rule for choosing the invented subtotal is not recoverable from the logs."
+    },
+    {
+      "applicability": "Parenthesization-count tasks containing an initial contiguous block that looks simplifiable in ordinary arithmetic, such as a repeated product block or an initial cancellation like 7-7. Clearly applies to the two episodes that reduce the problem before exploring Catalan parenthesizations.",
+      "computation": "1) Detect a leftmost block that seems value-invariant under its own internal regrouping, e.g. 6·7·7 -> 294 or 7-7 -> 0. 2) Replace that block by the simplified constant. 3) Count distinct values only for the shortened suffix expression. 4) Return the suffix count as if it represented the original expression's full parenthesization space.",
+      "hypothesized_cause": "The model incorrectly assumes that because a local block has a fixed value under its native operator, parentheses cannot connect across that block's boundary. It therefore deletes cross-boundary parenthesizations such as products involving sums/differences formed with later terms.",
+      "input_output": "Input: an ordered arithmetic expression where only parentheses may be inserted. Output: too-small set/count of values because the search space is collapsed before all legal binary-tree structures are considered.",
+      "observation": "In one task the model states that the first two terms 'always evaluate to 0' and reduces 7-7+5-7-7·5×5 to a shorter expression; in another it states that 6·7·7 'always gives 294' and reduces 6·7·7+2-6-3-8 to 294+2-6-3-8. Those reductions are not valid for the full parenthesization problem because later operations can be grouped inside the product/subtraction tree.",
+      "refusal": "Do not use this mechanism for prime-counting tasks or for parenthesization attempts that actually keep all numbers present in interval states without pre-collapsing a prefix/suffix block.",
+      "source_event_ids": [
+        "9ecc45210889a8a0ba4746faa19efe13a3656174d440659b0bbde1e7a6ac21bd",
+        "6de589c079a10b732bacc69730fc21cad36c82feb6a59a2353ab9072e68f1b8e"
+      ],
+      "uncertainty": "Low to moderate. The illegal reduction is explicit in the text, but we do not know whether the same simplification bug also affected other expression episodes."
+    },
+    {
+      "applicability": "Parenthesization-count tasks where the model invokes Catalan numbers or interval dynamic programming but does not exhibit a complete, exact set computation for every interval. Best fit for the three non-reduction expression episodes.",
+      "computation": "1) Recognize the task as 'count distinct values over all full parenthesizations.' 2) Recall the Catalan-size search space or the idea of interval DP. 3) Partially enumerate some splits/results or compute a few interval sets. 4) Stop short of exact closure under all splits and unions, but still emit a final distinct-count as if DP had been fully carried out.",
+      "hypothesized_cause": "The model substitutes the schema of the correct algorithm for its execution. It knows that interval DP is the right tool, but the actual set propagation/union bookkeeping is truncated, approximated, or replaced by a memorized/plausible final count.",
+      "input_output": "Input: a fixed-order arithmetic expression with +,-,×/· and a request for the number of distinct values from all parenthesizations. Output: an exact-looking count, sometimes accompanied by 'using DP' language, even when the intermediate state sets are incomplete or inconsistent.",
+      "observation": "One fragment explicitly says 'maybe the answer is 116 or something' before the final claims DP gave 116. Another shows ad hoc trial parenthesizations and then returns 26 without a completed exhaustive table. A third gives a large explicit result set and count 114, indicating some interval-set work, but the final is still confirmed wrong, consistent with incomplete or faulty set propagation/counting rather than a principled simplification like mechanism 2.",
+      "refusal": "This mechanism should not be used for tasks where the model explicitly collapses a prefix block to a constant before counting; those are better explained by mechanism 2. It also does not explain digit-prime counting problems.",
+      "source_event_ids": [
+        "5904fbdc76fe73876eb1af012431aa236aebc09bd3c25e224c5e15d33e3ea97a",
+        "62046b9c72fb4ea2648e692698152351a48e02175c2b54166632b41c45608011",
+        "edf9a9ffd5c9e016e8923cc6c1b127b6af53735546810f5771ff5885ff56b85a"
+      ],
+      "uncertainty": "Moderate to high. The logs show partial or guessed execution, but without the true answer derivations we cannot distinguish omitted states, arithmetic mistakes inside states, and pure memorized-count substitution."
+    }
+  ],
+  "summary": "Three unverified mechanisms fit the failures. First, the prime-count tasks often use exact cheap filters but then replace unresolved longer-length primality checks with asserted subtotals. Second, two expression tasks explicitly collapse a leading arithmetic block to a constant before exploring parenthesizations, illegally removing cross-boundary trees. Third, the remaining expression tasks appear to invoke Catalan/interval-DP methodology without fully executing the necessary state-set unions, producing exact-looking but unsupported counts."
+}

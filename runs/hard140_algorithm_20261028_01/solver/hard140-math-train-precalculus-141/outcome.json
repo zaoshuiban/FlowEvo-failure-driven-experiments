@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-precalculus-141",
+    "problem": "When the vectors $\\begin{pmatrix} -5 \\\\ 1 \\end{pmatrix}$ and $\\begin{pmatrix} 2 \\\\ 3 \\end{pmatrix}$ are both projected onto the same vector $\\mathbf{v},$ the result is $\\mathbf{p}$ in both cases.  Find $\\mathbf{p}.$"
+  },
+  "problem_sha256": "47298796954bd1ae0cda3777c89dd0274de4f8e9f59442ef8b51e1a712283e2d",
+  "task_id": "hard140-math-train-precalculus-141",
+  "sequence": 139,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-precalculus-141",
+  "locked_sha256": "16c84409ece52236219aaa089089432f4079991dd71d5bbdf5cac8116ab069f5",
+  "trajectory_sha256": "e0a5317f191b888b1135b7ab376615f814c4815810724ae984dfecab15f6848a",
+  "responses": [
+    {
+      "text": "Let the projection vector be \\(\\mathbf{v} = \\begin{pmatrix} a \\\\ b \\end{pmatrix}\\).\n\nThe projection of a vector \\(\\mathbf{u}\\) onto \\(\\mathbf{v}\\) is  \n\\[\n\\mathbf{p} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}} \\mathbf{v}.\n\\]\n\nWe are told that both  \n\\(\\mathbf{u}_1 = \\begin{pmatrix} -5 \\\\ 1 \\end{pmatrix}\\) and  \n\\(\\mathbf{u}_2 = \\begin{pmatrix} 2 \\\\ 3 \\end{pmatrix}\\)  \nproject to the same \\(\\mathbf{p}\\).\n\nThat means  \n\\[\n\\frac{\\mathbf{u}_1 \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}} \\mathbf{v}\n=\n\\frac{\\mathbf{u}_2 \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}} \\mathbf{v}.\n\\]\n\nSince \\(\\mathbf{v} \\neq \\mathbf{0}\\), this implies  \n\\[\n\\mathbf{u}_1 \\cdot \\mathbf{v} = \\mathbf{u}_2 \\cdot \\mathbf{v}.\n\\]\n\nSo  \n\\[\n(-5)a + (1)b = (2)a + (3)b.\n\\]\n\nSimplify:  \n\\[\n-5a + b = 2a + 3b\n\\]\n\\[\n-7a - 2b = 0\n\\]\n\\[\n7a + 2b = 0.\n\\]\n\nThus \\(b = -\\frac{7}{2}a\\). Choose \\(a = 2\\), then \\(b = -7\\). So  \n\\[\n\\mathbf{v} = \\begin{pmatrix} 2 \\\\ -7 \\end{pmatrix}.\n\\]\n\nNow compute the projection of \\(\\mathbf{u}_1\\) onto \\(\\mathbf{v}\\):\n\n\\[\n\\mathbf{u}_1 \\cdot \\mathbf{v} = (-5)(2) + (1)(-7) = -10 - 7 = -17.\n\\]\n\\[\n\\mathbf{v} \\cdot \\mathbf{v} = 2^2 + (-7)^2 = 4 + 49 = 53.\n\\]\n\nSo  \n\\[\n\\mathbf{p} = \\frac{-17}{53} \\begin{pmatrix} 2 \\\\ -7 \\end{pmatrix}\n= \\begin{pmatrix} -\\frac{34}{53} \\\\ \\frac{119}{53} \\end{pmatrix}.\n\\]\n\nCheck with \\(\\mathbf{u}_2\\):  \n\\(\\mathbf{u}_2 \\cdot \\mathbf{v} = 2(2) + 3(-7) = 4 - 21 = -17\\), same scalar, so same projection.\n\n\\[\n\\boxed{\\begin{pmatrix} -\\frac{34}{53} \\\\ \\frac{119}{53} \\end{pmatrix}}\n\\]\n\nThe answer is \\(\\begin{pmatrix} -\\frac{34}{53} \\\\ \\frac{119}{53} \\end{pmatrix}\\).",
+      "usage": {
+        "prompt_tokens": 117,
+        "completion_tokens": 583,
+        "total_tokens": 700,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 117
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "e9e419251503cf5244e718c4a884cb3e6b6d6f656c27cf115416f6d50e7301b5"
+    },
+    {
+      "text": "The condition that both vectors project to the same point means their difference is perpendicular to \\(\\mathbf v\\):\n\n\\[\n\\begin{pmatrix}-5\\\\1\\end{pmatrix}-\\begin{pmatrix}2\\\\3\\end{pmatrix}\n=\\begin{pmatrix}-7\\\\-2\\end{pmatrix}\n\\]\n\nSo \\(\\mathbf v\\) is perpendicular to \\(\\begin{pmatrix}-7\\\\-2\\end{pmatrix}\\), hence parallel to \\(\\begin{pmatrix}2\\\\-7\\end{pmatrix}\\).\n\nUsing \\(\\mathbf v=\\begin{pmatrix}2\\\\-7\\end{pmatrix}\\),\n\n\\[\n\\mathbf p=\\frac{\\begin{pmatrix}-5\\\\1\\end{pmatrix}\\cdot \\mathbf v}{\\mathbf v\\cdot \\mathbf v}\\mathbf v\n=\\frac{-17}{53}\\begin{pmatrix}2\\\\-7\\end{pmatrix}\n=\\begin{pmatrix}-\\frac{34}{53}\\\\[2pt]\\frac{119}{53}\\end{pmatrix}.\n\\]\n\nThe answer is \\(\\begin{pmatrix}-\\frac{34}{53}\\\\[2pt]\\frac{119}{53}\\end{pmatrix}\\).",
+      "usage": {
+        "prompt_tokens": 707,
+        "completion_tokens": 200,
+        "total_tokens": 907,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 707
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "b77e98d07a993663ab155ec690a97569def8436d49ad150cac40fbaf738dbe4c"
+    }
+  ],
+  "initial": {
+    "status": "UNVERIFIED",
+    "correct": null,
+    "parsed_answer": "\\begin{pmatrix} -\\frac{34}{53} \\\\ \\frac{119}{53} \\end{pmatrix}",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "UNVERIFIED",
+      "correct": null,
+      "parsed_answer": "\\begin{pmatrix} -\\frac{34}{53} \\\\ \\frac{119}{53} \\end{pmatrix}",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "UNVERIFIED",
+      "correct": null,
+      "parsed_answer": "\\begin{pmatrix}-\\frac{34}{53}\\\\[2pt]\\frac{119}{53}\\end{pmatrix}",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "UNVERIFIED",
+    "correct": null,
+    "parsed_answer": "\\begin{pmatrix}-\\frac{34}{53}\\\\[2pt]\\frac{119}{53}\\end{pmatrix}",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "3afc4f963b16b4dbcad30feb4abd7614fdcf3b35c8bc08a85a7a46011a1255d7"
+}

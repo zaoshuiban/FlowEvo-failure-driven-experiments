@@ -1,0 +1,55 @@
+{
+  "source_tasks": [
+    {
+      "task_id": "hard140-math-train-algebra-330",
+      "problem": "Compute\n\n$3(1+3(1+3(1+3(1+3(1+3(1+3(1+3(1+3(1+3)))))))))$"
+    }
+  ],
+  "analysis": {
+    "decision": "PROPOSE",
+    "invalid_operation": null,
+    "observations": [
+      "The source expression is a nested arithmetic expression with repeated pattern 1+3(...) and an outer multiplier 3.",
+      "The failure evidence shows a miscount of nesting depth: the model treated the innermost as 1+3 and applied 9 outer layers, yielding 265719.",
+      "A deterministic parser/evaluator can avoid depth-counting errors by tokenizing the expression and evaluating parentheses recursively."
+    ],
+    "parameter_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "depth": {
+          "description": "Number of nested 'inner_constant + inner_coefficient*(...)' layers inside the outer parentheses.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "inner_coefficient": {
+          "description": "Multiplier of the nested subexpression in each layer.",
+          "type": "integer"
+        },
+        "inner_constant": {
+          "description": "Additive constant in each nested layer.",
+          "type": "integer"
+        },
+        "outer_coefficient": {
+          "description": "Multiplier applied outside the entire nested expression.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "outer_coefficient",
+        "inner_constant",
+        "inner_coefficient",
+        "depth"
+      ],
+      "type": "object"
+    },
+    "procedure_plan": "Define a parameterized computation that evaluates a nested arithmetic expression of the form outer_coefficient * (inner_constant + inner_coefficient * ( ... )). Inputs: outer_coefficient (integer), inner_constant (integer), inner_coefficient (integer), and depth (nonnegative integer) specifying how many nested 'inner_constant + inner_coefficient*(...)' layers occur inside the outer parentheses. Algorithm: start with value = inner_constant (innermost bare constant); repeat depth times: value = inner_constant + inner_coefficient * value; then result = outer_coefficient * value. Return result as integer. This is a closed-form recurrence evaluation, not a lookup.",
+    "replacement_operation": null,
+    "source_parameters": {
+      "depth": 10,
+      "inner_coefficient": 3,
+      "inner_constant": 1,
+      "outer_coefficient": 3
+    },
+    "uncertainty": "The exact nesting depth must be inferred from the source expression; the schema encodes depth explicitly so the computation is unambiguous. If the source expression's structure differs from the assumed repeated pattern, the parameterization would need adjustment."
+  }
+}

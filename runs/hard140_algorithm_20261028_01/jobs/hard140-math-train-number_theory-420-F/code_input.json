@@ -1,0 +1,38 @@
+{
+  "source_tasks": [
+    {
+      "task_id": "hard140-math-train-number_theory-420",
+      "problem": "To transmit a positive integer less than 1000, the Networked Number Node offers two options.\n\nOption 1. Pay $\\$$d to send each digit d. Therefore, 987 would cost $\\$$9 + $\\$$8 + $\\$$7 = $\\$$24 to transmit.\n\nOption 2. Encode integer into binary (base 2) first, and then pay $\\$$d to send each digit d. Therefore, 987 becomes 1111011011 and would cost $\\$$1 + $\\$$1 + $\\$$1 + $\\$$1 + $\\$$0 + $\\$$1 + $\\$$1 + $\\$$0 + $\\$$1 + $\\$$1 = $\\$$8.\n\nWhat is the largest integer less than 1000 that costs the same whether using Option 1 or Option 2?"
+    }
+  ],
+  "analysis": {
+    "decision": "PROPOSE",
+    "invalid_operation": null,
+    "observations": [
+      "The task asks for the largest integer n < 1000 whose decimal digit sum equals its binary digit sum (popcount).",
+      "The failed attempt found 410 but the evidence indicates it was incorrect; the true maximum must be larger than 410.",
+      "The attempt's reasoning contained arithmetic errors in binary representations (e.g., 504 was miscomputed) and it incorrectly concluded no 5xx-9xx numbers work.",
+      "A correct approach is to enumerate all n in [1, limit) and return the maximum satisfying digit_sum(n,10) == popcount(n)."
+    ],
+    "parameter_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "limit": {
+          "description": "Exclusive upper bound: find largest n with 1 <= n < limit satisfying the digit-sum equality.",
+          "minimum": 2,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "limit"
+      ],
+      "type": "object"
+    },
+    "procedure_plan": "Define a deterministic function that takes an upper bound (exclusive) and returns the largest integer n in [1, limit) such that the sum of its base-10 digits equals the number of 1-bits in its binary representation. Implementation: iterate n from limit-1 down to 1; for each n compute decimal digit sum by repeated divmod by 10, and compute popcount via bin(n).count('1') or bit manipulation; return the first n where they are equal. If none found, return -1 (or null). This is O(limit * log(limit)) which is trivial for limit up to millions.",
+    "replacement_operation": null,
+    "source_parameters": {
+      "limit": 1000
+    },
+    "uncertainty": "The source problem fixes limit=1000, but the parameterized computation generalizes to any positive integer limit. The main uncertainty is whether the grader expects the exact source answer for limit=1000; the algorithm is straightforward and should be correct if implemented without arithmetic errors."
+  }
+}

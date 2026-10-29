@@ -1,0 +1,15 @@
+# 统一语义事实与证据协议
+
+新增默认关闭模块 semantic_evidence_v2.py，复用编译预算、SplitRunner和Linux Worker。未修改F3算法，SHA `98d007cd20c01ae857e8b22839645c10a502f5723c5b0fc01bda141ff2ed0c61`；旧V3.3模块和历史Run保持原样。
+
+事实值与证据分离：每个字段附kind、quotes、scope、rule、from_field。明确肯定/否定要求真实原文引用；NOT_STATED和UNRESOLVED必须value=null，不能以缺失推出禁止或允许。DERIVED仅支持宿主可机械核验的EXACT_COPY和LIST_LENGTH，不接受模型自创推理规则，拒绝循环依赖。
+
+全文review独立于facts。NO_ISSUE_OBSERVED允许空引文，但不是任何数学前提的证据；不能补全缺失事实。CONFLICT需要对应原文，UNRESOLVED保留不确定。进入运行前，模型契约声明的必要字段为空时返回UNKNOWN。实际值不受solver支持域限制：除法、乘方、非整数可进入事实表示，再由契约拒绝。
+
+引用验证只证明来源绑定，不能机械证明语义蕴含；必要字段列表也由模型声明，可能遗漏数学前提。因此不能把协议通过等同数学正确或自动准入。
+
+语义schema仍由DeepSeek生成。初稿只复制operands/operators，保留integer限制，未描述目标和变换；经预定一次表示修订，增加目标、允许变换、顺序约束及计数方式，number和开放operator string保留不支持的实际值。模型自己选择字段及含义，没有人工写数学规则。修订没有看到新任务或其结果。
+
+表示的新局限：目标和约束仍是自由文本字段，并非稳定的机器语义标识。共同解析器与契约对这些字符串没有可靠共同约定；这不能称为已解决数学语义表示。
+
+14项零API检查和16项原V3回归通过。首次测试有一项Mock夹具缺少显式sender，后修正夹具；schema首请求已在该次shell序列中启动，应记录这一执行顺序偏差。该错误未涉及生产证据校验，后续真实契约生成前14项全通过。

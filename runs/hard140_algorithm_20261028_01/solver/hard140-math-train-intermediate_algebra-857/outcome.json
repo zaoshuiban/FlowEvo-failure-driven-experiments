@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-intermediate_algebra-857",
+    "problem": "For each positive integer $p$, let $b(p)$ denote the unique positive integer $k$ such that $|k-\\sqrt{p}|<\\frac{1}{2}$. For example, $b(6)=2$ and $b(23)=5$. Find $S=\\sum_{p=1}^{2007} b(p)$."
+  },
+  "problem_sha256": "b2f1daea7b47ebb2bd8aedff238cacb2b46ebf9936de383ff9f1014b0980c40a",
+  "task_id": "hard140-math-train-intermediate_algebra-857",
+  "sequence": 122,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-intermediate_algebra-857",
+  "locked_sha256": "1e212ac19716cd5b9ae15d86121faac44d244b7cb832b73bf150fd63dac2f6af",
+  "trajectory_sha256": "ba5605270a7146970d0f1eee7107bb9ac37ab564aec38240de35ea780eb0aca6",
+  "responses": [
+    {
+      "text": "We need compute sum over p=1..2007 of nearest integer to sqrt(p), with tie? Condition strict |k - sqrt p| < 1/2. For p perfect square? sqrt integer, distance 0. For p where sqrt p exactly half-integer? p = (m+1/2)^2 not integer, so no ties. Unique.\n\nWe need sum b(p). b(p)=k iff |k - sqrt p|<1/2. Square: (k-1/2)^2 < p < (k+1/2)^2. Since p integer, p from? Need careful endpoints. Inequality strict. p integer satisfying k - 1/2 < sqrt p < k + 1/2. Equivalent (k-1/2)^2 < p < (k+1/2)^2. Lower bound = k^2 - k + 1/4. Since p integer, p >= k^2 - k +1? Because p > k^2 - k + 1/4. If k^2-k integer, p >= k^2-k+1. Upper: p < k^2+k+1/4, integer p <= k^2+k. Thus b(p)=k for p = k^2 - k +1, ..., k^2 + k inclusive. Count = (k^2+k) - (k^2-k+1)+1 = 2k. Check k=1: p from 1 to2? b(1)=1, b(2)=1? sqrt2=1.414 diff .414<.5 yes. p=3? sqrt3=1.732 diff .268 to2, b=2. So k=1 p=1,2 count2. k=2 p=3..6 count4. Good.\n\nNeed sum p=1..2007 b(p). Determine max k. Intervals for k: [k^2-k+1, k^2+k]. Need cover up to 2007. Find k such that k^2+k >=2007. 44^2+44=1936+44=1980. 45^2+45=2025+45=2070. So k=45 interval starts 45^2-45+1=2025-45+1=1981. Thus p 1981..2007 have b=45 (partial). Up to p=1980, intervals k=1..44 complete? k=44 interval ends 44^2+44=1980, starts 44^2-44+1=1936-44+1=1893. Yes.\n\nSum complete k=1..44: each k contributes k * (2k) = 2k^2. Sum = 2 sum_{k=1}^{44} k^2. Then partial k=45 for p=1981..2007 count = 2007-1981+1=27. Contribution 45*27=1215.\n\nCompute sum squares 1..44. Formula n(n+1)(2n+1)/6 for n=44: 44*45*89/6. 44*45=1980; *89 = 1980*89 = 1980*(90-1)=178200-1980=176220. /6 = 29370. Check 44*45/6=330; *89=29370 yes. Times 2 = 58740. Add 1215 = 59955.\n\nNeed final concise with explanation. Ensure no issue p=1? b(1)=1 yes. Sum maybe. Let's verify small: k=1 contributes p1,2 sum b=2. Formula 2*1^2=2. k=2 p3..6 b=2 four times=8; formula 8. total p1..6 sum=10. Direct sqrt: p1 1,2 1,3 2,4 2,5 2,6 2 sum10. Good.\n\nFinal answer with separate line.For a fixed positive integer \\(k\\), we have \\(b(p)=k\\) exactly when\n\n\\[\n\\left|k-\\sqrt p\\right|<\\frac12\n\\]\n\nwhich is equivalent to\n\n\\[\nk^2-k+1 \\le p \\le k^2+k.\n\\]\n\nThus \\(b(p)=k\\) for exactly \\(2k\\) values of \\(p\\).\n\nNow,\n\n\\[\n44^2+44=1980,\\qquad 45^2+45=2070,\n\\]\n\nso \\(k=1,\\dots,44\\) occur completely up to \\(p=1980\\), and \\(k=45\\) occurs for\n\n\\[\n45^2-45+1=1981\n\\]\n\nthrough \\(p=2007\\), giving \\(2007-1981+1=27\\) values.\n\nTherefore,\n\n\\[\nS=\\sum_{k=1}^{44} k(2k)+45\\cdot 27\n=2\\sum_{k=1}^{44}k^2+1215.\n\\]\n\nUsing\n\n\\[\n\\sum_{k=1}^{44}k^2=\\frac{44\\cdot45\\cdot89}{6}=29370,\n\\]\n\nwe get\n\n\\[\nS=2(29370)+1215=58740+1215=59955.\n\\]\n\nThe answer is 59955.",
+      "usage": {
+        "prompt_tokens": 127,
+        "completion_tokens": 1127,
+        "total_tokens": 1254,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 127
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "92d3f8ebcb877d3166ae4fd4092d0778c2b2235a609eeb8e72b3a7c80855e12f"
+    },
+    {
+      "text": "For each \\(k\\), \\(b(p)=k\\) exactly when\n\n\\[\nk^2-k+1 \\le p \\le k^2+k,\n\\]\n\nwhich gives \\(2k\\) values of \\(p\\).\n\nSince\n\n\\[\n44^2+44=1980,\\qquad 45^2+45=2070,\n\\]\n\nthe values \\(k=1,\\dots,44\\) are complete, and \\(k=45\\) occurs for \\(p=1981,\\dots,2007\\), a total of \\(27\\) values.\n\nThus\n\n\\[\nS=\\sum_{k=1}^{44} k(2k)+45\\cdot 27\n=2\\sum_{k=1}^{44}k^2+1215.\n\\]\n\nNow\n\n\\[\n\\sum_{k=1}^{44}k^2=\\frac{44\\cdot45\\cdot89}{6}=29370,\n\\]\n\nso\n\n\\[\nS=2(29370)+1215=58740+1215=59955.\n\\]\n\nThe answer is 59955.",
+      "usage": {
+        "prompt_tokens": 1260,
+        "completion_tokens": 211,
+        "total_tokens": 1471,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1260
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "97f1bf0a02550fe9ff35399ef487c6f4d20b595466c4f9e39382edf19c34431e"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "59955",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "59955",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "59955",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "59955",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "0dd45a7caf4e1646d8b81fdd1f66d586ecbde7eb03e1b23ff08861276afec1a6"
+}

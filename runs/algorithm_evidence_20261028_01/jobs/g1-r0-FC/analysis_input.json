@@ -1,0 +1,110 @@
+{
+  "source_tasks": [
+    {
+      "problem": "The expression $7 -  7 +  5 -  7 -  7 \\cdot  5 \\times  5$ may be changed only by inserting parentheses; rearranging numbers or operations is not allowed. In total, how many values can be obtained?",
+      "task_id": "math-7ab26853dc601349835bf1c2"
+    },
+    {
+      "problem": "Consider the expression $6 \\cdot  7 \\cdot  7 +  2 -  6 -  3 -  8$. Fully parenthesize it in every possible way without changing the order of numbers or operations. Parenthesizations with the same numerical result count only once. How many distinct values are possible?",
+      "task_id": "math-71853e3dff2f1732bc5b1669"
+    }
+  ],
+  "parameter_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "operands",
+      "operators"
+    ],
+    "properties": {
+      "operands": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 8,
+        "items": {
+          "type": "integer",
+          "minimum": -10,
+          "maximum": 20
+        }
+      },
+      "operators": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "+",
+            "-",
+            "*"
+          ]
+        }
+      }
+    }
+  },
+  "interface_note": "Only parameter values vary; all mathematical conditions and requested quantity remain those stated by the supplied source questions. Names describe source data, not a target algorithm. Implement solve(parameters), no natural-language applicability detection. operators must have exactly len(operands)-1 entries.",
+  "failure_evidence": [
+    {
+      "evidence_id": "9ecc45210889a8a0ba4746faa19efe13a3656174d440659b0bbde1e7a6ac21bd",
+      "task_id": "math-7ab26853dc601349835bf1c2",
+      "correct": false,
+      "wrong_answer": "9",
+      "attempts": [
+        {
+          "finish_reason": "stop",
+          "grade": "CONFIRMED_WRONG",
+          "text_fragments": [
+            "Alright, let's go step-by-step.\n\nWe have the expression:\n\n\\[\n7 - 7 + 5 - 7 - 7 \\cdot 5 \\times 5\n\\]\n\nWe can only insert parentheses, not change the order of numbers or operations.\n\n---\n\n### Step 1 – Understand the operations and precedence\nThe operations in order are:\n\n1. \\(7 - 7\\)\n2. \\(+ 5\\)\n3. \\(- 7\\)\n4. \\(- 7 \\cdot 5\\)\n5. \\(\\times 5\\)\n\nWithout parentheses, standard precedence means multiplication and division happen before addition/subtraction, and multiplication/division are left-to-right.\n\nSo without parentheses:\n\n- First \\(7 \\cdot 5 = 35\\)\n- Then \\(35 \\times 5 = 175\\)\n- Then the expression becomes \\(7 - 7 + 5 - 7 - 175\\)\n\nThat’s \\(0 + 5 - 7 - 175 = -177\\).\n\nBut we can insert parentheses to change grouping and thus results.\n\n---\n\n### Step 2 – Recognize the structure\nThe sequence of numbers and operators is fixed:\n\n\\[\n7 \\;-\\; 7 \\;+\\; 5 \\;-\\; 7 \\;-\\; 7 \\;\\cdot\\; 5 \\;\\times\\; 5\n\\]\n\nOperators: \\( -, +, -, -, \\cdot, \\times\\).\n\nWe can group them in different ways by parentheses. This is equivalent to choosing different binary tree structures for evaluating the expression, but with the constraint that the order of operands and operators is fixed.\n\n---\n\n### Step 3 – Possible groupings\nThis is a problem of counting distinct results from all possible full parenthesizations (Catalan number many), but here we have 6 numbers and 5 operators, so the number of full parenthesizations is th",
+            "eful: we have 5 numbers: 5,7,7,5,5. Last op is × between last two 5’s. So possible top-level splits:\n\nTop-level split after 1st number: 5 - (rest)  \nTop-level split after 2nd: (5-7) - (rest)  \nTop-level split after 3rd: (5-7-7) · (5×5) — but op3 is ·, so yes: (5-7-7) · (5×5)  \nTop-level split after 4th: (5-7-7·5) × 5\n\nLet’s do systematically:\n\nCase A: top split after 1: 5 - [7 - 7 · 5 × 5]  \nSub: 7 - 7 · 5 × 5 (4 numbers: 7,7,5,5 ops: -,·,×)  \nPossible:  \nA1: 7 - (7·(5×5)) = 7 - 175 = -168 → 5 - (-168)=173  \nA2: 7 - ((7·5)×5) = 7 - 175 = -168 → same 173  \nA3: (7-7)·(5×5) = 0·25=0 → 5-0=5  \nA4: (7-(7·5))×5 = (7-35)×5=-28×5=-140 → 5-(-140)=145  \nA5: ((7-7)·5)×5 = (0·5)×5=0 → 5-0=5 (dup)  \nSo from A: {173,5,145}\n\nCase B: top split after 2: (5-7) - [7·5×5]  \n5-7=-2. Sub: 7·5×5 = 175 (both groupings same). So -2 - 175 = -177.\n\nCase C: top split after 3: (5-7-7) · (5×5)  \n5-7-7: possible groupings:  \nC1: (5-7)-7 = -2-7=-9 → -9·25=-225  \nC2: 5-(7-7)=5-0=5 → 5·25=125  \nSo { -225, 125 }\n\nCase D: top split after 4: (5-7-7·5) × 5  \nSub: 5-7-7·5 (4 numbers: 5,7,7,5 ops: -,-,·)  \nPossible:  \nD1: ((5-7)-7)·5 = (-2-7)·5=-9·5=-45 → -45×5=-225  \nD2: (5-(7-7))·5 = (5-0)·5=25 → 25×5=125  \nD3: (5-7)-(7·5) = -2-35=-37 → -37×5=-185  \nD4: 5-(7-(7·5)) = 5-(7-35)=5-(-28)=33 → 33×5=165  \nD5: 5-((7-7)·5) = 5-(0·5)=5 → 5×5=25  \nSo from D: {-225,125,-185,165,25}\n\n---\n\n### Step 11 – Collect distinct values\nFrom A: 173, 5, 145  \nFrom B: -177  \nFrom C: -225, 125  \nFrom D: -225,125,-185,165,25\n\nUnion: {173,5,145,-177,-225,125,-185,165,25}\n\nCount: 9 distinct values.\n\n---\n\n### Step 12 – Check if any missing\nWe covered all 14 parenthesizations of the tail, got 9 distinct. The front 7-7+ doesn’t change value (adds 0). So total distinct values = 9.\n\n---\n\n**Final answer:**  \n\\[\n\\boxed{9}\n\\]\n\nThe answer is 9."
+          ],
+          "full_text_sha256": "f44720fd7177a070eeda51b363af3601e91fc22ee3b3495faf124b290e1b43b3",
+          "full_text_chars": 8194,
+          "omitted_middle_chars": 4994
+        },
+        {
+          "finish_reason": "stop",
+          "grade": "CONFIRMED_WRONG",
+          "text_fragments": [
+            "Let's verify the structure carefully.\n\nThe expression is:\n\n\\[\n7 - 7 + 5 - 7 - 7 \\cdot 5 \\times 5\n\\]\n\nThere are 7 numbers: \\(7,7,5,7,7,5,5\\) and 6 operators: \\(-,+,-,-,\\cdot,\\times\\).\n\nThe first two numbers \\(7-7\\) always evaluate to 0 regardless of parentheses, because no operator before them can be grouped with them in a way that changes that—the first operator is subtraction between the first two 7's, and any parentheses involving them must start with \\(7-7\\). So the expression reduces to:\n\n\\[\n0 + 5 - 7 - 7 \\cdot 5 \\times 5\n\\]\n\nwhich is just:\n\n\\[\n5 - 7 - 7 \\cdot 5 \\times 5\n\\]\n\nSo we only need to count distinct values from parenthesizing:\n\n\\[\n5 - 7 - 7 \\cdot 5 \\times 5\n\\]\n\nThis has 5 numbers: \\(5,7,7,5,5\\) and 4 operators: \\(-, - , \\cdot, \\times\\).\n\nThe number of full parenthesizations is Catalan \\(C_4 = 14\\). We can enumerate them systematically by the top-level split.\n\nLet the numbers be \\(a=5, b=7, c=7, d=5, e=5\\), operators \\(o_1=-, o_2=-, o_3=\\cdot, o_4=\\times\\).\n\n**Top-level split after 1st number:**  \n\\(5 - (7 - 7 \\cdot 5 \\times 5)\\)  \nSubexpression \\(7 - 7 \\cdot 5 \\times 5\\) has 4 numbers, 3 operators \\(-, \\cdot, \\times\\).  \nPossible values of subexpression:  \n- \\(7 - (7 \\cdot (5 \\times 5)) = 7 - 175 = -168\\) → \\(5 - (-168) = 173\\)  \n- \\(7 - ((7 \\cdot 5) \\times 5) = 7 - 175 = -168\\) → same 173  \n- \\((7 - 7) \\cdot (5 \\times 5) = 0 \\cdot 25 = 0\\) → \\(5 - 0 = 5\\)  \n- \\((7 - (7 \\cdot 5)) \\times 5 = (7 - 35) \\times 5 = -28 \\times 5 = -140\\) → \\(5 - (-140) = 145\\)  \n- \\(((7 - 7) \\cdot 5) \\times 5 = (0 \\cdot 5) \\times 5 = 0\\) → \\(5 - 0 = 5\\) (duplicate)  \nSo from this split: \\(\\{173, 5, 145\\}\\).\n\n**Top-level split after 2nd number:**  \n\\((5 - 7) - (7 \\cdot 5 \\times 5)\\)  \n\\(5 - 7 = -2\\).  \n\\(7 \\cdot 5 \\times 5 = 175\\) regardless of grouping (multiplication associative).  \nSo \\(-2 - 175 = -177\\).\n\n**Top-level split after 3rd number:**  \n\\((5 - 7 - 7) \\cdot (5 \\times 5)\\)  \nSubexpression \\(5 - 7 - 7\\):  \n- \\((5 - 7) - 7 = -2 - 7 = -9\\) → \\(-9 \\cdot 25 = -225\\)  \n- \\(5 - (7 - 7) = 5 - 0 = 5\\) → \\(5 \\cdot 25 = 125\\)  \nSo \\(\\{-225, 125\\}\\).\n\n**Top-level split after 4th number:**  \n\\((5 - 7 - 7 \\cdot 5) \\times 5\\)  \nSubexpression \\(5 - 7 - 7 \\cdot 5\\):  \n- \\(((5 - 7) - 7) \\cdot 5 = (-2 - 7) \\cdot 5 = -9 \\cdot 5 = -45\\) → \\(-45 \\times 5 = -225\\)  \n- \\((5 - (7 - 7)) \\cdot 5 = (5 - 0) \\cdot 5 = 25\\) → \\(25 \\times 5 = 125\\)  \n- \\((5 - 7) - (7 \\cdot 5) = -2 - 35 = -37\\) → \\(-37 \\times 5 = -185\\)  \n- \\(5 - (7 - (7 \\cdot 5)) = 5 - (7 - 35) = 5 - (-28) = 33\\) → \\(33 \\times 5 = 165\\)  \n- \\(5 - ((7 - 7) \\cdot 5) = 5 - (0 \\cdot 5) = 5\\) → \\(5 \\times 5 = 25\\)  \nSo \\(\\{-225, 125, -185, 165, 25\\}\\).\n\nNow collect all distinct values:\n\nFrom split 1: \\(173, 5, 145\\)  \nFrom split 2: \\(-177\\)  \nFrom split 3: \\(-225, 125\\)  \nFrom split 4: \\(-225, 125, -185, 165, 25\\)\n\nUnion:  \n\\[\n\\{173, 5, 145, -177, -225, 125, -185, 165, 25\\}\n\\]\n\nCount: 9 distinct values.\n\nThus the total number of obtainable values is 9.\n\nThe answer is 9."
+          ],
+          "full_text_sha256": "74d2fcf1603b13c699da0b1aef8d859ae2e33bd1b70e24b570c9be33b7961e02",
+          "full_text_chars": 2952,
+          "omitted_middle_chars": 0
+        }
+      ],
+      "original_record_sha256": "995c2442230cf4ffc4fcee721edd9751f9d10dd22909cc886399a1058247cd48",
+      "trajectory_sha256": "258713b4496d4d8a37461de1514d059492e549a36bf6c9971dee8ba8e6f1413c",
+      "locked_sha256": "b3b2e0405bb6536cb12cd9e01c45b8beb9f0deab71af8e949d74d4a06301c607"
+    },
+    {
+      "evidence_id": "6de589c079a10b732bacc69730fc21cad36c82feb6a59a2353ab9072e68f1b8e",
+      "task_id": "math-71853e3dff2f1732bc5b1669",
+      "correct": false,
+      "wrong_answer": "4",
+      "attempts": [
+        {
+          "finish_reason": "stop",
+          "grade": "CONFIRMED_WRONG",
+          "text_fragments": [
+            "Alright, let's go step-by-step.\n\nWe have the expression:\n\n\\[\n6 \\cdot 7 \\cdot 7 + 2 - 6 - 3 - 8\n\\]\n\nOperations in order:  \n1. \\(6 \\cdot 7\\)  \n2. result \\(\\cdot 7\\)  \n3. \\(+ 2\\)  \n4. \\(- 6\\)  \n5. \\(- 3\\)  \n6. \\(- 8\\)\n\nWe must fully parenthesize in every possible way without changing the order of numbers or operations. Then count distinct numerical results.\n\n---\n\n### Step 1 – Understanding the problem\nWe have 6 numbers: \\(6, 7, 7, 2, 6, 3, 8\\)? Wait, let's check:  \nNumbers: 6, 7, 7, 2, 6, 3, 8 — that's 7 numbers.  \nOperations: \\(\\cdot, \\cdot, +, -, -, -\\) — that's 6 operations.  \nYes, 7 numbers, 6 operations.\n\nWe need all possible full parenthesizations (binary trees) preserving order.  \nThe number of such parenthesizations is the Catalan number \\(C_6 = 132\\).  \nBut many will give the same result; we only count distinct results.\n\n---\n\n### Step 2 – Approach\nWe can use dynamic programming:  \nLet `values[i][j]` = set of possible results from subexpression from number i to number j (inclusive).  \nWe combine according to the operation between them.\n\nNumbers: index 0 to 6:  \n0:6, 1:7, 2:7, 3:2, 4:6, 5:3, 6:8  \nOps between i and i+1:  \nop[0] = '×' (between 0 and 1)  \nop[1] = '×' (between 1 and 2)  \nop[2] = '+' (between 2 and 3)  \nop[3] = '-' (between 3 and 4)  \nop[4] = '-' (between 4 and 5)  \nop[5] = '-' (between 5 and 6)\n\n---\n\n### Step 3 – Base cases\nFor length 1 (single number):  \nvalu",
+            "en numbers: \\(294, 2, 6, 3, 8\\) with operations: \\(+,-,-,-\\), how many distinct results from all parenthesizations?\n\nThat's 5 numbers, 4 operations → Catalan number \\(C_4 = 14\\) parenthesizations.  \nWe can enumerate these 14 results and count distinct ones.\n\n---\n\n### Step 7 – Enumerate the 14 cases\nLet A=294, B=2, C=6, D=3, E=8.  \nOps: +, -, -, -.\n\nWe can list all binary tree groupings:\n\n1. ((((A+B)-C)-D)-E) = ((((294+2)-6)-3)-8) = (296-6=290, -3=287, -8=279) → 279  \n2. (((A+(B-C))-D)-E) = ((294+(2-6))-3)-8 = (294+(-4)=290, -3=287, -8=279) → 279 (same as 1)  \n3. (((A+B)-(C-D))-E) = ((296-(6-3))-8) = (296-3=293, -8=285) → 285  \n4. (((A+B)-C)-(D-E)) = ((296-6)-(3-8)) = (290 - (-5)) = 295 → 295  \n5. ((A+((B-C)-D))-E) = (294+((2-6)-3))-8 = (294+(-4-3=-7)=287, -8=279) → 279  \n6. ((A+(B-(C-D)))-E) = (294+(2-(6-3)))-8 = (294+(2-3=-1)=293, -8=285) → 285  \n7. ((A+(B-C))-(D-E)) = (294+(2-6))-(3-8) = (290 - (-5)) = 295 → 295  \n8. ((A+B)-((C-D)-E)) = (296-((6-3)-8)) = (296-(3-8=-5)) = 296+5=301 → 301  \n9. ((A+B)-(C-(D-E))) = (296-(6-(3-8))) = (296-(6-(-5)=11)) = 296-11=285 → 285  \n10. (A+(((B-C)-D)-E)) = 294+(((2-6)-3)-8) = 294+((-4-3=-7)-8=-15) = 279 → 279  \n11. (A+((B-(C-D))-E)) = 294+((2-(6-3))-8) = 294+((2-3=-1)-8=-9) = 285 → 285  \n12. (A+((B-C)-(D-E))) = 294+((2-6)-(3-8)) = 294+((-4)-(-5)=1) = 295 → 295  \n13. (A+(B-((C-D)-E))) = 294+(2-((6-3)-8)) = 294+(2-(3-8=-5)) = 294+(2+5=7) = 301 → 301  \n14. (A+(B-(C-(D-E)))) = 294+(2-(6-(3-8))) = 294+(2-(6-(-5)=11)) = 294+(2-11=-9) = 285 → 285  \n\n---\n\n### Step 8 – Collect distinct results\nFrom above:  \n279, 285, 295, 301.\n\nCheck:  \n279 appears in 1,2,5,10.  \n285 in 3,6,9,11,14.  \n295 in 4,7,12.  \n301 in 8,13.\n\nSo distinct: {279, 285, 295, 301} → 4 values.\n\n---\n\n### Step 9 – Conclusion\nThe number of distinct values is 4.\n\nThe answer is 4."
+          ],
+          "full_text_sha256": "32fefa62c8267ee5abef2f665cfb9aecb066018a91ee9e94e94daf1cfdf60c8a",
+          "full_text_chars": 5049,
+          "omitted_middle_chars": 1849
+        },
+        {
+          "finish_reason": "stop",
+          "grade": "CONFIRMED_WRONG",
+          "text_fragments": [
+            "Let's verify the reduction and enumeration carefully.\n\nThe expression is:\n\n\\[\n6 \\cdot 7 \\cdot 7 + 2 - 6 - 3 - 8\n\\]\n\nThe first three numbers are connected only by multiplication, so any parenthesization of \\(6\\cdot 7\\cdot 7\\) gives \\(294\\). Thus the problem reduces to parenthesizing:\n\n\\[\n294 + 2 - 6 - 3 - 8\n\\]\n\nwith operations \\(+,-,-,-\\). There are \\(C_4=14\\) full parenthesizations. We need the distinct values.\n\nLet \\(A=294, B=2, C=6, D=3, E=8\\). Enumerating the 14 parenthesizations:\n\n1. \\(((((A+B)-C)-D)-E)=279\\)\n2. \\((((A+(B-C))-D)-E)=279\\)\n3. \\((((A+B)-(C-D))-E)=285\\)\n4. \\((((A+B)-C)-(D-E))=295\\)\n5. \\(((A+((B-C)-D))-E)=279\\)\n6. \\(((A+(B-(C-D)))-E)=285\\)\n7. \\(((A+(B-C))-(D-E))=295\\)\n8. \\(((A+B)-((C-D)-E))=301\\)\n9. \\(((A+B)-(C-(D-E)))=285\\)\n10. \\((A+(((B-C)-D)-E))=279\\)\n11. \\((A+((B-(C-D))-E))=285\\)\n12. \\((A+((B-C)-(D-E)))=295\\)\n13. \\((A+(B-((C-D)-E)))=301\\)\n14. \\((A+(B-(C-(D-E))))=285\\)\n\nDistinct values: \\(279, 285, 295, 301\\). That is 4 distinct values.\n\nThe answer is 4."
+          ],
+          "full_text_sha256": "50aaacf80586000b4fade4af3ee10b23c569357f918e060712b06d9fda9ce327",
+          "full_text_chars": 987,
+          "omitted_middle_chars": 0
+        }
+      ],
+      "original_record_sha256": "1e36efdaffe77e7d15b4d0ed2209e2075b918607ab772c6882e3f1860fae27cc",
+      "trajectory_sha256": "21677a053b63cfc68345e8283a27f83709ee9cb860b87ed9754e6aef32f9a14e",
+      "locked_sha256": "4195d820376de3467cd6ac7ba8b4663d4f15f95cafdcf98a8be1687a99bf1ecd"
+    }
+  ]
+}

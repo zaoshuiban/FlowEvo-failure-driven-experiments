@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-precalculus-500",
+    "problem": "Find the equation of the plane passing through $(-1,1,1)$ and $(1,-1,1),$ and which is perpendicular to the plane $x + 2y + 3z = 5.$  Enter your answer in the form\n\\[Ax + By + Cz + D = 0,\\]where $A,$ $B,$ $C,$ $D$ are integers such that $A > 0$ and $\\gcd(|A|,|B|,|C|,|D|) = 1.$"
+  },
+  "problem_sha256": "189055a890b61263ace73b054000456d845f59a08a7415f6628d6e4dfdfe604b",
+  "task_id": "hard140-math-train-precalculus-500",
+  "sequence": 55,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-precalculus-500",
+  "locked_sha256": "dc5f22481d9781a5c47d8dad2ac07aafdbd38179c4b5827f77421000976e8fdd",
+  "trajectory_sha256": "180c6bc67bc6f50def28b3d34c95c7661064bb624fdce7b1a638c94ef95a5a78",
+  "responses": [
+    {
+      "text": "Let the required plane be \\(Ax+By+Cz+D=0\\).\n\nIt passes through \\((-1,1,1)\\) and \\((1,-1,1)\\), so:\n\n1. \\(-A+B+C+D=0\\)\n2. \\(A-B+C+D=0\\)\n\nSubtracting the first from the second:\n\n\\[\n(A-B+C+D)-(-A+B+C+D)=0\n\\]\n\\[\n2A-2B=0 \\implies A=B.\n\\]\n\nNow the plane is perpendicular to \\(x+2y+3z=5\\), whose normal vector is \\((1,2,3)\\).  \nPerpendicular planes have normals that are perpendicular:\n\n\\[\n(A,B,C)\\cdot(1,2,3)=0\n\\]\n\\[\nA+2B+3C=0.\n\\]\n\nSince \\(A=B\\), this becomes:\n\n\\[\nA+2A+3C=0 \\implies 3A+3C=0 \\implies C=-A.\n\\]\n\nSo the normal vector is proportional to \\((A,A,-A)\\), or simply \\((1,1,-1)\\).\n\nThus the plane has equation:\n\n\\[\nx+y-z+D=0.\n\\]\n\nUse point \\((-1,1,1)\\):\n\n\\[\n-1+1-1+D=0 \\implies -1+D=0 \\implies D=1.\n\\]\n\nSo the equation is:\n\n\\[\nx+y-z+1=0.\n\\]\n\nCheck with \\((1,-1,1)\\): \\(1-1-1+1=0\\), works.\n\nThe answer is \\(x+y-z+1=0\\).\n\nThe answer is x+y-z+1=0",
+      "usage": {
+        "prompt_tokens": 169,
+        "completion_tokens": 338,
+        "total_tokens": 507,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 169
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "2e6b7adbb650be2d88c64659cee86cd2e60a111599af1d24e2551d93bc5ed240"
+    },
+    {
+      "text": "Let the plane be \\(Ax+By+Cz+D=0\\).\n\nPassing through \\((-1,1,1)\\) and \\((1,-1,1)\\) gives\n\\[\n-A+B+C+D=0,\\qquad A-B+C+D=0.\n\\]\nSubtracting yields \\(2A-2B=0\\), so \\(A=B\\).\n\nPerpendicularity to \\(x+2y+3z=5\\) means the normals are perpendicular:\n\\[\n(A,B,C)\\cdot(1,2,3)=0.\n\\]\nWith \\(A=B\\),\n\\[\nA+2A+3C=0 \\implies C=-A.\n\\]\nThus the normal is proportional to \\((1,1,-1)\\), so the plane is\n\\[\nx+y-z+D=0.\n\\]\nUsing \\((-1,1,1)\\):\n\\[\n-1+1-1+D=0 \\implies D=1.\n\\]\nHence the plane is\n\\[\nx+y-z+1=0.\n\\]\n\nThe answer is x+y-z+1=0",
+      "usage": {
+        "prompt_tokens": 515,
+        "completion_tokens": 220,
+        "total_tokens": 735,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 515
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "3db29186b878e5548eead5b9f7448902b9054b142272b8de18ef00e9e30d44df"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "x+y-z+1=0",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "x+y-z+1=0",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "x+y-z+1=0",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "x+y-z+1=0",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "78947f305fa8b77a3ff567515d974a01e190001e35f586be9fd4b47184399143"
+}

@@ -1,0 +1,372 @@
+[
+  {
+    "key": "g0-r0-T",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "All source questions share one structure: given a set of distinct digits and a maximum length L (here 4), count distinct positive integers that (a) use between 1 and L distinct digits from the set, (b) have no repeated digit, (c) have no leading zero, and (d) are prime.",
+        "The only varying inputs are the digit set and max_length; the mathematical condition (primality) and requested quantity (count of distinct primes) are fixed.",
+        "Distinctness of integers follows automatically from distinct digit sequences, so counting valid permutations that are prime suffices; no deduplication across lengths is needed because different lengths give different integers.",
+        "Leading-zero exclusion only matters for lengths >= 2; single-digit numbers are just the digits themselves.",
+        "Primality testing is deterministic and cheap for numbers with at most 4 digits (max 9876), so exhaustive enumeration over permutations is feasible and exact.",
+        "max_length is bounded by the number of distinct supplied digits, so enumeration over subsets of size 1..max_length is well-defined."
+      ],
+      "procedure_plan": "Implement solve(parameters) with digits (list of distinct integers 0-9) and max_length L. For k = 1 to L: enumerate all ordered k-tuples of distinct digits from the set (permutations of size k). For each tuple, skip if k>=2 and the first digit is 0. Form the integer n by concatenation. Test primality of n with trial division up to sqrt(n) (or a small deterministic check). Count each n that is prime. Return the total count. Use exact integer arithmetic; no floating point. Optionally precompute primes up to 9999 via sieve for speed, but trial division is sufficient.",
+      "replacement_operation": null,
+      "uncertainty": "None material: the procedure is a direct exhaustive enumeration with deterministic primality testing, matching the stated conditions exactly. The only assumption is that 'distinct prime numbers' means distinct integer values, which is implied by distinct digit arrangements of differing lengths/orders."
+    },
+    "source_sha256": "965a5e387d168fee80f40c31b1b8011c0f34e519fa9315792dcb086486cc024d",
+    "ast_sha256": "c4d682c4fa46c79f1f1c16b192fdbb0951a6c94a9a234a6aa6e28b506c5ec954",
+    "uses_nonlocal": true
+  },
+  {
+    "key": "g0-r0-F",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "All source tasks share one structure: given a set of distinct digits and a maximum length L (here 4), count distinct primes formable by choosing k digits (1<=k<=L), permuting without repetition, with no leading zero.",
+        "The failures are arithmetic/enumeration errors: truncated manual primality checks, guessed 4-digit counts, and inconsistent per-length subtotals. The mathematical procedure is deterministic and fully checkable.",
+        "Key correctness constraints: deduplicate results (different digit selections cannot yield the same integer because digit multisets differ, but dedupe defensively), enforce no leading zero, and test primality exactly by trial division up to floor(sqrt(n)).",
+        "Pruning is safe and exact: for k>=2 the last digit must be in {1,3,7,9}; reject candidates whose digit sum is divisible by 3 (for n>3); single-digit primes are exactly {2,3,5,7} intersected with the digit set.",
+        "max_length must be clamped to at most the number of distinct supplied digits; k ranges over 1..min(max_length, len(digits))."
+      ],
+      "procedure_plan": "solve(parameters): read digits (dedupe, keep as ints) and max_length; set L=min(max_length, len(digits)). Initialize a set S of primes. For k=1..L: enumerate all ordered k-tuples of distinct digits (permutations of size k from the digit set). For each tuple: if k>1 and first digit is 0, skip; build integer n; if k==1, include n iff n in {2,3,5,7}; else skip if last digit not in {1,3,7,9}; skip if digit sum % 3 == 0; otherwise test primality by trial division d=2,3,5,... while d*d<=n (increment by 1 or use 6k±1), and add n to S if prime. Return len(S). Use exact integer arithmetic; no floating point. Optionally memoize primality tests.",
+      "replacement_operation": null,
+      "uncertainty": "Low mathematical uncertainty: the procedure is a direct exhaustive enumeration with exact primality testing, so it is correct for any digit set and max_length within the schema. The only practical concern is runtime for large digit sets, but with at most 10 digits and max_length 4 the search space is at most sum_{k=1..4} P(10,k) ~ 5860 candidates, trivially fast. No reliance on the failed trajectories' guessed counts."
+    },
+    "source_sha256": "085b50bd9790c5d0636f607b7e4105ad06c0850cf2e3fe90bc9ee5c00b356dbe",
+    "ast_sha256": "642dcdc547ef0765478b882b31467cf8c37740bbfbfd131bf0843c794dc1bca8",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g0-r0-FC",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": "Manual enumeration of candidate numbers by length and hand-checking primality, often stopping early, truncating, or substituting a guessed count for the 4-digit case.",
+      "observations": [
+        "All source tasks share the same mathematical structure: count distinct primes formed by permutations of 1..max_length distinct digits from a supplied digit set, with no leading zero for multi-digit numbers.",
+        "The observed attempts repeatedly enumerate candidates by hand and then either truncate or guess the 4-digit count; several final answers are explicitly guessed (e.g. 'I'll guess', 'educated guess', 'verified total from complete enumeration' without enumeration).",
+        "The failing operation is manual case enumeration plus hand primality testing, which is incomplete and error-prone, especially for 4-digit candidates.",
+        "A deterministic exhaustive enumeration over all valid digit sequences of each length, with exact primality testing, is feasible because the search space is at most sum_{k=1..4} P(10,k) < 6000.",
+        "Distinctness of primes is automatic because each prime has a unique decimal representation, so counting valid permutations that are prime counts distinct primes."
+      ],
+      "procedure_plan": "Implement solve(digits, max_length): (1) Normalize digits to a set/list of distinct integers 0..9; let n = len(digits). (2) For each length k from 1 to min(max_length, n), generate every ordered k-tuple of distinct digits from the set. (3) Reject any tuple whose first element is 0 when k >= 2 (leading zero). (4) Convert the tuple to an integer value. (5) Test primality exactly: handle values < 2 as non-prime; check divisibility by 2 and 3 quickly; then trial-divide by all integers d from 5 while d*d <= value, stepping d by 2 (or by 6 using 6k±1 optimization). (6) If prime, insert the integer into a set to guarantee distinctness. (7) Return the cardinality of the set. Use integer arithmetic only; no floating point. The procedure is deterministic and exhaustive, so it cannot miss or double-count candidates.",
+      "replacement_operation": "Exhaustive generation of all valid digit permutations for each allowed length, followed by exact deterministic primality testing via trial division up to the integer square root, accumulating results in a set and returning its size.",
+      "uncertainty": "Low mathematical uncertainty: exhaustive enumeration plus exact primality testing is complete and sound for these small bounds. Residual uncertainty is only about implementation details (e.g. correct handling of single-digit 0/1 and leading-zero rejection), which the plan addresses explicitly. The diagnosis that manual enumeration caused the failures is supported by truncated/guessed attempts, but the exact arithmetic error in each wrong answer is not established."
+    },
+    "source_sha256": "784458d84c9deb5ca8acb66eb187dbe2ba844d73b7bdecd3170079093dbeef06",
+    "ast_sha256": "5e6a89c5b5548f1c041094dc5b6bca5cf1de2bf162421a715b2d61f84488201c",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g1-r0-F",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "Both source questions ask for the number of distinct values obtainable by fully parenthesizing a fixed sequence of operands and binary operators, preserving order.",
+        "The shared interface gives operands (integers) and operators (+, -, *) with exactly len(operands)-1 operators.",
+        "The mathematical object is the set of results over all full binary parenthesizations of the ordered operator sequence; the requested quantity is the cardinality of that set.",
+        "The two wrong trajectories both attempted manual enumeration and undercounted; the first also mis-reduced the leading 7-7+5 prefix, and the second correctly reduced 6*7*7 but then enumerated only 14 cases and missed values.",
+        "A correct deterministic procedure is interval dynamic programming: for each contiguous subrange [i,j], compute the set of all possible values by splitting at every k in [i,j-1] and combining left/right sets with operator[k].",
+        "The final answer is the size of the set for the full range; this is exact and avoids manual enumeration errors.",
+        "Potential pitfalls: integer overflow is not a concern for the stated bounds (operands up to 8, values up to 20), but intermediate products can grow; use arbitrary-precision integers.",
+        "Duplicate values must be deduplicated at each interval to keep the computation tractable and to count distinct results correctly."
+      ],
+      "procedure_plan": "Implement solve(parameters) where parameters has operands (list of integers) and operators (list of '+','-','*'). Let n = len(operands). If n == 1, return 1 (only one value). Build a 2D array dp[i][j] of sets of integers for 0 <= i <= j < n. Initialize dp[i][i] = {operands[i]}. For length L from 2 to n: for i from 0 to n-L: j = i+L-1; dp[i][j] = empty set. For each split k from i to j-1: for each a in dp[i][k] and b in dp[k+1][j]: apply operator[k] to a and b (a+b, a-b, a*b) and insert result into dp[i][j]. After filling, return len(dp[0][n-1]). Use Python integers (unbounded). This exactly computes the number of distinct fully parenthesized values preserving operand/operator order.",
+      "replacement_operation": null,
+      "uncertainty": "The procedure is standard and exact for the stated problem class. The only uncertainty is whether the source questions intend 'fully parenthesize' to include all binary tree shapes (Catalan many) rather than only some restricted forms; the wording and the wrong trajectories' own framing indicate all full parenthesizations, so the DP is appropriate. No other ambiguity affects the count."
+    },
+    "source_sha256": "c845f8ca9bfe6a5405578d5c1368bcc878766d9b14178de35e69e1e9c764a788",
+    "ast_sha256": "520963c51e253e856425c750b45a9762c9152ecc39807739f5994b2ab2e0e9a6",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g1-r0-FC",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": "Reducing the expression by evaluating an associative-looking prefix (e.g., treating '7-7' as 0 or '6*7*7' as 294) before enumerating parenthesizations, then counting distinct values only for the reduced expression.",
+      "observations": [
+        "Both source tasks ask for the number of distinct values obtainable by fully parenthesizing a fixed sequence of operands and binary operators, preserving order.",
+        "The attempted solutions reduce the expression by exploiting associativity (e.g., collapsing a leading product or a leading subtraction) and then enumerate parenthesizations of the reduced expression.",
+        "The reduction step is the likely failure point: collapsing a subexpression to a single value before enumerating parenthesizations can discard distinct values that arise when that subexpression is grouped differently with neighboring operators.",
+        "For example, in the first task the leading '7 - 7' is treated as always 0, but parentheses can bind the second 7 with later operators, changing the value.",
+        "In the second task the leading '6 * 7 * 7' is treated as always 294, but parentheses can bind the second 7 with the following '+' and later operators, changing the value.",
+        "The enumeration of the reduced expression is internally consistent but is applied to the wrong expression, so the final count is wrong."
+      ],
+      "procedure_plan": "Define solve(parameters) where parameters has operands (list of integers) and operators (list of strings from '+','-','*') with len(operators) == len(operands)-1. Use interval dynamic programming over the original sequence without any pre-reduction. Let dp[i][j] be the set of all values obtainable by fully parenthesizing operands[i..j] using operators[i..j-1]. Base case: dp[i][i] = {operands[i]}. For length L from 2 to n, for each i and j=i+L-1, for each split k from i to j-1, combine every a in dp[i][k] and b in dp[k+1][j] using operators[k]: for '+', a+b; for '-', a-b; for '*', a*b. Insert results into dp[i][j]. Return the cardinality of dp[0][n-1]. Use exact integer arithmetic (Python ints) and sets for deduplication. Complexity is O(n^3 * S^2) where S is the maximum set size; with n <= 8 this is small. Do not collapse any subexpression before enumeration; the DP naturally handles all parenthesizations including those that bind operands across the apparent 'associative' boundaries.",
+      "replacement_operation": "Enumerate all full parenthesizations of the original, unreduced operand/operator sequence via interval dynamic programming: dp[i][j] = union over splits k of {a op[k] b : a in dp[i][k], b in dp[k+1][j]}, with dp[i][i] = {operands[i]}; return |dp[0][n-1]|. This preserves every grouping, including those that bind operands across apparent associative boundaries, so no distinct value is lost.",
+      "uncertainty": "The DP is a standard exact enumeration of all full parenthesizations and should be correct for the stated quantity. The main uncertainty is whether the source tasks intend 'fully parenthesize' to include all binary tree structures (Catalan many) rather than only some subset; the problem statements say 'fully parenthesize in every possible way', which matches the DP. No other ambiguity is apparent."
+    },
+    "source_sha256": "4c081639c30d8ff67568de9913ce1e859700028870ffa399802d09b725efdddc",
+    "ast_sha256": "5fd4926c6b9f40cb4bf9b234e186899f59d3b4fb6b7a32775bec311bae245cab",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g1-r0-T",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "Both source questions fix an ordered sequence of operands and binary operators (+,-,*) and allow only full parenthesization (no reordering).",
+        "The requested quantity is the number of distinct numerical values over all full binary parenthesizations of the fixed expression.",
+        "The interface supplies operands (integers) and operators (length = len(operands)-1), so the procedure can be parameterized directly.",
+        "Distinct values must be deduplicated exactly; integer arithmetic avoids floating-point issues.",
+        "The number of full parenthesizations grows Catalan-like, so a DP over intervals with sets of achievable values is appropriate for up to 8 operands."
+      ],
+      "procedure_plan": "Implement solve(parameters): read operands a[0..n-1] and operators op[0..n-2]. If n==1 return 1 (single value). Use interval DP: for each i<=j compute set S[i][j] of all values obtainable by fully parenthesizing a[i..j] with op[i..j-1]. Base S[i][i]={a[i]}. For length L=2..n, for each i, j=i+L-1, for each split k in [i, j-1], combine every x in S[i][k] and y in S[k+1][j] using op[k] (+,-,*) and insert into S[i][j]. Return the cardinality of S[0][n-1]. Use exact integer arithmetic and hash sets for deduplication.",
+      "replacement_operation": null,
+      "uncertainty": "The plan assumes the intended quantity is exactly the count of distinct values from full parenthesizations preserving operand/operator order, which matches both source statements. If the source intended a different counting convention (e.g., counting parenthesizations rather than distinct values), the DP would need modification; no such ambiguity is evident from the supplied text."
+    },
+    "source_sha256": "4df8f38602b3bb79aad176358093a649079dfed91f4c6c397ee1c6b2e205c71c",
+    "ast_sha256": "49149f722d9a60d12fd245bfae71f5b8ae37c59b8a4db5fd0a0e0a827aee250b",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g2-r0-FC",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": "Manually enumerating a subset of parenthesizations and/or hand-maintaining a union list of values, then reporting its size (or guessing a plausible number such as 116) without exhaustively computing the interval-DP sets.",
+      "observations": [
+        "All three source tasks ask for the number of distinct values obtainable by fully parenthesizing a fixed sequence of operands and binary operators (+,-,*), preserving order.",
+        "The attempted solutions either enumerate parenthesizations by hand (error-prone, truncated) or use interval DP but then miscount or misreport the union of value sets.",
+        "The failing pattern is not the DP recurrence itself but the final aggregation: manual enumeration misses cases, and hand-maintained union lists are unreliable; one attempt even guessed a 'nice' number (116) without computation.",
+        "The correct mathematical object is well-defined: for each interval [i,j], the set of achievable values is the union over splits k of {a op_k b : a in S(i,k), b in S(k+1,j)}; the answer is |S(0,n-1)|.",
+        "The interface guarantees operators has exactly len(operands)-1 entries, so the DP is directly implementable with exact integer arithmetic."
+      ],
+      "procedure_plan": "Implement solve(operands, operators): let n=len(operands). Build a 2D table S[i][j] of sets of integers. Base case S[i][i]={operands[i]}. For length L=2..n, for each i with j=i+L-1, initialize empty set; for each split k from i to j-1, for each a in S[i][k] and b in S[k+1][j], apply operators[k] (+,-,*) to get v and add to the set. Use Python sets of ints (exact arithmetic, no floats). Return len(S[0][n-1]). This deterministically enumerates all full parenthesizations via the standard interval DP and deduplicates by set union, so the count is exact. Complexity is bounded by the number of distinct subexpression values, which is small for n<=8.",
+      "replacement_operation": "Compute the exact set of achievable values via interval DP: S[i][j] = union over k of {a op_k b : a in S[i][k], b in S[k+1][j]}, with S[i][i]={operands[i]}, and return the cardinality of S[0][n-1]. This replaces sampling/guessing with exhaustive set-based enumeration, which is the logically correct way to count distinct results.",
+      "uncertainty": "The DP recurrence is standard and trustworthy; the main residual risk is performance if intermediate value sets grow large, but with n<=8 and small integer operands this is negligible. There is no ambiguity in the requested quantity: full parenthesizations preserving order, counting distinct numerical results once. The prior failures are attributable to manual enumeration/guessing and to hand-aggregation errors, not to a flaw in the DP formulation, so confidence in the proposed procedure is high."
+    },
+    "source_sha256": "9070920d142c4ae5c97bebec1151a0c4674c2c6ec1f66e2c3febb4d1ab2dbb2c",
+    "ast_sha256": "65fd7fb94e252ed79098291ab243baebdc57910a74f6224c723b86690e27f3b6",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g2-r0-T",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "Each source question asks for the number of distinct values obtainable by fully parenthesizing a fixed sequence of integers and binary operators +,-,* without reordering.",
+        "The requested quantity is the cardinality of the set of results over all full binary parenthesizations of the operator sequence.",
+        "The parameter schema supplies operands and operators with len(operators)=len(operands)-1, matching the fixed sequence structure.",
+        "Because only +,-,* are used, all intermediate and final values are integers, so distinct values can be tracked exactly in a set.",
+        "The number of full parenthesizations grows Catalan-like, but dynamic programming over contiguous operand intervals avoids enumerating duplicate parenthesizations explicitly."
+      ],
+      "procedure_plan": "Implement solve(parameters): read operands a[0..n-1] and operators op[0..n-2]. Define DP[i][j] as the set of all integer values obtainable by fully parenthesizing the subexpression a[i] op[i] ... op[j-1] a[j]. Base case DP[i][i]={a[i]}. For length L from 2 to n, for each i with j=i+L-1, initialize DP[i][j]=empty set. For each split k from i to j-1, combine every x in DP[i][k] with every y in DP[k+1][j] using op[k]: if '+', add x+y; if '-', add x-y; if '*', add x*y. Insert results into DP[i][j]. Return the size of DP[0][n-1]. Use exact integer arithmetic and sets for deduplication.",
+      "replacement_operation": null,
+      "uncertainty": "The plan assumes the source questions' phrase 'inserting parentheses' is equivalent to considering all full binary parenthesizations of the given left-to-right sequence, which is the standard interpretation. If a source intended only some restricted class of parenthesizations, the count could differ, but the supplied statements do not indicate such a restriction."
+    },
+    "source_sha256": "d4e93ccb99893d8a694267f5b6b2d04a437c9adc0d8675d02bb2491c2865e614",
+    "ast_sha256": "3e82ab0da802ea2523175f09e55e82d8ff59ba3248ec8bdd82ce5e5e188d8b82",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g2-r0-F",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "All three source tasks ask for the number of distinct values obtainable by fully parenthesizing a fixed sequence of operands and binary operators (+,-,*), preserving order.",
+        "The shared interface supplies operands (list of integers) and operators (list of strings, length len(operands)-1).",
+        "The mathematical object is the set of results over all binary parse trees of the operator sequence; this is exactly interval dynamic programming over sets of reachable values.",
+        "Failures in the evidence are consistent with manual enumeration/estimation errors (truncation, guessing, incomplete DP), not with a flaw in the DP formulation itself.",
+        "The DP is deterministic and parameterized only by operands and operators; no semantic routing is needed."
+      ],
+      "procedure_plan": "Implement solve(parameters) with operands a[0..n-1] and operators op[0..n-2]. If n==1 return 1 (single value). Build dp[i][j] = set of all values from fully parenthesizing a[i..j]. Base: dp[i][i]={a[i]}. For length L=2..n, for i=0..n-L, j=i+L-1, for split k=i..j-1, combine every x in dp[i][k] and y in dp[k+1][j] via op[k]: '+' -> x+y, '-' -> x-y, '*' -> x*y; add to dp[i][j]. Return the cardinality of dp[0][n-1]. Use Python ints (arbitrary precision); sets deduplicate automatically. Complexity is bounded by Catalan-many combinations but with set deduplication; for n<=8 this is small.",
+      "replacement_operation": null,
+      "uncertainty": "The DP is standard and exact; the only risk is performance if intermediate sets grow large, but with n<=8 operands and values bounded by products of small integers, sets remain manageable. No correctness uncertainty about the formulation."
+    },
+    "source_sha256": "053557a83ed67e61baddec25cdd04ad74b4e1e08c1d758c3be0ffa96909015e7",
+    "ast_sha256": "b695578792f38c7cf4ae86b2f3259572402e4550444b2ee166ef3223c6f985bb",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g0-r1-T",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "All source questions ask for the count of distinct primes formed by arranging between 1 and max_length distinct digits drawn from a supplied digit set, with no repetition.",
+        "Leading zero is disallowed whenever 0 is in the digit set; the resulting integer must be positive.",
+        "The count is finite and small: at most sum over lengths 1..4 of permutations of the digit set, so exhaustive enumeration is feasible.",
+        "Primality must be tested exactly; trial division up to integer square root suffices for numbers with at most 4 digits.",
+        "Distinctness is automatic because digit arrangements without repetition over distinct digits yield distinct integers, but a set should still be used to be safe.",
+        "The parameter max_length is bounded by the number of distinct supplied digits, so enumeration lengths are 1..min(max_length, len(digits))."
+      ],
+      "procedure_plan": "Implement solve(parameters): read digits (list of distinct integers 0-9) and max_length L. Let n = len(digits). For each length k from 1 to min(L, n): generate all ordered k-tuples of distinct digits from digits (permutations). For each tuple, if the first digit is 0, skip it (no leading zero). Otherwise form the integer value by positional accumulation. If value >= 2 and is_prime(value), add to a set. Return the size of the set. is_prime(v): if v < 2 return false; if v is 2 or 3 return true; if v % 2 == 0 or v % 3 == 0 return false; loop d from 5 while d*d <= v step 6, checking divisibility by d and d+2; return true if none divide. Use integer arithmetic only.",
+      "replacement_operation": null,
+      "uncertainty": "The plan assumes the requested quantity is exactly the count of distinct prime integers, matching all supplied source questions. If a future parameter set contains repeated digits, the 'distinct digits' premise would need clarification, but the schema enforces uniqueItems. No other ambiguity affects the deterministic enumeration."
+    },
+    "source_sha256": "9fc022f9894cb7ac48c8863314ef883dca250bbaf131ab43fe5c8dbc1cc6ee3e",
+    "ast_sha256": "da19484cb9e97decc5b8dca2b0d1aa9288d869468d1724a051c1c8e338af5fe7",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g0-r1-FC",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": "Manual or partially manual enumeration of permutations with hand primality checks, especially for the 4-digit case, followed by truncation or guessing/recalling the count for the largest length instead of computing it.",
+      "observations": [
+        "All source tasks share one deterministic counting problem: given a digit set and max_length, count distinct primes obtainable by arranging 1..max_length distinct digits without repetition, with no leading zero.",
+        "The failing trajectories consistently attempt manual enumeration and primality testing, then truncate or guess the 4-digit count; several final answers are explicitly guessed or recalled rather than computed.",
+        "The attempted solutions rely on hand-checking divisibility and on unverified counts for the largest length, which is the main source of wrong totals.",
+        "A trustworthy procedure exists: exhaustive enumeration of all valid digit permutations up to max_length, deduplication, and exact primality testing by trial division up to the integer square root.",
+        "The search space is tiny (at most sum over k<=4 of P(n,k) <= 10*9*8*7 + ... < 6000 candidates), so exhaustive enumeration is feasible and exact."
+      ],
+      "procedure_plan": "Implement solve(parameters) with digits and max_length. Normalize digits to a sorted unique list. For each length k from 1 to min(max_length, len(digits)), generate all ordered k-tuples of distinct digits from the set (permutations without repetition). For each tuple, reject if the first digit is 0 (leading zero). Form the integer value. Insert into a set to deduplicate (though distinct tuples with distinct digits already give distinct integers, dedup is harmless). For each candidate integer n, test primality exactly: if n < 2 reject; if n in {2,3} accept; if n even or divisible by 3 reject; otherwise trial-divide by all integers d from 5 while d*d <= n, stepping d by 2 and 6 alternately (or simply all odd d), rejecting on any exact divisor; accept if none found. Count accepted candidates. Return the count. Use integer arithmetic only; no floating point. Ensure max_length is clamped to the number of distinct digits.",
+      "replacement_operation": "Exhaustive programmatic enumeration of all valid digit permutations for each length up to max_length, with exact deterministic primality testing by trial division up to the integer square root, and counting the accepted distinct primes.",
+      "uncertainty": "Low uncertainty about the enumeration and primality procedure; it is exact and the search space is small. The only residual risk is implementation detail (leading-zero handling and deduplication), which is straightforward. The diagnosis that manual enumeration/guessing caused the failures is strongly supported by the truncated and guessed final answers, but the exact internal arithmetic error in each attempt is not individually established."
+    },
+    "source_sha256": "fcabd222f855fa1b6152878ab14ea0cf5a078729e332d0a7c1b2250a29e3cda6",
+    "ast_sha256": "50ca40c18e8f92f5b4dfde4e6db9e4997ac05709b8fff34acd0049a3185edf78",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g0-r1-F",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "All source tasks share one deterministic structure: count distinct primes obtainable by permuting k distinct digits from a supplied digit set, for k=1..max_length, with no repetition and no leading zero.",
+        "The only varying parameters are the digit set and max_length; the counting rule is identical across tasks.",
+        "Failures are consistent with manual enumeration/primality-check errors: truncated attempts and guessed 4-digit counts (e.g., 78, 60, 52, 49, 136, 21, 40), not with a different problem interpretation.",
+        "A brute-force enumeration over all valid permutations is small: at most sum_{k=1..4} P(n,k) with n<=10, and for n=6 at most 6+30+120+360=516 candidates, so exact primality testing is cheap and reliable.",
+        "Leading-zero exclusion and distinctness are explicit in the source statements and must be enforced during permutation generation."
+      ],
+      "procedure_plan": "Implement solve(parameters) with digits (list of distinct integers 0-9) and max_length (1..min(4, len(digits))). For each length k from 1 to max_length, generate all ordered k-tuples of distinct digits from the set (permutations without repetition). Skip any tuple whose first element is 0. Convert each tuple to an integer. Test primality deterministically: n<2 not prime; n in {2,3} prime; if n even or divisible by 3 not prime; otherwise trial-divide by d=5,7,... while d*d<=n (or by all integers 2..floor(sqrt(n))) and return composite on any divisor. Collect primes in a set to guarantee distinctness, then return the set size. Use integer arithmetic only; no heuristics or sampling.",
+      "replacement_operation": null,
+      "uncertainty": "Low mathematical uncertainty: the procedure is a direct exhaustive enumeration with exact primality testing, and the search space is tiny. Residual risk is only implementation bugs (e.g., forgetting leading-zero exclusion, allowing repeated digits, or an incorrect primality bound); these are avoided by generating permutations from distinct indices and testing divisors up to sqrt(n)."
+    },
+    "source_sha256": "6aeb0f9af6fbfbaa44bf7f85e2232588eef9f474398b7212b488c061a693efa4",
+    "ast_sha256": "9aa3307d817ef70449b91cf1fc9f6644d9370e80a0031a86729391c30752ad92",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g1-r1-F",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": "Reducing the expression by associativity or precedence before parenthesization (e.g., collapsing a leading product chain or treating a prefix like a-b as fixed) and then enumerating only the reduced expression.",
+      "observations": [
+        "Both source questions ask for the number of distinct values obtainable by fully parenthesizing a fixed sequence of operands and binary operators, preserving order.",
+        "The shared interface gives operands (integers) and operators (one of +,-,*), with exactly len(operands)-1 operators.",
+        "The natural deterministic procedure is interval dynamic programming: for each contiguous subrange, compute the set of all achievable values by splitting at every operator position and combining left/right value sets.",
+        "The final answer is the cardinality of the set for the full range.",
+        "The failed attempts show a common error mode: they reduced subexpressions using associativity/precedence shortcuts (e.g., collapsing a leading product, or assuming 7-7 always yields 0) and then enumerated only a reduced expression, missing parenthesizations that interleave across the assumed boundary.",
+        "A correct DP over all splits avoids such invalid reductions and handles all Catalan-many parenthesizations implicitly.",
+        "Set sizes can grow, but with at most 8 operands the number of parenthesizations is C_7=429, so explicit set DP is small and exact with integer arithmetic."
+      ],
+      "procedure_plan": "Implement solve(parameters): let n=len(operands), ops=operators. If n==1 return 1. Build dp[i][j] as a set of integers for subexpression operands[i..j]. Initialize dp[i][i]={operands[i]}. For length L from 2 to n, for i from 0 to n-L, j=i+L-1, initialize empty set. For each split k from i to j-1, let op=ops[k]; for each a in dp[i][k] and b in dp[k+1][j], compute a+b, a-b, or a*b according to op and add to dp[i][j]. After filling, return len(dp[0][n-1]). Use Python ints; no floating point. This directly counts distinct fully-parenthesized values preserving operand/operator order.",
+      "replacement_operation": "Enumerate all binary-tree parenthesizations implicitly via interval DP over every split point, combining full value sets for left and right subranges with the operator at the split, then take the cardinality of the full-range set.",
+      "uncertainty": "The DP is exact for the stated quantity. The only residual risk is performance if the interface were extended far beyond 8 operands, since set sizes can grow; within the given bounds it is negligible. No semantic routing or task-ID dependence is used."
+    },
+    "source_sha256": "67b4a094591f50c79e0e66ec6c856faf56fa0f260c644bdff7787754db1ae629",
+    "ast_sha256": "f9b52ae1df4da0b335e4793b91af160fa0f0de884f8c1624316d7a4a008a1ea7",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g1-r1-T",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "Both source questions fix an ordered sequence of operands and binary operators (+,-,*) and allow only full parenthesization (inserting parentheses) without reordering operands or operators.",
+        "The requested quantity is the number of distinct numerical values obtainable over all full binary parenthesizations of the fixed expression.",
+        "The interface supplies operands (integers) and operators (length = len(operands)-1), matching the fixed expression structure.",
+        "The mathematical core is: enumerate all full binary tree parenthesizations of the operator sequence, evaluate each under standard integer arithmetic, and count distinct results.",
+        "Duplicate values must be deduplicated; the count is of distinct values, not parenthesizations.",
+        "No semantic routing or task-ID dependence is needed; the procedure is purely combinatorial over the parameter arrays."
+      ],
+      "procedure_plan": "Implement solve(parameters): read operands o[0..n-1] and operators op[0..n-2]. Use interval dynamic programming: for each subinterval [i,j] of operands, compute the set S[i][j] of all values obtainable by fully parenthesizing o[i..j] with operators op[i..j-1]. Base case S[i][i] = {o[i]}. For length L from 2 to n, for each i with j=i+L-1, for each split k in [i, j-1], combine every a in S[i][k] and b in S[k+1][j] using op[k]: if '+' add, if '-' subtract, if '*' multiply; insert results into S[i][j]. Return the cardinality of S[0][n-1]. Use exact integer arithmetic; sets handle deduplication. Complexity is O(n^3 * max set size), acceptable for n<=8.",
+      "replacement_operation": null,
+      "uncertainty": "Set sizes can grow but are bounded for n<=8 and small integer operands; no overflow concerns with standard integers. The procedure assumes standard precedence is irrelevant because all parenthesizations are enumerated, which matches the source framing. If the intended semantics required preserving default precedence rather than full parenthesization, the count would differ, but the source text explicitly allows inserting parentheses anywhere, so full parenthesization is the correct interpretation."
+    },
+    "source_sha256": "106448cea70369769817a8bb36838cdfe4c97457943d5468be05f3d175c80639",
+    "ast_sha256": "31582fa753a8df50a5d667146ba0288c52f4c736599eabd287d2568511f9352b",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g1-r1-FC",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": "Pre-enumeration algebraic simplification: replacing a contiguous subexpression by a single constant value (e.g., collapsing 6*7*7 to 294, or 7-7 to 0) and then enumerating parenthesizations only of the reduced expression. This can omit values reachable when that subexpression is grouped differently inside a larger parenthesization, causing undercounting.",
+      "observations": [
+        "Both source tasks ask for the number of distinct values obtainable by fully parenthesizing a fixed ordered sequence of operands and binary operators (+,-,*), with no reordering.",
+        "The attempted solutions reduce the expression by exploiting associativity (e.g., collapsing a leading product or a leading 7-7) and then enumerate only the reduced subexpression's parenthesizations.",
+        "That reduction is unsound in general: a subexpression that is constant under one grouping may not be constant under all groupings when embedded in a larger parenthesization, so collapsing it can drop reachable values.",
+        "The failing operation is a pre-enumeration algebraic simplification that assumes a prefix/suffix is grouping-invariant; the replacement is exhaustive DP over all contiguous subranges with no simplification.",
+        "The interface is deterministic: operands (1..8 integers) and operators (len(operands)-1 of +,-,*). The requested quantity is the cardinality of the set of all fully-parenthesized evaluation results."
+      ],
+      "procedure_plan": "Implement solve(operands, operators). Let n=len(operands). Build a 2D table S[i][j] of sets of integers for the subexpression operands[i..j]. Base case S[i][i]={operands[i]}. For length L=2..n, for each i with j=i+L-1, for each split k in [i, j-1], combine every a in S[i][k] and b in S[k+1][j] using operators[k]: + gives a+b, - gives a-b, * gives a*b; insert into S[i][j]. Return len(S[0][n-1]). Do not pre-simplify, do not assume associativity, do not collapse constant-looking prefixes. Use exact integer arithmetic; sets deduplicate automatically. Complexity is O(n^3 * max set size^2), fine for n<=8.",
+      "replacement_operation": "Exhaustive interval dynamic programming over all contiguous subranges: compute the full set of achievable values for every subexpression operands[i..j] by trying every split point and every operator, with no algebraic simplification or associativity assumptions, then return the size of the set for the whole expression.",
+      "uncertainty": "The DP is the standard exact method for counting distinct parenthesization values and should be correct for the stated interface. Residual uncertainty is only about whether the intended quantity is exactly the cardinality of the full-parenthesization value set (as the source wording states); if the grader expects a different convention (e.g., counting only maximal/minimal values), the plan would need adjustment. No evidence supports a different convention."
+    },
+    "source_sha256": "c1ca2b490e25cc0d0d6d3118b9e8bf2daa159d264db726e6650dc6dfdd0805d2",
+    "ast_sha256": "62352f98b350c8d80e85091f5835f99dfd6a600fa1a737a019c1895dd6ce8208",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g2-r1-FC",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": "Manual enumeration of a handful of parenthesizations, guessing a plausible count, or performing interval DP with arithmetic/union mistakes and truncation; these do not exhaustively and correctly compute the union of all parenthesization values.",
+      "observations": [
+        "All three source tasks ask for the number of distinct values obtainable by parenthesizing a fixed sequence of operands and binary operators (+,-,*).",
+        "The failing attempts either enumerated a small subset of parenthesizations by hand (missing many), guessed a number, or attempted interval DP but made arithmetic/union errors and truncated.",
+        "The correct mathematical object is the set of values from all full binary parenthesizations; this is exactly computed by interval DP over contiguous subexpressions.",
+        "The number of parenthesizations is Catalan(n-1) for n operands, but the requested quantity is the cardinality of the union of resulting values, not the Catalan count.",
+        "The interface supplies operands and operators with len(operators)=len(operands)-1, so a deterministic DP is well-defined."
+      ],
+      "procedure_plan": "Implement solve(operands, operators): let n=len(operands). Build dp[i][j] as a set of integers for subexpression operands[i..j]. Base: dp[i][i]={operands[i]}. For length L=2..n, for i=0..n-L, j=i+L-1, for split k=i..j-1, combine every a in dp[i][k] and b in dp[k+1][j] using operators[k] ('+' -> a+b, '-' -> a-b, '*' -> a*b), adding results to dp[i][j]. Return len(dp[0][n-1]). Use Python ints (arbitrary precision); sets deduplicate automatically. Complexity is O(n^3 * max set size), fine for n<=8.",
+      "replacement_operation": "Exhaustive interval dynamic programming: dp[i][j] = union over splits k of {a op_k b : a in dp[i][k], b in dp[k+1][j]}, returning the cardinality of dp[0][n-1]. This is logically guaranteed to cover every full parenthesization exactly once per split and deduplicate values via sets.",
+      "uncertainty": "The DP is exact for full parenthesizations; the only interpretive risk is whether 'inserting parentheses' allows partial parenthesizations that are not full binary trees. Any partial parenthesization evaluates to the same value as some full parenthesization under standard precedence, so the distinct-value set is unchanged. No other uncertainty."
+    },
+    "source_sha256": "d9b86f343a45ad253ac08b130acc24c476261bf6fb23bc5848646ff80ee63822",
+    "ast_sha256": "7d6c0deb8a0dea57f9f0d657b1891c4531637864e4bbda20aad15706959a8f5d",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g2-r1-F",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "All three source tasks ask for the number of distinct values obtainable by fully parenthesizing a fixed sequence of operands and binary operators (+,-,*), preserving order.",
+        "The mathematical object is the set of results over all binary parenthesizations of an expression with n operands and n-1 operators; this is exactly interval dynamic programming over sets of achievable values.",
+        "The number of full parenthesizations is Catalan(n-1), but the requested quantity is the cardinality of the union of resulting values, so duplicates must be merged.",
+        "Failures show two recurring errors: (a) enumerating or estimating instead of computing the exact set, and (b) truncation from manual enumeration; both are avoided by a deterministic set-based DP.",
+        "The interface fixes operands and operators with len(operators)=len(operands)-1, so the procedure is well-defined for any valid parameter instance."
+      ],
+      "procedure_plan": "Let operands a[0..n-1] and operators op[0..n-2], where op[k] sits between a[k] and a[k+1]. Define dp[i][j] as the set of all integer values obtainable by fully parenthesizing the subexpression a[i..j]. Base: dp[i][i]={a[i]}. For length L=2..n, for each i with j=i+L-1, initialize dp[i][j]=empty set; for each split k from i to j-1, combine every x in dp[i][k] with every y in dp[k+1][j] using op[k] (+,-,*), inserting x+y, x-y, or x*y into dp[i][j]. Use a set (or hash set) at each interval to deduplicate. Return the cardinality of dp[0][n-1]. Handle n=1 by returning 1 (the single operand). This directly computes the exact number of distinct values; no Catalan enumeration or manual listing is needed.",
+      "replacement_operation": null,
+      "uncertainty": "The procedure is standard and exact for the stated quantity. Residual uncertainty is only about whether the grader expects the count for the exact given operand/operator sequences (it does per the interface); no semantic ambiguity remains. Complexity is exponential in the worst case because value sets can grow, but for the supplied sizes (n<=8, operands in [-10,20]) it is feasible with set-based DP."
+    },
+    "source_sha256": "ca3e66bb4e60d010e630f2cde0fecd46ed1d8ffe2f26d6d801c90f3cdd28b322",
+    "ast_sha256": "277f1c9d78ff080bcb1be3e50047b74996ba0e52e745ae51fbd65c3cb3392b9b",
+    "uses_nonlocal": false
+  },
+  {
+    "key": "g2-r1-T",
+    "analysis": {
+      "decision": "PROPOSE",
+      "invalid_operation": null,
+      "observations": [
+        "All three source questions ask for the number of distinct values obtainable by fully parenthesizing a fixed sequence of operands and binary operators (+,-,*) without reordering.",
+        "The shared interface supplies operands (integers) and operators (len(operands)-1 symbols from +,-,*), which exactly parameterizes the expression.",
+        "The requested quantity is the cardinality of the set of results over all full binary parenthesizations of the operator sequence.",
+        "This is a standard interval dynamic-programming problem: for each contiguous subexpression, compute the set of achievable values by splitting at each operator and combining left/right value sets.",
+        "Because operands are bounded (|value|<=10, length<=8) and only +,-,* are used, value sets stay small enough for exact set-based DP; no floating point is needed.",
+        "Duplicates must be collapsed per interval (sets), since the question counts distinct values only once."
+      ],
+      "procedure_plan": "Implement solve(parameters): read operands a[0..n-1] and operators op[0..n-2]. If n==1 return 1 (single value). Build dp[i][j] = set of distinct integer values from fully parenthesizing a[i..j]. Initialize dp[i][i]={a[i]}. For length L from 2 to n, for each i, j=i+L-1, for each split k in [i, j-1]: combine every x in dp[i][k] with every y in dp[k+1][j] using op[k] (+,-,*), inserting results into dp[i][j]. Return the size of dp[0][n-1]. Use Python ints (arbitrary precision) to avoid overflow. Complexity O(n^3 * S^2) where S is max set size; fine for n<=8.",
+      "replacement_operation": null,
+      "uncertainty": "Set sizes could in principle grow, but with n<=8 and small operands the exact DP is tractable; worst-case set size is bounded by the number of parenthesizations (Catalan(7)=429) per interval, so combination work is modest. No ambiguity in the mathematical condition: full parenthesization preserving order, distinct values counted once."
+    },
+    "source_sha256": "a60fc4680008994346992ad5028a8d4109598e99ff126a6d7f801303598d3dd9",
+    "ast_sha256": "f283e935782eec357567f645c589d0564c0d0889a8e83ee0130037f87e20b0fd",
+    "uses_nonlocal": false
+  }
+]

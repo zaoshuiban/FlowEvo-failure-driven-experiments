@@ -1,0 +1,82 @@
+{
+  "task": {
+    "task_id": "hard140-math-train-algebra-588",
+    "problem": "Find the product of all positive integral values of $n$ such that $n^2-35n+306= p$ for some prime number $p$. Note that there is at least one such $n$."
+  },
+  "problem_sha256": "9106d2d0e30faec56a312f130bdcf8473a306660cae6cfb43c56b5f31bf12462",
+  "task_id": "hard140-math-train-algebra-588",
+  "sequence": 105,
+  "episode_id": "hard140_algorithm_20261028_01:hard140-math-train-algebra-588",
+  "locked_sha256": "cb5518cc38b0092915afb109a0faaf120dd13af13dd01f18ac1202c6301e84af",
+  "trajectory_sha256": "e5fc9a8e5bf8fb1692e8b08db56dbc890a9560a1e7f1440d0ea0e71c4a06c799",
+  "responses": [
+    {
+      "text": "We need solve. Need be careful. We need product of all positive integers n such that f(n)=n^2-35n+306 is prime p. Prime positive? Usually prime positive >1. Need n positive integral. f(n) must equal prime. Need all n positive with f(n) prime. Quadratic upward. Let's analyze.\n\nf(n)=n^2-35n+306. Complete square? Discriminant 1225-1224=1. Ah factors! n^2-35n+306 = (n-17)(n-18)? Check 17*18=306, sum 35. Yes (n-17)(n-18). Great.\n\nSo p=(n-17)(n-18). For p prime positive. Product of two integers differing by 1. Need product prime. Since p prime positive, factors must be 1 and p or -1 and -p? But product positive. Let's enumerate.\n\nLet a=n-18, then n-17=a+1. Product a(a+1)=p prime positive.\n\nFor integer a. Product of consecutive integers. For p prime >1. Possibilities:\na=1 => product 2, n=19.\na=-2 => product 2, n=16.\na? a=0 product 0 not prime; a=-1 product 0.\nFor a>=2 product composite (a(a+1) with both >1). For a<=-3, both negative? a and a+1 negative, product positive composite? e.g -3*-2=6. Need prime? both abs >1, composite. So only a=1,-2. n=19,16. Product =304. Check f(16)=(-1)(-2)=2 prime; f(19)=2*1=2. Positive n. Product 304.\n\nNeed final concise with explanation. Ensure \"all positive integral values n\" includes n=16,19. Product 304. End line exact.\\[\nn^2-35n+306=(n-17)(n-18)\n\\]\n\nFor this product to be prime, the two consecutive integers \\(n-18\\) and \\(n-17\\) must be \\(1\\) and \\(2\\), or \\(-2\\) and \\(-1\\).\n\nThus:\n- \\(n-18=1 \\Rightarrow n=19\\)\n- \\(n-18=-2 \\Rightarrow n=16\\)\n\nBoth give \\(p=2\\). The product of all such positive integral values is\n\n\\[\n16\\cdot 19=304.\n\\]\n\nThe answer is 304.",
+      "usage": {
+        "prompt_tokens": 101,
+        "completion_tokens": 539,
+        "total_tokens": 640,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 101
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "0563ffd0429c6bdf1d82949d76545d79074e97f3dbf60a321fa84e5c6f9e6a7a"
+    },
+    {
+      "text": "\\[\nn^2-35n+306=(n-17)(n-18)\n\\]\n\nFor this product to be prime, the two consecutive integers \\(n-18\\) and \\(n-17\\) must be \\(1,2\\) or \\(-2,-1\\).\n\nThus:\n- \\(n-18=1 \\Rightarrow n=19\\)\n- \\(n-18=-2 \\Rightarrow n=16\\)\n\nBoth give \\(p=2\\). The product of all such positive integral values is\n\n\\[\n16\\cdot 19=304.\n\\]\n\nThe answer is 304.",
+      "usage": {
+        "prompt_tokens": 646,
+        "completion_tokens": 117,
+        "total_tokens": 763,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 646
+      },
+      "model": "deepseek-flash",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0,
+      "gold_exposed": false,
+      "origin": "DEEPSEEK",
+      "request_sha256": "5e630f24c05596827788f114ece88013c312a998c80de6107c279dc1d43899ae"
+    }
+  ],
+  "initial": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "304",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "attempt_grades": [
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "304",
+      "scorer_version": "math-p1-continuation-v1"
+    },
+    {
+      "status": "CONFIRMED_CORRECT",
+      "correct": true,
+      "parsed_answer": "304",
+      "scorer_version": "math-p1-continuation-v1"
+    }
+  ],
+  "final": {
+    "status": "CONFIRMED_CORRECT",
+    "correct": true,
+    "parsed_answer": "304",
+    "scorer_version": "math-p1-continuation-v1"
+  },
+  "scorer_version": "math-p1-continuation-v1",
+  "scored_after_final_lock": true,
+  "gold_exposed": false,
+  "evidence_id": "52e1159dcc4dcf899122a4db621230bcdf35191e8f39aeca6bd2bc3c50fc31f6"
+}
