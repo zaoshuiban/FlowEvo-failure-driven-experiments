@@ -4,8 +4,22 @@ from pathlib import Path
 from run_hard10_algorithm import (ROOT,WORKER,IMAGE,save,sha,load,fingerprint,canonical,Adapter,VERSION as GENERATION_VERSION,budget,PublicMathTask,NoGoldMathController,NoGoldPolicy,NoGoldSolverChannel,DiscoveryRecorder,grade_continuation,extract_answer,normalized,BoundedCompiler,component_check,FrozenLinuxBackend,EvidenceStore)
 from failure_evo.workflow_protocol_v2 import PreflightRejected,prepare,Limits
 from code_math.no_gold import solver_messages
+from failure_evo.run_health import assert_run_healthy
+from types import SimpleNamespace
 OUT=ROOT/'runs/hard140_algorithm_20261028_01';VERSION='hard140-stratified-discovery-v1'
 SUBJECTS=['algebra','counting_and_probability','geometry','intermediate_algebra','number_theory','prealgebra','precalculus']
+
+def assert_disk_health():
+ # All journals in the run, not only the current task's adapter.
+ from failure_evo.persistent_budget import PersistentBudget
+ faults=[];providers=[]
+ for path in OUT.rglob('budget.jsonl'):
+  obj=PersistentBudget.__new__(PersistentBudget);obj.path=path
+  with obj._locked() as rows:
+   state,_=obj._state(rows)
+   if any(r['status']!='settled' for r in state.values()):faults.append('LEDGER_PENDING:'+str(path))
+ for path in OUT.rglob('provider.jsonl'):providers.append(SimpleNamespace(events=EvidenceStore(path)))
+ assert_run_healthy(providers=providers,faults=faults)
 
 def freeze():
  if (OUT/'protocol.json').exists():raise RuntimeError('already frozen')
@@ -89,12 +103,14 @@ def run():
  try:
   with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
    for base in range(0,len(tasks),4):
+    assert_disk_health()
     fs=[ex.submit(solve_one,i,t,labels[t['task_id']],p) for i,t in enumerate(tasks[base:base+4],start=base)];errors=[]
     for fut in fs:
      try:
       score=fut.result();outcomes.append(score);print('SOLVED',score['sequence']+1,score['task_id'],score['initial']['status'],score['final']['status'],flush=True)
      except BaseException as exc:errors.append(dict(type=type(exc).__name__,reason=str(exc)))
     save(OUT/'discovery_progress.json',outcomes)
+    assert_disk_health()
     if errors:save(OUT/'window_errors.json',errors);raise RuntimeError('STOP_AFTER_DRAINED_WINDOW')
   evidence=[]
   for s in outcomes:
@@ -118,6 +134,7 @@ def generate():
   for i,e in enumerate(evidence):
    arms=['T','F','FC'];arms=arms[i%3:]+arms[:i%3]
    for arm in arms:
+    assert_disk_health()
     key=e['task_id']+'-'+arm;d=OUT/'jobs'/key;b=budget(d/'budget.jsonl',OUT.name+':'+key,ph,2,250000);grant=dict(run_id=b.config['run_id'],protocol_hash=ph,model=p['model'],protocol=GENERATION_VERSION,max_cost_microusd=250000,paid_api_authorized=True);save(d/'authorization.json',grant)
     adapter=Adapter(d/'provider.jsonl',b,model=p['model'],authorization=grant,max_wire_input_upper=65536);compiler=BoundedCompiler(adapter,b,d/'compiler.jsonl',p['model'],max_input_upper=65536,max_output_upper=8192)
     job=dict(stream_id=b.config['run_id'],family_id='hard140-source',arm=arm);save(d/'spec.json',dict(interface='solve(parameters)',schema_origin='model-proposed'));job['specification']=compiler.import_specification(job,d/'spec.json',time.time());result=dict(key=key,task_id=e['task_id'],arm=arm,status='NOT_GENERATED')
@@ -128,7 +145,7 @@ def generate():
      save(d/(stage+'_input.json'),inp)
      try:r=compiler.request(dict(job,stage=stage,public_input=inp),'candidate',slot,time.time(),output_upper=8192)
      except ValueError as exc:
-      if any(x['kind']=='SEND_UNKNOWN' for x in adapter.events.records()):raise
+      assert_disk_health()
       result.update(status='DELIVERY_REJECTED',stage=stage,reason=str(exc));break
      save(d/(stage+'_response.json'),r)
      if stage=='analysis':

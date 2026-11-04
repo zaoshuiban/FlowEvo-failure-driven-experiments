@@ -105,13 +105,17 @@ class GPTCompilerAdapter:
     model and PersistentBudget. The key is read only inside the actual send path.
     Tests inject a sender and mock=True; these artifacts are labelled MOCK, never GPT.
     """
-    def __init__(self, path, budget, *, model, authorization=None, sender=None, mock=False, max_wire_input_upper=32768):
+    def __init__(self, path, budget, *, model, authorization=None, sender=None, mock=False, max_wire_input_upper=32768, network_policy=None):
         if type(max_wire_input_upper) is not int or not 1<=max_wire_input_upper<=65536:
             raise ValueError('wire bound must be explicitly frozen within host ceiling')
         self.max_wire_input_upper=max_wire_input_upper
         self.events = EvidenceStore(path)
         self.budget, self.model = budget, model
         self.authorization, self.sender, self.mock = authorization, sender, mock
+        from .network_transport import validate_policy
+        self.network_policy=validate_policy(network_policy) if network_policy else None
+        if network_policy and (self.provider_origin!='DEEPSEEK' or mock or sender is not None):
+            raise ValueError('frozen network path only supported on real DeepSeek transport')
         if mock and sender is None:
             raise ValueError('explicit mock sender required')
 
@@ -191,17 +195,42 @@ class GPTCompilerAdapter:
         if any(r['kind']=='SEND_STARTED' and r['payload']['key']==key for r in self.events.records()):
             raise RuntimeError('send consumed; UNKNOWN is never retried')
         import time
-        self.events.append('SEND_STARTED', dict(key=key, wire=body, wire_sha256=fingerprint(body),
-            origin='MOCK' if self.mock else self.provider_origin), time.time())
-        try:
-            raw = self.sender(body) if self.sender is not None else self._post(body)
-        except BaseException as exc:
-            self.events.append('SEND_UNKNOWN', dict(key=key, error=type(exc).__name__), time.time())
-            raise
+        if self.network_policy:
+            from .network_transport import post_deepseek
+            from .model_api import configured_api_key
+            def emit(kind,payload):
+                if kind=='SEND_STARTED':payload=dict(payload,wire=body,origin=self.provider_origin)
+                self.events.append(kind,dict(payload,key=key),time.time())
+            raw=post_deepseek(body,configured_api_key(),budget=self.budget,request_id=expected_id,policy=self.network_policy,emit=emit)
+        else:
+            self.events.append('SEND_STARTED', dict(key=key, wire=body, wire_sha256=fingerprint(body),
+                origin='MOCK' if self.mock else self.provider_origin), time.time())
+            try:
+                raw = self.sender(body) if self.sender is not None else self._post(body)
+            except BaseException as exc:
+                self.events.append('SEND_UNKNOWN', dict(key=key, error=type(exc).__name__), time.time())
+                raise
         self.events.append('RAW_RESPONSE', dict(key=key, response=raw, sha256=fingerprint(raw)), time.time())
         original_raw = raw
-        raw = self._normalize_response(raw)
-        usage = raw.get('usage', {})
+        from .run_health import trusted_usage
+        usage = trusted_usage(original_raw)
+        self.events.append('RESPONSE_RECEIVED', dict(key=key, response_id=raw.get('id'),
+            response_sha256=fingerprint(raw), usage=usage,
+            ledger_status='USAGE_AVAILABLE' if usage else 'USAGE_UNAVAILABLE'), time.time())
+        # Settle trusted transport usage BEFORE custom parsing/normalization.
+        if hasattr(self.budget, 'consume_shard'):
+            ledger_key = fingerprint(['generation',(request['stream_id'],request['family_id']),request['phase'],request['slot']])
+            self.budget.settle(ledger_key, usage.get('total_tokens'))
+        try:
+            raw = self._normalize_response(raw)
+        except (ValueError, TypeError, KeyError, IndexError) as exc:
+            state = 'PARSE_INVALID' if isinstance(exc, json.JSONDecodeError) else 'CONTRACT_INVALID'
+            self.events.append('DELIVERY_STATUS', dict(key=key, status=state, diagnostic=str(exc)), time.time())
+            return dict(model=original_raw.get('model'), id=original_raw.get('id'),
+                raw_response=original_raw, usage=usage, transport_status='RESPONSE_RECEIVED',
+                delivery_status=state, parse_status='COMPILE_OUTPUT_CONTRACT_ERROR',
+                contract_diagnostic=str(exc), finish_reason='error',
+                wire_sha256=fingerprint(body), response_sha256=fingerprint(original_raw))
         # Preserve usage even on contract rejection so BoundedCompiler can settle it.
         result = dict(model=raw.get('model'), id=raw.get('id'), raw_response=original_raw,
             usage=dict(total_tokens=usage.get('total_tokens'), input_tokens=usage.get('input_tokens'),
@@ -229,6 +258,10 @@ class GPTCompilerAdapter:
             result['finish_reason']='stop'
         except (ValueError, TypeError, KeyError) as exc:
             result.update(parse_status='COMPILE_OUTPUT_CONTRACT_ERROR', contract_diagnostic=str(exc), finish_reason='error')
+        result['transport_status'] = 'RESPONSE_RECEIVED'
+        result['delivery_status'] = ('MODEL_INCOMPLETE' if raw.get('status') != 'completed'
+                                    else 'CONTRACT_INVALID' if result.get('parse_status') else 'PARSE_VALID')
+        self.events.append('DELIVERY_STATUS', dict(key=key, status=result['delivery_status']), time.time())
         return result
 
 
@@ -239,6 +272,13 @@ class DeepSeekCompilerAdapter(GPTCompilerAdapter):
     server-enforced strict json_schema. Original responses are persisted unchanged.
     """
     provider_origin = 'DEEPSEEK'
+
+    def can_resume_pre_send(self,request):
+        if not self.network_policy:return False
+        key=fingerprint(['generation',(request['stream_id'],request['family_id']),request['phase'],request['slot']])
+        r=self.budget.request_state(key)
+        return bool(self.budget.safe_pre_send(r,self.network_policy) and r['request_hash']==fingerprint(request)
+                    and r['network']['wire_sha256']==fingerprint(self.preflight(request)))
 
     def _authorize(self):
         if self.mock:

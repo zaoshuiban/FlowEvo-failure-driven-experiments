@@ -6,8 +6,11 @@ from .workflow_protocol_v2 import SharedTransport,prepare,Limits
 from .model_api import DeepSeekGenerator,configured_api_key
 
 class NoGoldSolverChannel:
-    def __init__(self,budget,path,*,authorization=None,mock=False,sender=None):
+    def __init__(self,budget,path,*,authorization=None,mock=False,sender=None,network_policy=None):
         self.budget=budget;self.events=EvidenceStore(path);self.authorization=authorization;self.mock=mock;self.sender=sender
+        from .network_transport import validate_policy
+        self.network_policy=validate_policy(network_policy) if network_policy else None
+        if mock and network_policy:raise ValueError('network policy requires actual transport; test connection layer instead of model sender')
         if mock and (sender is None or not budget.config['run_id'].startswith('engineering:')):
             raise PermissionError('mock sender and engineering namespace required')
 
@@ -20,16 +23,27 @@ class NoGoldSolverChannel:
         from code_math.no_gold import SOLVER_SYSTEM,REVIEW_SYSTEM,CONCISE_SOLVER_SYSTEM,CONCISE_REVIEW_SYSTEM
         allowed=(SOLVER_SYSTEM,REVIEW_SYSTEM) if policy.delivery_profile=='legacy' else (CONCISE_SOLVER_SYSTEM,CONCISE_REVIEW_SYSTEM)
         if messages[0]['content'] not in allowed:raise ValueError('unfrozen solver system prompt')
-        if any(r['payload'].get('request_id')==request_id for r in self.events.records()):raise RuntimeError('request consumed; unknown never resent')
         prepared=prepare(messages,limits=Limits(input_token_upper=policy.input_upper,output_tokens=policy.output_tokens),temperature=policy.temperature)
-        self.events.append('NO_GOLD_REQUEST',dict(request_id=request_id,wire=prepared.body,wire_sha256=prepared.sha256,
-            gold_exposed=False,origin='MOCK' if self.mock else 'DEEPSEEK',channel='solver',preflight=prepared.measures),time.time())
+        old=[r for r in self.events.records() if r['payload'].get('request_id')==request_id]
+        if old:
+            req=[r['payload'] for r in old if r['kind']=='NO_GOLD_REQUEST']
+            if (not self.budget.safe_pre_send(self.budget.request_state(request_id),self.network_policy) or
+                len(req)!=1 or req[0]['wire_sha256']!=prepared.sha256 or any(r['kind'] in ('SEND_STARTED','RAW_RESPONSE') for r in old)):
+                raise RuntimeError('request consumed; unknown never resent')
+        else:
+            self.events.append('NO_GOLD_REQUEST',dict(request_id=request_id,wire=prepared.body,wire_sha256=prepared.sha256,
+                gold_exposed=False,origin='MOCK' if self.mock else 'DEEPSEEK',channel='solver',preflight=prepared.measures),time.time())
         audit=[]
         def send(wire):
-            self.events.append('SEND_STARTED',dict(request_id=request_id,wire_sha256=fingerprint(wire.decode()),gold_exposed=False),time.time())
-            raw=self.sender(json.loads(wire)) if self.mock else DeepSeekGenerator._post(json.loads(wire),configured_api_key(),min(120,self.budget.remaining_seconds))
+            if self.network_policy:
+                from .network_transport import post_deepseek
+                def emit(kind,payload):self.events.append(kind,dict(payload,gold_exposed=False),time.time())
+                raw=post_deepseek(json.loads(wire),configured_api_key(),budget=self.budget,request_id=request_id,policy=self.network_policy,emit=emit)
+            else:
+                self.events.append('SEND_STARTED',dict(request_id=request_id,wire_sha256=fingerprint(wire.decode()),gold_exposed=False),time.time())
+                raw=self.sender(json.loads(wire)) if self.mock else DeepSeekGenerator._post(json.loads(wire),configured_api_key(),min(120,self.budget.remaining_seconds))
             self.events.append('RAW_RESPONSE',dict(request_id=request_id,response=raw,gold_exposed=False),time.time());return raw
-        transport=SharedTransport(self.budget,send,authorized=dict(run_id=cfg['run_id'],protocol_hash=cfg['protocol_hash']),audit=audit)
+        transport=SharedTransport(self.budget,send,authorized=dict(run_id=cfg['run_id'],protocol_hash=cfg['protocol_hash']),audit=audit,network_policy=self.network_policy)
         try:
             result=transport.send(prepared,request_id=request_id,capability='math-solver')
             raw=next(r['payload']['response'] for r in reversed(self.events.records()) if r['kind']=='RAW_RESPONSE' and r['payload']['request_id']==request_id)

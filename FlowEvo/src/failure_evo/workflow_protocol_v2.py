@@ -191,8 +191,9 @@ class SharedTransport:
     sender accepts the immutable canonical wire bytes. Local task budgets are
     single-owner like Controller. Unknown sends retain their full reservation.
     """
-    def __init__(self,persistent_budget,sender,*,authorized=False,audit=None):
+    def __init__(self,persistent_budget,sender,*,authorized=False,audit=None,network_policy=None):
         self.budget=persistent_budget;self.sender=sender;self.authorized=authorized;self.audit=audit if audit is not None else []
+        self.network_policy=network_policy
     def send(self,prepared,*,task_budget=None,request_id,capability):
         if self.authorized != {'run_id':self.budget.config['run_id'],'protocol_hash':self.budget.config['protocol_hash']} :
             raise PermissionError('explicit matching run/protocol authorization required; S16-A is offline')
@@ -213,7 +214,10 @@ class SharedTransport:
             self.audit.append(dict(detail,status='NOT_SENT',provider_requests=0,reason='TASK_BUDGET_UNAVAILABLE'))
             raise PreflightRejected('TASK_BUDGET_UNAVAILABLE',detail) from exc
         try:
-            key=self.budget.reserve(prepared.input_upper,prepared.output_upper,job_id=capability,capability=capability,request_id=request_id,request_hash=prepared.sha256)
+            kw=dict(job_id=capability,capability=capability,request_id=request_id,request_hash=prepared.sha256)
+            if self.network_policy:
+                key=self.budget.reserve_network(prepared.input_upper,prepared.output_upper,**kw,policy=self.network_policy,wire_hash=digest(body))
+            else:key=self.budget.reserve(prepared.input_upper,prepared.output_upper,**kw)
         except BaseException as exc:
             if local is not None:
                 del task_budget.reservations[local];task_budget.calls-=1
@@ -232,9 +236,17 @@ class SharedTransport:
             row.update(status='COMPLETED',usage=usage,model=raw['model'])
             return dict(text=choice['message'].get('content') or '',usage=usage,model=raw['model'],finish_reason=choice.get('finish_reason'))
         except BaseException:
+            state=self.budget.request_state(key) if self.network_policy else None
+            if state and state['status']=='not_sent':
+                if local is not None:
+                    del task_budget.reservations[local];task_budget.calls-=1
+                row.update(status='NOT_SENT',transport_status='NOT_SENT',provider_requests=0,connection_attempts=state.get('connection_attempts',0))
+                raise
             self.budget.settle(key)
             if task_budget and local in task_budget.reservations:task_budget.settle(local)
-            row['status']='UNKNOWN';raise
+            row['status']='RESPONSE_INVALID' if self.network_policy and 'raw_response' in row else 'UNKNOWN'
+            if self.network_policy:row['transport_status']='RESPONSE_RECEIVED' if 'raw_response' in row else 'SEND_UNKNOWN'
+            raise
 
 
 class WorkflowClient:

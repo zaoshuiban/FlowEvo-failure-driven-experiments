@@ -56,10 +56,10 @@ def artifact(directory,solver,matcher,contract,*,provenance,parent=None):
  return dict(**identity,code_sha256=joint,operator_id=joint[:16],solver_path=str((d/(joint+'.solve.py')).resolve()),matcher_path=str((d/(joint+'.match.py')).resolve()),contract=contract,origin=provenance['origin'],provenance=provenance,parent=parent,excluded_task_ids=provenance.get('excluded_task_ids',[]),contract_version='math-v3-split-v1')
 
 class SplitRunner:
- def __init__(self,backend,journal):
+ def __init__(self,backend,journal,budget=None):
   if not isinstance(backend,FrozenLinuxBackend):raise TypeError('real Linux backend required')
   from .evidence import EvidenceStore
-  self.backend=backend;self.events=EvidenceStore(journal)
+  self.backend=backend;self.events=EvidenceStore(journal);self.budget=budget
  def component(self,a,component,value):
   from .evidence import EvidenceStore
   path=Path(a['matcher_path'] if component=='match' else a['solver_path']);digest=a['matcher_sha256' if component=='match' else 'solver_sha256']
@@ -69,7 +69,11 @@ class SplitRunner:
   if not component_check(path.read_text(),component)['passed']:raise PermissionError('static rejection')
   request=dict(mode='function',function=component,args=[value],timeout=2)
   start=time.monotonic()
-  with self.backend(path) as worker:raw=worker.call(request)
+  key=self.budget.tool(capability='math-'+component,request_hash=fingerprint([digest,request])) if self.budget else None
+  try:
+   with self.backend(path) as worker:raw=worker.call(request)
+  finally:
+   if key is not None:self.budget.settle(key,tool_milliseconds=int((time.monotonic()-start)*1000))
   elapsed=time.monotonic()-start
   if raw.get('status') in ('EVALUATOR_ERROR','WORKER_ERROR'):raise RuntimeError('Worker infrastructure')
   row=dict(component=component,code_sha256=a['code_sha256'],component_sha256=digest,input_sha256=fingerprint(value),raw=raw,seconds=elapsed,gold_exposed=False)

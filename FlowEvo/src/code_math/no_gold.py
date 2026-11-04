@@ -61,14 +61,31 @@ class NoGoldMathController:
     def __init__(self, client, journal, *, policy=NoGoldPolicy(), library=None):
         self.client=client;self.events=EvidenceStore(journal);self.policy=policy;self.library=library
 
-    def solve(self, task, *, episode_id, sequence):
+    def solve(self, task, *, episode_id, sequence, resume=False):
         if not isinstance(task,PublicMathTask):raise TypeError('public task required')
-        if any(r['payload'].get('episode_id')==episode_id for r in self.events.records()):
-            raise RuntimeError('consumed episode; interruption requires audit, never resend')
-        self.events.append('MATH_TASK_STARTED',dict(episode_id=episode_id,task_id=task.task_id,sequence=sequence,protocol=VERSION,policy=asdict(self.policy),gold_exposed=False),time.time())
+        old=[r for r in self.events.records() if r['payload'].get('episode_id')==episode_id]
+        start=dict(episode_id=episode_id,task_id=task.task_id,problem_sha256=fingerprint(task.problem),sequence=sequence,protocol=VERSION,policy=asdict(self.policy),gold_exposed=False)
+        if old:
+            if not resume or not getattr(self.client,'durable_replay',False):
+                raise RuntimeError('consumed episode; interruption requires audit, never resend')
+            starts=[r['payload'] for r in old if r['kind']=='MATH_TASK_STARTED']
+            if starts!=[dict(start,recovery='durable-client-v1')]:raise PermissionError('episode identity/policy drift or legacy resume')
+            locks=[r['payload'] for r in old if r['kind']=='MATH_ANSWER_LOCKED']
+            if locks:
+                if len(locks)!=1 or fingerprint({k:v for k,v in locks[0].items() if k!='locked_sha256'})!=locks[0]['locked_sha256']:raise ValueError('lock integrity')
+                return locks[0]
+        else:
+            if resume:start['recovery']='durable-client-v1'
+            self.events.append('MATH_TASK_STARTED',start,time.time())
         started=time.monotonic();op_rows=[];responses=[];output=None
         if self.policy.operators_enabled and self.library is not None:
-            op_rows=self.library.run(task,sequence=sequence)
+            cached=[r['payload']['rows'] for r in old if r['kind']=='MATH_OPERATOR_RESULT']
+            if cached:op_rows=cached[-1]
+            else:
+                if any(r['kind']=='MATH_ROUTING_STARTED' for r in old):raise RuntimeError('unresolved route; no automatic re-execution')
+                self.events.append('MATH_ROUTING_STARTED',dict(episode_id=episode_id),time.time())
+                op_rows=self.library.run(task,sequence=sequence)
+                self.events.append('MATH_OPERATOR_RESULT',dict(episode_id=episode_id,rows=op_rows),time.time())
             if op_rows and op_rows[-1]['status']=='APPLIED':output=op_rows[-1]['answer']
         if output is None:
             for step in range(1+self.policy.reflection_calls):
@@ -78,10 +95,10 @@ class NoGoldMathController:
                 responses.append(response);output=response['text']
         result=dict(episode_id=episode_id,task_id=task.task_id,sequence=sequence,final_output=output,
             selection='first_applied_operator' if op_rows and op_rows[-1]['status']=='APPLIED' else 'last_scheduled_response',
-            responses=responses,operator_events=op_rows,model_calls=len(responses),
-            input_tokens=sum(r['usage']['prompt_tokens'] for r in responses),
-            output_tokens=sum(r['usage']['completion_tokens'] for r in responses),
-            reasoning_tokens=sum(r.get('reasoning_tokens',0) for r in responses),
+            responses=responses,operator_events=op_rows,model_calls=len(responses)+sum(r.get("routing_model_calls",0) for r in op_rows),
+            input_tokens=sum(r['usage']['prompt_tokens'] for r in responses)+sum(r.get('routing_input_tokens',0) for r in op_rows),
+            output_tokens=sum(r['usage']['completion_tokens'] for r in responses)+sum(r.get('routing_output_tokens',0) for r in op_rows),
+            reasoning_tokens=sum(r.get('reasoning_tokens',0) for r in responses)+sum(r.get('routing_reasoning_tokens',0) for r in op_rows),
             tool_seconds=sum(r.get('seconds',0) for r in op_rows),
             fallback=bool(op_rows and op_rows[-1]['status']!='APPLIED'),
             seconds=time.monotonic()-started,gold_exposed=False,protocol=VERSION)
@@ -124,7 +141,7 @@ class MathFailureEvidenceStore:
         return dict(version=VERSION,events=out[:max_events],cutoff_sequence=after_sequence,omitted_event_ids=[r['event_id'] for r in out[max_events:]],gold_exposed=False)
 
 
-def run_condition_no_gold(benchmark,condition_name,cfg,llm,tasks,output_dir):
+def run_condition_no_gold(benchmark,condition_name,cfg,llm,tasks,output_dir,*,library=None):
     """Explicit entry from code_math.runner; old evaluator/retry path is not called."""
     from code_math.loader import split_math_tasks
     from code_math.private_math_scoring import PrivateMathScorer
@@ -132,12 +149,21 @@ def run_condition_no_gold(benchmark,condition_name,cfg,llm,tasks,output_dir):
     root=Path(output_dir)/('no_gold_'+benchmark+'_'+condition_name);root.mkdir(parents=True,exist_ok=True)
     public,private=split_math_tasks(tasks)
     scorer=PrivateMathScorer(private,root/'controller.jsonl',root/'private_scores.jsonl')
-    policy=NoGoldPolicy(reflection_calls=cfg.get('reflection_calls',1))
-    controller=NoGoldMathController(llm,root/'controller.jsonl',policy=policy)
+    enabled=cfg.get('math_router_enabled',False)
+    if enabled and (library is None or not hasattr(library,'record_feedback')):
+        raise ValueError('explicit unified router with host feedback required')
+    policy=NoGoldPolicy(reflection_calls=cfg.get('reflection_calls',1),operators_enabled=enabled)
+    controller=NoGoldMathController(llm,root/'controller.jsonl',policy=policy,library=library)
+    if enabled and any(not cfg.get('math_original_ids',{}).get(t.task_id) for t in public):
+        raise ValueError('audited original-task identities required before run')
     episodes=[]
     for i,task in enumerate(public):
         result=controller.solve(task,episode_id=f'{condition_name}/{task.task_id}',sequence=i)
         verdict=scorer.score(task,result)
+        if enabled:
+            original_id=cfg.get('math_original_ids',{}).get(task.task_id)
+            if not original_id:raise ValueError('audited original-task identity required')
+            library.record_feedback(task,result,verdict,controller=controller.events,scorer=scorer.events,original_id=original_id)
         episodes.append(dict(task_id=task.task_id,passed=verdict['correct'],tokens=result['input_tokens']+result['output_tokens'],model_calls=result['model_calls'],gold_exposed=False,locked_sha256=result['locked_sha256']))
     (root/'episodes.json').write_text(canonical(episodes)+'\n')
     return episodes

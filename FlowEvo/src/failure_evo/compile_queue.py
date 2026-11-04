@@ -195,6 +195,9 @@ class BoundedCompiler:
         return review
 
     def request(self, job, phase, slot, at, output_upper=4096):
+        if hasattr(self.budget, 'consume_shard'):
+            from .run_health import assert_run_healthy
+            assert_run_healthy(budgets=[self.budget], providers=[self.provider] if hasattr(self.provider, 'events') else [],network_policy=getattr(self.provider,'network_policy',None))
         rows = [r['payload'] for r in self.events.records() if r['kind']=='GENERATION_REQUESTED']
         family = (job['stream_id'], job['family_id'])
         keys = {(r['stream_id'], r['family_id']) for r in rows}
@@ -217,7 +220,9 @@ class BoundedCompiler:
                 if phase in ('candidate','revision') and job.get('specification')!=record['content']:
                     raise ValueError('request differs from imported specification')
         own = [r for r in rows if (r['stream_id'], r['family_id']) == family]
-        if any(r['phase'] == phase and r['slot'] == slot for r in own):
+        prior_requests=[r for r in own if r['phase']==phase and r['slot']==slot]
+        resuming=(len(prior_requests)==1 and getattr(self.provider,'can_resume_pre_send',lambda r:False)(prior_requests[0]))
+        if prior_requests and not resuming:
             raise ValueError('generation request already consumed')
         if phase != 'induction' and not any(r['phase'] == 'induction' for r in own_completed):
             raise ValueError('induction must precede candidates')
@@ -243,6 +248,7 @@ class BoundedCompiler:
                     or job.get('functional_diagnostics_sha256') != fingerprint(functional[0]['review'])):
                 raise ValueError('revision functional diagnostics differ from host review')
         request = dict(job, phase=phase, slot=slot, max_tokens=output_upper)
+        if resuming and request!=prior_requests[0]:raise ValueError('pre-send compiler resume request drift')
         # Providers exposing the final wire own serialization, including prompts
         # and schema. Count that representation once; internal job metadata is
         # not another model input. Keep the legacy estimate only for providers
@@ -259,12 +265,14 @@ class BoundedCompiler:
                 or input_upper > self.max_input_upper):
             raise BudgetExhausted('request exceeds frozen compiler token ceilings')
         if hasattr(self.budget, 'consume_shard'):
-            key = self.budget.reserve(input_upper, output_upper,
-                job_id=job.get('job_id', fingerprint(job)), capability='generation:'+phase,
+            kw=dict(job_id=job.get('job_id', fingerprint(job)), capability='generation:'+phase,
                 request_id=fingerprint(['generation',family,phase,slot]), request_hash=fingerprint(request))
+            if getattr(self.provider,'network_policy',None):
+                key=self.budget.reserve_network(input_upper,output_upper,**kw,policy=self.provider.network_policy,wire_hash=fingerprint(wire))
+            else:key=self.budget.reserve(input_upper,output_upper,**kw)
         else:
             key = self.budget.reserve(input_upper, output_upper)
-        self.events.append('GENERATION_REQUESTED', request, at)
+        if not resuming:self.events.append('GENERATION_REQUESTED', request, at)
         if callable(prepare):
             self.events.append('WIRE_PREFLIGHT', dict(request_sha256=fingerprint(request),
                 wire_sha256=fingerprint(wire), wire_bytes=len(canonical(wire).encode()),

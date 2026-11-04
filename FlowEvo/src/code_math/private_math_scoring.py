@@ -38,8 +38,9 @@ def answer_equal(predicted,gold):
     return bool(predicted.strip()) and normalized(predicted)==normalized(gold)
 
 class PrivateMathScorer:
-    def __init__(self,private_rows,controller_journal,score_journal):
+    def __init__(self,private_rows,controller_journal,score_journal,*,strict_delivery=False):
         self._rows={r['task_id']:r for r in private_rows};self.controller=EvidenceStore(controller_journal);self.events=EvidenceStore(score_journal)
+        self.strict_delivery=strict_delivery
 
     def score(self,task,locked):
         raw={k:v for k,v in locked.items() if k!='locked_sha256'}
@@ -47,9 +48,22 @@ class PrivateMathScorer:
         receipts=[r for r in self.controller.records() if r['kind']=='MATH_ANSWER_LOCKED' and r['payload']==locked]
         if not receipts:raise PermissionError('private score requires durable terminal answer lock')
         prior=[r['payload'] for r in self.events.records() if r['payload'].get('episode_id')==locked['episode_id']]
-        if prior:return prior[0]
+        if prior:
+            if self.strict_delivery and prior[0].get('scorer_version')!='math-stream-strict-v1':
+                raise PermissionError('new strict scoring requires a new journal')
+            if prior[0]['locked_sha256']!=locked['locked_sha256']:raise ValueError('conflicting score replay')
+            return prior[0]
         row=self._rows[task.task_id]
         if row['problem_sha256']!=fingerprint(task.problem):raise ValueError('private scorer task binding')
+        if self.strict_delivery:
+            from .discovery_continuation import grade_continuation
+            applied=bool(locked.get('operator_events') and locked['operator_events'][-1].get('status')=='APPLIED')
+            finish='stop' if applied else (locked['responses'][-1].get('finish_reason') if locked['responses'] else None)
+            grade=grade_continuation(locked['final_output'],row['gold_answer'],finish)
+            result=dict(grade,credible_failure=grade['status']=='CONFIRMED_WRONG',episode_id=locked['episode_id'],
+                task_id=task.task_id,locked_sha256=locked['locked_sha256'],scorer_version='math-stream-strict-v1',
+                visibility='HOST_POST_TASK_ONLY',gold_exposed=False)
+            self.events.append('MATH_PRIVATE_SCORE',result,time.time());return result
         matched=answer_equal(locked['final_output'],row['gold_answer'])
         numeric_pair=normalized(locked['final_output'])[0]=='rational' and normalized(row['gold_answer'])[0]=='rational'
         score_class='MATCH' if matched else ('EXACT_RATIONAL_MISMATCH' if numeric_pair else 'UNVERIFIED_NONMATCH')
