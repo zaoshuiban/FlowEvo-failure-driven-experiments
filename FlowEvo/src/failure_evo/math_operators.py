@@ -84,8 +84,13 @@ class MathOperatorRunner:
 class MathOperatorRegistry:
     def __init__(self,path):self.events=EvidenceStore(path)
     def shadow(self,artifact):
+        if "operator_contract" in artifact:
+            from .operator_contract import binding
+            binding(artifact)
         self.events.append('MATH_SHADOW',artifact,time.time())
     def admit(self,artifact,validation,*,after_sequence):
+        from .operator_contract import require_release
+        require_release(self,artifact)
         if validation.get('code_sha256')!=artifact['code_sha256'] or validation.get('gate_passed') is not True or validation.get('selected_before_gate') is not True:
             raise PermissionError('bound frozen source/design/gate validation required')
         journal=validation.get('journal')

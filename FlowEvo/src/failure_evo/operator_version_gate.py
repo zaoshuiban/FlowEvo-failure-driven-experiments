@@ -17,6 +17,8 @@ class VersionGate(MathOperatorRegistry):
   p=dict(code_sha256=a['code_sha256'],rows=rows,role=role,data_hash=data_hash,exposed=exposed,paired_generic=paired_generic,passed=development_passed(rows))
   self.events.append('V3_VALIDATION',p,time.time());return p
  def admit(self,a,validation,*,after_sequence):
+  from .operator_contract import require_release
+  require_release(self,a)
   rows=self.events.records()
   if not any(r['kind']=='MATH_SHADOW' and r['payload']==a for r in rows):raise PermissionError('unregistered shadow')
   receipts=[r['payload'] for r in rows if r['kind']=='V3_VALIDATION' and r['payload']['code_sha256']==a['code_sha256']]

@@ -14,24 +14,29 @@ from .math_engineering_repair import receive_source,version_change
 from .semantic_contract import artifact
 from .compile_queue import BoundedCompiler
 from .run_health import RunUnhealthy
+from .evidence_links import INSTRUCTIONS as LINK_INSTRUCTIONS,LinkConflict,validate_revision
+from .cluster_contract import ClusterContext,ClusterProposal,reject_permissions,BOUNDARY_INSTRUCTIONS
 
-RELATION_EXAMPLE=dict(descriptions=[dict(evidence_id='supplied ID',task_structure='observed structure',observable_symptom='observation or UNKNOWN',possible_cause='unverified hypothesis or UNKNOWN',possible_correction='unverified proposal or UNKNOWN',uncertainty='limits')],clusters=[dict(cluster_id='NEW or supplied cluster ID',hypothesis=dict(mechanism='unverified computation',uncertainty='limits',applicability='premises',exclusions='boundaries',input_output='parameterized interface'),assessment=dict(mechanism_assessment=dict(status='SUSPECTED',reason='uncertain',evidence_refs=[]),algorithm_candidate=dict(decision='NEEDS_SPECIFICATION',reason='concrete computation not established',details=None)),links=[dict(evidence_id='supplied ID',relation='SUPPORT/POSSIBLE/COUNTEREXAMPLE/UNRELATED',reason='specific relationship',evidence_quote='exact supplied quote',new_information=False)])])
+RELATION_EXAMPLE=dict(descriptions=[dict(evidence_id='supplied ID',task_structure='observed structure',observable_symptom='observation or UNKNOWN',possible_cause='unverified hypothesis or UNKNOWN',possible_correction='unverified proposal or UNKNOWN',uncertainty='limits')],clusters=[dict(cluster_id='NEW or supplied cluster ID',hypothesis=dict(mechanism='unverified computation',uncertainty='limits',applicability='premises',exclusions='boundaries',input_output='parameterized interface'),assessment=dict(mechanism_assessment=dict(status='SUSPECTED',reason='uncertain',evidence_refs=[]),algorithm_candidate=dict(decision='NEEDS_SPECIFICATION',reason='concrete computation not established',details=None)),links=[dict(evidence_id='supplied ID',relation='SUPPORTS/CONTRADICTS/UNRELATED/UNCERTAIN',reason='specific relationship',quote_spans=['exact supplied quote'],new_information=False)])])
 def parse_relations(v):
+    reject_permissions(v)
     exact(v,('descriptions','clusters'))
     if not isinstance(v['descriptions'],list) or not isinstance(v['clusters'],list):raise ValueError('relation arrays')
+    for c in v['clusters']:ClusterProposal.validate(c)
     return v
 class AssociationAdapter(StreamCompilerAdapter):
     protocol=VERSION;hypothesis_parser=staticmethod(parse_relations)
     def preflight(self,r):
         self._authorize();bundle=r['association_input']
-        if set(bundle)!={'version','evidence','candidate_clusters','selection'} or bundle['version']!=VERSION:raise PermissionError('association whitelist')
+        if set(bundle) not in ({'version','evidence','candidate_clusters','selection'},{'version','evidence','candidate_clusters','selection','relation_revision'}) or bundle['version']!=VERSION:raise PermissionError('association whitelist')
+        for context in bundle['candidate_clusters']:ClusterContext.validate(context)
         # Host constructs this projection; no private row, task-ID-based answer or future task is accepted.
-        system=('Describe the supplied historical public evidence, separating observations from uncertain causes and proposed corrections. '
+        system=(BOUNDARY_INSTRUCTIONS+LINK_INSTRUCTIONS+'Describe the supplied historical public evidence, separating observations from uncertain causes and proposed corrections. '
                 'Do not equate a subject label or wrong answer with a common mechanism. Retrieve candidate relationships using task structure, reasoning, observed symptoms and possible corrections. '
                 'A record may belong to multiple hypotheses or none. State UNKNOWN when unsupported. Candidate clusters and their claims are UNVERIFIED. '
                 'Host text omissions are not model truncation; finish_reason describes actual delivery. Do not infer correctness from absent feedback. '
                 'No fixed algorithm, mechanism name, number, success or root cause is required. Do not invent quotes. Do not certify truth or permissions. '
-                'Return JSON with exactly the example keys; clusters may be empty; descriptions must cover all supplied evidence. Relation must be one of SUPPORT, POSSIBLE, COUNTEREXAMPLE, UNRELATED. '
+                'Return JSON with exactly the example keys; clusters may be empty; descriptions must cover all supplied evidence. Relation must follow evidence-link-v2. '
                 +INSTRUCTIONS.replace('Return the exact JSON schema: ','Each cluster assessment must conform to this schema: ')+canonical(SCHEMA)+' new_information says whether this record challenges or materially extends the mechanism rather than repeats a symptom. Schema example: '+canonical(RELATION_EXAMPLE))
         wire=dict(model=self.model,messages=[dict(role='system',content=system),dict(role='user',content=canonical(bundle))],max_tokens=r['max_tokens'],temperature=0,thinking={'type':'disabled'},reasoning_effort='none',response_format={'type':'json_object'},stream=False)
         if len(canonical(wire).encode())+256>self.max_wire_input_upper:raise ValueError('EVIDENCE_REPRESENTATION_LIMIT')
@@ -107,10 +112,15 @@ class CumulativeLearner(WindowLearner):
             if not packs:return
             ids=[i for i,f in facts.items() if f['task']['task_id'] in packs[0]['task_ids']]
             if len(ids)!=len(packs[0]['task_ids']):raise PermissionError('paired public packet incomplete')
-        else:ids=sorted(set(facts)-consumed,key=lambda i:(facts[i]['sequence'],i))[:self.cfg['association_batch']]
+        else:
+            from .evidence_retrieval import select
+            retrieval=select(self.memory,cutoff,max_records=self.cfg['association_batch'],max_bytes=self.cfg['bundle_bytes'])
+            ids=retrieval['selected_ids']
+            from .evidence import EvidenceStore
+            self.memory.put(EvidenceStore(self.root/'retrieval.jsonl'),'EVIDENCE_RETRIEVAL',retrieval,fingerprint(retrieval))
         if not ids or set(ids)<=consumed:return
         if len(previous)>=self.cfg['max_association_jobs']:return
-        key=fingerprint(['associate',self.arm,ids]);path=self._path(cutoff,key)
+        key=fingerprint(['associate-lifecycle-v1',self.arm,ids]);path=self._path(cutoff,key)
         # Recovery reuses its already allocated account; it is not a new job.
         if not (path/'generation_budget.jsonl').exists() and not self.capacity(cutoff,1):return
         path.mkdir(parents=True,exist_ok=True)
@@ -122,8 +132,20 @@ class CumulativeLearner(WindowLearner):
             representative=sorted(linked,key=lambda i:(facts[i]['sequence'],i))[:1]
             for i in counter+representative:
                 if i not in visible_ids:visible_ids.append(i)
+        if self.cfg['comparison']=='workflow':
+            # Independent evidence shortlist owns the total evidence cap. Cluster
+            # context is optional; omit whole clusters whose witnesses do not fit.
+            visible_ids=list(ids);kept=[]
+            for c in chosen:
+                linked=[i for i,l in c['links'].items() if l['relation']!='UNRELATED' and i in facts]
+                needed=[i for i in linked if c['links'][i]['relation']=='COUNTEREXAMPLE']
+                needed+=sorted(linked,key=lambda i:(facts[i]['sequence'],i))[:1]
+                trial=list(dict.fromkeys(visible_ids+needed))
+                if len(trial)<=self.cfg['association_batch'] and len(canonical([self.memory.project(facts[i]) for i in trial]).encode())<=self.cfg['bundle_bytes']:
+                    visible_ids=trial;kept.append(c)
+            chosen=kept
         allowed=[c['cluster_id'] for c in chosen]
-        payload=dict(version=VERSION,evidence=[self.memory.project(facts[i]) for i in visible_ids],candidate_clusters=[dict(cluster_id=c['cluster_id'],hypothesis=c['hypothesis'],assessment=c['assessment'],verified=False) for c in chosen],selection=self.cfg['comparison'])
+        payload=dict(version=VERSION,evidence=[self.memory.project(facts[i]) for i in visible_ids],candidate_clusters=[ClusterContext.from_host(c).to_dict() for c in chosen],selection=self.cfg['comparison'])
         # Input immutable across restart; old clusters cannot replace those originally supplied.
         frozen=dict(payload=payload,ids=ids,visible_ids=visible_ids,allowed=allowed,cutoff=cutoff)
         if (path/'input.json').exists():frozen=read(path/'input.json');payload=frozen['payload'];allowed=frozen['allowed'];visible_ids=frozen['visible_ids']
@@ -141,9 +163,55 @@ class CumulativeLearner(WindowLearner):
             if self.cfg['comparison']=='paired_information' and len(result['clusters'])>1:raise ValueError('paired protocol allows one hypothesis per frozen pack')
             self.memory.associate(result,visible_ids,allowed,cutoff,response_sha)
             outcome='ACCEPTED_UNVERIFIED'
+        except LinkConflict as exc:
+            s.health()
+            outcome=self.repair_relation_conflict(path,job,result,exc.diagnostic,visible_ids,allowed,cutoff)
         except ValueError as exc:
             s.health();outcome='REJECTED:'+str(exc)
+        receipts=[r['payload'] for r in compiler.events.records() if r['kind']=='GENERATION_RESPONSE']
+        requests=[r['payload'] for r in compiler.events.records() if r['kind']=='GENERATION_REQUESTED']
+        self.memory.put(self.memory.attempts,'ASSOCIATION_ATTEMPT',dict(
+            evidence_ids=visible_ids,selected_ids=ids,cutoff=cutoff,schema_version=VERSION,
+            policy_version='association-lifecycle-v1',
+            request_id=fingerprint(['generation',(job['stream_id'],job['family_id']),'induction',0]),
+            request_sha256=fingerprint(requests[0]) if requests else None,
+            parse_status=receipts[-1]['response'].get('delivery_status','UNKNOWN') if receipts else 'UNKNOWN',
+            rejection_reason=outcome if outcome.startswith('REJECTED:') else None,
+            raw_response_sha256=fingerprint(receipts[-1]['response'].get('raw_response')) if receipts else None,
+            outcome=outcome,budget=b.snapshot(),provider_path=str(path/'provider.jsonl')),key)
         self.memory.put(self.memory.views,'ASSOCIATION_DONE',dict(evidence_ids=ids,cutoff=cutoff,outcome=outcome,path=str(path)),key)
+    def repair_relation_conflict(self,parent,job,proposal,diagnostic,visible_ids,allowed,cutoff):
+        # One distinct paid revision at most. No reset/retry of unknown requests.
+        path=parent/'relation_revision'
+        if (path/'result.json').exists():return read(path/'result.json')['outcome']
+        if not (path/'generation_budget.jsonl').exists() and not self.capacity(cutoff,1):
+            return 'REJECTED:RELATION_REVISION_NO_BUDGET'
+        path.mkdir(parents=True,exist_ok=True)
+        data=copy.deepcopy(job['association_input'])
+        data['relation_revision']=dict(previous_proposal=proposal,diagnostic=diagnostic,
+            instruction='Revise only relation representation and aggregate judgment. Preserve evidence; no new IDs or permissions. One attempt only.')
+        frozen=dict(payload=data,visible_ids=visible_ids,allowed=allowed,cutoff=cutoff)
+        if (path/'input.json').exists():
+            if read(path/'input.json')!=frozen:raise RunUnhealthy('relation revision input drift')
+        else:save(path/'input.json',frozen)
+        b,provider,compiler=self._provider(path,AssociationAdapter,1)
+        revised_job=dict(stream_id=b.config['run_id'],family_id=fingerprint([job['family_id'],'relation-revision-v1']),association_input=data,arm=self.arm)
+        completed=[r['payload'] for r in compiler.events.records() if r['kind']=='GENERATION_COMPLETED']
+        try:
+            if completed:value=json.loads(completed[-1]['content'])
+            else:
+                prior=[r['payload'] for r in compiler.events.records() if r['kind']=='GENERATION_REQUESTED']
+                if prior and not (len(prior)==1 and provider.can_resume_pre_send(prior[0])):raise RunUnhealthy('relation revision consumed; no resend')
+                response=compiler.request(revised_job,'induction',0,time.time(),output_upper=self.cfg['output_upper'])
+                value=json.loads(response['specification'])
+            validate_revision(proposal,value)
+            if self.cfg['comparison']=='paired_information' and len(value['clusters'])>1:raise ValueError('paired cluster count')
+            self.memory.associate(value,visible_ids,allowed,cutoff,fingerprint(value))
+            outcome='ACCEPTED_UNVERIFIED_AFTER_RELATION_REVISION'
+        except ValueError as exc:
+            self.stream.health();outcome='REJECTED:RELATION_REVISION:'+str(exc)
+        save(path/'result.json',dict(outcome=outcome,diagnostic=diagnostic,original_proposal_sha256=fingerprint(proposal),budget=b.snapshot(),max_revisions=1))
+        return outcome
     def boundary(self,cutoff):
         s=self.stream;s.health()
         for a in s.arms.values():

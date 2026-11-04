@@ -4,6 +4,8 @@ No model calls, mathematical rules, private scorer values or automatic admission
 import re,time,copy
 from .contracts import canonical,fingerprint
 from .evidence import EvidenceStore
+from .evidence_links import cardinality,receive
+from .cluster_contract import ClusterProposal,reject_permissions
 from .compile_queue import CompileQueue
 VERSION='math-cumulative-evidence-v2-dual-assessment'
 from .math_candidate_decision import validate_decision,bind_evidence,generatable
@@ -26,6 +28,7 @@ class CumulativeMemory:
         self.paired=paired;self.public=EvidenceStore(path/'public.jsonl')
         self.arm=arm;self.raw=EvidenceStore(path/'raw.jsonl');self.views=EvidenceStore(path/'views.jsonl')
         self.clusters=EvidenceStore(path/'clusters.jsonl');self.path=path
+        self.attempts=EvidenceStore(path/'association_attempts.jsonl')
     def put(self,store,kind,value,key):
         old=[r['payload'] for r in store.records() if r['kind']==kind and r['payload']['id']==key]
         row=dict(id=key,**value)
@@ -59,6 +62,24 @@ class CumulativeMemory:
         for r in self.clusters.records():
             if r['kind']=='CLUSTER_VERSION' and r['payload']['cutoff']<=cutoff:states[r['payload']['cluster_id']]=r['payload']
         return states
+    def association_states(self,cutoff):
+        """Derived state: a finished request never proves a mechanism relationship.
+
+        Three selected attempts per evidence under this policy. Exhaustion is local
+        to this version, not deletion. A new frozen policy is required to reset it.
+        Legacy DONE receipts remain counted; they are never resent or relabelled.
+        """
+        facts=self.facts(cutoff)
+        done=[r['payload'] for r in self.views.records() if r['kind']=='ASSOCIATION_DONE' and r['payload']['cutoff']<=cutoff]
+        linked={i for c in self.state(cutoff).values() for i,l in c['links'].items() if l['relation']!='UNRELATED'}
+        result={}
+        for i,f in facts.items():
+            attempts=[d for d in done if i in d['evidence_ids']]
+            n=len(attempts)
+            newer=any(g['sequence']>max((d['cutoff'] for d in attempts),default=f['sequence']) for g in facts.values())
+            state='LINKED' if i in linked else 'NEW' if not n else 'EXHAUSTED' if n>=3 else 'RETRY_ELIGIBLE' if newer else 'ATTEMPTED'
+            result[i]=dict(state=state,attempts=n,policy_version='association-lifecycle-v1',max_attempts=3,linked_is_unverified=True)
+        return result
     def retrieved(self,event_ids,cutoff,limit=6):
         """Lexical retrieval is only a shortlist; never asserts a shared mechanism."""
         facts=self.facts(cutoff);states=self.state(cutoff)
@@ -78,6 +99,7 @@ class CumulativeMemory:
         return out
     def associate(self,result,visible_ids,allowed_clusters,cutoff,response_sha):
         """Model relations remain UNVERIFIED; no model flag can certify root cause."""
+        reject_permissions(result)
         exact(result,('descriptions','clusters'))
         facts=self.facts(cutoff);visible=set(visible_ids)
         if not visible<=set(facts):raise PermissionError('unknown/future evidence')
@@ -91,7 +113,7 @@ class CumulativeMemory:
         if described!=visible:raise ValueError('describe every supplied event, including unknown mechanisms')
         prepared=[];states=self.state(cutoff)
         for c in result['clusters']:
-            exact(c,('cluster_id','hypothesis','assessment','links'))
+            ClusterProposal.validate(c)
             exact(c['hypothesis'],('mechanism','uncertainty','applicability','exclusions','input_output'))
             for v in c['hypothesis'].values():text(v)
             bind_evidence(validate_decision(c['assessment']),visible)
@@ -100,15 +122,14 @@ class CumulativeMemory:
             if cid=='NEW':cid=fingerprint([VERSION,response_sha,len(prepared)])
             elif cid not in allowed_clusters or cid not in states:raise PermissionError('cluster not supplied to model')
             links=copy.deepcopy(states.get(cid,{}).get('links',{}));ids=[]
-            for link in c['links']:
-                exact(link,('evidence_id','relation','reason','evidence_quote','new_information'))
+            cardinality(c['links'])
+            for index,link in enumerate(c['links']):
                 eid=link['evidence_id']
-                if eid not in visible or eid in ids or link['relation'] not in ROLES or type(link['new_information']) is not bool:raise ValueError('link identity/role')
-                ids.append(eid);text(link['reason']);text(link['evidence_quote'])
-                # Exact quote is evidence of grounding, not proof of the model's inference.
-                f=facts[eid];projected=self.project(f);allowed=projected['problem']+'\n'+projected.get('final_output',{}).get('text','')
-                if link['evidence_quote'] not in allowed:raise ValueError('ungrounded relation quote')
-                links[eid]=dict(link,assessment='MODEL_HYPOTHESIS_UNVERIFIED')
+                if eid not in visible:raise ValueError('links['+str(index)+'].evidence_id unavailable')
+                f=facts[eid];projected=self.project(f)
+                allowed=projected['problem']+'\n'+projected.get('final_output',{}).get('text','')
+                normalized=receive(link,allowed,'links['+str(index)+']')
+                links[eid]=dict(normalized,assessment='MODEL_HYPOTHESIS_UNVERIFIED')
             if cid in [x['cluster_id'] for x in prepared]:raise ValueError('duplicate cluster update')
             state=dict(cluster_id=cid,hypothesis=c['hypothesis'],assessment=c['assessment'],links=links,cutoff=cutoff,
                        response_sha256=response_sha,verified=False)

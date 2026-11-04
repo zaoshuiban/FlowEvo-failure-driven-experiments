@@ -11,6 +11,7 @@ import urllib.request
 from .contracts import canonical, fingerprint
 from .evidence import EvidenceStore
 from .model_api import COMPILE_OUTPUT_SCHEMA
+from .delivery_observation import DeliveryObservation, source_contract_error
 
 PROTOCOL = 'autonomous-python-operator-v1'
 HYPOTHESIS_FIELDS = ('operator_category', 'common_failure', 'root_cause_hypothesis', 'executable_suggestion',
@@ -212,6 +213,7 @@ class GPTCompilerAdapter:
                 raise
         self.events.append('RAW_RESPONSE', dict(key=key, response=raw, sha256=fingerprint(raw)), time.time())
         original_raw = raw
+        observation = DeliveryObservation.received(original_raw)
         from .run_health import trusted_usage
         usage = trusted_usage(original_raw)
         self.events.append('RESPONSE_RECEIVED', dict(key=key, response_id=raw.get('id'),
@@ -229,7 +231,8 @@ class GPTCompilerAdapter:
             return dict(model=original_raw.get('model'), id=original_raw.get('id'),
                 raw_response=original_raw, usage=usage, transport_status='RESPONSE_RECEIVED',
                 delivery_status=state, parse_status='COMPILE_OUTPUT_CONTRACT_ERROR',
-                contract_diagnostic=str(exc), finish_reason='error',
+                contract_diagnostic=str(exc), finish_reason=observation.provider_finish_reason,
+                **{k:v for k,v in observation.decide_contract(False, str(exc)).fields().items() if k != 'transport_status'},
                 wire_sha256=fingerprint(body), response_sha256=fingerprint(original_raw))
         # Preserve usage even on contract rejection so BoundedCompiler can settle it.
         result = dict(model=raw.get('model'), id=raw.get('id'), raw_response=original_raw,
@@ -252,16 +255,21 @@ class GPTCompilerAdapter:
             if request['phase']=='induction':
                 result['specification'] = canonical(self.hypothesis_parser(value))
             else:
-                if not isinstance(value, dict) or set(value)!=set(CODE_SCHEMA['required']) or any(not isinstance(x,str) or not x.strip() for x in value.values()):
-                    raise ValueError('code/description/applicability exact nonempty strings required')
+                error = source_contract_error(value, CODE_SCHEMA['required'])
+                if error:
+                    raise ValueError(error)
                 result.update(value)
             result['finish_reason']='stop'
         except (ValueError, TypeError, KeyError) as exc:
-            result.update(parse_status='COMPILE_OUTPUT_CONTRACT_ERROR', contract_diagnostic=str(exc), finish_reason='error')
-        result['transport_status'] = 'RESPONSE_RECEIVED'
+            result.update(parse_status='COMPILE_OUTPUT_CONTRACT_ERROR', contract_diagnostic=str(exc))
+        result.update(observation.decide_contract(not bool(result.get('parse_status')),
+            result.get('contract_diagnostic')).fields())
+        # Legacy finish_reason remains a completion fact, never a local parser verdict.
+        result['finish_reason'] = observation.provider_finish_reason if 'choices' in original_raw else (
+            'stop' if original_raw.get('status') == 'completed' else original_raw.get('status'))
         result['delivery_status'] = ('MODEL_INCOMPLETE' if raw.get('status') != 'completed'
                                     else 'CONTRACT_INVALID' if result.get('parse_status') else 'PARSE_VALID')
-        self.events.append('DELIVERY_STATUS', dict(key=key, status=result['delivery_status']), time.time())
+        self.events.append('DELIVERY_STATUS', dict(key=key, status=result['delivery_status'], observation={k:result[k] for k in observation.fields()}), time.time())
         return result
 
 
