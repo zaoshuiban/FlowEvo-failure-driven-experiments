@@ -29,7 +29,7 @@ class DockerWorker:
         self.name = 'flowevo-' + uuid.uuid4().hex
         self.buffer = b''
         self.closed = False
-        args = ['docker','run','--rm','--pull=never','--name',self.name,'-i',
+        args = ['docker','run','--pull=never','--name',self.name,'-i',
             '--network=none','--read-only','--cap-drop=ALL',
             '--security-opt=no-new-privileges','--pids-limit=32',
             '--memory=256m','--memory-swap=256m','--cpus=1',
@@ -62,6 +62,11 @@ class DockerWorker:
                     continue
                 chunk = os.read(self.process.stdout.fileno(),65536)
                 if not chunk:
+                    # Inspect before explicit cleanup; --rm would erase OOM evidence.
+                    try:
+                        state=json.loads(subprocess.check_output(['docker','inspect','--format','{{json .State}}',self.name],timeout=5,text=True))
+                        if state.get('OOMKilled') is True:return {'status':'MEMORY_LIMIT','origin':'docker_oom','exit_code':state.get('ExitCode')}
+                    except (OSError,ValueError,subprocess.SubprocessError):pass
                     return {'status':'EVALUATOR_ERROR','reason':'isolated_worker_exited'}
                 self.buffer += chunk
                 if len(self.buffer) > 1024*1024:

@@ -48,7 +48,10 @@ class CumulativeStream(StreamRuntime):
                 if any(r['kind']=='CUMULATIVE_BOUNDARY_COMPLETED' and r['payload']['sequence']==seq for r in self.events.records()):continue
                 locks={}
                 order=ARMS[(seq-1)%4:]+ARMS[:(seq-1)%4]
-                for arm in order:self.health();locks[arm]=self.solve(arm,task,seq)
+                for arm in order:
+                    self.health()
+                    if self.arms[arm].get('contract_shadow'):self.arms[arm]['contract_shadow'].observe(task,seq)
+                    locks[arm]=self.solve(arm,task,seq)
                 verdicts={}
                 for arm in ARMS:
                     a=self.arms[arm];v=a['scorer'].score(task,locks[arm]);verdicts[arm]=v
@@ -57,6 +60,10 @@ class CumulativeStream(StreamRuntime):
                         original=self.lineage[task.task_id]['source_original_id']
                         if original=='UNKNOWN':raise PermissionError('unknown original cannot certify reuse')
                         a['router'].record_feedback(task,locks[arm],v,controller=a['controller'],scorer=a['scorer'].events,original_id=original)
+                if self.plan.get('operator_contract_shadow'):
+                    for arm in ('T','F'):
+                        self.arms[arm]['contract_shadow'].finalize(task,locks[arm])
+                        self.arms[arm]['learner'].release.poll_contract(seq)
                 self.fault('after_scoring',None,seq)
                 for arm in ('T','F'):
                     learner=self.arms[arm]['learner'];learner.ingest(task,locks[arm],verdicts[arm],seq);learner.boundary(seq)

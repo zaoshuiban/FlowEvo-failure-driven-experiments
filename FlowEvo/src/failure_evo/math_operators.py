@@ -108,6 +108,10 @@ class MathOperatorRegistry:
         for r in rows:
             if r['kind']!='MATH_EXPERIMENTAL':continue
             p=r['payload'];a=p['artifact']
+            if 'operator_contract' in a:
+                from .operator_contract import require_release
+                try:require_release(self,a)
+                except (PermissionError,ValueError,OSError):continue
             if a['code_sha256'] in suspended or sequence<=p['effective_after'] or task.task_id in a['excluded_task_ids']:continue
             entries.append(a)
         return sorted({a['code_sha256']:a for a in entries}.values(),key=lambda a:a['code_sha256'])

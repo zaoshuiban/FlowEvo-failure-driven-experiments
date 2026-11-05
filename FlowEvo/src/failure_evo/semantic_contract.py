@@ -97,8 +97,16 @@ class SplitRunner:
   import jsonschema
   try:jsonschema.validate(parameters,json.loads(a['contract']['parameter_schema']))
   except jsonschema.ValidationError:return dict(status='ERROR',reason='PARAMETERS')
+  if 'operator_contract' in a:
+   from .operator_contract import binding
+   binding(a)
+   try:jsonschema.validate(parameters,a['operator_contract']['input_schema'])
+   except jsonschema.ValidationError:return dict(status='ERROR',reason='OPERATOR_INPUT_SCHEMA')
   raw=self.component(a,'solve',parameters)
   if raw.get('status')!='OK' or not isinstance(raw.get('value'),str) or not raw['value'].strip() or len(raw['value'])>4096:return dict(status='ERROR',reason='SOLVE_CONTRACT')
+  if 'operator_contract' in a:
+   try:jsonschema.validate(raw['value'],a['operator_contract']['output_schema'])
+   except jsonschema.ValidationError:return dict(status='ERROR',reason='OPERATOR_OUTPUT_SCHEMA')
   return dict(status='APPLIED',answer=raw['value'])
  def run(self,a,task):
   start=time.monotonic();m=self.match(a,task.problem)

@@ -114,7 +114,8 @@ class Tests(unittest.TestCase):
    self.assertTrue(any(x['kind']=='SCHEDULE_DECISION' and x['payload']['reason']=='NO_BUDGET' for x in stream.index.events.records()))
  def test_private_input_same_boundary_g_m_f(self):
   for arm in ('G','M','F'):
-   with tempfile.TemporaryDirectory() as tmp:
+   # This input-whitelist test must not depend on a historical Docker acceptance.
+   with tempfile.TemporaryDirectory() as tmp,patch.object(e.prior,'Judge',FakeJudge):
     provider=Provider();r=e.ExperimentRunner(Path(tmp)/arm,plan(),provider.factory)
     bad=tasks(1);bad[0]['task_public']['public_examples'][0]['source']['private_score']='PRIVATE_SENTINEL'
     with self.assertRaises(ValueError):LearningStream(r,bad,arm=arm)

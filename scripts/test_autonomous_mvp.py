@@ -159,7 +159,8 @@ class ProtocolTests(unittest.TestCase):
         with self.assertRaises(TimeoutError):c.request(job,'induction',0,4)
         self.assertEqual(b.calls,1)
         self.assertEqual(len(b.snapshot()['unknown_or_pending_requests']),1)
-        with self.assertRaises(ValueError):c.request(job,'induction',0,5)
+        from failure_evo.run_health import RunUnhealthy
+        with self.assertRaises(RunUnhealthy):c.request(job,'induction',0,5)
         self.assertEqual(len(sender.wires),1)
     def test_wire_has_no_algorithm_or_heldout_answers(self):
         _,_,job,sender,compiler,_=setup(self.root,[HYP])

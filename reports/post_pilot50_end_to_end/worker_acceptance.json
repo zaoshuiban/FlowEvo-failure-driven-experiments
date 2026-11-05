@@ -1,0 +1,95 @@
+{
+  "image": "sha256:cce12316475d7d56d605f76e1d811d0dc4e7227f2d4afd29951521264f504ff8",
+  "worker_sha256": "245d60b2c69b658c7386970d50238219abe189d963082ef57c76a54aadc408c3",
+  "results": [
+    {
+      "name": "normal",
+      "raw": {
+        "status": "OK",
+        "value": 3,
+        "seconds": 0.009271999995689839
+      },
+      "seconds": 0.2704877909854986,
+      "source_sha256": "256ac47cf53b5764fab86c18363411a408f0c7656826b7deeb0309ededce8fdc"
+    },
+    {
+      "name": "network",
+      "raw": {
+        "status": "OK",
+        "value": "BLOCKED",
+        "seconds": 0.015149832994211465
+      },
+      "seconds": 0.33003775001270697,
+      "source_sha256": "8872c05b94ae9e654c91eca9d0697aba4f0f2f3257bbdaaaaf66ae4ae6b174bf"
+    },
+    {
+      "name": "outside_write",
+      "raw": {
+        "status": "OK",
+        "value": "BLOCKED",
+        "seconds": 0.009048750041984022
+      },
+      "seconds": 0.2523795420420356,
+      "source_sha256": "a717269ce4246bdc497fce1b3a5d507e1c4732a476ee54c8bef1bde111172728"
+    },
+    {
+      "name": "host_private",
+      "raw": {
+        "status": "OK",
+        "value": "BLOCKED",
+        "seconds": 0.009605750034097582
+      },
+      "seconds": 0.2581989579484798,
+      "source_sha256": "998828cafd281997b7905ca3efdd873851a9533496019c4b7c6501001dedf79f"
+    },
+    {
+      "name": "output",
+      "raw": {
+        "status": "OUTPUT_LIMIT"
+      },
+      "seconds": 0.25124158296966925,
+      "source_sha256": "9090c03d23f83c47801c6af8a3d33b49b1eb9188d0b6578ed619d550321b3e88"
+    },
+    {
+      "name": "file_descriptors",
+      "raw": {
+        "status": "OK",
+        "value": "LIMITED",
+        "seconds": 0.008258917019702494
+      },
+      "seconds": 0.21570145903388038,
+      "source_sha256": "d49f85af05dbfea11ea5c7f7dc0632d35052d8f333d14827f0758097a2375650"
+    },
+    {
+      "name": "tmp_limit",
+      "raw": {
+        "status": "OK",
+        "value": "LIMITED",
+        "seconds": 0.014171209011692554
+      },
+      "seconds": 0.23307141597615555,
+      "source_sha256": "1c7b74fdfa0952f2682c713107a0a4eb816d9711971c44c7388fd0671a81cd3f"
+    },
+    {
+      "name": "loop",
+      "raw": {
+        "status": "TIME_LIMIT",
+        "seconds": 1.004364000982605
+      },
+      "seconds": 1.2683607090148143,
+      "source_sha256": "aa3feac1c23a033892534eb2ddab9b8230591d411de433339127fbf72140c133"
+    },
+    {
+      "name": "recursion",
+      "raw": {
+        "status": "RUNTIME_ERROR",
+        "error": "RecursionError: maximum recursion depth exceeded",
+        "traceback": "Traceback (most recent call last):\n  File \"/worker.py\", line 108, in run\n    result = entry(*request[\"args\"])\n             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/candidate.py\", line 1, in probe\n    def probe(): return probe()\n                        ^^^^^^^\n  File \"/candidate.py\", line 1, in probe\n    def probe(): return probe()\n                        ^^^^^^^\n  File \"/candidate.py\", line 1, in probe\n    def probe(): return probe()\n                        ^^^^^^^\n  [Previous line repeated 995 more times]\nRecursionError: maximum recursion depth exceeded\n",
+        "seconds": 0.021686875028535724
+      },
+      "seconds": 0.25644166697748005,
+      "source_sha256": "7186f2446d1e5319a7b302c93dba662222aed52a71b4ba5b8e8a527fbc5f14e1"
+    }
+  ],
+  "api_calls": 0
+}

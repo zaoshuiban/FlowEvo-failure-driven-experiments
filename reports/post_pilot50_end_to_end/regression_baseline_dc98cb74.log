@@ -1,0 +1,195 @@
+======================================================================
+ERROR: test_s16c2_reuse (unittest.loader._FailedTest.test_s16c2_reuse)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_s16c2_reuse
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.11/3.11.14_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/loader.py", line 162, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_s16c2_reuse.py", line 4, in <module>
+    import experiment_s16c2_reuse as x
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/experiment_s16c2_reuse.py", line 4, in <module>
+    import run_workflow_v2 as e
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/run_workflow_v2.py", line 9, in <module>
+    import learn_reuse30 as prior
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/learn_reuse30.py", line 8, in <module>
+    import compare30_workflows as old
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/compare30_workflows.py", line 25, in <module>
+    import scripts.d0_aflow_b_adapter as af
+  File "/Users/majiatong/lab/AFlow/scripts/d0_aflow_b_adapter.py", line 10, in <module>
+    from scripts.d0_s01_runtime.runner import execute_case
+  File "/Users/majiatong/lab/AFlow/scripts/d0_s01_runtime/__init__.py", line 2, in <module>
+    from .runner import execute_case,judge,admit,public_task
+  File "/Users/majiatong/lab/AFlow/scripts/d0_s01_runtime/runner.py", line 4, in <module>
+    from scripts.operator_runtime.executor import sandbox_profile,bounded_read
+  File "/Users/majiatong/lab/AFlow/scripts/operator_runtime/__init__.py", line 5, in <module>
+    from .runner import solve
+  File "/Users/majiatong/lab/AFlow/scripts/operator_runtime/runner.py", line 4, in <module>
+    from scripts.experiment_a_calibration import prompt,tools_for
+  File "/Users/majiatong/lab/AFlow/scripts/experiment_a_calibration.py", line 14, in <module>
+    from scripts.experiment_a_pilot import Transport,RequestFailure,BudgetStop,parse_json,SEMANTICS
+  File "/Users/majiatong/lab/AFlow/scripts/experiment_a_pilot.py", line 22, in <module>
+    from scripts.async_llm import LLMsConfig
+  File "/Users/majiatong/lab/AFlow/scripts/async_llm.py", line 7, in <module>
+    from scripts.formatter import BaseFormatter, FormatError
+  File "/Users/majiatong/lab/AFlow/scripts/formatter.py", line 13, in <module>
+    from scripts.utils.sanitize import sanitize
+  File "/Users/majiatong/lab/AFlow/scripts/utils/sanitize.py", line 12, in <module>
+    from tree_sitter import Node
+ModuleNotFoundError: No module named 'tree_sitter'
+
+
+======================================================================
+ERROR: test_auth_before_sender (scripts.test_s22_executor.ExecutorTests.test_auth_before_sender)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_s22_executor.py", line 25, in test_auth_before_sender
+    with self.assertRaises(PermissionError):e.run(d,mode='real',sender=lambda *a:self.fail('sent'))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 66, in run
+    p,m=verify();directory=pathlib.Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
+        ^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/compile_queue.py
+
+======================================================================
+ERROR: test_manifest_and_sources (scripts.test_s22_executor.ExecutorTests.test_manifest_and_sources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_s22_executor.py", line 51, in test_manifest_and_sources
+    def test_manifest_and_sources(self):e.verify()
+                                        ^^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/compile_queue.py
+
+======================================================================
+ERROR: test_sealed_gate_and_twenty_mock (scripts.test_s22_executor.ExecutorTests.test_sealed_gate_and_twenty_mock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_s22_executor.py", line 45, in test_sealed_gate_and_twenty_mock
+    with self.assertRaises(RuntimeError):review(d)
+                                         ^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_final_review.py", line 7, in review
+    p,m=e.verify();d=pathlib.Path(directory).resolve()
+        ^^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/compile_queue.py
+
+======================================================================
+ERROR: test_twenty_and_restart (scripts.test_s22_executor.ExecutorTests.test_twenty_and_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_s22_executor.py", line 9, in test_twenty_and_restart
+    state=e.run(d,sender=sender)
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 66, in run
+    p,m=verify();directory=pathlib.Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
+        ^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/compile_queue.py
+
+======================================================================
+ERROR: test_unknown_no_resend (scripts.test_s22_executor.ExecutorTests.test_unknown_no_resend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_s22_executor.py", line 19, in test_unknown_no_resend
+    with self.assertRaises(EOFError):e.run(d,sender=fail)
+                                     ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 66, in run
+    p,m=verify();directory=pathlib.Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
+        ^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/compile_queue.py
+
+======================================================================
+ERROR: test_worker_failure_stops (scripts.test_s22_executor.ExecutorTests.test_worker_failure_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_s22_executor.py", line 29, in test_worker_failure_stops
+    with self.assertRaises(RuntimeError):e.run(d,judge=fail)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 66, in run
+    p,m=verify();directory=pathlib.Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
+        ^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/compile_queue.py
+
+======================================================================
+ERROR: test_full_mock_and_restart (scripts.test_s24_learning_probe.Tests.test_full_mock_and_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_s24_learning_probe.py", line 29, in test_full_mock_and_restart
+    x.run();self.assertEqual(len(calls),5);self.assertEqual(x.e.read(d/'state.json')['status'],'ONLINE_LOCKED')
+    ^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s24_learning_probe.py", line 65, in run
+    p=e.read(RUN/'protocol.json');assert e.fingerprint({k:v for k,v in p.items() if k!='protocol_hash'})==p['protocol_hash'];e.verify()
+                                                                                                                             ^^^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/compile_queue.py
+
+======================================================================
+FAIL: test_freeze (scripts.test_hard10_algorithm.TestHard10.test_freeze)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_hard10_algorithm.py", line 6, in test_freeze
+    p=verify();self.assertEqual(len(load(OUT/'tasks.json')),10);self.assertEqual(p['max_calls'],80)
+      ^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/run_hard10_algorithm.py", line 100, in verify
+    for rel,h in p['source_hashes'].items():assert sha(ROOT/rel)==h,rel
+                                                   ^^^^^^^^^^^^^^^^
+AssertionError: FlowEvo/src/failure_evo/math_operators.py
+
+======================================================================
+FAIL: test_frozen (scripts.test_hard140_algorithm.Test140.test_frozen)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_hard140_algorithm.py", line 7, in test_frozen
+    p=verify();self.assertEqual(len(load(OUT/'tasks.json')),140);self.assertEqual(p['max_calls'],364)
+      ^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/run_hard140_algorithm.py", line 86, in verify
+    for rel,h in p['source_hashes'].items():assert sha(ROOT/rel)==h,rel
+                                                   ^^^^^^^^^^^^^^^^
+AssertionError: scripts/run_hard140_algorithm.py
+
+======================================================================
+FAIL: test_frozen (scripts.test_algorithm_evidence.Test.test_frozen)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_algorithm_evidence.py", line 35, in test_frozen
+    def test_frozen(self):self.assertEqual(verify()['max_requests'],36)
+                                           ^^^^^^^^
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/run_algorithm_evidence.py", line 92, in verify
+    p=load(OUT/'protocol.json');assert fingerprint(p)==load(OUT/'freeze.json')['sha256'];assert all(sha(ROOT/k)==h for k,h in p['source_hashes'].items());assert all(sha(OUT/k)==h for k,h in p['data_hashes'].items());return p
+                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_prepared_bundle_integrity_and_old_experiment_unchanged (scripts.test_prepare_workflow_pilot.PilotTests.test_prepared_bundle_integrity_and_old_experiment_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/flowevo-dc98cb74-baseline-o2lzzzuk/scripts/test_prepare_workflow_pilot.py", line 56, in test_prepared_bundle_integrity_and_old_experiment_unchanged
+    for f,h in old['frozen_files'].items():self.assertEqual(p.sha(f),h,f)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '77702f69c011b89d1e10a0ac6951b45e51d9091601b383c66b48b37692f031a9' != '911d417eff645269d5322d1e4379e74270ca9c282202c36ccd307823fb423b63'
+- 77702f69c011b89d1e10a0ac6951b45e51d9091601b383c66b48b37692f031a9
++ 911d417eff645269d5322d1e4379e74270ca9c282202c36ccd307823fb423b63
+ : /Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/FlowEvo/src/code_math/runner.py
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.269s
+
+FAILED (failures=4, errors=8)

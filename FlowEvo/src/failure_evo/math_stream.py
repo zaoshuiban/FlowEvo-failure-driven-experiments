@@ -87,6 +87,7 @@ class PublicProblemProbe:
 class StreamRuntime:
     def __init__(self,path,plan,tasks,private_rows,lineage,*,backend,learner_factory,
                  engineering=False,sender_factory=None,fault=None,budget_factory=None):
+        self._active_contract_publications=set()
         self.path=Path(path);self.path.mkdir(parents=True,exist_ok=True)
         self.plan=copy.deepcopy(plan);self.tasks=[PublicMathTask.parse(t) for t in tasks]
         self.lineage=copy.deepcopy(lineage);self.engineering=engineering;self.fault=fault or (lambda *a:None)
@@ -122,6 +123,10 @@ class StreamRuntime:
             self.arms[arm].update(budget=b,tool_budget=tool,client=client,split=split,probe=probe,router=router,
                 states=EvidenceStore(d/'task_state.jsonl'),controller=EvidenceStore(d/'controller.jsonl'),
                 scorer=PrivateMathScorer(private_rows,d/'controller.jsonl',d/'scores.jsonl',strict_delivery=True))
+            if plan.get('operator_contract_shadow'):
+                if plan['operator_contract_shadow']!='pre-score-one-candidate-v1':raise PermissionError('unknown Shadow policy')
+                from .math_contract_runtime import ContractShadow
+                self.arms[arm]['contract_shadow']=ContractShadow(self,arm,private_rows) if arm in ('T','F') else None
             self.arms[arm]['learner']=learner_factory(self,arm) if arm in ('T','F') else None
     def health(self):
         if fingerprint(self.plan)!=self.ph:raise RunUnhealthy('in-memory protocol drift')
@@ -133,6 +138,14 @@ class StreamRuntime:
             from .math_continuation import verify
             m=verify(self.path,self.plan)
             isolated={(q['ledger'],q['request_id']) for q in m['isolations']}
+        for arm in self.arms.values():
+            rows=arm['registry'].events.records()
+            completed={r['payload'].get('execution_id') for r in rows if r['kind']=='OPERATOR_VALIDATOR_EXECUTED'}
+            shadow_done={r['payload'].get('execution_id') for r in rows if r['kind']=='CONTRACT_SHADOW_EXECUTED'}
+            publication_done={r['payload'].get('version') for r in rows if r['kind']=='CONTRACT_RELEASE_RESUME_DONE'}
+            if any(r['kind']=='CONTRACT_RELEASE_RESUME_STARTED' and r['payload'].get('version') not in publication_done and r['payload'].get('version') not in getattr(self,'_active_contract_publications',set()) for r in rows):raise RunUnhealthy('unresolved publication; audit required')
+            if any(r['kind']=='OPERATOR_VALIDATOR_STARTED' and r['payload'].get('execution_id') not in completed for r in rows):raise RunUnhealthy('unresolved validator execution; audit required')
+            if any(r['kind']=='CONTRACT_SHADOW_STARTED' and r['payload'].get('execution_id') not in shadow_done for r in rows):raise RunUnhealthy('unresolved Shadow execution; audit required')
         # Check ALL account journals, including learner accounts restored after process restart.
         for p in self.path.rglob('*budget.jsonl'):
             b=PersistentBudget.__new__(PersistentBudget);b.path=p
@@ -238,16 +251,22 @@ class StreamRuntime:
                 locks={}
                 order=ARMS[(seq-1)%4:]+ARMS[:(seq-1)%4]
                 for arm in order:
-                    self.health();locks[arm]=self.solve(arm,task,seq)
+                    self.health()
+                    if self.arms[arm].get('contract_shadow'):self.arms[arm]['contract_shadow'].observe(task,seq)
+                    locks[arm]=self.solve(arm,task,seq)
                 # Barrier: every arm's final answer is durable before ANY private score.
                 for arm in ARMS:
                     a=self.arms[arm];eid=f'{arm}/{seq}/{task.task_id}'
                     v=a['scorer'].score(task,locks[arm])
                     self.emit_once(a['states'],'PRIVATE_SCORED',eid,dict(task_id=task.task_id,sequence=seq,verdict=v))
+                    if a.get('contract_shadow'):a['contract_shadow'].finalize(task,locks[arm])
                     original=self.lineage[task.task_id]['source_original_id']
                     if a['router'] and any(r['kind']=='MATH_ROUTER_EXECUTED' and r['payload']['task_id']==task.task_id for r in a['registry'].events.records()):
                         if original=='UNKNOWN':raise PermissionError('cannot record unknown original as verified reuse')
                         a['router'].record_feedback(task,locks[arm],v,controller=a['controller'],scorer=a['scorer'].events,original_id=original)
+                if self.plan.get('operator_contract_shadow'):
+                    for arm in ('T','F'):
+                        self.arms[arm]['learner'].release.poll_contract(seq)
                 self.fault('after_scoring',None,seq)
                 if seq%self.plan['window']==0 or seq==len(self.tasks):
                     for arm in ('T','F'):

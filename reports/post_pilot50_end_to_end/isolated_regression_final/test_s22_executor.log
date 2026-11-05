@@ -1,0 +1,91 @@
+======================================================================
+ERROR: test_auth_before_sender (scripts.test_s22_executor.ExecutorTests.test_auth_before_sender)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s22_executor.py", line 25, in test_auth_before_sender
+    with self.assertRaises(PermissionError):e.run(d,mode='real',sender=lambda *a:self.fail('sent'))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 66, in run
+    p,m=verify();directory=pathlib.Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
+        ^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/container_worker.py
+
+======================================================================
+ERROR: test_manifest_and_sources (scripts.test_s22_executor.ExecutorTests.test_manifest_and_sources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s22_executor.py", line 51, in test_manifest_and_sources
+    def test_manifest_and_sources(self):e.verify()
+                                        ^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/container_worker.py
+
+======================================================================
+ERROR: test_sealed_gate_and_twenty_mock (scripts.test_s22_executor.ExecutorTests.test_sealed_gate_and_twenty_mock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s22_executor.py", line 45, in test_sealed_gate_and_twenty_mock
+    with self.assertRaises(RuntimeError):review(d)
+                                         ^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_final_review.py", line 7, in review
+    p,m=e.verify();d=pathlib.Path(directory).resolve()
+        ^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/container_worker.py
+
+======================================================================
+ERROR: test_twenty_and_restart (scripts.test_s22_executor.ExecutorTests.test_twenty_and_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s22_executor.py", line 9, in test_twenty_and_restart
+    state=e.run(d,sender=sender)
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 66, in run
+    p,m=verify();directory=pathlib.Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
+        ^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/container_worker.py
+
+======================================================================
+ERROR: test_unknown_no_resend (scripts.test_s22_executor.ExecutorTests.test_unknown_no_resend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s22_executor.py", line 19, in test_unknown_no_resend
+    with self.assertRaises(EOFError):e.run(d,sender=fail)
+                                     ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 66, in run
+    p,m=verify();directory=pathlib.Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
+        ^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/container_worker.py
+
+======================================================================
+ERROR: test_worker_failure_stops (scripts.test_s22_executor.ExecutorTests.test_worker_failure_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s22_executor.py", line 29, in test_worker_failure_stops
+    with self.assertRaises(RuntimeError):e.run(d,judge=fail)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 66, in run
+    p,m=verify();directory=pathlib.Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
+        ^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/container_worker.py
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.006s
+
+FAILED (errors=6)

@@ -64,6 +64,9 @@ class BundleCompilerAdapter(StreamCompilerAdapter):
                     'description must be a JSON-encoded contract with exactly nonempty string fields '+','.join(FIELDS)+'. '
                     'parameter_schema is a closed object schema without references; requested_quantity equals match requested_quantity. '
                     'DIAGNOSTIC outputs are diagnostic numerical results, never final answers to a different mathematical objective. '
+                    'applicability must be a JSON-encoded Operator Contract object with exactly artifact_kind, input_schema, preconditions, output_schema, algorithm, complexity_bound, failure_modes, source_evidence. '
+                    'artifact_kind is INSTANCE_SOLVER or REUSABLE_CANDIDATE, not a validation claim. input_schema, output_schema, complexity_bound are nonempty objects; preconditions, failure_modes, source_evidence are nonempty string lists. algorithm is a nonempty string. '
+                    'source_evidence must equal the supplied evidence IDs. Never output validation_status, verified, gate_passed, execution_authorized. '
                     'Return exactly nonempty strings code, description, applicability. Do not assert validation or permissions.')
             if r['phase']=='revision':
                 data.update(previous_source=r['code'],engineering_diagnostics=r['engineering_diagnostics'])
@@ -295,8 +298,22 @@ class CumulativeLearner(WindowLearner):
             # Exactly the generated source is used in both component paths; no host-written algorithm.
             used=sorted({t for rr in a['registry'].events.records() if rr['kind']=='STREAM_LEARNING_INPUT' for t in rr['payload']['task_ids']})
             art=artifact(path/'artifact',response['code'],response['code'],contract,provenance=dict(origin='MOCK' if s.engineering else 'DEEPSEEK',response_sha256=response['response_sha256'],request_sha256=response['wire_sha256'],excluded_task_ids=used,assessment_sha256=fingerprint(hyp),output_role=hyp['algorithm_candidate']['details']['output']['role']))
+            from .operator_contract import attach_contract
+            try:
+                art=attach_contract(art,json.loads(response['applicability']),evidence_ids=ids,protocol=provider.protocol,
+                    original_ids=sorted({facts[i].get('source_original_id','UNKNOWN') for i in ids}))
+            except (ValueError,TypeError) as exc:
+                save(path/'operator_contract_rejection.json',dict(status='CONTRACT_REJECTED',reason=str(exc),response_sha256=response['response_sha256']))
+                return finish(dict(status='OPERATOR_CONTRACT_REJECTED',reason=str(exc),learning_calls=b.snapshot()['calls']))
+            art['candidate_created_after']=cutoff
+            art['learning_provenance']=dict(candidate_generation_job_id=j['job_id'],cluster_id=j['cluster_id'],cluster_version=j['hypothesis_version'],
+                source_evidence_ids=ids,association_attempt_ids=[r['payload']['id'] for r in self.memory.attempts.records() if r['payload']['cutoff']<=cutoff and set(r['payload']['evidence_ids']) & set(ids)],
+                mechanism_assessment=hyp['mechanism_assessment'],algorithm_candidate=hyp['algorithm_candidate'],hypothesis_sha256=fingerprint(hyp))
             save(path/'artifact.json',art)
             if not any(rr['kind']=='MATH_SHADOW' and rr['payload']==art for rr in a['registry'].events.records()):a['registry'].shadow(art)
+            from .math_contract_runtime import validate_safety
+            safety=validate_safety(a['registry'],art,a['split'],engineering=s.engineering)
+            if not safety['passed']:return finish(dict(status='SHADOW_STATIC_SAFETY_REJECTED',learning_calls=b.snapshot()['calls']))
             # Diagnostics are bound to publicly available source tasks, no gold enters Worker.
             source=[];byid={t.task_id:t for t in s.tasks}
             if (path/'VALIDATION_STARTED.json').exists():raise RunUnhealthy('interrupted validation requires audit; no implicit Worker replay')

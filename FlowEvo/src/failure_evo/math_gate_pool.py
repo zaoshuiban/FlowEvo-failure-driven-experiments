@@ -102,7 +102,8 @@ class PoolReviewedRelease(ReviewedRelease):
         s=self.stream;path=Path(path)
         done=[r['payload'] for r in self.journal.records() if r['kind']=='RELEASE_COMPLETED' and r['payload']['sha']==a['code_sha256']]
         if done:return done[0]['result']
-        if any(r['kind']=='RELEASE_STARTED' and r['payload']['sha']==a['code_sha256'] for r in self.journal.records()):raise RunUnhealthy('interrupted Gate requires audit; no replay')
+        history=[r for r in self.journal.records() if r['payload'].get('sha')==a['code_sha256']]
+        if history and history[-1]['kind']=='RELEASE_STARTED':raise RunUnhealthy('interrupted Gate requires audit; no replay')
         package=self.packages(a,cutoff)
         if package is None:
             if not any(r['kind']=='RELEASE_PENDING' and r['payload']['sha']==a['code_sha256'] for r in self.journal.records()):self.journal.append('RELEASE_PENDING',dict(sha=a['code_sha256'],artifact=a,path=str(path),created_after=cutoff),time.time())
@@ -113,9 +114,10 @@ class PoolReviewedRelease(ReviewedRelease):
         target=learner._path(cutoff,'gate-'+a['code_sha256']);target.mkdir(parents=True,exist_ok=True)
         self.journal.append('RELEASE_STARTED',dict(sha=a['code_sha256'],cutoff=cutoff,path=str(target)),time.time())
         result=super().attempt(a,cutoff,target)
-        self.journal.append('RELEASE_COMPLETED',dict(sha=a['code_sha256'],cutoff=cutoff,result=result),time.time());return result
+        kind='RELEASE_DEFERRED' if result.get('status')=='SHADOW_RELEASE_STAGES_PENDING' else 'RELEASE_COMPLETED'
+        self.journal.append(kind,dict(sha=a['code_sha256'],cutoff=cutoff,result=result,path=str(path)),time.time());return result
     def poll(self,cutoff):
         done={r['payload']['sha'] for r in self.journal.records() if r['kind']=='RELEASE_COMPLETED'}
         for r in self.journal.records():
-            if r['kind']=='RELEASE_PENDING' and r['payload']['sha'] not in done:
+            if r['kind'] in ('RELEASE_PENDING','RELEASE_DEFERRED') and r['payload']['sha'] not in done:
                 x=r['payload'];self.attempt(x['artifact'],cutoff,Path(x['path']))

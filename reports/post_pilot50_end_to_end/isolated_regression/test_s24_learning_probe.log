@@ -1,0 +1,19 @@
+======================================================================
+ERROR: test_full_mock_and_restart (scripts.test_s24_learning_probe.Tests.test_full_mock_and_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/test_s24_learning_probe.py", line 29, in test_full_mock_and_restart
+    x.run();self.assertEqual(len(calls),5);self.assertEqual(x.e.read(d/'state.json')['status'],'ONLINE_LOCKED')
+    ^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s24_learning_probe.py", line 65, in run
+    p=e.read(RUN/'protocol.json');assert e.fingerprint({k:v for k,v in p.items() if k!='protocol_hash'})==p['protocol_hash'];e.verify()
+                                                                                                                             ^^^^^^^^^^
+  File "/Users/majiatong/lab/FlowEvo与V3全数据集对比资料包/FlowEvo-failure-driven-experiments/scripts/s22_executor.py", line 31, in verify
+    if sha(ROOT/path)!=h:raise ValueError('FROZEN_HASH_MISMATCH: '+path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: FROZEN_HASH_MISMATCH: FlowEvo/src/failure_evo/container_worker.py
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.006s
+
+FAILED (errors=1)

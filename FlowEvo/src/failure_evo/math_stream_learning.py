@@ -3,6 +3,7 @@ import json,time
 from pathlib import Path
 from .contracts import canonical,fingerprint
 from .evidence import EvidenceStore
+from .run_health import RunUnhealthy
 from .autonomous_generation import DeepSeekCompilerAdapter,CODE_SCHEMA
 from .math_learning import HYPOTHESIS_SCHEMA,parse_hypothesis
 from .math_engineering_repair import receive_source,version_change
@@ -98,15 +99,38 @@ class ReviewedRelease:
             if v=='UNKNOWN':return dict(status='SHADOW_SOURCE_ORIGINAL_UNKNOWN',gate_passed=False)
             source_originals.append(v)
         if set(source_originals)&{c['original_id'] for c in gate}:raise PermissionError('source/Gate original overlap')
+        if 'operator_contract' in a:
+            required=set(a.get('source_original_ids',[]))
+            reviewed_sources={c['original_id'] for c in dev if c['task_id'] in a['excluded_task_ids'] and c.get('supported') is True}
+            if not required or not required<=reviewed_sources:
+                return dict(status='SHADOW_SOURCE_MAPPING_REVIEW_UNAVAILABLE',gate_passed=False)
         save(path/'reviewed_cases.private.json',package)
         class Adapter:
             def run(self,a,t):return state['split'].run(a,t)
             def solve(self,a,p):return state['split'].solve(a,p)
         def old(cases):return [dict(proposal=dict(problem=c['problem']),review=dict(status='VERIFIED',record={k:c[k] for k in ('supported','parameters','answer')})) for c in cases]
-        reg=state['registry'];dr=evaluate(Adapter(),a,old(dev));d=reg.record_review(a,dr,role='Development',data_hash=fingerprint(dev),exposed=True)
+        reg=state['registry']
+        if 'operator_contract' in a:
+            from .operator_contract import validate_computation_stage
+            validated=validate_computation_stage(reg,a,state['split'],old(dev),stage='SOURCE',
+                source_original_ids=[c['original_id'] for c in dev],engineering=s.engineering)
+            dr=validated['rows']
+        else:dr=evaluate(Adapter(),a,old(dev))
+        d=reg.record_review(a,dr,role='Development',data_hash=fingerprint(dev),exposed=True)
         if not d['passed']:return dict(status='SHADOW_DEVELOPMENT_GATE_FAILED',gate_passed=False)
-        reg.freeze_gate([a],data_hash=fingerprint(gate),development_ids=[c['task_id'] for c in dev],gate_ids=[c['task_id'] for c in gate])
-        gr=evaluate(Adapter(),a,old(gate))
+        if not any(r['kind']=='V3_GATE_FREEZE' and r['payload']['data_hash']==fingerprint(gate) and a['code_sha256'] in r['payload']['versions'] for r in reg.events.records()):
+            reg.freeze_gate([a],data_hash=fingerprint(gate),development_ids=[c['task_id'] for c in dev],gate_ids=[c['task_id'] for c in gate])
+        if 'operator_contract' in a:
+            validated=validate_computation_stage(reg,a,state['split'],old(gate),stage='INDEPENDENT_GATE',
+                source_original_ids=[c['original_id'] for c in gate],independent=True,engineering=s.engineering)
+            gr=validated['rows']
+        else:gr=evaluate(Adapter(),a,old(gate))
+        if 'operator_contract' in a:
+            from .operator_contract import require_release
+            try:require_release(reg,a)
+            except PermissionError as exc:
+                s.emit_once(reg.events,'CONTRACT_RELEASE_PENDING',a['candidate_version'],dict(artifact=a,path=str(path),after_sequence=cutoff))
+                return dict(status='SHADOW_RELEASE_STAGES_PENDING',gate_passed=False,reason=str(exc))
         gatekeeper=MathPublicationGate(reg,state['probe'],path/'private_publication.jsonl',engineering=s.engineering)
         fid=gatekeeper.freeze(a,gate,development_originals=source_originals+[c['original_id'] for c in dev],input_rate=.3e-6,output_rate=1.2e-6,tool_second_rate=0)
         # A separate existing ledger/client owns all validation baseline and fallback calls.
@@ -122,6 +146,24 @@ class ReviewedRelease:
         if not future:return dict(status='QUALIFIED_NO_FUTURE_KNOWN_ORIGINAL',gate_passed=True)
         reg.authorize_trial(a,future_task_ids=future,max_uses=len(future),after_sequence=cutoff)
         return dict(status='EXPERIMENTAL',gate_passed=True,trial_tasks=future,summary=summary)
+
+    def poll_contract(self,cutoff):
+        from .operator_contract import require_release
+        reg=self.stream.arms[self.arm]['registry']
+        for r in reg.events.records():
+            if r['kind']!='CONTRACT_RELEASE_PENDING':continue
+            a=r['payload']['artifact'];version=a['candidate_version']
+            history=[e for e in reg.events.records() if e['kind'] in ('CONTRACT_RELEASE_RESUME_STARTED','CONTRACT_RELEASE_RESUME_DONE') and e['payload'].get('version')==version]
+            if history and history[-1]['kind']=='CONTRACT_RELEASE_RESUME_DONE':continue
+            if history:raise RunUnhealthy('interrupted contract publication; no replay')
+            try:require_release(reg,a)
+            except PermissionError:continue
+            reg.events.append('CONTRACT_RELEASE_RESUME_STARTED',dict(version=version,cutoff=cutoff),time.time())
+            self.stream._active_contract_publications.add(version)
+            try:
+                result=self.attempt(a,cutoff,Path(r['payload']['path']))
+                reg.events.append('CONTRACT_RELEASE_RESUME_DONE',dict(version=version,cutoff=cutoff,result=result),time.time())
+            finally:self.stream._active_contract_publications.discard(version)
 
 class WindowLearner:
     def __init__(self,stream,arm,*,sender=None,release=None):

@@ -23,12 +23,14 @@ def generator(arm,role='ANSWER',cause='SUSPECTED'):
             if 'hypothesis' not in data:
                 refs=[e['evidence_id'] for e in data['learning_evidence_bundle']['evidence']]
                 return raw(json.dumps(assessment(refs,status=cause,role=role)))
-            return base(w)
+            response=base(w);content=json.loads(response['choices'][0]['message']['content'])
+            content['applicability']=json.dumps(dict(artifact_kind='REUSABLE_CANDIDATE',input_schema={'type':'object'},output_schema={'type':'string'},preconditions=['engineering fixture'],algorithm='engineering fixture only',complexity_bound={'max_n':10000},failure_modes=['other targets'],source_evidence=[e['evidence_id'] for e in data['learning_evidence_bundle']['evidence']]))
+            return raw(json.dumps(content))
         desc=[];links=[]
         for e in data['evidence']:
             desc.append(dict(evidence_id=e['evidence_id'],task_structure='MOCK structure',observable_symptom='MOCK observation',possible_cause='UNVERIFIED MOCK',possible_correction='MOCK fixture',uncertainty='engineering only'))
             links.append(dict(evidence_id=e['evidence_id'],relation='SUPPORT',reason='MOCK evidence relation',evidence_quote=e['problem'],new_information=True))
-        return raw(json.dumps(dict(descriptions=desc,clusters=[dict(cluster_id=data['candidate_clusters'][0]['cluster_id'] if data['candidate_clusters'] else 'NEW',hypothesis=dict(mechanism='MOCK finite computation',uncertainty='engineering only',applicability='fixture',exclusions='other',input_output='fixture parameter'),assessment=assessment([e['evidence_id'] for e in data['evidence']],status=cause,role=role),links=links)])))
+        return raw(json.dumps(dict(descriptions=desc,clusters=[dict(cluster_id=data['candidate_clusters'][0]['reference_id'] if data['candidate_clusters'] else 'NEW',hypothesis=dict(mechanism='MOCK finite computation',uncertainty='engineering only',applicability='fixture',exclusions='other',input_output='fixture parameter'),assessment=assessment([e['evidence_id'] for e in data['evidence']],status=cause,role=role),links=links)])))
     return send
 
 def run_case(name,mode='workflow',gate=False,role='ANSWER',cause='SUSPECTED'):
@@ -37,9 +39,17 @@ def run_case(name,mode='workflow',gate=False,role='ANSWER',cause='SUSPECTED'):
     lineage={t['task_id']:dict(source_original_id='MOCK_'+t['task_id']) for t in tasks}
     cfg=dict(DEFAULTS,max_association_jobs=2,max_generation_jobs=1,comparison=mode)
     if mode=='paired_information':cfg['paired_packs']=[dict(after_sequence=2,task_ids=[t['task_id'] for t in tasks[:2]])]
-    plan=dict(tasks_sha256=fingerprint(tasks),window=2,r_policy='previous-window-f-call-credit-v1',r_max_extra_calls=27,max_gate_cases=6,max_tools_per_arm=1200,sources={},cumulative=cfg)
+    plan=dict(operator_contract_shadow='pre-score-one-candidate-v1',tasks_sha256=fingerprint(tasks),window=2,r_policy='previous-window-f-call-credit-v1',r_max_extra_calls=27,max_gate_cases=6,max_tools_per_arm=1200,sources={},cumulative=cfg)
     def release(s,a):
-        rr=ReviewedRelease(s,a,reviewed if gate else None);rr.sender=solve_sender(a);return rr
+        def provider(art,cutoff):
+            packet=reviewed(art,2)
+            sources=[]
+            for tid in art['excluded_task_ids']:
+                task=next(t for t in s.tasks if t.task_id==tid);n=int(tid.split('-')[-1])
+                sources.append(dict(task_id=tid,original_id=s.lineage[tid]['source_original_id'],problem=task.problem,supported=True,parameters={'n':n},answer=str(sum(range(1,n+1))),available_after_sequence=0,review_status='INDEPENDENT_VERIFIED',reviewer='engineering fixture',oracle_sha256=fingerprint(['builtin-sum',n])))
+            packet['Development']=sources+[packet['Development'][-1]]
+            return packet
+        rr=ReviewedRelease(s,a,provider if gate else None);rr.sender=solve_sender(a);return rr
     def make():return CumulativeStream(OUT/name,plan,tasks,labels,lineage,backend=FrozenLinuxBackend(image=IMAGE,worker_script=WORKER),engineering=True,sender_factory=solve_sender,learning_sender_factory=lambda a:generator(a,role,cause),release_factory=release)
     s=make();s.run();before=len(wires);make().run();checks[name+'_resume_no_new_learning']=len(wires)==before
     checks[name+'_all_tasks_completed']=read(s.path/'progress.json')['last_sequence']==6
@@ -53,7 +63,7 @@ def run_case(name,mode='workflow',gate=False,role='ANSWER',cause='SUSPECTED'):
         checks['future_execution']=any(x['kind']=='MATH_ROUTER_EXECUTED' and x['payload']['sequence']>1 for x in s.arms['F']['registry'].events.records())
     else:checks[name+'_no_automatic_permission']=not any(x['kind']=='MATH_ROUTER_PUBLICATION' for x in s.arms['F']['registry'].events.records())
     return s
-s=run_case('shadow');paired=run_case('paired','paired_information');published=run_case('published',gate=True)
+s=run_case('shadow');paired=run_case('paired','paired_information');published=run_case('published','paired_information',gate=True)
 diagnostic=run_case('diagnostic',role='DIAGNOSTIC',cause='UNSUPPORTED')
 checks['unsupported_cause_can_generate_diagnostic']=all(any(read(p)['status']=='SHADOW_DIAGNOSTIC_ONLY' for p in (diagnostic.path/a/'learning').rglob('result.json')) for a in ('T','F'))
 checks['diagnostic_not_answer_scored']=all(x['combined_source']['status']=='DIAGNOSTIC_NOT_ANSWER_SCORED' for p in diagnostic.path.rglob('source_execution.json') for x in read(p))
