@@ -48,3 +48,46 @@ datasets/math_cumulative50_*/private/
 runs/math_cumulative50_*/**/private/
 runs/math_cumulative50_*/**/*.private.json
 runs/math_cumulative50_*/**/private_publication.jsonl
+
+# Repository isolation: execution artifacts stay in controlled local storage.
+# Existing tracked files are not protected by ignore; the staged-byte guard also applies.
+/runs/
+/datasets/
+/logs/
+**/private/
+**/.private/
+**/sealed/
+**/*.private.*
+**/private_publication.jsonl
+**/reviewed_cases.private.json
+**/generated_artifacts/
+**/frozen_source/
+**/wire/
+*.jsonl
+*.log
+*.lock
+*.tmp
+*.p12
+*.pfx
+# Reports publish only reviewed Markdown and explicit integrity/validation manifests.
+/reports/*/*
+!/reports/*/*.md
+!/reports/*/source_manifest.json
+!/reports/*/validation_matrix.json
+!/reports/*/artifact_integrity_manifest.json
+!/reports/*/historical_integrity.json
+!/reports/*/public_audit_summary.json
+**/credentials.json
+**/credentials.yaml
+**/secrets.json
+**/secrets.yaml
+**/gate_keys.*
+**/gate_answers.*
+**/gold_answers.*
+**/private_scores.*
+# Content-addressed archives are external objects, never Git payloads.
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
