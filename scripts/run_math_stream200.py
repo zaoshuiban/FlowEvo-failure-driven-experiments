@@ -97,6 +97,9 @@ def summarize(path):
         a,b=sm(x),sm(y);ids={i for i in set(a)&set(b) if a[i]!='INFRASTRUCTURE_MISSING' and b[i]!='INFRASTRUCTURE_MISSING'}
         paired[x+'-'+y]=dict(paired_tasks=len(ids),x_only_correct=sum(a[i]=='CONFIRMED_CORRECT' and b[i]!='CONFIRMED_CORRECT' for i in ids),y_only_correct=sum(b[i]=='CONFIRMED_CORRECT' and a[i]!='CONFIRMED_CORRECT' for i in ids),note='noncorrect includes uncertain/truncated; not all are mathematical errors')
     summary=dict(http_rejections=http_rejections,unmetered_responses=unmetered,arms=arms,pairs=paired,responses=len(responses),tokens=sum(r['input_tokens']+r['output_tokens'] for r in responses),estimated_peak_usd=sum(r['peak_quote_usd'] for r in responses),actual_invoice='UNAVAILABLE',pricing_note='peak quoted rates applied to actual cache-aware usage; actual offpeak invoice can be lower',ledger_charged_or_reserved_usd=sum(a['snapshot']['charged_or_reserved_cost_microusd'] for a in accounts)/1e6,worker_calls=sum(a['snapshot']['tool_calls'] for a in accounts),worker_seconds=sum(a['snapshot']['charged_or_reserved_tool_milliseconds'] for a in accounts)/1000,pending=[k for a in accounts for k in a['snapshot']['unknown_or_pending_requests']],tool_monetary_cost='UNAVAILABLE_NOT_ASSUMED_ZERO',complete=any(r['kind']=='STREAM_COMPLETED' for r in EvidenceStore(path/'stream.jsonl').records()))
+    plan_path=path/'execution_plan.json'
+    if plan_path.exists() and read(plan_path).get('experiment_mode')=='LEARNING_DIAGNOSTIC':
+        summary['research_scope']='DIAGNOSTIC'
     summary['not_sent_requests']=[k for a in accounts for k in a['snapshot']['not_sent_requests']]
     summary['connection_attempts']=sum(a['snapshot']['connection_attempts'] for a in accounts)
     summary['network_accounting']='NOT_SENT has zero model calls/tokens/fee; UNKNOWN retains full reservation; connections are not model requests'

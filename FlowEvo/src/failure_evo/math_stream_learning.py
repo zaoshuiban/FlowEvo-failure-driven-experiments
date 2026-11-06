@@ -85,6 +85,9 @@ class ReviewedRelease:
         if package is None:return dict(status='SHADOW_INDEPENDENT_REVIEW_UNAVAILABLE',gate_passed=False)
         if not s.engineering and package.get('origin')=='ENGINEERING_FIXTURE':raise PermissionError('fixture cannot certify real operator')
         if package.get('artifact_sha256')!=a['code_sha256']:raise PermissionError('review not bound to exact code')
+        if 'operator_contract' in a:
+            from .operator_contract import candidate_identity
+            if package.get('candidate_version')!=candidate_identity(a):raise PermissionError('review not bound to exact candidate version')
         dev=package['Development'];gate=package['Gate'];allcases=dev+gate
         if not 1<=len(gate)<=s.plan['max_gate_cases'] or not 1<=len(dev)<=12:raise PermissionError('validation case budget')
         if any(c.get('available_after_sequence',cutoff+1)>cutoff or c.get('review_status')!='INDEPENDENT_VERIFIED' or c.get('original_id') in (None,'','UNKNOWN') or not c.get('reviewer') or not c.get('oracle_sha256') for c in allcases):raise PermissionError('unknown/future/unreviewed Gate identity')
@@ -118,12 +121,14 @@ class ReviewedRelease:
         else:dr=evaluate(Adapter(),a,old(dev))
         d=reg.record_review(a,dr,role='Development',data_hash=fingerprint(dev),exposed=True)
         if not d['passed']:return dict(status='SHADOW_DEVELOPMENT_GATE_FAILED',gate_passed=False)
-        if not any(r['kind']=='V3_GATE_FREEZE' and r['payload']['data_hash']==fingerprint(gate) and a['code_sha256'] in r['payload']['versions'] for r in reg.events.records()):
+        if not any(r['kind']=='V3_GATE_FREEZE' and r['payload']['data_hash']==fingerprint(gate) and a['code_sha256'] in r['payload']['versions'] and (a.get('candidate_version',a['code_sha256']) in r['payload'].get('candidate_versions',r['payload']['versions'])) for r in reg.events.records()):
             reg.freeze_gate([a],data_hash=fingerprint(gate),development_ids=[c['task_id'] for c in dev],gate_ids=[c['task_id'] for c in gate])
         if 'operator_contract' in a:
             validated=validate_computation_stage(reg,a,state['split'],old(gate),stage='INDEPENDENT_GATE',
                 source_original_ids=[c['original_id'] for c in gate],independent=True,engineering=s.engineering)
             gr=validated['rows']
+            if self.stream.plan.get('gate_mode')=='AUTOMATED_GATE' and not validated['passed']:
+                return dict(status='BLOCKED_AUTOMATED_GATE_MATH_FAILED',gate_passed=False)
         else:gr=evaluate(Adapter(),a,old(gate))
         if 'operator_contract' in a:
             from .operator_contract import require_release

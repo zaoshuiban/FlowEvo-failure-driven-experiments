@@ -14,6 +14,13 @@ class Contract(Boundaries):
  def test_valid_proposal_receives_without_permission(self):
   a=self.add(1)['id'];v=self.proposal([a]);parse_relations(v)
   c=self.m.associate(v,[a],[],1,fingerprint(v))[0];self.assertIs(c['verified'],False)
+ def test_mistyped_cluster_is_rejected_without_mutating_state(self):
+  a=self.add(1)['id'];c=self.update([a])
+  before=self.m.clusters.records()
+  v=self.proposal([a]);v['clusters'][0]['cluster_id']=c['cluster_id'][:-1]
+  with self.assertRaisesRegex(ValueError,'MODEL_CLUSTER_ID_NOT_IN_FROZEN_ALLOWLIST'):
+   self.m.associate(v,[a],[c['cluster_id']],1,fingerprint(v))
+  self.assertEqual(self.m.clusters.records(),before)
  def test_permission_fields_everywhere_rejected(self):
   a=self.add(1)['id']
   for key in PERMISSIONS:

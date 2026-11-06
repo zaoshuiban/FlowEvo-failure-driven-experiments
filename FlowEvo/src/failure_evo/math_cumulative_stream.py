@@ -1,6 +1,6 @@
 """Opt-in cumulative stream: old StreamRuntime and historical runs remain untouched."""
 import fcntl,time
-from .math_stream import StreamRuntime,ARMS,save
+from .math_stream import StreamRuntime,ARMS,LEARNING_DIAGNOSTIC,save
 from .math_cumulative_learning import CumulativeLearner
 from .contracts import fingerprint
 from .run_health import RunUnhealthy
@@ -28,6 +28,11 @@ class CumulativeStream(StreamRuntime):
         plan=args[1] if len(args)>1 else kwargs['plan'];tasks=args[2] if len(args)>2 else kwargs['tasks']
         validate_config(plan['cumulative'],tasks)
         if 'learner_factory' in kwargs:raise TypeError('use learning_sender_factory/release_factory')
+        if plan.get('experiment_mode')==LEARNING_DIAGNOSTIC and (
+            release_factory is not None or any(plan.get(key) for key in (
+                'gate_pool_binding','gate_mode','operator_contract_shadow','stop_for_gate_review','continuation_binding'))
+        ):
+            raise PermissionError('DIAGNOSTIC forbids Gate, publication and intervention')
         if plan.get('continuation_binding'):
             from .math_continuation import inherited_budget_factory
             if 'budget_factory' in kwargs:raise TypeError('continuation owns inherited budget factory')
@@ -96,11 +101,9 @@ class CumulativeStream(StreamRuntime):
         for arm in ('T','F'):
             release=self.arms[arm]['learner'].release
             if not hasattr(release,'journal'):continue
-            done={r['payload']['sha'] for r in release.journal.records() if r['kind']=='RELEASE_COMPLETED'}
-            for r in release.journal.records():
-                if r['kind']=='RELEASE_PENDING' and r['payload']['sha'] not in done:
-                    path=release.packages.review_path(r['payload']['artifact'])
-                    if not path.exists():pending.append(str(path))
+            for record in release.pending_records():
+                path=release.packages.review_path(record['artifact'])
+                if not path.exists():pending.append(str(path))
         if not pending:return False
         from .math_stream import read
         p=self.path/'progress.json';prior=read(p) if p.exists() else {}

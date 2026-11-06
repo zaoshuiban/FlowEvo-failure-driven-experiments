@@ -43,6 +43,7 @@ def run_case(name,mode='workflow',gate=False,role='ANSWER',cause='SUSPECTED'):
     def release(s,a):
         def provider(art,cutoff):
             packet=reviewed(art,2)
+            if 'operator_contract' in art:packet['candidate_version']=art['candidate_version']
             sources=[]
             for tid in art['excluded_task_ids']:
                 task=next(t for t in s.tasks if t.task_id==tid);n=int(tid.split('-')[-1])

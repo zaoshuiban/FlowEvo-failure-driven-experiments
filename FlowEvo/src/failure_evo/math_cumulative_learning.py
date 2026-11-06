@@ -41,6 +41,46 @@ class AssociationAdapter(StreamCompilerAdapter):
         wire=dict(model=self.model,messages=[dict(role='system',content=system),dict(role='user',content=canonical(bundle))],max_tokens=r['max_tokens'],temperature=0,thinking={'type':'disabled'},reasoning_effort='none',response_format={'type':'json_object'},stream=False)
         if len(canonical(wire).encode())+256>self.max_wire_input_upper:raise ValueError('EVIDENCE_REPRESENTATION_LIMIT')
         return wire
+# A concrete JSON serialization example, not a valid candidate contract.
+DELIVERY_EXAMPLE=json.dumps(dict(
+    description=canonical(dict(example='semantic contract fields go here')),
+    applicability=canonical(dict(example='Operator Contract fields go here')),
+    code="def example():\n    return 'text'\n"))
+
+
+def settled_malformed_json(response):
+    """Only a received, metered, stopped response with invalid outer JSON may be replaced."""
+    from .run_health import trusted_usage
+
+    if (response.get('transport_status')!='RESPONSE_RECEIVED'
+            or response.get('parse_status')!='COMPILE_OUTPUT_CONTRACT_ERROR'
+            or response.get('finish_reason')!='stop'):
+        return False
+    raw=response.get('raw_response')
+    if not isinstance(raw,dict) or fingerprint(raw)!=response.get('response_sha256') or not trusted_usage(raw):
+        return False
+    choices=raw.get('choices',[])
+    if len(choices)!=1 or choices[0].get('finish_reason')!='stop':
+        return False
+    content=choices[0].get('message',{}).get('content')
+    if not isinstance(content,str) or not content.strip():
+        return False
+    try:
+        json.loads(content)
+    except json.JSONDecodeError:
+        return True
+    return False
+
+
+def request_candidate_delivery(request, job):
+    response=request('candidate',0)
+    if not settled_malformed_json(response):
+        return response,False
+    job['delivery_repair']=dict(reason='MALFORMED_OUTER_JSON',
+                                parent_response_sha256=response['response_sha256'])
+    return request('candidate',1),True
+
+
 class BundleCompilerAdapter(StreamCompilerAdapter):
     protocol=VERSION;hypothesis_parser=staticmethod(validate_decision)
     def preflight(self,r):
@@ -67,7 +107,16 @@ class BundleCompilerAdapter(StreamCompilerAdapter):
                     'applicability must be a JSON-encoded Operator Contract object with exactly artifact_kind, input_schema, preconditions, output_schema, algorithm, complexity_bound, failure_modes, source_evidence. '
                     'artifact_kind is INSTANCE_SOLVER or REUSABLE_CANDIDATE, not a validation claim. input_schema, output_schema, complexity_bound are nonempty objects; preconditions, failure_modes, source_evidence are nonempty string lists. algorithm is a nonempty string. '
                     'source_evidence must equal the supplied evidence IDs. Never output validation_status, verified, gate_passed, execution_authorized. '
-                    'Return exactly nonempty strings code, description, applicability. Do not assert validation or permissions.')
+                    'Return exactly one JSON object with three nonempty string values: description, applicability, code. '
+                    'Put the two metadata values before code. Escape quotes, backslashes and line breaks as JSON. '
+                    'Keep code concise. The code string contains only Python defining the required functions. '
+                    'Do not define description or applicability inside Python, add a result envelope, or return a dictionary containing the source. '
+                    'Close the code string and the outer object. No Markdown. Do not assert validation or permissions. '
+                    'Serialization example only; use the actual contract fields and implement your own computation: '+DELIVERY_EXAMPLE)
+            if r.get('delivery_repair'):
+                if r['phase']!='candidate' or r['slot']!=1:
+                    raise PermissionError('delivery repair uses one distinct candidate slot')
+                system+=' The previous outer JSON was invalid. Deliver a fresh complete candidate from the same frozen specification. '
             if r['phase']=='revision':
                 data.update(previous_source=r['code'],engineering_diagnostics=r['engineering_diagnostics'])
                 system+=' Repair the stated engineering problems; disclose any computational logic changes. No reference answers are provided.'
@@ -270,24 +319,46 @@ class CumulativeLearner(WindowLearner):
             save(path/'result.json',dict(cutoff=cutoff,arm=self.arm,**result));return read(path/'result.json')
         b,provider,compiler=self._provider(path,BundleCompilerAdapter,3)
         job=dict(stream_id=b.config['run_id'],family_id=j['job_id'],arm=self.arm,public_evidence=packet,prior_hypotheses=[],learning_evidence_bundle=bundle)
-        def request(phase):
-            rows=compiler.events.records();requests=[r['payload'] for r in rows if r['kind']=='GENERATION_REQUESTED' and r['payload']['phase']==phase]
+        def request(phase,slot=0):
+            rows=compiler.events.records()
+            requests=[r['payload'] for r in rows if r['kind']=='GENERATION_REQUESTED'
+                      and r['payload']['phase']==phase and r['payload']['slot']==slot]
             if requests:
-                responses=[r['payload']['response'] for r in rows if r['kind']=='GENERATION_RESPONSE' and r['payload']['request_sha256']==fingerprint(requests[0])]
-                complete=[r for r in rows if r['kind']=='GENERATION_COMPLETED' and r['payload']['phase']==phase]
+                request_hash=fingerprint(requests[0])
+                responses=[r['payload']['response'] for r in rows if r['kind']=='GENERATION_RESPONSE'
+                           and r['payload']['request_sha256']==request_hash]
+                complete=[r for r in rows if r['kind']=='GENERATION_COMPLETED'
+                          and r['payload']['request_sha256']==request_hash]
                 if responses and complete:return responses[-1]
-                if not (len(requests)==1 and provider.can_resume_pre_send(requests[0])):raise RunUnhealthy('incomplete generation; no resend')
-            return compiler.request(job,phase,0,time.time(),output_upper=self.cfg['output_upper'])
+                if phase=='candidate' and len(responses)==1 and settled_malformed_json(responses[0]):
+                    s.health()
+                    return responses[0]
+                if not (len(requests)==1 and provider.can_resume_pre_send(requests[0])):
+                    raise RunUnhealthy('incomplete generation; no resend')
+            try:
+                return compiler.request(job,phase,slot,time.time(),output_upper=self.cfg['output_upper'])
+            except ValueError as exc:
+                if phase!='candidate' or str(exc)!='COMPILE_OUTPUT_CONTRACT_ERROR':
+                    raise
+                receipts=compiler.events.records()
+                latest=receipts[-1]
+                if latest['kind']!='GENERATION_RESPONSE' or not settled_malformed_json(latest['payload']['response']):
+                    raise
+                s.health()
+                return latest['payload']['response']
         try:
             r=request('induction');hyp=bind_evidence(validate_decision(json.loads(r['specification'])),ids)
             s.emit_once(a['registry'].events,'STREAM_HYPOTHESIS',j['job_id'],dict(hypothesis=hyp,task_ids=refs['task_ids'],cutoff=cutoff))
             save(path/'hypothesis.json',hyp)
             if not generatable(hyp):return finish(dict(status=hyp['algorithm_candidate']['decision'],mechanism_assessment=hyp['mechanism_assessment'],learning_calls=b.snapshot()['calls']))
-            job['specification']=r['specification'];response=request('candidate');rejection=receive_source(response,'MOCK' if s.engineering else 'DEEPSEEK')
-            if rejection:return finish(dict(status='DELIVERY_REJECTED',reason=rejection,learning_calls=b.snapshot()['calls']))
+            job['specification']=r['specification']
+            response,replaced=request_candidate_delivery(request,job)
+            rejection=receive_source(response,'MOCK' if s.engineering else 'DEEPSEEK')
+            if rejection:return finish(dict(status='DELIVERY_REJECTED',reason=rejection,
+                delivery_replacement=replaced,learning_calls=b.snapshot()['calls']))
             save(path/'original_response.json',response);(path/'original.py').write_text(response['code'])
             diag,contract=diagnosis(response);save(path/'engineering_diagnosis.json',diag)
-            if not diag['passed']:
+            if not diag['passed'] and not replaced:
                 job.update(code=response['code'],engineering_diagnostics=diag)
                 revised=request('revision');rejection=receive_source(revised,'MOCK' if s.engineering else 'DEEPSEEK')
                 save(path/'revision_response.json',revised)
@@ -308,7 +379,8 @@ class CumulativeLearner(WindowLearner):
             art['candidate_created_after']=cutoff
             art['learning_provenance']=dict(candidate_generation_job_id=j['job_id'],cluster_id=j['cluster_id'],cluster_version=j['hypothesis_version'],
                 source_evidence_ids=ids,association_attempt_ids=[r['payload']['id'] for r in self.memory.attempts.records() if r['payload']['cutoff']<=cutoff and set(r['payload']['evidence_ids']) & set(ids)],
-                mechanism_assessment=hyp['mechanism_assessment'],algorithm_candidate=hyp['algorithm_candidate'],hypothesis_sha256=fingerprint(hyp))
+                mechanism_assessment=hyp['mechanism_assessment'],algorithm_candidate=hyp['algorithm_candidate'],hypothesis_sha256=fingerprint(hyp),
+                delivery_repair=job.get('delivery_repair'))
             save(path/'artifact.json',art)
             if not any(rr['kind']=='MATH_SHADOW' and rr['payload']==art for rr in a['registry'].events.records()):a['registry'].shadow(art)
             from .math_contract_runtime import validate_safety

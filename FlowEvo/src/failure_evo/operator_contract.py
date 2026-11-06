@@ -60,6 +60,15 @@ def binding(artifact):
         source_original_ids=artifact.get('source_original_ids',[])))
 
 
+def candidate_identity(artifact):
+    """Versioned contracts never inherit code-only historical cache entries."""
+    if 'operator_contract' not in artifact:return artifact['code_sha256']
+    identity=binding(artifact)
+    if artifact.get('candidate_version',identity)!=identity:
+        raise PermissionError('declared candidate version does not match full binding')
+    return identity
+
+
 def attach_contract(artifact, value, *, evidence_ids, protocol, original_ids):
     contract=receive_contract(value)
     if set(contract['source_evidence'])!=set(evidence_ids):

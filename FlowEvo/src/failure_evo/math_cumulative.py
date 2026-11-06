@@ -120,7 +120,10 @@ class CumulativeMemory:
             if not isinstance(c['links'],list) or not c['links']:raise ValueError('invalid mechanism')
             cid=c['cluster_id']
             if cid=='NEW':cid=fingerprint([VERSION,response_sha,len(prepared)])
-            elif cid not in allowed_clusters or cid not in states:raise PermissionError('cluster not supplied to model')
+            elif cid not in allowed_clusters:
+                raise ValueError('MODEL_CLUSTER_ID_NOT_IN_FROZEN_ALLOWLIST')
+            elif cid not in states:
+                raise PermissionError('supplied cluster missing from host state')
             links=copy.deepcopy(states.get(cid,{}).get('links',{}));ids=[]
             cardinality(c['links'])
             for index,link in enumerate(c['links']):

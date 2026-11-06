@@ -17,6 +17,8 @@ from code_math.no_gold import PublicMathTask,NoGoldPolicy,NoGoldMathController
 from code_math.private_math_scoring import PrivateMathScorer
 VERSION='math-continuous-stream-v1'
 ARMS=('G','T','F','R')
+LEARNING_DIAGNOSTIC='LEARNING_DIAGNOSTIC'
+INDEPENDENT_GENERALIZATION='INDEPENDENT_GENERALIZATION'
 
 def save(path,value):
     path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
@@ -116,7 +118,7 @@ class StreamRuntime:
             tool=make_budget(d/'tool_budget.jsonl',('engineering:' if engineering else '')+self.path.name+':'+arm+':tools',self.ph,calls=0,tools=plan['max_tools_per_arm'])
             client=DurableSolver(d,b,engineering=engineering,sender=sender_factory(arm) if sender_factory else None,health=self.health,network_policy=plan.get('network_policy'))
             split=SplitRunner(backend,d/'worker.jsonl',tool);probe=PublicProblemProbe(split,engineering=engineering)
-            router=UnifiedMathRouter(reg,probe,engineering=engineering) if arm in ('T','F') else None
+            router=UnifiedMathRouter(reg,probe,engineering=engineering) if arm in ('T','F') and plan.get('experiment_mode')!=LEARNING_DIAGNOSTIC else None
             if router:
                 existing=router.quality.feedback_role(self.tasks[0].task_id)
                 if existing is None:router.quality.freeze_feedback_roles({t.task_id:'ONLINE_POST_TASK' for t in self.tasks})
@@ -167,7 +169,7 @@ class StreamRuntime:
         done=[r['payload']['lock'] for r in a['states'].records() if r['kind']=='ANSWER_LOCKED' and r['payload']['id']==eid]
         if done:return done[0]
         self.emit_once(a['states'],'TASK_STARTED',eid,dict(task_id=task.task_id,sequence=seq))
-        policy=NoGoldPolicy(delivery_profile='concise-v1',operators_enabled=arm in ('T','F'))
+        policy=NoGoldPolicy(delivery_profile='concise-v1',operators_enabled=arm in ('T','F') and self.plan.get('experiment_mode')!=LEARNING_DIAGNOSTIC)
         ctl=NoGoldMathController(a['client'],a['controller'].path,policy=policy,library=a['router'])
         lock=ctl.solve(task,episode_id=eid+'/base',sequence=seq,resume=True)
         allowance=0
