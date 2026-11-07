@@ -134,7 +134,7 @@ def validate_computation_stage(registry, artifact, runner, cases, *, stage,
     import time
     if type(runner) is not SplitRunner:
         raise PermissionError('existing real SplitRunner required')
-    if stage not in ('SOURCE','INDEPENDENT_GATE'):
+    if stage not in ('SOURCE','DEV','INDEPENDENT_GATE'):
         raise ValueError('computation validator stage')
     if artifact.get('origin')=='MOCK' and not engineering:
         raise PermissionError('Mock cannot certify real candidate')
@@ -166,6 +166,8 @@ def validate_computation_stage(registry, artifact, runner, cases, *, stage,
             passed=development_passed(rows),engineering=engineering,rows=rows,
             source_original_ids=list(source_original_ids),independent=independent)
         registry.events.append('OPERATOR_VALIDATOR_EXECUTED',receipt,time.time())
+    if stage=='DEV':
+        return receipt
     result=record_stage(registry,artifact,stage=stage,passed=receipt['passed'],data_hash=data_hash,
         worker_hash=receipt['worker_hash'],source_original_ids=source_original_ids,independent=independent,receipt=receipt)
     return dict(result,rows=receipt['rows'])

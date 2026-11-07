@@ -125,7 +125,8 @@ class BundleCompilerAdapter(StreamCompilerAdapter):
         return wire
 
 class CumulativeLearner(WindowLearner):
-    def __init__(self,stream,arm,*,sender=None,release=None):
+    def __init__(self,stream,arm,*,sender=None,release=None,budget_factory=None):
+        self.budget_factory=budget_factory
         super().__init__(stream,arm,sender=sender,release=release)
         self.cfg=stream.plan['cumulative'];self.root=stream.arms[arm]['path']/'cumulative'
         self.memory=CumulativeMemory(self.root,arm,paired=self.cfg['comparison']=='paired_information')
@@ -151,7 +152,8 @@ class CumulativeLearner(WindowLearner):
             if not self.cfg.get('paid_api_authorized',False) and not (auth.get('paid_api_authorized') is True and auth.get('run_id')==self.stream.path.name and auth.get('protocol_sha256')==self.stream.ph):raise PermissionError('cumulative learning paid authorization absent')
     def _provider(self,path,cls,calls):
         self._authorize();s=self.stream
-        b=budget(path/'generation_budget.jsonl',('engineering:' if s.engineering else '')+s.path.name+':'+self.arm+':cumulative:'+path.name,s.ph,calls=calls)
+        b=(self.budget_factory(path/'generation_budget.jsonl',calls) if self.budget_factory
+           else budget(path/'generation_budget.jsonl',('engineering:' if s.engineering else '')+s.path.name+':'+self.arm+':cumulative:'+path.name,s.ph,calls=calls))
         auth=dict(run_id=b.config['run_id'],protocol_hash=s.ph,model='deepseek-flash',protocol=VERSION,max_cost_microusd=b.config['max_cost_microusd'],paid_api_authorized=True)
         provider=cls(path/'provider.jsonl',b,model='deepseek-flash',authorization=auth,mock=s.engineering,sender=self.sender,max_wire_input_upper=self.cfg['wire_upper'],network_policy=s.plan.get('network_policy'))
         return b,provider,BoundedCompiler(provider,b,path/'compiler.jsonl','deepseek-flash',max_input_upper=self.cfg['wire_upper'],max_output_upper=self.cfg['output_upper'])
@@ -270,6 +272,9 @@ class CumulativeLearner(WindowLearner):
             if not any(r['kind']=='PRIVATE_SCORED' and r['payload']['sequence']==cutoff for r in a['states'].records()):raise PermissionError('learning before all-arm lock/score barrier')
         # No work at terminal task: there are no future tasks to benefit.
         if cutoff==len(s.tasks):return
+        self.learn_visible_prefix(cutoff)
+
+    def learn_visible_prefix(self,cutoff):
         if hasattr(self.release,'poll'):self.release.poll(cutoff)
         self.discover(cutoff)
         # Complete durable prior outcomes before scheduling any new job.
