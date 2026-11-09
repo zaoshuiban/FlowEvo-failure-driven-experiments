@@ -384,7 +384,7 @@ class AlfWorldExecutor:
             trace.llm_total_tokens_total += (
                 step_out.prompt_tokens + step_out.completion_tokens
             )
-            trace.llm_call_count += 1
+            trace.llm_call_count += step_out.model_calls
 
             result = self.env.step(step_out.action)
 

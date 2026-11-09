@@ -12,7 +12,8 @@ from .generations import GenerationManagement, serialized
 
 HOOKS = ('before_native_retry', 'before_final_return')
 TASK_START_HOOK = 'before_native_start'
-SUPPORTED_HOOKS = HOOKS + (TASK_START_HOOK,)
+ENVIRONMENT_HOOK = 'before_environment_step'
+SUPPORTED_HOOKS = HOOKS + (TASK_START_HOOK, ENVIRONMENT_HOOK)
 
 
 @dataclass(frozen=True)
@@ -49,9 +50,14 @@ class FailureOperator:
             raise ValueError('unsupported hook')
         if TASK_START_HOOK in self.hooks and (self.operator_kind!='task_solver' or self.allowed_actions!=('candidate_code',)):
             raise ValueError('task start requires deterministic task_solver candidate program')
-        if not set(self.allowed_actions) <= {'candidate_code', 'select_candidate'} or not self.allowed_actions:
+        if ENVIRONMENT_HOOK in self.hooks or self.operator_kind=='environment_policy':
+            if (self.operator_kind!='environment_policy' or self.hooks!=(ENVIRONMENT_HOOK,)
+                    or self.allowed_actions!=('environment_action',) or self.stages!=('environment',)):
+                raise ValueError('environment policy must use its isolated action contract')
+        allowed = {'environment_action'} if self.operator_kind=='environment_policy' else {'candidate_code','select_candidate'}
+        if not set(self.allowed_actions) <= allowed or not self.allowed_actions:
             raise ValueError('unsupported action capability')
-        if self.operator_kind not in ('workflow_recovery','code_repair','task_solver','prompt_policy') or self.source_mode not in ('historical_development','chronological_simulation','live_online'):
+        if self.operator_kind not in ('workflow_recovery','code_repair','task_solver','prompt_policy','environment_policy') or self.source_mode not in ('historical_development','chronological_simulation','live_online'):
             raise ValueError('unknown operator kind or source mode')
         if self.max_model_calls != 0:
             raise ValueError('S1.1 operators have no direct model capability')

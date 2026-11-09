@@ -20,6 +20,7 @@ class AlfWorldStepOutput:
     action: str
     prompt_tokens: int = 0
     completion_tokens: int = 0
+    model_calls: int = 1
 
 
 # ---------------------------------------------------------------------------
@@ -63,8 +64,9 @@ class AlfWorldGenerator:
     current admissible commands list.
     """
 
-    def __init__(self, llm_client: Any) -> None:
+    def __init__(self, llm_client: Any, settings: GenerationSettings | None = None) -> None:
         self._llm = llm_client
+        self.settings = settings or _STEP_SETTINGS
 
     def step(
         self,
@@ -93,7 +95,7 @@ class AlfWorldGenerator:
         resp = self._llm.generate(
             instructions=system,
             input_text=user,
-            settings=_STEP_SETTINGS,
+            settings=self.settings,
         )
         action = _parse_single_action(resp.text, admissible_commands)
         return AlfWorldStepOutput(

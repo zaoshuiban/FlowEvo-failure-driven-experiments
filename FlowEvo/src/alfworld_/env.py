@@ -116,13 +116,20 @@ class AlfWorldEnv:
     # Lifecycle
     # ------------------------------------------------------------------
 
-    def initialize(self) -> int:
+    def initialize(self, *, frozen_game_files: list[str] | None = None) -> int:
         """Boot the TextWorld environment.  Returns the number of tasks."""
         import alfworld.agents.environment as alf_env
 
         config = self._build_config()
         EnvClass = alf_env.get_environment("AlfredTWEnv")
         tw_env = EnvClass(config, train_eval=self.split)
+        if frozen_game_files is not None:
+            available = set(tw_env.game_files)
+            if (not frozen_game_files or len(set(frozen_game_files)) != len(frozen_game_files)
+                    or not set(frozen_game_files) <= available):
+                raise ValueError("Frozen game list is not an official eligible subset")
+            tw_env.game_files = list(frozen_game_files)
+            tw_env.num_games = len(frozen_game_files)
         self._env = tw_env.init_env(batch_size=1)
         self._initialized = True
 
@@ -179,6 +186,12 @@ class AlfWorldEnv:
             self._env.reset()
         self._task_index = target_index
         return self.reset()
+
+    def close(self) -> None:
+        if self._env is not None:
+            self._env.close()
+            self._env = None
+        self._initialized = False
 
     def step(self, action: str) -> AlfWorldStepResult:
         """Execute one action in the current task."""
