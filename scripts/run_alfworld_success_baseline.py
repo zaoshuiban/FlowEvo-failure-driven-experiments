@@ -14,7 +14,7 @@ from failure_evo.math_stream import read, save, sha
 from failure_evo.network_transport import DEFAULT_POLICY
 from run_alfworld_audited_baseline import ROOT, TYPES, budget
 
-VERSION = 'alfworld-audited-full-library-v2'
+VERSION = 'alfworld-audited-full-library-v3-online'
 KIND = 'pick_two_obj_and_place'
 PACKAGES = ('alfworld', 'textworld', 'numpy', 'PyYAML')
 SETTINGS = dict(condition='full_library', model='deepseek-flash', thinking='disabled',
@@ -72,22 +72,12 @@ def sample(rows, *, online, evaluation, seed, purpose):
             raise ValueError('no three-scene calibration partition fits the declared counts')
         a,b,c = min(partitions,key=lambda group:sum(len(by_scene[x]) for x in group))
         return rng.sample(by_scene[a],online)+rng.sample(by_scene[b]+by_scene[c],evaluation), scenes, [b,c]
-    heldout, count = [], 0
-    for scene in scenes:
-        if count >= evaluation and len(heldout) >= 8:
-            break
-        heldout.append(scene)
-        count += len(by_scene[scene])
-    early = [r for scene in scenes if scene not in heldout for r in by_scene[scene]]
-    late = [r for scene in heldout for r in by_scene[scene]]
-    if len(heldout) < 8 or len(heldout) > evaluation or len(early) < online or len(late) < evaluation:
-        raise ValueError(f"scene split capacity insufficient: online={len(early)}, evaluation={len(late)}")
-    # Guarantee scene coverage without stratifying or ranking by task type.
-    covered = [rng.choice(by_scene[scene]) for scene in heldout]
-    picked = {r['game'] for r in covered}
-    covered += rng.sample([r for r in late if r['game'] not in picked], evaluation-len(covered))
-    rng.shuffle(covered)
-    return rng.sample(early, online)+covered, scenes, heldout
+    if evaluation or len(rows) < online:
+        raise ValueError('formal online sampling requires a single sufficient pool')
+    tasks = rng.sample(sorted(rows, key=lambda r:r['game']), online)
+    if {r['task_type'] for r in tasks} != set(TYPES):
+        raise ValueError('frozen draw lacks a task type; no outcome-based redraw')
+    return tasks, scenes, []
 
 
 def freeze(root, data, history, *, purpose, seed, max_cost_usd):
@@ -96,7 +86,7 @@ def freeze(root, data, history, *, purpose, seed, max_cost_usd):
         raise FileExistsError('new baseline Run required')
     data = data.resolve()
     history = history.resolve()
-    online, evaluation = (90, 30) if purpose == 'formal' else (12, 4)
+    online, evaluation = (120, 0) if purpose == 'formal' else (12, 4)
     old, manifests = exposure(history, data)
     if purpose == 'formal' and not any(read(Path(p['path'])).get('purpose') == 'calibration' for p in manifests):
         raise PermissionError('freeze a separate calibration plan first')
@@ -125,7 +115,8 @@ def freeze(root, data, history, *, purpose, seed, max_cost_usd):
         raise ValueError('positive cap with at most six decimal places required')
     sources = [Path(__file__), ROOT/'scripts/run_alfworld_audited_baseline.py',
                *[p for d in ('alfworld_', 'failure_evo', 'runtime') for p in (ROOT/'FlowEvo/src'/d).glob('*.py')]]
-    selection = dict(method='scene-reservation-then-game-sample-v3', seed=seed, task_types=list(kinds),
+    selection = dict(method=('single-eligible-pool-seeded-uniform-v1' if purpose == 'formal'
+                             else 'scene-reservation-then-game-sample-v3'), seed=seed, task_types=list(kinds),
                      inventory=inventory, exclusions=exclusions, eligible=[r['game'] for r in eligible],
                      shuffled_scenes=scenes, heldout_scenes=heldout, exposure_manifests=manifests)
     cfg = dict(SETTINGS, protocol=VERSION, purpose=purpose, run_id=root.name, online=online,
@@ -143,7 +134,7 @@ def freeze(root, data, history, *, purpose, seed, max_cost_usd):
 def load(root):
     cfg = read(root/'protocol.json')
     selection = read(root/'selection.json')
-    count = (90,120) if cfg['purpose']=='formal' else (12,16)
+    count = (120,120) if cfg['purpose']=='formal' else (12,16)
     tasks = cfg['tasks']
     if (cfg['protocol'] != VERSION or cfg['run_id'] != root.name
             or cfg['purpose'] not in ('calibration','formal')

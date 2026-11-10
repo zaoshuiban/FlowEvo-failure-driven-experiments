@@ -148,9 +148,12 @@ def update_library(library, trace, selected, holdout, compiler, sequence):
         if result.exemplar is not None:
             library.add_exemplar(result.exemplar)
             produced['L2'] = dict(id=result.exemplar.exemplar_id, admitted=True)
+    had_insight = library.retrieve(trace.task_type)['insight'] is not None
+    # A suppressed insight can still exist, so check storage when masked.
+    had_insight = had_insight or trace.task_type in library.to_dict()['insights']
     library.record_trace_stats(trace)
     if trace.task_type in library.to_dict()['insights']:
-        produced['L3'] = dict(refreshed=True)
+        produced['L3'] = dict(created=not had_insight, refreshed=had_insight)
     audit = library.periodic_audit() if sequence % AUDIT_INTERVAL == 0 else {}
     return produced, audit
 
@@ -212,11 +215,15 @@ def run_stream(root, cfg, budget, *, sender=None, env_factory=StrictTrainEnv, fa
     committed = [r['payload'] for r in rows if r['kind'] == 'EPISODE_COMMITTED']
     if [e['task_id'] for e in committed] != [r['task_id'] for r in cfg['tasks'][:len(committed)]]:
         raise RunUnhealthy('committed episode order differs')
+    all_online = cfg['online'] == len(cfg['tasks'])
+    if all_online:
+        for entry in committed:
+            publish_online_checkpoint(root, cfg, entry)
     library = SkillLibrary.from_dict(committed[-1]['library']) if committed else SkillLibrary()
     rng = _rng(committed[-1]['rng'] if committed else None)
     freezes = [r['payload'] for r in rows if r['kind'] == 'BANK_FROZEN']
     frozen = freezes[0] if freezes else None
-    if len(freezes) > 1 or (frozen and frozen['library_sha256'] != fingerprint(library.to_dict())):
+    if len(freezes) > 1 or (frozen and (all_online or frozen['library_sha256'] != fingerprint(library.to_dict()))):
         raise RunUnhealthy('frozen bank drift')
     if frozen:
         if frozen.get('evaluation_holdout') is not False:
@@ -274,12 +281,15 @@ def run_stream(root, cfg, budget, *, sender=None, env_factory=StrictTrainEnv, fa
                 fault('before_commit', seq)
             payload = dict(identity, phase='online' if online else 'evaluation', outcome=outcome,
                            produced=produced, audit=audit, library=state,
+                           compile_calls=sum(r['kind'] == 'ACTION_RESPONSE' for r in compilation.events.records()),
                            library_sha256=fingerprint(state), rng=rng.getstate(),
                            elapsed_seconds=time.time()-started,
                            snapshot=working.snapshot())
             journal.append('EPISODE_COMMITTED', payload, time.time())
             library = working
             committed.append(payload)
+            if all_online:
+                publish_online_checkpoint(root, cfg, payload)
         except Exception as exc:
             save(root/'STOP.json', dict(identity, status='INCOMPLETE', error_class=type(exc).__name__,
                                         reason=str(exc)[:240]))
@@ -295,6 +305,25 @@ def run_stream(root, cfg, budget, *, sender=None, env_factory=StrictTrainEnv, fa
     return summary
 
 
+def publish_online_checkpoint(root, cfg, entry):
+    """Materialize the committed bank; never change learning or consume RNG."""
+    seq = entry['seq']
+    final = seq == len(cfg['tasks'])
+    if seq % 20 and not final:
+        return
+    receipt = {k:entry[k] for k in ('seq','protocol_sha256','library','library_sha256','rng','snapshot')}
+    receipt['committed_payload_sha256'] = fingerprint(entry)
+    paths = [root/'checkpoints'/f'{seq:03d}.json']
+    if final:
+        paths.append(root/'final_bank.json')
+    for path in paths:
+        if path.exists():
+            if fingerprint(read(path)) != fingerprint(receipt):
+                raise RunUnhealthy('materialized bank differs from committed checkpoint')
+        else:
+            save(path, receipt)
+
+
 def started_at(path, identity):
     marker = path/'started.json'
     if not marker.exists():
@@ -308,10 +337,15 @@ def started_at(path, identity):
 def summarize_run(root, cfg, committed, budget):
     phases = {}
     results = []
+    cumulative = 0
     for entry in committed:
         t = entry['outcome']['trace']
-        results.append(dict(task_id=entry['task_id'], phase=entry['phase'], status=entry['outcome']['status'],
+        cumulative += t['success']
+        results.append(dict(task_id=entry['task_id'], sequence=entry['seq'], task_type=t['task_type'],
+                            cumulative_success_rate=cumulative/entry['seq'],
+                            phase=entry['phase'], status=entry['outcome']['status'],
                             success=t['success'], steps=t['total_steps'], action_tokens=t['llm_total_tokens_total'],
+                            action_calls=t['llm_call_count'], compile_calls=entry.get('compile_calls',0),
                             route=t['planning_mode'], holdout=entry['holdout'], use=entry['outcome']['use'],
                             retrieved=entry['outcome']['retrieved'], selected=entry['outcome']['selected'],
                             produced=entry['produced'], audit=entry['audit'],
@@ -320,14 +354,11 @@ def summarize_run(root, cfg, committed, budget):
                             elapsed_seconds=entry['elapsed_seconds']))
     for phase in ('online', 'evaluation', 'total'):
         selected = [r for r in results if phase == 'total' or r['phase'] == phase]
-        count = len(selected)
-        phases[phase] = dict(completed=count, successes=sum(r['success'] for r in selected),
-                             mean_steps=sum(r['steps'] for r in selected)/count if count else None,
-                             mean_action_tokens=sum(r['action_tokens'] for r in selected)/count if count else None,
-                             outcomes=dict(Counter(r['status'] for r in selected)),
-                             success_rate=sum(r['success'] for r in selected)/count if count else None,
-                             modes=dict(Counter(r['route'] for r in selected)),
-                             uses={k:sum(r['use'][k] for r in selected) for k in ('L1_actions','L2_requests','L3_requests','fallback')})
+        phases[phase] = outcome_counts(selected)
+    windows = [dict(start=i+1, end=min(i+20,len(results)), **outcome_counts(results[i:i+20]))
+               for i in range(0,len(results),20)]
+    by_type = {kind:outcome_counts([r for r in results if r['task_type']==kind])
+               for kind in sorted({r['task_type'] for r in results})}
     usage = {}
     for channel in ('action', 'compile'):
         totals = Counter()
@@ -363,4 +394,21 @@ def summarize_run(root, cfg, committed, budget):
                 actual_invoice_usd=None,
                 expected_episodes=len(cfg['tasks']), not_committed=len(cfg['tasks'])-len(results),
                 protocol_sha256=fingerprint(cfg), status='COMPLETED' if len(results)==len(cfg['tasks']) else 'PARTIAL',
-                phases=phases, results=results, provider_usage=usage, budget=budget.snapshot())
+                phases=phases, windows=windows, by_type=by_type, results=results, provider_usage=usage, budget=budget.snapshot())
+
+def outcome_counts(rows):
+    count = len(rows)
+    successes = sum(r['success'] for r in rows)
+    return dict(completed=count, successes=successes, success_rate=successes/count if count else None,
+                mean_steps=sum(r['steps'] for r in rows)/count if count else None,
+                mean_model_calls=sum(r['action_calls']+r['compile_calls'] for r in rows)/count if count else None,
+                mean_action_tokens=sum(r['action_tokens'] for r in rows)/count if count else None,
+                outcomes=dict(Counter(r['status'] for r in rows)),
+                modes=dict(Counter(r['route'] for r in rows)),
+                uses={k:sum(r['use'][k] for r in rows) for k in ('L1_actions','L2_requests','L3_requests','fallback')},
+                skill_generation={k:sum(k in r['produced'] for r in rows) for k in ('L1','L2','L3')},
+                skill_admission={k:sum(bool(r['produced'].get(k,{}).get(field)) for r in rows)
+                                 for k,field in (('L1','admitted'),('L2','admitted'),('L3','created'))},
+                retrievals={k:sum(k in r['retrieved'] for r in rows) for k in ('template','exemplar','insight')},
+                successes_with_skill=sum(r['success'] and any(r['use'][k] for k in ('L1_actions','L2_requests','L3_requests')) for r in rows),
+                failures_with_skill=sum(not r['success'] and any(r['use'][k] for k in ('L1_actions','L2_requests','L3_requests')) for r in rows))

@@ -229,6 +229,14 @@ def create_candidate(root,compiler,store,views,*,stream_id,evidence_ids,worker_m
     generated=replay_train_generation(compiler,job,'candidate')
     if generated.get('parse_status'):
         return dict(status='DELIVERY_REJECTED')
+    return register_environment_candidate(root, generated, hypothesis, evidence_ids, known,
+                                          worker_manifest, registry, engineering=engineering)
+
+
+def register_environment_candidate(root, generated, hypothesis, evidence_ids, known,
+                                   worker_manifest, registry, *, engineering=False,
+                                   protocol=VERSION, baseline='alfworld-pure-dynamic'):
+    """Register exact provider source in Shadow using the existing registry."""
     code=generated['code']
     check=static_check(code)
     save(root/'static.json',check)
@@ -241,12 +249,12 @@ def create_candidate(root,compiler,store,views,*,stream_id,evidence_ids,worker_m
     digest=hashlib.sha256(code.encode()).hexdigest()
     prior=[r['payload']['card'] for r in registry.events.records() if r['kind']=='SHADOW_REGISTERED'
            and r['payload']['card']['artifact_sha256']==digest]
-    if prior:
+    if prior and protocol==VERSION:
         return dict(status='DUPLICATE_SOURCE_REJECTED',artifact_sha256=digest,
                     previous_versions=[r['version'] for r in prior])
-    fp=Fingerprint(baseline='alfworld-pure-dynamic',scorer='official-won',
+    fp=Fingerprint(baseline=baseline,scorer='official-won',
                    model='MOCK' if engineering else generated['model'],dependencies=fingerprint(worker_manifest),
-                   protocol=VERSION)
+                   protocol=protocol)
     version=fingerprint([digest,hypothesis,generated['applicability'],evidence_ids,asdict(fp)])
     card=FailureOperator(operator_id=version[:16],version=version,artifact_path=str(path.resolve()),
                          artifact_sha256=digest,evidence_fingerprint=fp,evidence_scope='ALFWORLD_GAME_ID_DISJOINT',
@@ -254,6 +262,9 @@ def create_candidate(root,compiler,store,views,*,stream_id,evidence_ids,worker_m
                          hooks=(ENVIRONMENT_HOOK,),stages=('environment',),allowed_feedback=('ENVIRONMENT_FAILED',),
                          structural_statuses=('ENVIRONMENT_STATE',),allowed_actions=('environment_action',),
                          operator_kind='environment_policy',source_mode='live_online',max_seconds=2)
+    if any(canonical(item)!=canonical(card.to_dict()) for item in prior):
+        return dict(status='DUPLICATE_SOURCE_REJECTED',artifact_sha256=digest,
+                    previous_versions=[r['version'] for r in prior])
     if not registry._rows(card):
         registry.register(card,time.time())
     save(root/'artifact.json',dict(card=card.to_dict(),hypothesis=hypothesis,description=generated['description'],

@@ -79,6 +79,80 @@ class SuccessBaselineTests(TestCase):
         self.assertTrue(trace.success)
         self.assertEqual(trace.direct_success_count,1)
 
+    def test_full_online_stream_recovers_after_90_and_commits_120(self):
+        import random
+        from failure_evo.math_stream import read
+        from alfworld_.run_20task_validation import HOLDOUT_RATE, HOLDOUT_RNG_SEED
+
+        class OnlineEnv(FixtureEnv):
+            def reset(self):
+                self.seq = int(Path(self.path).name)
+                goal = f'put two books on desk [goal-{self.seq:03d}].'
+                return AlfWorldTask('', DUAL, goal, game_file=self.path), 'Room', ['take book 1 from desk 1']
+
+            def step(self, action):
+                assert action == 'take book 1 from desk 1'
+                won = self.seq != 95
+                return AlfWorldStepResult('Fixture end', int(won), True, won, [])
+
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cfg = dict(fixture_config(), online=120, max_calls=6120, max_cost_microusd=85_000_000,
+                       tasks=[dict(task_id=f'task-{i}', task_type=DUAL, game=str(i))
+                              for i in range(1,121)])
+            account = budget(root,cfg,engineering=True)
+            requests = []
+
+            def sender(wire):
+                requests.append(wire)
+                assert 'expert_plan' not in str(wire)
+                if wire['max_tokens'] == 1024:
+                    goal_line = wire['messages'][-1]['content'].splitlines()[0]
+                    seq = int(goal_line.split('[goal-')[1][:3])
+                    assert all(f'[goal-{i:03d}]' not in str(wire) for i in range(seq+1,121))
+                    return response('Act: take book 1 from desk 1')
+                assert wire['max_tokens'] == 500
+                return response('1. Track distinct items before repeating a placement.')
+
+            def stop(phase, seq):
+                if phase == 'before_commit' and seq == 91:
+                    raise InterruptedError('after the 91st compile')
+
+            with self.assertRaises(InterruptedError):
+                run_stream(root,cfg,account,sender=sender,env_factory=OnlineEnv,fault=stop)
+            self.assertEqual(account.calls,182)
+            before = read(root/'checkpoints/080.json')
+            self.assertEqual(before['snapshot']['current_episode'],80)
+            summary = run_stream(root,cfg,account,sender=sender,env_factory=OnlineEnv)
+            rows = EvidenceStore(root/'episodes.jsonl').records()
+            self.assertEqual([r['kind'] for r in rows],['EPISODE_COMMITTED']*120)
+            self.assertEqual(account.calls,len(requests))
+            self.assertEqual(account.calls,239)
+            self.assertEqual(account.snapshot()['charged_or_reserved_tokens'],239*50)
+            self.assertEqual(summary['phases']['online']['completed'],120)
+            self.assertEqual(summary['phases']['evaluation']['completed'],0)
+            self.assertEqual(summary['phases']['total']['successes'],119)
+            rng = random.Random(HOLDOUT_RNG_SEED)
+            holdouts = [False]+[rng.random()<HOLDOUT_RATE for _ in range(119)]
+            self.assertEqual([r['holdout'] for r in summary['results']],holdouts)
+            self.assertEqual(summary['results'][0]['retrieved'],[])
+            self.assertIn('exemplar', summary['results'][1]['retrieved'])
+            self.assertGreater(sum(r['use']['L2_requests'] for r in summary['results'][90:]),0)
+            self.assertEqual(summary['windows'][-1]['skill_generation']['L2'],20)
+            self.assertEqual(summary['results'][-1]['compile_calls'],1)
+            self.assertEqual(len(list((root/'checkpoints').glob('*.json'))),6)
+            final = read(root/'final_bank.json')
+            self.assertEqual(final['seq'],120)
+            self.assertEqual(final['snapshot']['current_episode'],120)
+            self.assertEqual(final['library_sha256'],rows[-1]['payload']['library_sha256'])
+            self.assertFalse(final['library']['trace_stats'][DUAL][94]['success'])
+            self.assertEqual(final['rng'][1],list(rng.getstate()[1]))
+            self.assertFalse((root/'frozen_bank.json').exists())
+            (root/'final_bank.json').unlink()
+            self.assertEqual(run_stream(root,cfg,account,sender=sender,env_factory=OnlineEnv),summary)
+            self.assertEqual(read(root/'final_bank.json'),final)
+            self.assertEqual(len(requests),239)
+
     def test_evaluation_does_not_draw_holdout_or_update_bank(self):
         from unittest.mock import patch
         with TemporaryDirectory() as tmp:
