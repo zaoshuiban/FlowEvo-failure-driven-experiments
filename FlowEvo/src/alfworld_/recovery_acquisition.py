@@ -250,9 +250,10 @@ MERGE_FORMAT = ('\nDelivery contract. Return only JSON, no Markdown. Text length
 class RecoveryAdapter(DeepSeekCompilerAdapter):
     protocol = VERSION
 
-    def __init__(self, *args, stage, payload, parser, protocol=VERSION, generation_requirements='', **kwargs):
+    def __init__(self, *args, stage, payload, parser, protocol=VERSION, generation_requirements='', analysis_prompt=ANALYSIS_PROMPT, **kwargs):
         super().__init__(*args, **kwargs)
         self.stage = stage
+        self.analysis_prompt = analysis_prompt
         self.protocol = protocol
         self.generation_requirements = generation_requirements
         self.payload = canonical(payload)
@@ -265,7 +266,7 @@ class RecoveryAdapter(DeepSeekCompilerAdapter):
                 'payload_sha256':fingerprint(json.loads(self.payload))}
                 or (phase=='candidate' and request.get('specification') != self.payload+'\n')):
             raise PermissionError('recovery stage payload drift')
-        system = {'analyze':ANALYSIS_PROMPT,'merge':MERGE_PROMPT+MERGE_FORMAT,'generate':RECOVERY_SOURCE_CONTRACT+self.generation_requirements}[self.stage]
+        system = {'analyze':self.analysis_prompt,'merge':MERGE_PROMPT+MERGE_FORMAT,'generate':RECOVERY_SOURCE_CONTRACT+self.generation_requirements}[self.stage]
         wire = dict(model=self.model, messages=[dict(role='system',content=system),
                     dict(role='user',content=self.payload)], max_tokens=request['max_tokens'],temperature=0,
                     thinking={'type':'disabled'},reasoning_effort='none',
@@ -276,15 +277,19 @@ class RecoveryAdapter(DeepSeekCompilerAdapter):
 
 
 def stage_request(root, name, stage, payload, parser, budget, *, sender=None, authorization=None, network_policy=None,
-                  protocol=VERSION, generation_requirements=''):
+                  protocol=VERSION, generation_requirements='', analysis_prompt=ANALYSIS_PROMPT):
     """Each stage uses a frozen job with the same durable budget and provider journal."""
     adapter = RecoveryAdapter(root/'provider.jsonl', budget, model=MODEL, mock=sender is not None,
         sender=sender, authorization=authorization, network_policy=network_policy,
         stage=stage, payload=payload, parser=parser, max_wire_input_upper=INPUT_LIMIT,
-        protocol=protocol,generation_requirements=generation_requirements)
+        protocol=protocol,generation_requirements=generation_requirements,analysis_prompt=analysis_prompt)
     compiler = BoundedCompiler(adapter, budget, root/name/'compiler.jsonl', MODEL, max_input_upper=INPUT_LIMIT)
-    job = dict(stream_id=budget.config['run_id'],family_id=fingerprint([protocol,name,payload] if not generation_requirements else
-                                     [protocol,name,payload,generation_requirements]),
+    identity = [protocol,name,payload]
+    if generation_requirements:
+        identity.append(generation_requirements)
+    if analysis_prompt != ANALYSIS_PROMPT:
+        identity.append(analysis_prompt)
+    job = dict(stream_id=budget.config['run_id'],family_id=fingerprint(identity),
                discovery=dict(stage=stage,payload_sha256=fingerprint(payload)))
     if stage=='generate':
         # Import the model's checked merge proposal; no source or validation result is imported.

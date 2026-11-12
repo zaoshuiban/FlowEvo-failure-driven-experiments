@@ -12,7 +12,7 @@ from failure_evo.contracts import Fingerprint, PublicFeedback, canonical, finger
 from failure_evo.evidence import EvidenceStore
 from failure_evo.failure_events import FailureEvidenceStore
 from failure_evo.failure_registry import ENVIRONMENT_HOOK, FailureOperator, FailureOperatorRegistry
-from failure_evo.math_operators import validate_math_source
+from failure_evo.math_operators import SourceDiagnostics, validate_math_source
 from failure_evo.math_skill_transfer import replay_train_generation
 from failure_evo.math_stream import save
 from failure_evo.run_health import RunUnhealthy
@@ -71,21 +71,51 @@ class EnvironmentCompilerAdapter(DeepSeekCompilerAdapter):
 
 
 def static_check(code):
-    if not isinstance(code,str) or len(code.encode())>65536:
-        return dict(passed=False,errors=['SOURCE_BOUND'])
+    return _static_check(code, detailed=False)
+
+
+def static_check_detailed(code):
+    """Report individual violations without changing the legacy admission result."""
+    return _static_check(code, detailed=True)
+
+
+def _static_check(code, *, detailed):
+    review = SourceDiagnostics(code, detailed)
+    checks = dict(source='NOT_CHECKED', parse='NOT_CHECKED', interface='NOT_CHECKED', safety='NOT_CHECKED')
+    if not isinstance(code, str) or len(code.encode())>65536:
+        review.reject('SOURCE_BOUND')
+        return review.result(dict(checks, source='REJECTED'))
+    checks['source'] = 'PASSED'
     try:
-        tree=ast.parse(code)
-    except SyntaxError:
-        return dict(passed=False,errors=['SYNTAX'])
-    entries=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='environment_operator']
+        tree = ast.parse(code)
+    except SyntaxError as error:
+        review.reject('SYNTAX', syntax_error=error)
+        return review.result(dict(checks, parse='REJECTED'))
+    checks['parse'] = 'PASSED'
+    entries = [n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='environment_operator']
     if len(entries)!=1:
-        return dict(passed=False,errors=['ENTRY'])
-    args=entries[0].args
-    if len(args.args)!=1 or args.posonlyargs or args.vararg or args.kwarg or args.kwonlyargs:
-        return dict(passed=False,errors=['SIGNATURE'])
+        for entry in entries or [None]:
+            review.reject('ENTRY', entry, rule_id='ENV_ENTRY')
+    else:
+        args = entries[0].args
+        if len(args.args)!=1 or args.posonlyargs or args.vararg or args.kwarg or args.kwonlyargs:
+            review.reject('SIGNATURE', entries[0], rule_id='ENV_SIGNATURE', identity=args)
+    checks['interface'] = 'REJECTED' if review.errors else 'PASSED'
+    if review.errors and not detailed:
+        return review.result(checks)
     # Permission lint only. The adapter below is never written or executed.
-    check=validate_math_source(code+"\ndef math_operator(context):\n return {'status':'DECLINED','reason':'permission-lint-only'}\n")
-    return dict(passed=check['passed'],errors=check['errors'],source_sha256=hashlib.sha256(code.encode()).hexdigest())
+    permission = validate_math_source(code+"\ndef math_operator(context):\n return {'status':'DECLINED','reason':'permission-lint-only'}\n",
+                                      detailed=detailed)
+    if detailed:
+        checks['safety'] = permission['checks']['safety']
+        review.details.extend(row for row in permission['diagnostics']
+                              if row['line'] is None or row['line']<=len(review.lines))
+    if review.errors:
+        # The legacy entry-point guard remains authoritative. Independent lint
+        # findings above are only feedback when that guard fails.
+        return review.result(checks)
+    review.errors.update(permission['errors'])
+    return review.result(checks, source_sha256=hashlib.sha256(code.encode()).hexdigest())
 
 
 def context_view(goal,observation,commands,history,state):
