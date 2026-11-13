@@ -389,6 +389,7 @@ def compare_static(previous, current):
         return dict(status='STATIC_PASSED' if current['passed'] else 'BASELINE', after_count=len(after))
     before = previous['diagnostics']
     old, new = _violation_keys(before), _violation_keys(after)
+    removed, introduced = old-new, new-old
     new_codes = sorted({row['code'] for row in after}-{row['code'] for row in before})
     if current['passed']:
         status = 'STATIC_PASSED'
@@ -399,7 +400,11 @@ def compare_static(previous, current):
     else:
         status = 'ERRORS_CHANGED' if old!=new else 'ERRORS_UNCHANGED'
     return dict(status=status, before_count=len(before), after_count=len(after),
-        removed_count=sum((old-new).values()), introduced_count=sum((new-old).values()),
+        removed_count=sum(removed.values()), introduced_count=sum(introduced.values()),
+        removed_nodes=[dict(rule_id=rule, node_sha256=digest, count=count)
+                       for (rule,digest),count in sorted(removed.items())],
+        introduced_nodes=[dict(rule_id=rule, node_sha256=digest, count=count)
+                          for (rule,digest),count in sorted(introduced.items())],
         new_error_codes=new_codes, source_changed=previous.get('source_sha256')!=current.get('source_sha256'),
         node_structures_changed=old!=new,
         node_locations_changed=[(row['rule_id'],row['line'],row['column']) for row in before]

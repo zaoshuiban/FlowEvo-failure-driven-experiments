@@ -41,6 +41,13 @@ import run_alfworld_cross_mechanism_expanded as frozen
 
 
 VERSION = 'alfworld-python-recovery-feedback-pilot-v2'
+CONTAINER_VERSION = 'alfworld-python-recovery-container-pilot-v1'
+CONTAINER_GROUP = 'container_precondition'
+CONTAINER_SEQUENCES = (33, 40, 47, 54, 66, 70, 72, 86, 88, 94, 106)
+# Canonical checkpoint list and initial wire from the concluded Python Pilot.
+CONTAINER_CHECKPOINTS_SHA = '1a606e4ad09804f09843a316262c84ac0fd195ad8a39073fb23841ac01081fcd'
+CONTAINER_INITIAL_WIRE_SHA = '4b636bb7cfeb79511009d4b213e416701b5a8caf9dfcdc3302417dc55a067574'
+CONCLUDED_PILOT = 'python_recovery_feedback_pilot_20261112_01'
 PARENT = 'alfworld_recovery_plan_v14_pilot_20261112_01'
 PARENT_SHA = 'dd049687410f4df774f0541fd5caace1bf9a70e9f764a0b26fb5217be1a4b629'
 UPDATED_DIAGNOSTIC_FILES = (
@@ -141,6 +148,8 @@ def frozen_sources(base, output):
         if ({row['group'] for row in selected}!={entry['group']}
                 or [row['sequence'] for row in selected]!=entry['sequences']):
             raise PermissionError('candidate sources differ from B v14')
+        for row in selected:
+            verify_source_game(source['data_root'], host[row['evidence_id']])
         packet = initial_payload(PREVIOUS.generation_payload(mechanism, analyses, views))
         schedule.append((entry['group'], selected, packet))
     history = {**protocol['historical_sha256'], **{str(p):sha(p) for p in parent.rglob('*') if p.is_file()}}
@@ -149,25 +158,49 @@ def frozen_sources(base, output):
     return source, events, host, schedule, boundaries, backend, history
 
 
-def configuration(base, output, *, env_factory=StrictTrainEnv, real=False):
+def container_schedule(schedule):
+    matches = [entry for entry in schedule if entry[0]==CONTAINER_GROUP]
+    if len(matches)!=1:
+        raise PermissionError('exactly one frozen container mechanism required')
+    _, selected, _ = matches[0]
+    if (tuple(row['sequence'] for row in selected)!=CONTAINER_SEQUENCES
+            or fingerprint(selected)!=CONTAINER_CHECKPOINTS_SHA):
+        raise PermissionError('frozen container checkpoint binding differs')
+    return matches
+
+
+def configuration(base, output, *, env_factory=StrictTrainEnv, real=False, container_only=False):
     base, output = Path(base).resolve(), Path(output).resolve()
     if real and env_factory is not StrictTrainEnv:
         raise PermissionError('real Pilot requires the frozen TextWorld environment')
+    if container_only:
+        protected = (ROOT/'runs'/CONCLUDED_PILOT, base/CONCLUDED_PILOT)
+        if output.name==CONCLUDED_PILOT or any(output.is_relative_to(path.resolve())
+                or path.resolve().is_relative_to(output) for path in protected):
+            raise PermissionError('container Pilot requires a new run directory and identity')
     source, events, host, schedule, boundaries, backend, history = frozen_sources(base, output)
     verify_history(history)
     files = [Path(__file__).resolve(), ROOT/'FlowEvo/src/alfworld_/python_recovery_feedback.py']
     # Read frozen manifests rather than rescanning historical source trees for code identities.
     files += [ROOT/name for name in read(base/PARENT/'protocol.json')['code_sha256']]
+    if container_only:
+        schedule = container_schedule(schedule)
+        selected_ids = {row['evidence_id'] for row in schedule[0][1]}
+        events = [event for event in events if event['evidence_id'] in selected_ids]
+        host = {eid:host[eid] for eid in selected_ids}
+        if len(events)!=len(selected_ids) or {event['evidence_id'] for event in events}!=selected_ids:
+            raise PermissionError('container evidence event binding differs')
+        files.append(ROOT/'scripts/run_alfworld_python_recovery_container_pilot.py')
     entries = []
     with TemporaryDirectory() as temp:
         provider = Path(temp)/'provider.jsonl'
         measure = revision_measure(provider)
         for group, selected, packet in schedule:
             body = wire(provider, packet, INITIAL_PROMPT)
-            for row in selected:
-                verify_source_game(source['data_root'], host[row['evidence_id']])
             entry = dict(group=group, sources=selected, wire_sha256=fingerprint(body),
                          input_upper=len(canonical(body).encode())+256)
+            if container_only and entry['wire_sha256']!=CONTAINER_INITIAL_WIRE_SHA:
+                raise PermissionError('frozen container initial evidence or wire differs')
             if real:
                 slots = [min(SOURCE_WINDOW, EPISODE_LIMIT-row['anchor']) for row in selected]
                 stress = revision_stress_packet(packet, slots)
@@ -188,7 +221,7 @@ def configuration(base, output, *, env_factory=StrictTrainEnv, real=False):
     conservative_cost = sum(ceiling_microusd(size+OUTPUT_UPPER, RESERVATION_RATE) for size in input_bounds)
     hard_cap = ((conservative_cost+HARD_CAP_INCREMENT-1)//HARD_CAP_INCREMENT)*HARD_CAP_INCREMENT
     scope = 'REAL_SOURCE_ONLY' if real else ('MOCK_SOURCE_ONLY' if env_factory is StrictTrainEnv else 'MOCK_ENV_FIXTURE_ONLY')
-    plan = dict(version=VERSION, scope=scope,
+    plan = dict(version=CONTAINER_VERSION if container_only else VERSION, scope=scope,
         run_id=('real:' if real else 'mock:')+output.name, model=PREVIOUS.MODEL, paid_api_authorized=False,
         disposition='SHADOW_SOURCE_ONLY',
         source_protocol_sha256=fingerprint(source), parent_protocol_sha256=PARENT_SHA,
@@ -215,6 +248,13 @@ def configuration(base, output, *, env_factory=StrictTrainEnv, real=False):
     if real:
         plan.update(environment=environment_manifest(source['data_root']),
                     network_policy=validate_policy(read(base/PARENT/'protocol.json')['network_policy']))
+    if container_only:
+        per_version = REVISION_LIMIT+1
+        fresh_steps = (original_prefix_steps+action_slots)*per_version
+        environment_cap = len(events)*EPISODE_LIMIT*per_version
+        plan.update(mechanism_scope='CONTAINER_ONLY', environment_steps=environment_cap,
+            uninterrupted_environment_steps=fresh_steps, recovery_environment_steps=environment_cap-fresh_steps,
+            container_checkpoints_sha256=CONTAINER_CHECKPOINTS_SHA)
     return plan, source, events, host, schedule, boundaries, backend
 
 
@@ -234,8 +274,8 @@ def authorization_template(plan):
     return dict(authorization_for(plan), paid_api_authorized=False)
 
 
-def frozen_real_inputs(base, output):
-    values = configuration(base, output, real=True)
+def frozen_real_inputs(base, output, *, container_only=False):
+    values = configuration(base, output, real=True, container_only=container_only)
     plan = values[0]
     if (not output.is_dir() or output.stat().st_mode & 0o077
             or not (output/'protocol.json').is_file() or canonical(read(output/'protocol.json'))!=canonical(plan)
@@ -245,9 +285,9 @@ def frozen_real_inputs(base, output):
     return values
 
 
-def prepare(base, output):
+def prepare(base, output, *, container_only=False):
     output = Path(output).resolve()
-    plan, *_ = configuration(base, output, real=True)
+    plan, *_ = configuration(base, output, real=True, container_only=container_only)
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
     save(output/'protocol.json', plan)
     save(output/'authorization.template.json', authorization_template(plan))
@@ -269,14 +309,14 @@ def check_local_runtime(plan):
         raise RunUnhealthy('frozen local Docker image differs')
 
 
-def preflight(base, output):
+def preflight(base, output, *, container_only=False):
     output = Path(output).resolve()
-    plan, *_ = frozen_real_inputs(base, output)
+    plan, *_ = frozen_real_inputs(base, output, container_only=container_only)
     check_local_runtime(plan)
     credential = bool(configured_api_key())
     started = (output/'budget.jsonl').exists()
-    return dict(status=('RUN_EXISTS_USE_RESUME' if started else
-                        'READY_PENDING_AUTHORIZATION' if credential else 'CREDENTIAL_REQUIRED'),
+    ready = 'READY_PENDING_EXPLICIT_AUTHORIZATION' if container_only else 'READY_PENDING_AUTHORIZATION'
+    return dict(status='RUN_EXISTS_USE_RESUME' if started else ready if credential else 'CREDENTIAL_REQUIRED',
         run_id=plan['run_id'], protocol_sha256=fingerprint(plan), credential_configured=credential,
         worker_ready=True, max_calls=plan['max_calls'], max_tokens=plan['max_tokens'],
         max_cost_microusd=plan['max_cost_microusd'], quote_upper_usd=plan['peak_no_cache_quote_upper_usd'],
@@ -291,6 +331,14 @@ def commit(path, value):
     else:
         save(path, value)
     return value
+
+
+def verify_container_freeze(output, plan):
+    if plan['version']!=CONTAINER_VERSION:
+        return
+    if (read(output/'protocol.json')!=plan
+            or any(sha(ROOT/name)!=digest for name,digest in plan['code_sha256'].items())):
+        raise RunUnhealthy('container Pilot protocol or code changed')
 
 
 def start_state(origin, plan):
@@ -510,7 +558,7 @@ def validate_source(plan, data, origin, source_ref, card, runner, registry, rece
     if registry.state(card)['permission']!='shadow' or not card.intact():
         raise PermissionError('exact Shadow artifact required')
     prefix, start, start_sha = start_state(origin, plan)
-    branch = fingerprint([card.version, start_sha, runner.backend.manifest(), VERSION])
+    branch = fingerprint([card.version, start_sha, runner.backend.manifest(), plan['version']])
     path = directory/f'{source_ref}.json'
     if branch in receipts.committed:
         if sha(path)!=receipts.committed[branch]:
@@ -686,12 +734,13 @@ def next_step(attempt, packet, prior_problems, limit, *, attempts=(), revision_l
     return 'REVISION_SCHEDULED', feedback
 
 
-def register(directory, proposal, response, hypothesis, evidence_ids, known, runner, registry, *, engineering):
+def register(directory, proposal, response, hypothesis, evidence_ids, known, runner, registry, *, engineering,
+             protocol=VERSION):
     path = directory/'artifact.json'
     if not path.exists():
         registration = register_environment_candidate(directory, dict(proposal, model=response['model'],
             id=response['id'], response_sha256=response['response_sha256']), hypothesis, evidence_ids, known,
-            runner.backend.manifest(), registry, engineering=engineering, protocol=VERSION,
+            runner.backend.manifest(), registry, engineering=engineering, protocol=protocol,
             baseline='alfworld-python-source-shadow')
         return json.loads(canonical(registration))
     artifact = read(path)
@@ -724,11 +773,12 @@ def acquire_group(plan, output, index, group, selected, packet, host, data, budg
             raise PermissionError('bounded feedback differs from final wire')
         if number==0 and expected_wire!=plan['schedule'][index]['wire_sha256']:
             raise PermissionError('initial prompt changed')
+        verify_container_freeze(output, plan)
         check_run(budget, provider, runner, network_policy)
         commit(directory/'request_binding.json', dict(stage=stage, wire_sha256=expected_wire, parent_version=parent))
         try:
             response = stage_request(output, relative, 'analyze', message, parse_delivery, budget, sender=sender,
-                authorization=authorization, network_policy=network_policy, protocol=VERSION, analysis_prompt=prompt)
+                authorization=authorization, network_policy=network_policy, protocol=plan['version'], analysis_prompt=prompt)
         except (DefinitelyNotSent, SendUnknown):
             raise
         except Exception:
@@ -740,6 +790,7 @@ def acquire_group(plan, output, index, group, selected, packet, host, data, budg
             raise PermissionError('response wire or archive differs')
         if fault is not None:
             fault('after_response', dict(group=group, stage=stage))
+        verify_container_freeze(output, plan)
         parsed = delivery(response)
         billed = trusted_usage(response['raw_response'])
         if not billed:
@@ -767,7 +818,7 @@ def acquire_group(plan, output, index, group, selected, packet, host, data, budg
             if check['passed']:
                 origins = [host[row['evidence_id']] for row in selected]
                 key = fingerprint([attempt['code_sha256'], group, [start_state(o, plan)[2] for o in origins],
-                    runner.backend.manifest(), plan['max_stagnant_repeats'], plan['boundaries_sha256'], VERSION])
+                    runner.backend.manifest(), plan['max_stagnant_repeats'], plan['boundaries_sha256'], plan['version']])
                 attempt['evaluation_id'] = key
                 if key in cache:
                     original = cache[key]
@@ -776,7 +827,7 @@ def acquire_group(plan, output, index, group, selected, packet, host, data, budg
                 else:
                     registration = register(directory, proposal, response, packet['hypothesis'],
                         [imported[row['evidence_id']] for row in selected], known, runner, registry,
-                        engineering=sender is not None)
+                        engineering=sender is not None, protocol=plan['version'])
                     attempt['registration'] = registration
                     if registration['status']=='SHADOW':
                         card = FailureOperator.from_dict(registration['card'])
@@ -803,6 +854,8 @@ def acquire_group(plan, output, index, group, selected, packet, host, data, budg
             if message is None:
                 disposition = 'INPUT_LIMIT'
         attempt['disposition'] = disposition
+        if plan['version']==CONTAINER_VERSION:
+            attempt['remaining_revisions'] = plan['revision_limit']-number
         commit(directory/'attempt.json', attempt)
         attempts.append(attempt)
         if fault is not None:
@@ -862,7 +915,39 @@ def version_metrics(attempt, group, boundaries):
         boundary_status='EXECUTED' if boundary else 'REUSED' if attempt.get('reused_evaluation') else 'NOT_REACHED')
 
 
-def run(base, output, *, sender=None, authorization=None, resume=False, env_factory=StrictTrainEnv, fault=None):
+def container_milestones(attempts):
+    def first(predicate):
+        return next(({key:attempt[key] for key in ('stage','version','code_sha256')}
+                     for attempt in attempts if predicate(attempt)), None)
+
+    by_version = {attempt['version']:attempt for attempt in attempts}
+    comparisons = []
+    for prior, revised in zip(attempts, attempts[1:]):
+        projection = prior.get('revision_projection', {})
+        if not projection.get('source_receipts'):
+            continue
+        original = by_version[projection['last_valid_version']]
+        comparison = dict(feedback_version=original['version'], revised_version=revised['version'],
+                          status='NOT_REACHED', metrics={})
+        if revised['sources']:
+            pairs = list(zip(original['sources'], revised['sources'], strict=True))
+            if any((a['sequence'],a['start_sha256'])!=(b['sequence'],b['start_sha256']) for a,b in pairs):
+                raise RunUnhealthy('source comparison requires the same frozen starting states')
+            comparison['status'] = 'PAIRED'
+            comparison['metrics'] = {
+                name:dict(improved=[a['sequence'] for a,b in pairs if not a[name] and b[name]],
+                          regressed=[a['sequence'] for a,b in pairs if a[name] and not b[name]])
+                for name in ('local_repair_verified','recovery_completed','won')
+            }
+        comparisons.append(comparison)
+    return dict(first_static_pass=first(lambda a:a['static']['status']=='PASSED'),
+                first_source_worker=first(lambda a:any(row['decisions'] for row in a['sources'])),
+                first_source_action=first(lambda a:any(row['first_action_executed'] for row in a['sources'])),
+                feedback_revision_comparisons=comparisons)
+
+
+def run(base, output, *, sender=None, authorization=None, resume=False, env_factory=StrictTrainEnv, fault=None,
+        container_only=False):
     real = sender is None
     output = Path(output).resolve()
     if real:
@@ -870,7 +955,7 @@ def run(base, output, *, sender=None, authorization=None, resume=False, env_fact
             raise PermissionError('explicit matching real Pilot authorization required')
         if env_factory is not StrictTrainEnv:
             raise PermissionError('real Pilot requires the frozen TextWorld environment')
-        values = frozen_real_inputs(base, output)
+        values = frozen_real_inputs(base, output, container_only=container_only)
         if canonical(authorization)!=canonical(authorization_for(values[0])):
             raise PermissionError('authorization does not match the frozen run, protocol, model or amount')
         if not configured_api_key():
@@ -879,7 +964,7 @@ def run(base, output, *, sender=None, authorization=None, resume=False, env_fact
     else:
         if not callable(sender) or authorization is not None or resume:
             raise PermissionError('Mock and real entrypoints have separate authorization')
-        values = configuration(base, output, env_factory=env_factory)
+        values = configuration(base, output, env_factory=env_factory, container_only=container_only)
         output.mkdir(mode=0o700, parents=True, exist_ok=True)
     plan, source, events, host, schedule, boundaries, backend = values
     network_policy = plan.get('network_policy')
@@ -908,8 +993,10 @@ def run(base, output, *, sender=None, authorization=None, resume=False, env_fact
         candidates = [acquire_group(plan, output, index, group, selected, packet, host, source['data_root'],
             budget, registry, runner, receipts, imported, known, sender, provider, env_factory, fault, authorization)
             for index,(group,selected,packet) in enumerate(schedule)]
+        verify_container_freeze(output, plan)
         check_run(budget, provider, runner, network_policy)
         evaluate_boundaries(output, candidates, boundaries, runner, registry)
+        verify_container_freeze(output, plan)
         check_run(budget, provider, runner, network_policy)
         verify_history(plan['historical_sha256'])
         attempts = [attempt for candidate in candidates for attempt in candidate['attempts']]
@@ -929,10 +1016,13 @@ def run(base, output, *, sender=None, authorization=None, resume=False, env_fact
             peak_no_cache_estimate_usd=estimate_peak(usage['input_tokens'],usage['output_tokens']),
             actual_billed_usd=None, final_version_rule=plan['final_version_rule'],
             independent_gate_games=0, disposition=plan['disposition'])
+        if container_only:
+            result.update(run_id=plan['run_id'], mechanism_scope=plan['mechanism_scope'],
+                          milestones=container_milestones(attempts))
         return commit(output/'result.json', result)
 
 
-def main():
+def main(*, container_only=False):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('prepare','preflight','run','resume'))
     parser.add_argument('--base', type=Path, default=Path.home()/'.local/share/flowevo')
@@ -940,17 +1030,20 @@ def main():
     parser.add_argument('--authorization', type=Path)
     args = parser.parse_args()
     if args.command=='prepare':
-        plan = prepare(args.base,args.output)
+        plan = prepare(args.base,args.output,container_only=container_only)
         summary = dict(status='PREPARED_PENDING_AUTHORIZATION',run_id=plan['run_id'],
             protocol_sha256=fingerprint(plan),max_cost_microusd=plan['max_cost_microusd'],model_requests=0)
     elif args.command=='preflight':
-        summary = preflight(args.base,args.output)
+        summary = preflight(args.base,args.output,container_only=container_only)
     else:
         if not args.authorization:
             parser.error('run and resume require --authorization')
-        result = run(args.base,args.output,authorization=read(args.authorization),resume=args.command=='resume')
+        result = run(args.base,args.output,authorization=read(args.authorization),resume=args.command=='resume',
+                     container_only=container_only)
         summary = {key:result[key] for key in ('scope','protocol_sha256','model_requests','paid_requests','usage',
                                                'peak_no_cache_estimate_usd','independent_gate_games','disposition')}
+        if container_only:
+            summary.update({key:result[key] for key in ('run_id','mechanism_scope','milestones')})
     print(canonical(summary))
 
 
