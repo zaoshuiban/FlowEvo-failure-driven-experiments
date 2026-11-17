@@ -1,0 +1,134 @@
+# ALFWorld 首轮真实基线报告
+
+状态 COMPLETED。已完成 120/120，成功 91 题。成功率以官方 won 信号计算。未完成任务保留缺失状态。
+
+本轮采用 FlowEvo 现有 ALFWorld pure_dynamic 动作生成与执行链，官方文本环境 0.4.2、TextWorld 1.7.0，valid_unseen，冻结 120 题，种子 20261108，每题单次尝试、最多 50 步。冻结协议摘要为 `37d793f399682209eb62ee2e35cf0f9290465f5df470b1476a027a8a69d8b599`。
+
+真实响应 2217 次，输入 1,682,667、输出 136,424、合计 1,819,091 Token。按官方未缓存价格计算，峰时估算上界 0.6685089 美元、非峰时估算上界 0.33425445 美元；缓存折扣和供应商账单以实际账户记录为准。未知发送事件 0 次。 [DeepSeek 官方价格](https://api-docs.deepseek.com/quick_start/pricing/)
+
+| 任务 | 类型 | 结果 | 步数 | 模型调用 |
+| --- | --- | --- | --- | --- |
+| alf-7f7df658c6a842858191 | pick_clean_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 25 | 25 |
+| alf-bd308426f3bc6e1becc0 | pick_clean_then_place_in_recep | SUCCESS | 6 | 6 |
+| alf-fd3620596f50f836d349 | pick_and_place_simple | SUCCESS | 10 | 10 |
+| alf-f9de8d59c5db503226fa | pick_two_obj_and_place | SUCCESS | 9 | 9 |
+| alf-af70d9ba1c4de0d8aa1d | pick_clean_then_place_in_recep | SUCCESS | 8 | 8 |
+| alf-cafcfc88293517da7c2b | pick_clean_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-e8705225993cffef1820 | pick_cool_then_place_in_recep | SUCCESS | 9 | 9 |
+| alf-a57cb2f159feb4150f3f | look_at_obj_in_light | SUCCESS | 18 | 18 |
+| alf-4baf1c4aef1e70234019 | pick_two_obj_and_place | SUCCESS | 8 | 8 |
+| alf-b1412ec14fe90c94439a | pick_heat_then_place_in_recep | SUCCESS | 15 | 15 |
+| alf-158a9ff2833f5934fb9a | pick_cool_then_place_in_recep | SUCCESS | 9 | 9 |
+| alf-d5b1cab380c5373b202a | pick_clean_then_place_in_recep | SUCCESS | 17 | 17 |
+| alf-aa36ebe87b56f0ffffb1 | look_at_obj_in_light | SUCCESS | 22 | 22 |
+| alf-7a3a4852aeb9dded12b7 | pick_two_obj_and_place | STEP_LIMIT | 50 | 50 |
+| alf-1d4d2ea0ef6e00a044cd | pick_heat_then_place_in_recep | SUCCESS | 21 | 21 |
+| alf-e723035131f91f101078 | look_at_obj_in_light | SUCCESS | 6 | 6 |
+| alf-5ddb28ceab309f35a593 | look_at_obj_in_light | SUCCESS | 5 | 5 |
+| alf-b98c5dc0102955ecff40 | pick_clean_then_place_in_recep | SUCCESS | 25 | 25 |
+| alf-9ae9ea38394210ff2086 | pick_two_obj_and_place | SUCCESS | 9 | 9 |
+| alf-35810bca92609f86c84e | pick_two_obj_and_place | SUCCESS | 11 | 11 |
+| alf-84c7da821d9db988cff1 | pick_clean_then_place_in_recep | SUCCESS | 10 | 10 |
+| alf-a977ced5cc0d25854bbf | pick_heat_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 11 | 11 |
+| alf-6ab212cce6a9adff6ea3 | pick_clean_then_place_in_recep | SUCCESS | 7 | 7 |
+| alf-6bca0d2999f7d90cf233 | pick_two_obj_and_place | ACTION_CYCLE | 21 | 21 |
+| alf-6ed2a5188d3789180317 | pick_and_place_simple | SUCCESS | 4 | 4 |
+| alf-5277ea470058b525cbba | pick_heat_then_place_in_recep | SUCCESS | 17 | 17 |
+| alf-f478ef192592c0f03899 | pick_heat_then_place_in_recep | SUCCESS | 44 | 44 |
+| alf-3ba6d716404db9a49885 | pick_two_obj_and_place | STEP_LIMIT | 50 | 50 |
+| alf-f84b4d17ab74dc6f21f4 | pick_heat_then_place_in_recep | SUCCESS | 33 | 33 |
+| alf-53d494f6546d94bbafa5 | pick_heat_then_place_in_recep | SUCCESS | 34 | 34 |
+| alf-b2b1cf5f9746a127fa0b | pick_cool_then_place_in_recep | SUCCESS | 16 | 16 |
+| alf-37a946a8e14e159d21a4 | pick_clean_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 11 | 11 |
+| alf-b1cea288d1b2c683ff6f | pick_and_place_simple | SUCCESS | 19 | 19 |
+| alf-0a520e6f827b2eb91620 | pick_clean_then_place_in_recep | SUCCESS | 23 | 23 |
+| alf-3a53b508faadb8e0de30 | pick_clean_then_place_in_recep | SUCCESS | 14 | 14 |
+| alf-dac2145c474f52f44f17 | pick_clean_then_place_in_recep | SUCCESS | 13 | 13 |
+| alf-e66dbfc5922156bcbe42 | pick_cool_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-d19f428deac69d728829 | pick_and_place_simple | SUCCESS | 5 | 5 |
+| alf-473ca7e3a8c8d4ecd4fd | pick_two_obj_and_place | SUCCESS | 8 | 8 |
+| alf-f53deb178987c1d408bb | pick_heat_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 9 | 9 |
+| alf-fb03ba8796635e971f6a | pick_clean_then_place_in_recep | SUCCESS | 15 | 15 |
+| alf-4c7fdff007259184933a | look_at_obj_in_light | SUCCESS | 3 | 3 |
+| alf-3b95f91a9a369ade2db7 | pick_two_obj_and_place | SUCCESS | 20 | 20 |
+| alf-941fe45767956c72df8b | pick_clean_then_place_in_recep | SUCCESS | 9 | 9 |
+| alf-0807ca4c0f6e51fa1d2b | pick_cool_then_place_in_recep | SUCCESS | 11 | 11 |
+| alf-c39c7814bf176b942f36 | look_at_obj_in_light | SUCCESS | 8 | 8 |
+| alf-f9d8fe74a56dbd052db3 | pick_cool_then_place_in_recep | SUCCESS | 8 | 8 |
+| alf-948cc8353f7759bad39b | pick_two_obj_and_place | STEP_LIMIT | 50 | 50 |
+| alf-a2e3346193c4921546c5 | pick_clean_then_place_in_recep | SUCCESS | 9 | 9 |
+| alf-2db44967b77ef1dfdeea | pick_heat_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-c6d52112472ad5651a84 | look_at_obj_in_light | SUCCESS | 3 | 3 |
+| alf-3c114f58b3b294bc62e0 | pick_clean_then_place_in_recep | SUCCESS | 26 | 26 |
+| alf-4eb875ca4e9b26217754 | look_at_obj_in_light | SUCCESS | 6 | 6 |
+| alf-68d073a4f609daf7efe2 | pick_and_place_simple | SUCCESS | 22 | 22 |
+| alf-c12e45b70e76b2445084 | pick_cool_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-cd9a9a3014194fce01ef | pick_and_place_simple | SUCCESS | 4 | 4 |
+| alf-ac13ce5f835967be6aee | pick_heat_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-b938c56fabd1165a4463 | pick_and_place_simple | SUCCESS | 4 | 4 |
+| alf-deb96b9a7fb7e47f9c65 | pick_heat_then_place_in_recep | SUCCESS | 9 | 9 |
+| alf-719efdd0e1160f4dd794 | pick_clean_then_place_in_recep | SUCCESS | 7 | 7 |
+| alf-f82dc26d70263889c3a2 | pick_cool_then_place_in_recep | SUCCESS | 34 | 34 |
+| alf-6d29e319fbd0b9f6fe31 | pick_and_place_simple | SUCCESS | 5 | 5 |
+| alf-1daf543a1f40af24cdca | pick_cool_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-8420155630b4c79be001 | pick_two_obj_and_place | STEP_LIMIT | 50 | 50 |
+| alf-a35b0011d307459bf6df | pick_clean_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 9 | 9 |
+| alf-017b02cf0a2c98235e24 | pick_heat_then_place_in_recep | SUCCESS | 14 | 14 |
+| alf-bba949e70cb684b671d8 | look_at_obj_in_light | SUCCESS | 5 | 5 |
+| alf-7eefbbc9f6583fe88e3d | pick_heat_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-72e9b865148b228ac0cb | pick_clean_then_place_in_recep | SUCCESS | 17 | 17 |
+| alf-3eec0a6f22c6721ec911 | pick_heat_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 21 | 21 |
+| alf-778b371440b13c4f8f1c | pick_clean_then_place_in_recep | SUCCESS | 8 | 8 |
+| alf-0cce7249faf0da09d065 | pick_cool_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-97a7631321c74708b80b | pick_cool_then_place_in_recep | SUCCESS | 10 | 10 |
+| alf-83923b9c012b94db41c1 | pick_clean_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 25 | 25 |
+| alf-a732c2fe35bdf46e2b71 | pick_cool_then_place_in_recep | SUCCESS | 10 | 10 |
+| alf-9716f8659cfbb3841d3a | pick_clean_then_place_in_recep | SUCCESS | 8 | 8 |
+| alf-55abc4226efec2389cd6 | pick_and_place_simple | SUCCESS | 4 | 4 |
+| alf-f9575c6744265491eeb4 | pick_and_place_simple | SUCCESS | 4 | 4 |
+| alf-18a1ca1e6a61e1c60719 | look_at_obj_in_light | SUCCESS | 7 | 7 |
+| alf-34803c73d33ce885df92 | pick_two_obj_and_place | SUCCESS | 12 | 12 |
+| alf-ef7806153af1218f7964 | pick_and_place_simple | SUCCESS | 14 | 14 |
+| alf-2b05437474511f6cb7db | pick_cool_then_place_in_recep | SUCCESS | 7 | 7 |
+| alf-5589ef2ffcaf2ac5dea6 | look_at_obj_in_light | SUCCESS | 5 | 5 |
+| alf-4912e244714a8aba53fa | pick_two_obj_and_place | SUCCESS | 21 | 21 |
+| alf-1720438dc5dd84236dbb | pick_and_place_simple | SUCCESS | 5 | 5 |
+| alf-04b3b43756bbc7f32503 | pick_heat_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-b841f3707bbd0a208f0f | look_at_obj_in_light | SUCCESS | 5 | 5 |
+| alf-a97b957ba9846e3d3582 | pick_and_place_simple | STEP_LIMIT | 50 | 50 |
+| alf-4f1c0fcfc20e7dc2be7b | pick_clean_then_place_in_recep | SUCCESS | 6 | 6 |
+| alf-08e25db173b7687f0966 | pick_heat_then_place_in_recep | SUCCESS | 15 | 15 |
+| alf-02588db3551c5f3d3a9f | pick_and_place_simple | SUCCESS | 7 | 7 |
+| alf-680a72ac843963d4c207 | pick_and_place_simple | SUCCESS | 6 | 6 |
+| alf-f139050129d24490e8a2 | pick_two_obj_and_place | SUCCESS | 8 | 8 |
+| alf-20550de81baa8e7a1702 | pick_heat_then_place_in_recep | SUCCESS | 20 | 20 |
+| alf-36a8180c0ba059530c88 | look_at_obj_in_light | SUCCESS | 3 | 3 |
+| alf-a1268b1adb7352224768 | pick_cool_then_place_in_recep | SUCCESS | 7 | 7 |
+| alf-36ab93e971d6fad2a4ea | pick_heat_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-d907ee0d9a6483f7d0fe | pick_and_place_simple | SUCCESS | 4 | 4 |
+| alf-df942abff01975aeb918 | pick_clean_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-d9815dc81fbf29bc0214 | pick_cool_then_place_in_recep | SUCCESS | 4 | 4 |
+| alf-bad0ac19f978fa6c30a9 | pick_clean_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 14 | 14 |
+| alf-0ef57e7789cf12bda5fe | pick_and_place_simple | SUCCESS | 16 | 16 |
+| alf-52bb2e4951958cbd706f | pick_two_obj_and_place | SUCCESS | 15 | 15 |
+| alf-44c328d8ff1c22fe67a9 | pick_and_place_simple | SUCCESS | 4 | 4 |
+| alf-90583ddc5f3c3b095b36 | pick_clean_then_place_in_recep | INFRASTRUCTURE_OR_DELIVERY_ERROR | 16 | 16 |
+| alf-339a90b1a257248a6355 | pick_and_place_simple | SUCCESS | 6 | 6 |
+| alf-15fb932e8330121d386b | pick_cool_then_place_in_recep | SUCCESS | 44 | 44 |
+| alf-2caf00ebe6ddec201afe | pick_clean_then_place_in_recep | SUCCESS | 8 | 8 |
+| alf-fe58657397ac6e864820 | pick_cool_then_place_in_recep | SUCCESS | 8 | 8 |
+| alf-026a68a09c41df77cac9 | pick_cool_then_place_in_recep | SUCCESS | 13 | 13 |
+| alf-085989757e8357e8b76d | pick_heat_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-0594199d64c356144029 | look_at_obj_in_light | STEP_LIMIT | 50 | 50 |
+| alf-0ee27c8e32b59b32c533 | pick_cool_then_place_in_recep | SUCCESS | 7 | 7 |
+| alf-e734c754643868a2e3a3 | pick_heat_then_place_in_recep | SUCCESS | 29 | 29 |
+| alf-58e0ae13d901f7a94629 | pick_and_place_simple | SUCCESS | 14 | 14 |
+| alf-56dde9c48d6ecbaee317 | pick_clean_then_place_in_recep | SUCCESS | 14 | 14 |
+| alf-53d882f0d147fc258fd8 | pick_clean_then_place_in_recep | SUCCESS | 7 | 7 |
+| alf-830cbd8d00171e2f2ee5 | pick_heat_then_place_in_recep | STEP_LIMIT | 50 | 50 |
+| alf-fd2da721739855fb2fd7 | look_at_obj_in_light | SUCCESS | 13 | 13 |
+| alf-ee864ff87783a1d4ad24 | pick_and_place_simple | SUCCESS | 4 | 4 |
+
+本轮使用环境的合法动作提示，保留仓库原有人工通用任务说明和动作解析回退。环境步数耗尽、动作循环及无进展与请求异常分开记录。每个模型请求只包含公开观察和动作历史，参考轨迹与 expert plan 不进入提示。
+
+本轮没有学习、编译或复用算子。现有 ALFWorld 编译器含人工任务蓝图，并从成功轨迹生成模板；因此本轮成绩只用于描述原生工作流表现。后续失败驱动比较需接入真实失败证据、自动能力来源与独立验证，再冻结新的对照协议。本轮任务均属于已曝光的开发评测材料。

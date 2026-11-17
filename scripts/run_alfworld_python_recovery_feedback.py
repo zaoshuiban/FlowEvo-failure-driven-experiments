@@ -554,10 +554,19 @@ def with_effect(decision, before, after):
     return dict(decision, public_state_changed=changed, effect=truth, score_or_win_progress=progressed)
 
 
-def validate_source(plan, data, origin, source_ref, card, runner, registry, receipts, directory, env_factory, fault):
+def validate_source(plan, data, origin, source_ref, card, runner, registry, receipts, directory, env_factory, fault, *, public_history_indices=None):
     if registry.state(card)['permission']!='shadow' or not card.intact():
         raise PermissionError('exact Shadow artifact required')
     prefix, start, start_sha = start_state(origin, plan)
+    visible_prefix=prefix
+    if public_history_indices is not None:
+        ids=list(public_history_indices)
+        if (not ids or any(type(i) is not int or not 1<=i<=len(prefix) for i in ids)
+                or ids!=sorted(set(ids)) or ids[-1]!=len(prefix)):
+            raise PermissionError('invalid frozen public history projection')
+        visible_prefix=[prefix[i-1] for i in ids]
+        start=context_view(origin['projected']['goal'],prefix[-1]['observation'],prefix[-1]['commands'],visible_prefix,{})
+        start_sha=fingerprint([start_sha,ids,start])
     branch = fingerprint([card.version, start_sha, runner.backend.manifest(), plan['version']])
     path = directory/f'{source_ref}.json'
     if branch in receipts.committed:
@@ -587,7 +596,7 @@ def validate_source(plan, data, origin, source_ref, card, runner, registry, rece
         if len(old_decisions)>limit:
             raise RunUnhealthy('committed source exceeds frozen action limit')
         for offset in range(limit):
-            context = context_view(start['goal'], current['observation'], current['commands'], prefix+actions, state)
+            context = context_view(start['goal'], current['observation'], current['commands'], visible_prefix+actions, state)
             prior = offset<len(old_decisions)
             if prior:
                 decision = old_decisions[offset]
@@ -646,8 +655,13 @@ def score_source(origin, prefix, decisions, actions, stop):
         witness = dict(kind='ENVIRONMENT_SCORE_OR_WIN', step=progress)
     # The prior v14 protocol also recognizes a historical decisive action
     # becoming admissible after a confirmed effect. Keep that witness host-only.
-    decisive = PREVIOUS._decisive(origin)['action']
-    if witness is None and decisive not in prefix[-1]['commands']:
+    # Controlled negative/UNKNOWN states need not have a successful suffix.
+    # Absence of such a witness is not an execution or mathematical failure.
+    try:
+        decisive = PREVIOUS._decisive(origin)['action']
+    except StopIteration:
+        decisive = None
+    if witness is None and decisive is not None and decisive not in prefix[-1]['commands']:
         witness = next((dict(kind='DECISIVE_ACTION_NEWLY_ADMISSIBLE', step=i, action=decisive)
                         for i,row in enumerate(decisions,1) if row.get('effect')=='TRUE'
                         and decisive in row['receipt']['commands']), None)

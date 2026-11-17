@@ -165,7 +165,7 @@ def _rng(state):
     return rng
 
 
-def solve(root, cfg, row, library, holdout, action, env_factory):
+def solve(root, cfg, row, library, holdout, action, env_factory, *, recovery_factory=None):
     path = str(Path(cfg['data_root']) / row['game'])
     native = env_factory(cfg['data_root'], cfg['max_steps'])
     try:
@@ -183,8 +183,12 @@ def solve(root, cfg, row, library, holdout, action, env_factory):
                         insight=layers['insight'] is not None, bound=bindings is not None)
         action.begin(task.task_id)
         generator = AlfWorldGenerator(action, GenerationSettings(temperature=0, max_output_tokens=cfg['output_tokens']))
+        if recovery_factory is not None:
+            generator = recovery_factory(generator)
         trace = AlfWorldExecutor(env, generator, max_steps=cfg['max_steps']).run(
             task, obs, commands, skill_library_result=layers, skill_bindings=bindings)
+        if recovery_factory is not None and generator.problem:
+            raise generator.problem
         if action.problem:
             raise action.problem
         action.health()
@@ -200,7 +204,12 @@ def solve(root, cfg, row, library, holdout, action, env_factory):
                    L2_requests=sum(bool(l2 and l2 in w['messages'][-1]['content']) for w in raw),
                    L3_requests=sum(bool(l3 and l3 in w['messages'][0]['content']) for w in raw),
                    fallback=trace.planning_mode.startswith('direct_then_'))
-        return dict(trace=asdict(trace), retrieved=retrieved, selected=selected, use=use, status=classify_trace(trace))
+        outcome = dict(trace=asdict(trace), retrieved=retrieved, selected=selected, use=use, status=classify_trace(trace))
+        if recovery_factory is not None:
+            outcome['recovery_usage'] = generator.finish(trace)
+            if trace.direct_use_count:
+                outcome['use']['L1_actions'] -= outcome['recovery_usage']['actual_actions']
+        return outcome
     finally:
         native.close()
 

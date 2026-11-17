@@ -1,5 +1,6 @@
 """Source-only B study: analyze evidence separately, merge hypotheses, compile policies."""
 import json
+import math
 import time
 from pathlib import Path
 
@@ -250,8 +251,11 @@ MERGE_FORMAT = ('\nDelivery contract. Return only JSON, no Markdown. Text length
 class RecoveryAdapter(DeepSeekCompilerAdapter):
     protocol = VERSION
 
-    def __init__(self, *args, stage, payload, parser, protocol=VERSION, generation_requirements='', analysis_prompt=ANALYSIS_PROMPT, **kwargs):
+    def __init__(self, *args, stage, payload, parser, protocol=VERSION, generation_requirements='', analysis_prompt=ANALYSIS_PROMPT, temperature=0, **kwargs):
+        if isinstance(temperature,bool) or not isinstance(temperature,(int,float)) or not math.isfinite(temperature) or not 0<=temperature<=2:
+            raise ValueError('temperature must be finite within [0,2]')
         super().__init__(*args, **kwargs)
+        self.temperature = temperature
         self.stage = stage
         self.analysis_prompt = analysis_prompt
         self.protocol = protocol
@@ -268,23 +272,31 @@ class RecoveryAdapter(DeepSeekCompilerAdapter):
             raise PermissionError('recovery stage payload drift')
         system = {'analyze':self.analysis_prompt,'merge':MERGE_PROMPT+MERGE_FORMAT,'generate':RECOVERY_SOURCE_CONTRACT+self.generation_requirements}[self.stage]
         wire = dict(model=self.model, messages=[dict(role='system',content=system),
-                    dict(role='user',content=self.payload)], max_tokens=request['max_tokens'],temperature=0,
+                    dict(role='user',content=self.payload)], max_tokens=request['max_tokens'],temperature=self.temperature,
                     thinking={'type':'disabled'},reasoning_effort='none',
                     response_format={'type':'json_object'},stream=False)
+        if self.wire_input_policy is not None:
+            from failure_evo.wire_input_policy import check_wire
+            check_wire(wire,self.wire_input_policy)
         if len(canonical(wire).encode()) + 256 > self.max_wire_input_upper:
             raise ValueError('EVIDENCE_REPRESENTATION_LIMIT')
         return wire
 
 
 def stage_request(root, name, stage, payload, parser, budget, *, sender=None, authorization=None, network_policy=None,
-                  protocol=VERSION, generation_requirements='', analysis_prompt=ANALYSIS_PROMPT):
+                  protocol=VERSION, generation_requirements='', analysis_prompt=ANALYSIS_PROMPT, temperature=0, input_policy=None):
     """Each stage uses a frozen job with the same durable budget and provider journal."""
     adapter = RecoveryAdapter(root/'provider.jsonl', budget, model=MODEL, mock=sender is not None,
         sender=sender, authorization=authorization, network_policy=network_policy,
-        stage=stage, payload=payload, parser=parser, max_wire_input_upper=INPUT_LIMIT,
-        protocol=protocol,generation_requirements=generation_requirements,analysis_prompt=analysis_prompt)
-    compiler = BoundedCompiler(adapter, budget, root/name/'compiler.jsonl', MODEL, max_input_upper=INPUT_LIMIT)
+        stage=stage, payload=payload, parser=parser, max_wire_input_upper=input_policy['max_input_tokens'] if input_policy else INPUT_LIMIT,
+        wire_input_policy=input_policy,
+        protocol=protocol,generation_requirements=generation_requirements,analysis_prompt=analysis_prompt,temperature=temperature)
+    compiler = BoundedCompiler(adapter, budget, root/name/'compiler.jsonl', MODEL,
+        max_input_upper=input_policy['max_input_tokens'] if input_policy else INPUT_LIMIT)
     identity = [protocol,name,payload]
+    if input_policy is not None:identity.append(dict(input_policy=input_policy))
+    if temperature != 0:
+        identity.append(dict(temperature=temperature))
     if generation_requirements:
         identity.append(generation_requirements)
     if analysis_prompt != ANALYSIS_PROMPT:

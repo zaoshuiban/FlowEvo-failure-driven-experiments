@@ -106,9 +106,16 @@ class GPTCompilerAdapter:
     model and PersistentBudget. The key is read only inside the actual send path.
     Tests inject a sender and mock=True; these artifacts are labelled MOCK, never GPT.
     """
-    def __init__(self, path, budget, *, model, authorization=None, sender=None, mock=False, max_wire_input_upper=32768, network_policy=None):
-        if type(max_wire_input_upper) is not int or not 1<=max_wire_input_upper<=65536:
+    def __init__(self, path, budget, *, model, authorization=None, sender=None, mock=False, max_wire_input_upper=32768, network_policy=None, wire_input_policy=None):
+        ceiling=65536
+        if wire_input_policy is not None:
+            from .wire_input_policy import validate_wire_input_policy
+            validate_wire_input_policy(wire_input_policy,model)
+            ceiling=wire_input_policy['max_input_tokens']
+            if max_wire_input_upper!=ceiling:raise ValueError('experiment input bound differs from policy')
+        if type(max_wire_input_upper) is not int or not 1<=max_wire_input_upper<=ceiling:
             raise ValueError('wire bound must be explicitly frozen within host ceiling')
+        self.wire_input_policy=wire_input_policy
         self.max_wire_input_upper=max_wire_input_upper
         self.events = EvidenceStore(path)
         self.budget, self.model = budget, model
