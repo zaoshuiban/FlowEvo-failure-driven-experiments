@@ -37,6 +37,8 @@ class PrimitiveCompiler:
         return self._skill_compiler._extract_literal_replay_cases(executed_code, entry_point)
 
     def _infer_target_entry_point(self, trace: ExecutionTrace, source: str) -> str:
+        if trace.validated_entry_point:
+            return trace.validated_entry_point
         executed_code = ""
         if trace.verifier_feedback:
             executed_code = trace.verifier_feedback[-1].executed_code or ""
@@ -103,7 +105,34 @@ class PrimitiveCompiler:
             return []
 
         entry_point = self._infer_target_entry_point(trace, source)
+        if trace.validated_entry_point:
+            from failure_evo.skill_runtime import check_source
+            try:
+                check_source(source)
+            except (ValueError, SyntaxError):
+                return []
         helper_nodes = self._reachable_helpers(tree, entry_point)
+        # A declared top-level parameterized operation is not required to be a
+        # helper. Preserve the complete original module/SHA for this path.
+        explicit = trace.operation_contracts.get(entry_point, {})
+        entry_node = next((n for n in reversed(tree.body) if isinstance(n, ast.FunctionDef) and n.name == entry_point), None)
+        if trace.validated_entry_point and explicit and entry_node is not None:
+            exact = trace.attempts[-1].candidate_code if trace.attempts else trace.code_history[-1]
+            check_source(exact)
+            card = PrimitiveCard(
+                executable_dependencies=trace.executable_dependencies,
+                independent_source_ids=trace.independent_source_ids or [trace.task_id],
+                operation_contracts=trace.operation_contracts,
+                validation_status='source_verified_dependency_checked',
+                source_sha256=hashlib.sha256(exact.encode()).hexdigest(),
+                primitive_id=self._primitive_id(trace, entry_point, exact),
+                name=entry_point+'_operation', description=str(explicit.get('purpose', entry_point)),
+                benchmark=trace.benchmark, task_pattern=trace.task_pattern,
+                helper_name=entry_point,target_entry_point=entry_point,
+                signature={'helper_name':entry_point,'target_entry_point':entry_point,
+                           'args':[a.arg for a in entry_node.args.args]},
+                source_trace_ids=[trace.trace_id],source_skill_ids=[],support_count=1,utility=0.5,status='draft')
+            return [PrimitiveCandidate(card=card, code=exact)]
         if not helper_nodes:
             return []
 
@@ -111,10 +140,27 @@ class PrimitiveCompiler:
         candidates: list[PrimitiveCandidate] = []
         for helper in helper_nodes[:2]:
             helper_closure = [node for node in helper_nodes if node.name == helper.name or node.name in self._called_names(helper)]
-            module = ast.Module(body=[*imports, *helper_closure], type_ignores=[])
+            # New explicit-entry path preserves the complete dependency closure,
+            # including constants and transitive helpers. Legacy extraction is unchanged.
+            if trace.validated_entry_point:
+                functions = {n.name: n for n in tree.body if isinstance(n, ast.FunctionDef)}
+                names, todo = set(), [helper.name]
+                while todo:
+                    name = todo.pop()
+                    if name in names:
+                        continue
+                    names.add(name)
+                    todo.extend(n.id for n in ast.walk(functions[name]) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load) and n.id in functions)
+                if entry_point in names:
+                    continue  # A reusable helper may not depend on the task entry.
+                constants = [n for n in tree.body if isinstance(n, (ast.Assign, ast.AnnAssign))]
+                module = ast.Module(body=[*imports, *constants, *[functions[n] for n in sorted(names)]], type_ignores=[])
+            else:
+                module = ast.Module(body=[*imports, *helper_closure], type_ignores=[])
             ast.fix_missing_locations(module)
             try:
                 code = ast.unparse(module).rstrip() + "\n"
+                if trace.validated_entry_point:check_source(code)
             except Exception:  # noqa: BLE001
                 continue
             replay_cases = self._extract_literal_replay_cases(
@@ -128,6 +174,11 @@ class PrimitiveCompiler:
             )
             primitive_id = self._primitive_id(trace, helper.name, code)
             card = PrimitiveCard(
+                executable_dependencies=trace.executable_dependencies,
+                independent_source_ids=trace.independent_source_ids or [trace.task_id],
+                operation_contracts=trace.operation_contracts,
+                validation_status="source_verified_dependency_checked" if trace.validated_entry_point else "legacy",
+                source_sha256=hashlib.sha256(code.encode()).hexdigest(),
                 primitive_id=primitive_id,
                 name=f"{helper.name}_primitive",
                 description=f"Compiled helper primitive {helper.name} for {trace.benchmark}/{trace.task_pattern}.",

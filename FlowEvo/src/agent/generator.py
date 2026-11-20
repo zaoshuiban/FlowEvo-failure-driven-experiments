@@ -895,6 +895,10 @@ class LLMGenerator(HeuristicGenerator):
             return ""
         lines = ["primitive_helpers:"]
         for item in primitive_helpers:
+            if item.get("executable_call_name"):
+                lines.append("- frozen_operation=" + json.dumps({k: item.get(k) for k in
+                    ("primitive_id", "description", "signature", "operation_contracts", "executable_call_name", "source_sha256")}, ensure_ascii=False))
+                continue
             code_excerpt = ""
             code_path = str(item.get("code_path", "") or "")
             if code_path:

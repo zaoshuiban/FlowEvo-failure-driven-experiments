@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+from contextlib import contextmanager
 import subprocess
 import tempfile
 from pathlib import Path
@@ -19,8 +21,22 @@ class Sandbox:
         """
         self.python_executable = python_executable
         self.timeout_seconds = timeout_seconds
+        self.dependencies = {}
+        self.skill_events = []
 
-    def run(self, code: str) -> dict:
+    @contextmanager
+    def bind_dependencies(self, dependencies):
+        from failure_evo.skill_runtime import validate_bundle
+        validate_bundle(dependencies)
+        previous = self.dependencies
+        self.dependencies = dependencies
+        self.skill_events = []
+        try:
+            yield self
+        finally:
+            self.dependencies = previous
+
+    def run(self, code: str, module_bundle=None) -> dict:
         """Run Python code in a temporary file.
 
         Args:
@@ -32,6 +48,11 @@ class Sandbox:
         with tempfile.TemporaryDirectory(prefix="idea_v7_") as tmp_dir:
             script_path = Path(tmp_dir) / "main.py"
             script_path.write_text(code, encoding="utf-8")
+            bundle = self.dependencies if module_bundle is None else module_bundle
+            event_file = None
+            if bundle:
+                from failure_evo.skill_runtime import materialize
+                event_file = materialize(bundle, Path(tmp_dir))
             try:
                 result = subprocess.run(
                     [self.python_executable, str(script_path)],
@@ -55,3 +76,7 @@ class Sandbox:
                     "passed": False,
                     "timeout": True,
                 }
+
+            finally:
+                if event_file and event_file.exists():
+                    self.skill_events.extend(json.loads(line) for line in event_file.read_text().splitlines())

@@ -27,7 +27,7 @@ class PersistentBudget:
     def __init__(self, path, *, run_id, protocol_hash, max_calls, max_tokens,
                  max_tools, max_cost_microusd, token_rate_microusd_per_million,
                  tool_cost_upper_microusd, max_tool_milliseconds,
-                 tool_milliseconds_upper, wall_seconds, clock=time.time):
+                 tool_milliseconds_upper, wall_seconds, clock=time.time, model_rates=None):
         if not run_id or not protocol_hash:
             raise ValueError('run and protocol identity required')
         values = dict(max_calls=max_calls,max_tokens=max_tokens,max_tools=max_tools,
@@ -40,6 +40,11 @@ class PersistentBudget:
         self.path=Path(path);self.path.parent.mkdir(parents=True,exist_ok=True)
         self.clock=clock
         self.config=dict(values,run_id=run_id,protocol_hash=protocol_hash,currency='USD',cost_unit='microusd')
+        if model_rates is not None:
+            for rates in model_rates.values():
+                for rate in rates:integer(rate, 'model_rate')
+                if len(rates)!=2:raise ValueError('input/output rates required')
+            self.config['model_rates']=model_rates
         with self._locked() as rows:
             if not rows:
                 self._append(rows,'RUN_OPENED',dict(config=self.config,deadline=self.clock()+wall_seconds))
@@ -110,6 +115,9 @@ class PersistentBudget:
             raise ValueError('request provenance required')
         tokens=input_upper+output_upper
         cost=(tokens*self.config['token_rate_microusd_per_million']+999999)//1000000 if kind=='model' else self.config['tool_cost_upper_microusd']
+        rates=self.config.get('model_rates',{}).get(capability)
+        if kind=='model' and rates is not None:
+            cost=(input_upper*rates[0]+output_upper*rates[1]+999999)//1000000
         ms=0 if kind=='model' else self.config['tool_milliseconds_upper']
         with self._locked() as rows:
             requests,_=self._state(rows)

@@ -51,6 +51,8 @@ STRING_SEEDED_QUERY_PATTERN = re.compile(
 
 @dataclass
 class RunnerConfig:
+    executable_skills_enabled: bool = False
+    development_callable_catalog_path: str = ''
     mode: str = "dynamic"
     benchmark: str = "humaneval"
     dataset_split: str = ""
@@ -148,8 +150,22 @@ class BenchmarkRunner:
         config: RunnerConfig,
         python_executable: str = sys.executable,
         dynamic_generator: BaseGenerator | None = None,
+        acquisition_scheduler=None,
+        sandbox=None,
     ) -> None:
+        if config.frozen_eval and acquisition_scheduler is not None:
+            raise RuntimeError("TEACHER_UNAVAILABLE_IN_EVALUATION")
+        self.acquisition_scheduler = acquisition_scheduler
+        self.acquisition_results = []
         self.config = config
+        self.development_callables = []
+        if config.development_callable_catalog_path:
+            catalog = json.loads(Path(config.development_callable_catalog_path).read_text())
+            if catalog.get('scope') != 'development_diagnostic':
+                raise ValueError('DEVELOPMENT_CALLABLE_SCOPE_REQUIRED')
+            self.development_callables = catalog['cards']
+            if any(c['status'] != 'draft' or c['support_count'] != 1 for c in self.development_callables):
+                raise ValueError('DEVELOPMENT_CARDS_MUST_REMAIN_SINGLE_SOURCE_DRAFT')
         self.mode = config.mode
         self.claim_target = config.claim_target
         self.mbpp_score_protocol = str(config.mbpp_score_protocol or "table1_compatible")
@@ -228,7 +244,7 @@ class BenchmarkRunner:
             self.config.governance_mode = "disabled"
         self.policy_directive_min_confidence = config.policy_directive_min_confidence
         self.policy_directive_max_count = config.policy_directive_max_count
-        self.sandbox = Sandbox(python_executable=python_executable, timeout_seconds=config.timeout_seconds)
+        self.sandbox = sandbox or Sandbox(python_executable=python_executable, timeout_seconds=config.timeout_seconds)
         self.planner = CodeTaskPlanner()
         self.skill_registry = SkillRegistry(file_path=config.registry_path)
         self.policy_store = PolicyStore(file_path=config.policy_path)
@@ -445,6 +461,7 @@ class BenchmarkRunner:
                 trace,
                 provenance=trace.episode_provenance,
                 registry=self.skill_registry,
+                sandbox=self.sandbox,
                 timeout_seconds=self.config.timeout_seconds,
                 dedup_keys=self.compile_dedup_keys,
                 force_shadow=trace.episode_provenance == "seeded_dynamic_success" and not self.admit_seeded_compiles,
@@ -833,7 +850,15 @@ class BenchmarkRunner:
             return []
         task_pattern = infer_task_pattern(task)
         matched = self.primitive_store.match(task.benchmark, task_pattern, limit=2)
-        return [card.model_dump(mode="json") for card in matched]
+        result = [card.model_dump(mode="json") for card in matched]
+        if self.development_callables:
+            if task.metadata.get('data_role') not in {'train','development','transfer_dev'}:
+                raise ValueError('DEVELOPMENT_CALLABLES_FORBIDDEN_IN_EVALUATION')
+            # Preserve normal whole-program retrieval, including its cutoff and order.
+            retrieved, _ = self._retrieve(task)
+            by_source = {c['source_skill_ids'][0]:c for c in self.development_callables}
+            result += [dict(by_source[x['skill_id']]) for x in retrieved if x['skill_id'] in by_source]
+        return result
 
     def _filter_policy_context(self, policy_context: dict[str, Any]) -> dict[str, Any]:
         if self.disable_policy:
@@ -1180,6 +1205,17 @@ class BenchmarkRunner:
             plan.planned_usage_subtype = ""
         plan.matched_primitive_ids = [str(item.get("primitive_id", "")) for item in matched_primitives if item.get("primitive_id")]
         plan.matched_workflow_memory_ids = [str(item.get("memory_id", "")) for item in matched_workflow_memories if item.get("memory_id")]
+        self.executor.executable_skills_enabled = self.config.executable_skills_enabled
+        self.executor.development_callable_permission = dict(scope='development_diagnostic',
+            allowed={c['primitive_id']:c['source_sha256'] for c in self.development_callables}) if self.development_callables else None
+        task_skill_kwargs = {}
+        if self.config.executable_skills_enabled and plan.selected_skill_id:
+            selected_card = self.skill_registry.get(plan.selected_skill_id)
+            if selected_card is not None:
+                task_skill_kwargs = dict(
+                    task_skill_bundle=selected_card.executable_dependencies,
+                    task_skill_hash=selected_card.source_sha256,
+                )
         trace = self.executor.run(
             task=task,
             plan=plan,
@@ -1188,8 +1224,13 @@ class BenchmarkRunner:
             matched_workflow_memories=matched_workflow_memories,
             matched_templates=matched_templates,
             matched_primitives=matched_primitives,
+            **task_skill_kwargs,
             template_injection_enabled=not self.disable_template_injection,
         )
+        if self.acquisition_scheduler is not None:
+            if self.frozen_eval:
+                raise RuntimeError("TEACHER_UNAVAILABLE_IN_EVALUATION")
+            self.acquisition_results.append(self.acquisition_scheduler.on_task_end(task, trace))
         trace.setting_name = self.config.setting_name
         trace.phase_a_bank_source = self.config.phase_a_bank_source
         trace.phase_b_usage_setting = self.config.phase_b_usage_setting
@@ -1257,7 +1298,19 @@ class BenchmarkRunner:
         trace.matched_template_ids = plan.matched_template_ids
         trace.matched_primitive_ids = plan.matched_primitive_ids
         utility_after, status_after = self._record_runtime_governance(task, trace)
-        compile_result = self._online_compile(task, trace)
+        # Optional new-protocol gate. The scorer persists private feedback
+        # separately and may return only an allowlisted binary receipt summary.
+        training_score = None
+        validator = getattr(self, 'postlock_training_validator', None)
+        if validator is not None:
+            training_score = validator(task, trace)
+            if set(training_score) - {'verdict','receipt_ref','source_sha256','dependency_bundle_sha256'}:
+                raise ValueError('PRIVATE_TRAINING_SCORE_PROJECTION_VIOLATION')
+            trace.final_result['independent_training_score'] = training_score
+        growth_allowed = training_score is None or training_score['verdict'] == 'FULL_CHECK_PASS'
+        compile_result = (self._online_compile(task, trace) if growth_allowed else
+            CompileAdmissionResult(attempted=False, admitted=False, rejection_stage='independent_training_score',
+                                   rejection_reason='not_full_check_pass'))
         trace.compiled_skill_admitted = compile_result.admitted
         trace.compiled_skill_admission_bank = compile_result.admission_bank
         if compile_result.attempted:
@@ -1292,7 +1345,8 @@ class BenchmarkRunner:
                 )
                 if strategy is not None:
                     self.strategy_registry.add(strategy)
-        trace.compiled_primitive_ids, trace.compiled_primitive_admitted, trace.primitive_update_summary = self._update_primitives(trace)
+        if growth_allowed:
+            trace.compiled_primitive_ids, trace.compiled_primitive_admitted, trace.primitive_update_summary = self._update_primitives(trace)
         if self.disable_policy:
             updated_policy_version, policy_update_summary = trace.policy_version, "policy_disabled"
         elif self.frozen_eval or self.disable_policy_update or self.freeze_policy_updates:
@@ -1302,8 +1356,9 @@ class BenchmarkRunner:
                 trace=trace,
                 selected_skill_status_after=status_after,
             )
-        trace.updated_template_ids, trace.updated_template_kinds, trace.template_update_summary = self._update_templates(trace)
-        trace.updated_workflow_memory_ids = self._update_workflow_memory(trace)
+        if growth_allowed:
+            trace.updated_template_ids, trace.updated_template_kinds, trace.template_update_summary = self._update_templates(trace)
+            trace.updated_workflow_memory_ids = self._update_workflow_memory(trace)
         trace.utility_score = score_episode(trace)
         if self.governance_mode == "full":
             trace.audit_warnings = audit_trace(trace)

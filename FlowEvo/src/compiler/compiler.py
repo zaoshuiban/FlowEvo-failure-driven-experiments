@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import re
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,9 @@ class Compiler:
         self.skills_root.mkdir(parents=True, exist_ok=True)
 
     def _select_passing_attempt(self, trace: ExecutionTrace):
+        feedbacks = list(trace.verifier_feedback) + [a.verifier_feedback for a in trace.attempts if a.verifier_feedback]
+        if any(f.metrics.get('feedback_visibility') == 'private' for f in feedbacks):
+            raise ValueError('PRIVATE_FEEDBACK_CANNOT_BE_COMPILED')
         for attempt in reversed(trace.attempts):
             feedback = attempt.verifier_feedback
             if feedback is not None and feedback.passed:
@@ -199,6 +203,8 @@ class Compiler:
         return "generic_function_synthesis"
 
     def _helper_kind(self, trace: ExecutionTrace) -> str:
+        if trace.benchmark == 'taco':
+            return 'taco_function_skill'
         if trace.benchmark == "humaneval":
             return "humaneval_function_skill"
         if trace.benchmark == "gsm8k":
@@ -297,7 +303,7 @@ class Compiler:
         }
 
     def _direct_eligible(self, trace: ExecutionTrace, entry_point: str) -> bool:
-        if trace.benchmark in {"gsm8k", "humaneval"}:
+        if trace.benchmark in {"gsm8k", "humaneval", "taco"}:
             return False
         return bool(entry_point)
 
@@ -335,6 +341,10 @@ class Compiler:
         skill_source: str,
         entry_point: str,
     ) -> list[dict]:
+        if trace.validated_entry_point and trace.verifier_feedback:
+            public_tests = trace.verifier_feedback[-1].metrics.get("acquisition_public_tests", [])
+            if public_tests:
+                return [{"name": "public_training_replay", "code": "\n".join(public_tests)}]
         if trace.benchmark == "humaneval":
             marker = "def check(candidate):"
             if marker in executed_code:
@@ -361,7 +371,7 @@ class Compiler:
         candidate_code = attempt.candidate_code.rstrip() + "\n"
         feedback = attempt.verifier_feedback
         skill_source = self._build_skill_source(trace, candidate_code)
-        entry_point = self._extract_entry_point(skill_source)
+        entry_point = trace.validated_entry_point or self._extract_entry_point(skill_source)
         direct_eligible = self._direct_eligible(trace, entry_point)
         helper_kind = self._helper_kind(trace)
         replay_cases = self._extract_literal_replay_cases(feedback.executed_code, entry_point)
@@ -377,6 +387,11 @@ class Compiler:
         code_path = self.skills_root / f"{skill_id}.py"
 
         card = SkillCard(
+            source_sha256=hashlib.sha256(skill_source.encode()).hexdigest(),
+            executable_dependencies=trace.executable_dependencies,
+            validated_entry_point=entry_point,
+            independent_source_ids=trace.independent_source_ids,
+            operation_contracts=trace.operation_contracts,
             skill_id=skill_id,
             name=name,
             description=f"Compiled executable skill for {trace.benchmark} task {trace.task_id} from successful trace {trace.trace_id}.",

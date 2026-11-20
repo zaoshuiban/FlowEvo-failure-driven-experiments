@@ -1,0 +1,76 @@
+{
+  "baseline_commit": "d845600594ee4d0d32c60b17b3cc7a12cd3f73e1",
+  "offline": true,
+  "allow_paid_requests": false,
+  "max_paid_requests": 0,
+  "actor_model": "native_HeuristicGenerator_zero_api",
+  "teacher_model": "MOCK_INTERFACE_ONLY",
+  "compiler_model": null,
+  "output": "reports/failure_acquisition_prepare_20261119",
+  "run_root": "runs/failure_acquisition_prepare_20261119",
+  "seed": "FAILURE_ACQUISITION_PREPARE_V1",
+  "future_draft": {
+    "status": "NOT_AUTHORIZED_NOT_FROZEN",
+    "actor_model": "TO_FREEZE",
+    "teacher_model": "TO_FREEZE",
+    "shared_execution_interface": "frozen_modules_v1",
+    "native_train_tasks": 24,
+    "evaluation_tasks": 24,
+    "extra_learning_items_per_arm": 6,
+    "teacher_attempts_per_item": 1,
+    "parameterization_calls_per_item": 0,
+    "teacher_requests_both_arms": 12,
+    "actor_requests_training_plus_three_eval_arms_upper": 288,
+    "validation_executions_upper": 512,
+    "teacher_output_tokens": 8192,
+    "teacher_input_tokens_upper": 32768,
+    "source_bytes_upper": 64000,
+    "max_usd_reservation": 17,
+    "unknown_sent_request_policy": "STOP_NO_REISSUE",
+    "selectors": {
+      "G": "native_success_only",
+      "G+F": "confirmed_training_failure_hash_order",
+      "G+U": "all_same_training_pool_hash_order"
+    },
+    "actor_input_tokens_upper": 32768,
+    "actor_output_tokens": 4096
+  },
+  "groups": {
+    "G": {
+      "executable_skills_enabled": true,
+      "phase_order": [
+        "native_train",
+        "copy_libraries",
+        "extra_learning",
+        "freeze",
+        "evaluation"
+      ],
+      "selector": "native_success_only",
+      "extra_items": 0
+    },
+    "G+F": {
+      "executable_skills_enabled": true,
+      "phase_order": [
+        "native_train",
+        "copy_libraries",
+        "extra_learning",
+        "freeze",
+        "evaluation"
+      ],
+      "selector": "confirmed_training_failure_hash_order",
+      "extra_items": 6
+    },
+    "G+U": {
+      "executable_skills_enabled": true,
+      "phase_order": [
+        "native_train",
+        "copy_libraries",
+        "extra_learning",
+        "freeze",
+        "evaluation"
+      ],
+      "selector": "all_same_training_pool_hash_order",
+      "extra_items": 6
+    }
+  }
+}

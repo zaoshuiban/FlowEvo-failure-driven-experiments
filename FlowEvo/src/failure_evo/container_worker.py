@@ -11,7 +11,10 @@ import uuid
 
 
 class DockerWorker:
-    def __init__(self, candidate, *, image, worker_script):
+    def __init__(self, candidate, *, image, worker_script, module_dir=None, timeout_limit=10):
+        if not isinstance(timeout_limit, (int, float)) or not 0 < timeout_limit <= 180:
+            raise ValueError('explicit worker deadline must be positive and at most 180 seconds')
+        self.timeout_limit = timeout_limit
         if not shutil.which('docker'):
             raise RuntimeError('local Docker Linux runtime unavailable')
         if not re.fullmatch(r'sha256:[0-9a-f]{64}', image):
@@ -41,13 +44,18 @@ class DockerWorker:
             '--mount','type=bind,src='+str(worker_script)+',dst=/worker.py,readonly',
             '--env','PYTHONDONTWRITEBYTECODE=1','--env','PYTHONHASHSEED=0',
             '--entrypoint','python3',image,'-I','-u','/worker.py']
+        if module_dir is not None:
+            module_dir = Path(module_dir).resolve()
+            if not module_dir.is_dir() or ',' in str(module_dir):
+                raise ValueError('invalid read-only module mount')
+            args[2:2] = ['--mount', 'type=bind,src='+str(module_dir)+',dst=/skills,readonly']
         self.process = subprocess.Popen(args,stdin=subprocess.PIPE,stdout=subprocess.PIPE,
                                         stderr=subprocess.DEVNULL)
 
     def call(self, request):
         seconds = request.get('timeout', 5)
-        if not isinstance(seconds,(int,float)) or not 0 < seconds <= 10:
-            raise ValueError('worker timeout must be positive and at most 10 seconds')
+        if not isinstance(seconds,(int,float)) or not 0 < seconds <= self.timeout_limit:
+            raise ValueError('worker timeout exceeds the configured deadline')
         try:
             self.process.stdin.write(json.dumps(request).encode()+b'\n')
             self.process.stdin.flush()

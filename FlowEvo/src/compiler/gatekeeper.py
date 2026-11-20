@@ -206,6 +206,9 @@ class GateKeeper:
         return "\n".join(lines)
 
     def _source_oracle_seed_replay(self, code: str, card: SkillCard) -> tuple[int, int, dict[str, int]]:
+        if str((card.preconditions or {}).get('benchmark', card.family)) == 'taco':
+            # Generic value mutations have no validated TACO input contract.
+            return 0, 0, {'no_validated_taco_perturbation_contract': 1}
         task_pattern = self._supported_task_pattern(card)
         entry_point = str(card.signature.get("entry_point", "")).strip()
         cases = self._extract_literal_replay_cases(card)
@@ -395,6 +398,8 @@ class GateKeeper:
         )
 
     def _same_family_perturbation_replay(self, code: str, card: SkillCard) -> tuple[bool, bool, str]:
+        if str((card.preconditions or {}).get('benchmark', card.family)) == 'taco':
+            return True, False, 'no_validated_taco_perturbation_contract'
         task_pattern = self._supported_task_pattern(card)
         entry_point = str(card.signature.get("entry_point", "")).strip()
         cases = self._extract_literal_replay_cases(card)
@@ -425,6 +430,10 @@ class GateKeeper:
         return False, True, f"same-family perturbation replay failed: {result['stderr'] or result['stdout']}"
 
     def validate(self, code: str, card: SkillCard) -> GatekeeperResult:
+        with self.sandbox.bind_dependencies(card.executable_dependencies):
+            return self._validate(code, card)
+
+    def _validate(self, code: str, card: SkillCard) -> GatekeeperResult:
         checks: dict[str, bool] = {}
         reasons: list[str] = []
 

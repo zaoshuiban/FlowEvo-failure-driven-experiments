@@ -65,9 +65,20 @@ class PrimitiveStore:
     def observe_candidate(self, card: PrimitiveCard, code: str) -> PrimitiveCard:
         current = self.get(card.primitive_id)
         now = self._now()
+        verified = card.validation_status == "source_verified_dependency_checked"
+        if verified:
+            from failure_evo.skill_runtime import sha
+            if sha(code) != card.source_sha256:
+                raise ValueError("PRIMITIVE_SOURCE_HASH_MISMATCH")
+        if current is not None and current.validation_status != card.validation_status:
+            raise ValueError("PRIMITIVE_VALIDATION_MODE_CONFLICT")
         if current is None:
             current = card.model_copy(deep=True)
-            current.support_count = max(1, int(current.support_count or 1))
+            if verified:
+                current.independent_source_ids = list(dict.fromkeys(card.independent_source_ids or card.source_trace_ids))
+                current.support_count = len(current.independent_source_ids)
+            else:
+                current.support_count = max(1, int(current.support_count or 1))
             current.status = "active" if current.support_count >= 2 else "draft"
         else:
             current.name = card.name or current.name
@@ -75,7 +86,15 @@ class PrimitiveStore:
             current.signature = card.signature or current.signature
             current.helper_name = card.helper_name or current.helper_name
             current.target_entry_point = card.target_entry_point or current.target_entry_point
-            current.support_count += max(1, int(card.support_count or 1))
+            if verified:
+                sources = set(current.independent_source_ids or current.source_trace_ids)
+                sources.update(card.independent_source_ids or card.source_trace_ids)
+                current.independent_source_ids = sorted(sources)
+                current.support_count = len(sources)
+                if current.source_sha256 and current.source_sha256 != card.source_sha256:
+                    raise ValueError("PRIMITIVE_HASH_DRIFT")
+            else:
+                current.support_count += max(1, int(card.support_count or 1))
             current.utility = max(float(current.utility), float(card.utility))
             for trace_id in card.source_trace_ids:
                 if trace_id not in current.source_trace_ids:
@@ -89,6 +108,26 @@ class PrimitiveStore:
         current.code_path = str(self.save_code(current.primitive_id, code))
         self.upsert(current)
         return self.get(current.primitive_id) or current
+
+    def observe_support(self, primitive_id, evidence):
+        current = self.get(primitive_id)
+        if current is None or current.source_sha256 != evidence.get('sha256'):
+            raise ValueError('SUPPORT_VERSION_MISMATCH')
+        source = evidence.get('source_lineage_id')
+        if not source or not evidence.get('passed') or not evidence.get('return_use_verified'):
+            raise ValueError('UNVERIFIED_SUPPORT')
+        if not any(e.get('event') == 'returned' and e.get('sha256') == current.source_sha256
+                   for e in evidence.get('actual_calls', [])):
+            raise ValueError('SUPPORT_REQUIRES_REAL_CALL')
+        if source in current.independent_source_ids:
+            return current
+        current.independent_source_ids.append(source)
+        current.source_trace_ids.append('support:' + evidence['program_sha256'])
+        current.support_evidence.append(evidence)
+        updated = self.observe_candidate(current, Path(current.code_path).read_text())
+        updated.support_evidence = current.support_evidence
+        self.upsert(updated)
+        return updated
 
     def match(self, benchmark: str, task_pattern: str, limit: int = 2) -> list[PrimitiveCard]:
         cards = [

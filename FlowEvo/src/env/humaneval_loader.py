@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import json
+import gzip
 from pathlib import Path
 
-from datasets import load_dataset
 
 from core.schemas import CodeTaskInstance
 
@@ -64,10 +64,21 @@ def _task_allowed(task_id: str, allowed_task_ids: set[str] | None) -> bool:
     return task_id in allowed_task_ids
 
 
+def humaneval_task_from_row(row, *, public_only=False, metadata=None):
+    return CodeTaskInstance(
+        task_id=str(row['task_id']), benchmark='humaneval', prompt=row['prompt'],
+        canonical_solution='' if public_only else row['canonical_solution'],
+        test='' if public_only else row['test'], entry_point=row['entry_point'],
+        metadata=metadata or {},
+    )
+
+
 def load_humaneval_tasks(
     profile: str = "full",
     limit: int | None = None,
     dataset_split: str = "",
+    dataset_path: str | None = None,
+    public_only: bool = False,
 ) -> list[CodeTaskInstance]:
     """Load HumanEval and convert rows into `CodeTaskInstance` objects.
 
@@ -87,7 +98,12 @@ def load_humaneval_tasks(
         raise ValueError(f"Unsupported HumanEval profile: {profile}")
 
     source_split, allowed_task_ids = _resolve_dataset_split(dataset_split)
-    dataset = load_dataset("openai/openai_humaneval", split=source_split)
+    if dataset_path:
+        with gzip.open(dataset_path, "rt") as source:
+            dataset = [json.loads(line) for line in source]
+    else:
+        from datasets import load_dataset
+        dataset = load_dataset("openai/openai_humaneval", split=source_split)
     resolved_dataset_split = dataset_split.strip() or source_split
     tasks: list[CodeTaskInstance] = []
 
@@ -96,18 +112,9 @@ def load_humaneval_tasks(
         if not _task_allowed(task_id, allowed_task_ids):
             continue
         tasks.append(
-            CodeTaskInstance(
-                task_id=task_id,
-                benchmark="humaneval",
-                prompt=row["prompt"],
-                canonical_solution=row["canonical_solution"],
-                test=row["test"],
-                entry_point=row["entry_point"],
-                metadata={
-                    "dataset_split": resolved_dataset_split,
-                    "profile": profile,
-                },
-            )
+            humaneval_task_from_row(row, public_only=public_only, metadata={
+                'dataset_split': resolved_dataset_split, 'profile': profile,
+            })
         )
         if limit is not None and len(tasks) >= limit:
             break

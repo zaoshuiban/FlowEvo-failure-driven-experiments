@@ -11,7 +11,7 @@ import uuid
 from pathlib import Path
 from typing import Any, Optional
 
-from agent.generator import BaseGenerator, GenerationError, HeuristicGenerator, OracleGenerator
+from agent.generator import GenerationOutput, BaseGenerator, GenerationError, HeuristicGenerator, OracleGenerator
 from agent.skill_compatibility import task_compatibility_context
 from core.schemas import (
     ActionRecord,
@@ -58,6 +58,18 @@ class CodeTaskExecutor:
         )
 
     def _invoke_generator(self, generator: BaseGenerator, method_name: str, **kwargs: Any) -> GenerationOutput:
+        task = kwargs.get('task')
+        initial = task.metadata.get('resume_public_failure') if task is not None else None
+        if method_name == 'draft' and initial:
+            from failure_evo.skill_runtime import sha
+            if (task.metadata.get('data_role') not in {'train','development','transfer_dev'}
+                or set(initial) != {'source','source_sha256','summary','evidence_id'}
+                or sha(initial['source']) != initial['source_sha256']):
+                raise ValueError('INVALID_PUBLIC_FAILURE_RESUME')
+            method_name = 'repair'
+            kwargs.update(previous_code=initial['source'], attempt_index=0,
+                feedback=VerifierFeedback(benchmark=task.benchmark,task_id=task.task_id,passed=False,summary=initial['summary'],
+                    failure_type='resource_limit',metrics={'feedback_visibility':'allowed_training_projection'}))
         method = getattr(generator, method_name)
         signature = inspect.signature(method)
         accepted = {
@@ -65,7 +77,30 @@ class CodeTaskExecutor:
             for key, value in kwargs.items()
             if key in signature.parameters
         }
-        return method(**accepted)
+        if self.executable_skills_enabled and "primitive_helpers" in accepted:
+            self._presented_primitive_ids.update(c["primitive_id"] for c in accepted["primitive_helpers"] or [])
+        output = method(**accepted)
+        task = kwargs.get("task")
+        if task is not None and task.benchmark == 'taco' and task.metadata.get('taco_function_subset'):
+            from env.taco_function_loader import adapt_candidate
+            try:
+                code = adapt_candidate(output.code, task.entry_point)
+                output = GenerationOutput(code=code, event=output.event)
+            except (SyntaxError, ValueError):
+                pass  # Normal verifier/repair handles invalid model deliveries.
+        if task is not None and task.benchmark == 'humaneval' and task.metadata.get("public_validation_only"):
+            imports = [ast.unparse(node) for node in ast.parse(task.prompt).body
+                       if isinstance(node, (ast.Import, ast.ImportFrom))]
+            if imports:
+                try:
+                    future_end = max((node.end_lineno for node in ast.parse(output.code).body
+                                      if isinstance(node, ast.ImportFrom) and node.module == "__future__"), default=0)
+                except SyntaxError:
+                    future_end = 0
+                lines = output.code.splitlines(keepends=True)
+                code = "".join(lines[:future_end]) + "\n" + "\n".join(imports) + "\n" + "".join(lines[future_end:])
+                output = GenerationOutput(code=code, event=output.event)
+        return output
 
     def _classify_failure(self, feedback: VerifierFeedback) -> str:
         if feedback.summary == "generation_failed":
@@ -865,7 +900,18 @@ class CodeTaskExecutor:
         try:
             import_started = time.perf_counter()
             candidate = self._load_skill_code(code_path)
-            self._import_skill_module(code_path, skill_entry_point or task_entry_point)
+            if self.executable_skills_enabled:
+                from failure_evo.skill_runtime import sha
+                if self._task_code_sha and sha(candidate) != self._task_code_sha:
+                    raise ValueError("TASK_SKILL_HASH_MISMATCH")
+                if not any(
+                    isinstance(node, ast.FunctionDef)
+                    and node.name == (skill_entry_point or task_entry_point)
+                    for node in ast.parse(candidate).body
+                ):
+                    raise ValueError("MISSING_ENTRY_POINT")
+            else:
+                self._import_skill_module(code_path, skill_entry_point or task_entry_point)
             artifact_import_latency_ms = (time.perf_counter() - import_started) * 1000.0
             candidate = self._adapt_skill_candidate_for_task(
                 candidate,
@@ -904,7 +950,61 @@ class CodeTaskExecutor:
         )
         return feedback, skill_id, artifact_import_latency_ms, artifact_verification_latency_ms
 
+    executable_skills_enabled = False
+
     def run(
+        self,
+        task: BenchmarkTaskInstance,
+        plan: WorkflowPlan,
+        mode: str,
+        retrieval_scores: list[dict[str, Any]] | None = None,
+        matched_workflow_memories: list[dict[str, Any]] | None = None,
+        matched_templates: list[dict[str, Any]] | None = None,
+        matched_primitives: list[dict[str, Any]] | None = None,
+        template_injection_enabled: bool = True,
+        *,
+        task_skill_bundle: dict[str, Any] | None = None,
+        task_skill_hash: str = "",
+    ) -> ExecutionTrace:
+        kwargs = dict(
+            task=task, plan=plan, mode=mode, retrieval_scores=retrieval_scores,
+            matched_workflow_memories=matched_workflow_memories,
+            matched_templates=matched_templates, matched_primitives=matched_primitives,
+            template_injection_enabled=template_injection_enabled,
+        )
+        if not self.executable_skills_enabled:
+            return self._run(**kwargs)
+        from failure_evo.skill_runtime import bundle_from_cards, validate_bundle
+        self._presented_primitive_ids = set()
+        task_bundle = task_skill_bundle or {}
+        self._task_code_sha = task_skill_hash
+        cards = [dict(c) for c in matched_primitives or []]
+        executable = [c for c in cards if c.get("validation_status") == "source_verified_dependency_checked"
+                      and c.get("operation_contracts", {}).get(c.get("helper_name"))]
+        bundle = bundle_from_cards(executable, development_permission=getattr(self,'development_callable_permission',None))
+        validate_bundle(task_bundle)
+        for field in ("modules", "entries", "card_names"):
+            for name, value in task_bundle.get(field, {}).items():
+                if name in bundle[field] and bundle[field][name] != value:
+                    raise ValueError("DEPENDENCY_CONFLICT")
+                bundle[field][name] = value
+        for card in executable:
+            card["executable_call_name"] = "from flowevo_skills import " + bundle["card_names"][card["primitive_id"]]
+        kwargs["matched_primitives"] = cards
+        with self.sandbox.bind_dependencies(bundle):
+            trace = self._run(**kwargs)
+            trace.actual_skill_calls = list(self.sandbox.skill_events)
+        trace.executable_dependencies = bundle
+        trace.validated_entry_point = infer_task_entry_point(task) or ""
+        trace.independent_source_ids = [task.metadata.get("source_lineage_id", trace.task_id)]
+        trace.injected_primitive_ids = sorted({e["skill_id"] for e in trace.actual_skill_calls if e["event"] == "started"})
+        for c in cards:
+            trace.actions.append(ActionRecord(tool_name="skill_retrieved", tool_input_summary=c["primitive_id"], tool_output_summary="retrieved"))
+            if c["primitive_id"] in self._presented_primitive_ids:
+                trace.actions.append(ActionRecord(tool_name="skill_presented", tool_input_summary=c["primitive_id"], tool_output_summary=c.get("executable_call_name", "legacy_source_context")))
+        return trace
+
+    def _run(
         self,
         task: BenchmarkTaskInstance,
         plan: WorkflowPlan,
@@ -947,6 +1047,8 @@ class CodeTaskExecutor:
         feedback: VerifierFeedback | None = None
         attempt_offset = 0
         plan_steps = list(plan.steps)
+        if task.metadata.get('resume_public_failure'):
+            plan_steps = []  # Resume the archived failed state with the normal repair generator.
 
         if plan_steps and plan_steps[0].step_type == "call_skill":
             feedback, used_skill, artifact_import_latency_ms, artifact_verification_latency_ms = self._run_skill_step(

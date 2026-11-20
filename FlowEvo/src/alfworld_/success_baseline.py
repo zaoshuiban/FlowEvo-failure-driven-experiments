@@ -131,6 +131,18 @@ def draw_holdout(library, task_type, rng):
     return bool((layers['exemplar'] or layers['insight']) and rng.random() < HOLDOUT_RATE)
 
 
+def compile_success_into_library(library, trace, compiler):
+    produced = {}
+    if trace.success:
+        result = compiler.compile(trace)
+        if result.template is not None:
+            produced['L1'] = dict(id=result.template.template_id, admitted=library.add_template(result.template))
+        if result.exemplar is not None:
+            library.add_exemplar(result.exemplar)
+            produced['L2'] = dict(id=result.exemplar.exemplar_id, admitted=True)
+    return produced
+
+
 def update_library(library, trace, selected, holdout, compiler, sequence):
     template_id = selected['template']
     if template_id:
@@ -140,14 +152,7 @@ def update_library(library, trace, selected, holdout, compiler, sequence):
     elif trace.planning_mode in ('exemplar_guided', 'insight_guided',
                                  'direct_then_exemplar', 'direct_then_insight'):
         library.record_guided(trace.task_type, trace.success)
-    produced = {}
-    if trace.success:
-        result = compiler.compile(trace)
-        if result.template is not None:
-            produced['L1'] = dict(id=result.template.template_id, admitted=library.add_template(result.template))
-        if result.exemplar is not None:
-            library.add_exemplar(result.exemplar)
-            produced['L2'] = dict(id=result.exemplar.exemplar_id, admitted=True)
+    produced = compile_success_into_library(library, trace, compiler)
     had_insight = library.retrieve(trace.task_type)['insight'] is not None
     # A suppressed insight can still exist, so check storage when masked.
     had_insight = had_insight or trace.task_type in library.to_dict()['insights']

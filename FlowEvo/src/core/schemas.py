@@ -161,6 +161,13 @@ class WorkflowPlan(BaseModel):
 
 
 class ExecutionTrace(BaseModel):
+    executable_dependencies: dict[str, Any] = Field(default_factory=dict)
+    validated_entry_point: str = ""
+    independent_source_ids: list[str] = Field(default_factory=list)
+    operation_contracts: dict[str, Any] = Field(default_factory=dict)
+    actual_skill_calls: list[dict[str, Any]] = Field(default_factory=list)
+    validation_status: str = "legacy"
+    source_sha256: str = ""
     trace_id: str
     task_id: str
     family: str
@@ -323,6 +330,13 @@ class SkillFailureEvent(BaseModel):
 
 
 class SkillCard(BaseModel):
+    executable_dependencies: dict[str, Any] = Field(default_factory=dict)
+    validated_entry_point: str = ""
+    independent_source_ids: list[str] = Field(default_factory=list)
+    operation_contracts: dict[str, Any] = Field(default_factory=dict)
+    actual_skill_calls: list[dict[str, Any]] = Field(default_factory=list)
+    validation_status: str = "legacy"
+    source_sha256: str = ""
     skill_id: str
     name: str
     description: str
@@ -430,6 +444,14 @@ class WorkflowMemoryCard(BaseModel):
 
 
 class PrimitiveCard(BaseModel):
+    support_evidence: list[dict[str, Any]] = Field(default_factory=list)
+    executable_dependencies: dict[str, Any] = Field(default_factory=dict)
+    validated_entry_point: str = ""
+    independent_source_ids: list[str] = Field(default_factory=list)
+    operation_contracts: dict[str, Any] = Field(default_factory=dict)
+    actual_skill_calls: list[dict[str, Any]] = Field(default_factory=list)
+    validation_status: str = "legacy"
+    source_sha256: str = ""
     primitive_id: str
     name: str
     description: str

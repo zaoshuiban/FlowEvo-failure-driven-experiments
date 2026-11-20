@@ -71,7 +71,7 @@ def find_existing_card_for_dedup_key(
 def _is_humaneval_seed_only_card(card) -> bool:
     benchmark = str((card.preconditions or {}).get("benchmark", card.family) or "")
     task_pattern = str((card.preconditions or {}).get("task_pattern", "") or "")
-    return benchmark == "humaneval" or task_pattern in {
+    return benchmark in {"humaneval", "taco"} or task_pattern in {
         "function_synthesis",
         "generic_function_synthesis",
         "humaneval_function_synthesis",
@@ -94,6 +94,7 @@ def admit_compiled_trace(
     timeout_seconds: float,
     dedup_keys: set[tuple[str, str, str]] | None = None,
     force_shadow: bool = False,
+    sandbox: Sandbox | None = None,
     allow_unsupported_family_direct_admission: bool = False,
 ) -> CompileAdmissionResult:
     compiler = Compiler(skills_root=os.fspath(registry.skills_root))
@@ -106,7 +107,7 @@ def admit_compiled_trace(
     existing = find_existing_card_for_dedup_key(registry, dedup_key) if dedup_keys is not None and dedup_key in dedup_keys else None
     if existing is not None:
         if existing.status == "shadow" and provenance == "pure_dynamic_success":
-            result = GateKeeper(sandbox=Sandbox(timeout_seconds=timeout_seconds)).validate(code=code, card=card)
+            result = GateKeeper(sandbox=sandbox or Sandbox(timeout_seconds=timeout_seconds)).validate(code=code, card=card)
             if result.allowed:
                 existing.status = "active"
                 if trace.trace_id and trace.trace_id not in existing.lineage:
@@ -164,7 +165,7 @@ def admit_compiled_trace(
             checks={"shadow_compile": True},
         )
 
-    result = GateKeeper(sandbox=Sandbox(timeout_seconds=timeout_seconds)).validate(code=code, card=card)
+    result = GateKeeper(sandbox=sandbox or Sandbox(timeout_seconds=timeout_seconds)).validate(code=code, card=card)
     card.compile_metadata.update(dict(result.metrics or {}))
     card.replay_validation_count += 1
     if not bool(result.checks.get("fresh_world_source_replay", True)) or not bool(result.checks.get("same_family_perturbation_replay", True)):

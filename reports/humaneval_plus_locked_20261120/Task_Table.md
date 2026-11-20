@@ -1,0 +1,26 @@
+| Task | 原公开 / 原完整 | 新基础 / 新增强 | 基础 / 增强案例 | 审定 |
+|---|---|---|---|---|
+| HumanEval/0 | PASS / PASS | pass / pass | 7 / 999 | 无观测失败 |
+| HumanEval/20 | PASS / PASS | pass / pass | 5 / 1000 | 无观测失败 |
+| HumanEval/1 | PASS / PASS | pass / pass | 4 / 83 | 无观测失败 |
+| HumanEval/6 | PASS / PASS | pass / pass | 3 / 66 | 无观测失败 |
+| HumanEval/56 | PASS / PASS | pass / pass | 12 / 1000 | 无观测失败 |
+| HumanEval/61 | PASS / PASS | pass / pass | 12 / 999 | 无观测失败 |
+| HumanEval/13 | PASS / PASS | pass / pass | 4 / 987 | 无观测失败 |
+| HumanEval/24 | PASS / PASS | pass / pass | 5 / 168 | 无观测失败 |
+| HumanEval/25 | PASS / PASS | pass / pass | 8 / 138 | 无观测失败 |
+| HumanEval/31 | PASS / PASS | pass / pass | 13 / 154 | 无观测失败 |
+| HumanEval/39 | PASS / PASS | pass / fail | 10 / 2 | 可复现超时；获取资格待定 |
+| HumanEval/59 | PASS / PASS | pass / pass | 5 / 174 | 无观测失败 |
+| HumanEval/8 | PASS / PASS | pass / pass | 5 / 1000 | 无观测失败 |
+| HumanEval/9 | PASS / PASS | pass / pass | 4 / 959 | 无观测失败 |
+| HumanEval/21 | PASS / PASS | pass / pass | 5 / 999 | 无观测失败 |
+| HumanEval/46 | PASS / PASS | pass / pass | 4 / 132 | 无观测失败 |
+| HumanEval/55 | PASS / PASS | pass / pass | 5 / 45 | 无观测失败 |
+| HumanEval/63 | PASS / PASS | pass / pass | 7 / 63 | 无观测失败 |
+| HumanEval/10 | PASS / PASS | pass / pass | 5 / 780 | 无观测失败 |
+| HumanEval/48 | PASS / PASS | pass / pass | 7 / 989 | 无观测失败 |
+| HumanEval/18 | PASS / PASS | pass / pass | 4 / 1000 | 无观测失败 |
+| HumanEval/17 | PASS / PASS | pass / pass | 5 / 215 | 无观测失败 |
+| HumanEval/33 | PASS / PASS | pass / pass | 10 / 955 | 无观测失败 |
+| HumanEval/37 | PASS / PASS | pass / pass | 3 / 974 | 无观测失败 |

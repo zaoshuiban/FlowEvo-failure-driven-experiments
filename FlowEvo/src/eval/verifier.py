@@ -200,9 +200,28 @@ def verify_code_task(
     score_protocol: str = "table1_compatible",
 ) -> VerifierFeedback:
     """Dispatch deterministic verification by benchmark name."""
+    if task.benchmark == 'taco':
+        if not task.metadata.get('taco_function_subset'):
+            raise ValueError('UNSUPPORTED_TACO_PROTOCOL')
+        public = task.metadata.get('public_validation_only') is True
+        selected = task.metadata.get('public_training_tests', []) if public else task.test_list
+        if not selected:
+            raise ValueError('EMPTY_TACO_VALIDATION')
+        feedback = verify_function_task(task, candidate, sandbox, tests=selected,
+            scope='taco_public' if public else 'taco_private')
+        feedback.metrics['feedback_visibility'] = 'public' if public else 'private'
+        if public:
+            feedback.metrics['acquisition_public_tests'] = list(selected)
+        return feedback
     if task.benchmark == "mbpp":
         return verify_function_task(task, candidate, sandbox, scope=scope, tests=tests, score_protocol=score_protocol)
     if task.benchmark == "humaneval":
+        if task.metadata.get("public_validation_only"):
+            public = task.metadata.get("public_training_tests", [])
+            if not public:raise ValueError("EMPTY_PUBLIC_VALIDATION")
+            feedback = verify_function_task(task, candidate, sandbox, tests=public, scope="visible_public")
+            feedback.metrics["acquisition_public_tests"] = public
+            return feedback
         return verify_humaneval(task, candidate, sandbox)
     raise ValueError(f"Unsupported benchmark: {task.benchmark}")
 
